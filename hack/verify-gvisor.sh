@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+"${repo_root}/hack/require-demo-cluster.sh"
 cache_dir="${repo_root}/.cache"
 evidence_file="${cache_dir}/gvisor-dmesg.txt"
 namespace="sandboxd-demo"
@@ -18,6 +19,7 @@ trap cleanup EXIT
 "${repo_root}/hack/check-resources.sh"
 mkdir -p "${cache_dir}"
 
+kubectl apply -f "${repo_root}/deploy/namespace.yaml"
 kubectl apply -f "${repo_root}/deploy/runtimeclass.yaml"
 kubectl apply -f "${repo_root}/deploy/smoke/gvisor-pod.yaml"
 kubectl wait --namespace "${namespace}" \

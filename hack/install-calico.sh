@@ -5,6 +5,7 @@ set -Eeuo pipefail
 CALICO_VERSION="3.32.0"
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+"${repo_root}/hack/require-demo-cluster.sh"
 cache_dir="${repo_root}/.cache"
 manifest="${cache_dir}/calico-v${CALICO_VERSION}.yaml"
 manifest_url="https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml"

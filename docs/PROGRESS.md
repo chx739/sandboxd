@@ -1,52 +1,64 @@
 # sandboxd 持续开发进度
 
-> 本文件是跨会话进度快照。每完成一个可验证步骤就更新它，避免上下文压缩后重复工作或偏移目标。目标和边界以 `../GOAL.md` 为准。
+> 本文件是跨会话进度快照。目标和边界以 `../GOAL.md` 为准；若未来继续扩展，先确认仍符合“最小、可运行、适合面试”的范围。
 
-## 当前阶段
+## 当前状态
 
-阶段 7：整理一键 Demo、最终面试问答与全量证据审计。
+目标范围已完成并通过最终审计。后续只做用户明确要求的修复、讲解或可选扩展，不自动扩大为生产系统。
 
 ## 已完成
 
-- 建立 GitHub 仓库、目标锚点和跨上下文续作协议。
-- 完成 WSL2 + 单节点 kind + gVisor + Calico，并保留真实 `Starting gVisor` 证据。
-- 完成 Pod 安全基线、PSA restricted、只读 RBAC、NetworkPolicy 正反路径及学习文档。
-- 完成 Manager、filtered informer/lister、WebSocket/SPDY Exec、本地鉴权 HTTP API及超时清理。
-- 完成 typed workqueue、目标为 2 的预热池、JSON Patch CAS、direct fallback 和 Release 补新。
-- 真实五并发得到五个唯一 ID，source=pool 2/direct 3；Release 后 idle 恢复到 2。
-- 完成 Prometheus acquire、pool、conflict、exec、timeout、runtime、plan denied 指标及真实验收。
-- 实现内存 Plan Store，唯一动作固定为 Deployment scale，replicas 限制为 0–10，拒绝系统/沙箱 namespace。
-- Agent/Operator 双 Token 必填且必须不同；Agent 只能 propose，Operator 才能 approve/reject。
-- Propose 做 server-side dry-run并保存 UID/resourceVersion；Approve 前重读校验和乐观锁防 TOCTOU。
-- Plan 用 pending/executing/approved/rejected/stale 状态机避免重复批准；临时 API 错误恢复 pending。
-- 真实验证 Agent approve=401、Operator approve 后 replicas 0→1、版本变化=409/stale、reject 后不可重批。
-- approval 核心不变量测试连续 20 轮通过；真实脚本最多一个 32Mi gVisor Pod并精确清理。
-- 完成 `docs/08-DryRun与审批门.md`、阶段 6 证据和踩坑条目 19–22。
+- GitHub 仓库、目标锚点、跨上下文续作协议。
+- WSL2 + 单节点 kind + gVisor + Calico；Pod 内真实 `Starting gVisor` 证据。
+- restricted Pod 安全基线、PSA、短时 Token、只读 RBAC、NetworkPolicy 正反路径。
+- Manager、filtered informer/lister、WebSocket/SPDY Exec、有界输出、超时独立清理。
+- typed workqueue、target=2 预热池、JSON Patch CAS、direct fallback、Release 删除补新。
+- Prometheus 低基数 acquire/pool/conflict/exec/timeout/runtime/plan denied 指标。
+- Deployment scale server-side DryRun Plan、Agent/Operator 双 Token、状态机和 UID/resourceVersion 防 TOCTOU。
+- approval 不变量测试连续 20 轮通过；全项目 test/vet/build 通过。
+- `./hack/demo.sh` 按安全→gVisor→Exec→Pool→Approval 顺序完整实测通过。
+- 所有写脚本在 cleanup 前校验 context 必须是单节点 `kind-sandboxd`。
+- 完整 Demo 后：PSA=restricted、Pod=0、临时 target namespace 不存在、8080 无监听、可用内存约 5.6GiB、swap=0。
+- 模块学习文档 01–10、真实踩坑总表 25 条、各阶段 evidence 和简历/面试讲法。
+- Ubuntu 官方 GNU Make 4.3 已最小安装；`make build`、`make test` 和 demo target 展开均通过。
 
-## 正在进行
+## 最终实测摘要
 
-- 增加按安全顺序串联各模块的一键最终 Demo。
-- 编写 `docs/10-面试问答与项目讲法.md`，覆盖项目介绍、追问、边界和简历表述。
-- 全量复跑/审计 README 中每个可验证结论、脚本清理和 Git 范围。
+```text
+Starting gVisor...
+RBAC read=yes, write/secrets/exec=no
+Network API=200, public egress=denied
+Exec exit=7 preserved, timeout=504 and Pod deleted
+5 concurrent claims -> 5 unique IDs, pool=2/direct=3
+Pool restored idle=2, observed CAS conflicts=6
+DryRun did not mutate; Agent approve=401; Operator approve=200
+resourceVersion changed -> 409/stale; reject cannot reapprove
+```
 
-## 紧接着做
+## 最终审计结果
 
-1. `make demo` 只编排已有低资源脚本，不扩大并发或副本。
-2. 评估最终 Demo 是否默认复用现有集群，避免重复创建 kind/gVisor 基础设施。
-3. 更新 README 的启动方式、双 Token 和完整演示输出。
-4. 检查每篇模块文档都有代码入口、验证命令和一分钟项目讲法。
-5. 最后运行 tests/vet/build、关键真实脚本及敏感路径扫描后推送。
+- `make build`：PASS；
+- `make test`：PASS；
+- `go vet ./...`：PASS；
+- `go mod tidy`：无额外依赖变化；
+- 所有 `hack/*.sh`：`bash -n` PASS 且具备执行位；
+- 非模板 Kubernetes YAML：client dry-run PASS；
+- 完整真实 Demo：PASS；
+- 目标资源残留、swap：0；
+- 本机路径、sudo 文件名、API key/Token 敏感引用扫描：PASS；
+- 本次最终里程碑提交包含完整范围与敏感信息扫描，并在提交后立即推送 GitHub 分支。
 
 ## 资源与安全约束
 
-- kind：单 control-plane 节点；预热池默认 2。
-- 并发验证默认 5；资源确认充足后上限 10，不运行 20 并发日常测试。
-- 可用内存接近 2 GiB、持续使用 swap 或 WSL/Docker 异常时停止测试。
-- sudo 仅用于无法由普通用户完成的最小系统操作；密码不进入命令、脚本、日志或 Git。
-- 只清理名称和来源都能确认属于 sandboxd 的容器、集群、网络和临时文件。
+- kind 单 control-plane；pool=2；默认并发=5，最多 10，不做 20 并发日常测试。
+- 可用内存接近 2GiB、持续 swap 或 WSL/Docker 异常时停止。
+- sudo 默认禁用；密码不进入命令、脚本、日志或 Git。
+- 只清理能同时确认名称、来源和目标 context 属于 sandboxd 的资源。
 
-## 尚未完成
+## 后续可选扩展（不是当前完成条件）
 
-- 一键最终 Demo。
-- 最终面试问答手册和简历项目描述。
-- 全量证据/链接/仓库状态审计。
+- in-cluster Deployment 与最小写 RBAC；
+- Plan/审计持久化；
+- OIDC/TLS/Token 轮转；
+- Grafana/告警与正式容量测试；
+- 多副本 leader election。

@@ -62,6 +62,18 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 脚本在重操作前检查内存、swap、磁盘和容器。验证脚本使用低副本、小并发，并在退出时精确清理。
 
+## 一键完整演示
+
+基础集群已准备好后，零额外依赖入口为：
+
+```bash
+./hack/demo.sh
+```
+
+它会先确认当前 context 精确为单节点 `kind-sandboxd`，再依次验证安全策略、gVisor、Manager/Exec、Pool/CAS/Metrics 和审批门，最后检查临时资源残留。脚本不会自动重建集群、安装系统包或调用 sudo。
+
+如果环境已安装 make，也可使用等价快捷方式 `make demo`。
+
 ## 启动 API
 
 Agent 与 Operator Token 必须设置且不能相同；服务默认只监听 `127.0.0.1:8080`：
@@ -89,6 +101,7 @@ make test
 - [最小实现计划](docs/00-实现计划.md)
 - [学习文档索引](docs/README.md)
 - [开发踩坑与排障](docs/11-开发踩坑与排障.md)
+- [秋招面试问答与项目讲法](docs/10-面试问答与项目讲法.md)
 
 ## 项目边界
 

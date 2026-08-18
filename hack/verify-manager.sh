@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+"${repo_root}/hack/require-demo-cluster.sh"
 cache_dir="${repo_root}/.cache"
 binary="${cache_dir}/sandboxd"
 server_log="${cache_dir}/sandboxd.log"
