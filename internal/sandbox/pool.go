@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chx739/sandboxd/internal/metrics"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -108,6 +109,7 @@ func (p *Pool) Reconcile(ctx context.Context) error {
 		return fmt.Errorf("列出 Pool Pod: %w", err)
 	}
 
+	recordPoolSize(pods)
 	idle := make([]*corev1.Pod, 0, len(pods))
 	for _, pod := range pods {
 		if pod.Status.Phase == corev1.PodFailed || pod.Status.Phase == corev1.PodSucceeded {
@@ -146,6 +148,7 @@ func (p *Pool) Reconcile(ctx context.Context) error {
 
 // Claim 先从 Ready idle 候选中 CAS 认领；缓存为空或候选都冲突时才冷启动。
 func (p *Pool) Claim(ctx context.Context) (*Sandbox, error) {
+	started := time.Now()
 	pods, err := p.lister.Pods(p.manager.config.Namespace).List(labels.SelectorFromSet(labels.Set{
 		LabelManagedBy: ValueManagedBy,
 		LabelState:     string(StateIdle),
@@ -175,6 +178,7 @@ func (p *Pool) Claim(ctx context.Context) (*Sandbox, error) {
 			metav1.PatchOptions{},
 		)
 		if patchErr == nil {
+			metrics.AcquireDuration.WithLabelValues("pool").Observe(time.Since(started).Seconds())
 			p.queue.Add(poolKey)
 			return &Sandbox{
 				ID:        claimed.Labels[LabelID],
@@ -187,6 +191,7 @@ func (p *Pool) Claim(ctx context.Context) (*Sandbox, error) {
 		}
 		// JSON Patch test 失败通常是 422；缓存仍显示 idle，但对象已被其他请求认领。
 		if apierrors.IsInvalid(patchErr) || apierrors.IsConflict(patchErr) || strings.Contains(patchErr.Error(), "test failed") {
+			metrics.ClaimConflicts.Inc()
 			continue
 		}
 		return nil, fmt.Errorf("CAS 认领 Pod %s: %w", candidate.Name, patchErr)

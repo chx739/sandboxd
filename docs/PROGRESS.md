@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-阶段 5：增加最小 Prometheus 指标，再实现 Deployment scale DryRun 与 Operator 审批门。
+阶段 6：实现只支持 Deployment scale 的 server-side DryRun Plan 与双 Token Operator 审批门。
 
 ## 已完成
 
@@ -12,29 +12,29 @@
 - 完成 WSL2 + 单节点 kind + gVisor + Calico，并保留真实 `Starting gVisor` 证据。
 - 完成 Pod 安全基线、PSA restricted、只读 RBAC、NetworkPolicy 正反路径及学习文档。
 - 完成 Manager、filtered informer/lister、WebSocket/SPDY Exec、本地鉴权 HTTP API及超时清理。
-- 实现 typed rate-limiting workqueue；所有 Pod 事件只入固定 key，单 worker幂等 Reconcile。
-- Reconcile 统计 provisioning + Ready idle，维持默认 target=2；终态清理和超额缩减基于 lister 当前状态。
-- Claim 使用 JSON Patch `test idle` + `replace busy` CAS；缓存冲突继续候选，池空 direct cold start。
-- direct Pod 从创建时即为 busy；Release 删除而不复用，让 Reconcile 补新。
-- fake client 双并发测试重复 20 轮通过；真实 kind 五并发得到五个唯一 ID，source 为 pool=2/direct=3。
-- Release 后 idle 恢复到 2；脚本结束后服务停止、managed Pod=0、swap=0。
-- 完成 `docs/06-Informer与控制器模式.md`、`docs/07-预热池与CAS.md` 和阶段 4 证据记录。
-- `docs/11-开发踩坑与排障.md` 持续维护；新增 informer lazy init、CAS 错误包装等面试素材在对应模块文档中。
+- 实现 typed rate-limiting workqueue；所有 Pod 事件只入固定 key，单 worker 幂等 Reconcile。
+- Reconcile 维持默认 pool target=2；Claim 使用 JSON Patch CAS，池空 direct cold start，Release 删除补新。
+- fake client 并发测试重复 20 轮通过；真实 kind 五并发得到五个唯一 ID，source 为 pool=2/direct=3。
+- 增加 Prometheus acquire、pool size、claim conflict、exec、timeout、plan denied 和 runtime 指标，暴露 `/metrics`。
+- 真实五并发观察到 6 次 CAS 冲突；Gauge 最终收敛到 idle=2/busy=0。
+- 真实 Exec 流程得到 direct acquire=2、exec=3、timeout=1；超时 Pod 正确删除。
+- 指标验收后服务停止、managed Pod=0、可用内存约 5.6 GiB、swap=0。
+- 完成 `docs/09-指标与性能测试.md` 和阶段 5 证据；踩坑总表新增最终一致 Gauge、非确定冲突数和 Go 依赖图条目。
 
 ## 正在进行
 
-- 添加 acquire、pool size、claim conflict、exec、plan denied 等最小指标。
-- 暴露 `/metrics` 并在真实五并发流程中读取。
 - 设计仅支持 Deployment scale 的内存 Plan Store。
+- 拆分 Agent Token 与 Operator Token 权限。
+- 定义 namespace denylist、replicas 0–10、UID/resourceVersion 防 TOCTOU 规则。
 
 ## 紧接着做
 
-1. 指标包保持简单全局 Collector，不引入 tracing 或复杂 registry。
-2. 在 Manager、Pool、Exec 埋最少观测点，指标 label 保持低基数。
-3. Agent Token 只能 propose；Operator Token 才能 approve/reject。
-4. Propose 做 server-side dry-run，replicas 只允许 0–10，拒绝系统 namespace。
-5. Plan 保存 target UID/resourceVersion，Approve 前重新校验防 TOCTOU。
-6. 完成指标、审批门、双 Token 的真实验证和学习文档。
+1. Agent Token 只能 propose/list；Operator Token 才能 approve/reject。
+2. Propose 获取 Deployment 后执行 server-side dry-run，replicas 只允许 0–10，拒绝系统 namespace。
+3. Plan 保存 target UID/resourceVersion、before/after 和状态，暂存内存，不引入数据库。
+4. Approve 前重新读取并校验对象，审核后目标变化则拒绝执行。
+5. 用专用低资源 Deployment 完成 propose、越权拒绝、Operator 执行和 TOCTOU 拒绝实测。
+6. 编写 `08-DryRun与审批门.md`，继续把真实坑加入 `11-开发踩坑与排障.md`。
 
 ## 资源与安全约束
 
@@ -46,6 +46,5 @@
 
 ## 尚未开始
 
-- Prometheus 指标具体实现。
-- DryRun Plan、Operator 审批门和相关 API。
+- DryRun Plan、Operator 审批门和双 Token 真实验证。
 - 一键最终 Demo、README 最终实测数据和最终面试问答手册。

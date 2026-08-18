@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/chx739/sandboxd/internal/metrics"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -48,6 +49,7 @@ func (m *Manager) CreateIdle(ctx context.Context) (*Sandbox, error) {
 }
 
 func (m *Manager) create(ctx context.Context, state State, source string) (*Sandbox, error) {
+	started := time.Now()
 	id, err := randomID()
 	if err != nil {
 		return nil, fmt.Errorf("生成沙箱 ID: %w", err)
@@ -71,6 +73,9 @@ func (m *Manager) create(ctx context.Context, state State, source string) (*Sand
 		return nil, fmt.Errorf("等待 Pod %s Ready: %w", created.Name, err)
 	}
 
+	if source == "direct" {
+		metrics.AcquireDuration.WithLabelValues(source).Observe(time.Since(started).Seconds())
+	}
 	return &Sandbox{
 		ID:        id,
 		PodName:   created.Name,

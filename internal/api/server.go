@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/chx739/sandboxd/internal/sandbox"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 const maxRequestBodyBytes = 16 << 10
@@ -46,6 +47,7 @@ func (s *Server) Handler() http.Handler {
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", textOK)
 	s.mux.HandleFunc("GET /readyz", textOK)
+	s.mux.Handle("GET /metrics", promhttp.Handler())
 	s.mux.Handle("POST /api/v1/sandboxes", s.authenticate(http.HandlerFunc(s.createSandbox)))
 	s.mux.Handle("GET /api/v1/sandboxes", s.authenticate(http.HandlerFunc(s.listSandboxes)))
 	s.mux.Handle("DELETE /api/v1/sandboxes/{id}", s.authenticate(http.HandlerFunc(s.deleteSandbox)))

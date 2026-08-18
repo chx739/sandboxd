@@ -12,6 +12,7 @@ import (
 
 	"github.com/chx739/sandboxd/internal/api"
 	"github.com/chx739/sandboxd/internal/config"
+	"github.com/chx739/sandboxd/internal/metrics"
 	"github.com/chx739/sandboxd/internal/sandbox"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -37,6 +38,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("创建 Kubernetes client: %v", err)
 	}
+
+	runtimeName := cfg.RuntimeClass
+	if runtimeName == "" {
+		runtimeName = "runc"
+	}
+	metrics.RuntimeInfo.WithLabelValues(runtimeName).Set(1)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

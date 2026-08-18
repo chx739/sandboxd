@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/chx739/sandboxd/internal/metrics"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/httpstream"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -31,6 +32,9 @@ func (m *Manager) Exec(
 	if m.restConfig == nil {
 		return -1, errors.New("rest.Config 不能为空")
 	}
+
+	started := time.Now()
+	defer func() { metrics.ExecDuration.Observe(time.Since(started).Seconds()) }()
 
 	request := m.client.CoreV1().RESTClient().Post().
 		Resource("pods").
@@ -87,6 +91,7 @@ func (m *Manager) Exec(
 	}
 
 	if ctx.Err() != nil {
+		metrics.ExecTimeouts.Inc()
 		// 超时后进程状态不可信，整个沙箱直接销毁，不放回池中复用。
 		cleanupCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()

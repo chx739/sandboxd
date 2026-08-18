@@ -6,6 +6,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cache_dir="${repo_root}/.cache"
 binary="${cache_dir}/sandboxd"
 server_log="${cache_dir}/sandboxd.log"
+metrics_file="${cache_dir}/sandboxd-manager.metrics"
 base_url="http://127.0.0.1:8080"
 demo_token="$(tr -d '-' </proc/sys/kernel/random/uuid)"
 server_pid=""
@@ -114,9 +115,16 @@ if [[ -n "$(kubectl get pods --namespace sandboxd-demo \
   exit 1
 fi
 
+curl --fail --silent "${base_url}/metrics" >"${metrics_file}"
+grep -q '^sandbox_runtime_info{runtime="gvisor"} 1$' "${metrics_file}"
+grep -q '^sandbox_exec_seconds_count 3$' "${metrics_file}"
+grep -q '^sandbox_exec_timeouts_total 1$' "${metrics_file}"
+grep -q '^sandbox_acquire_seconds_count{source="direct"} 2$' "${metrics_file}"
+
 echo "HTTP auth: unauthorized -> 401"
 echo "Create + informer Ready: -> 201"
 echo "Exec success: exitCode=0，stdout/stderr 已分离"
 echo "Exec failure: exitCode=7，未错误 fallback"
 echo "Exec timeout: -> 504，Pod 已删除"
 echo "Delete: -> 204，managed Pod=0"
+echo "Metrics: direct acquire=2, exec=3, timeout=1"

@@ -6,6 +6,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cache_dir="${repo_root}/.cache"
 binary="${cache_dir}/sandboxd"
 server_log="${cache_dir}/sandboxd-pool.log"
+metrics_file="${cache_dir}/sandboxd-pool.metrics"
 base_url="http://127.0.0.1:8080"
 namespace="sandboxd-demo"
 demo_token="$(tr -d '-' </proc/sys/kernel/random/uuid)"
@@ -122,9 +123,20 @@ final_idle_count="$(kubectl get pods --namespace "${namespace}" \
   --selector "${idle_selector}" --no-headers | wc -l)"
 [[ "${final_idle_count}" == "2" ]]
 
+# Gauge 来自控制器最近一次 Reconcile，先等待状态收敛，再读取指标。
+curl --fail --silent "${base_url}/metrics" >"${metrics_file}"
+grep -q '^sandbox_runtime_info{runtime="gvisor"} 1$' "${metrics_file}"
+grep -q '^sandbox_pool_size{state="idle"} 2$' "${metrics_file}"
+grep -q '^sandbox_pool_size{state="busy"} 0$' "${metrics_file}"
+grep -Eq '^sandbox_acquire_seconds_count\{source="pool"\} [1-9][0-9]*$' "${metrics_file}"
+grep -Eq '^sandbox_acquire_seconds_count\{source="direct"\} [1-9][0-9]*$' "${metrics_file}"
+grep -q '^sandbox_claim_conflicts_total ' "${metrics_file}"
+
 pool_sources="$(grep -h -c '"source":"pool"' "${cache_dir}"/pool-claim-*.json | awk '{sum += $1} END {print sum}')"
 direct_sources=$((5 - pool_sources))
+claim_conflicts="$(awk '$1 == "sandbox_claim_conflicts_total" {print $2}' "${metrics_file}")"
 echo "Pool target: 2 Ready idle"
 echo "Concurrent Claim: 5 requests, 5 unique IDs"
 echo "Claim source: pool=${pool_sources}, direct=${direct_sources}"
 echo "Release + reconcile: idle restored to 2"
+echo "Metrics: runtime=gvisor, idle=2, busy=0, claim_conflicts=${claim_conflicts}"
