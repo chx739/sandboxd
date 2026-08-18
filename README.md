@@ -14,13 +14,37 @@
 
 ## 当前状态
 
-项目处于环境和工程骨架阶段。实现以 [执行计划](docs/00-实现计划.md) 为准。
+阶段 0 的 WSL2 + kind + gVisor + Calico 环境闭环已经实测通过：
 
-## 学习资料
+- Go 1.26.5、kind 0.31.0、Kubernetes 1.35.0；
+- gVisor `release-20260810.0`，默认 systrap；
+- kind 单 control-plane 节点，containerd 2.2.0；
+- Calico 3.32.0；
+- 临时 Pod 内实测出现 `[0.000000] Starting gVisor...`。
 
-学习文档会和对应模块一起实现，入口见 [docs/README.md](docs/README.md)。每篇文档都包含代码导读、核心原理、八股知识、常见追问和验证命令。
+详细命令输出见 [阶段 0 验证记录](docs/evidence/phase0-gvisor.md)。当前开发位置见 [持续进度](docs/PROGRESS.md)。
+
+## 环境快速复现
+
+以下脚本默认只写用户目录和本仓库缓存，不需要 sudo：
+
+```bash
+export PATH="${HOME}/.local/bin:${PATH}"
+./hack/install-tools.sh
+./hack/create-cluster.sh
+./hack/install-calico.sh
+./hack/verify-gvisor.sh
+```
+
+每次重操作前，脚本都会检查可用内存、swap、磁盘和现有容器。`verify-gvisor.sh` 只创建一个限制为 100m CPU、32 MiB 内存的临时 Pod，验证后自动删除。
+
+## 文档入口
+
+- [持续开发目标与安全边界](GOAL.md)
+- [最小实现计划](docs/00-实现计划.md)
+- [学习文档索引](docs/README.md)
+- [gVisor 与容器隔离](docs/01-gVisor与容器隔离.md)
 
 ## 项目边界
 
-这是单机、单进程、单租户的教学与面试 Demo，不具备生产环境要求的多租户隔离、高可用、持久化审计、凭证轮转和完整限流能力。
-
+这是单机、单进程、单租户的教学与面试 Demo，不具备生产环境要求的多租户隔离、高可用、持久化审计、凭证轮转和完整限流能力。gVisor 是纵深防御的一层，不是“绝对安全”的承诺。

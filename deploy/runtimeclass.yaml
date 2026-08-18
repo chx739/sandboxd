@@ -1,0 +1,6 @@
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: gvisor
+# handler 必须和 kind 节点 containerd 中注册的 runtimes.runsc 一致。
+handler: runsc

@@ -5,10 +5,10 @@
 | 顺序 | 文档 | 对应实现 | 状态 |
 |---:|---|---|---|
 | 0 | [实现计划](00-实现计划.md) | 全项目 | 已完成 |
-| 1 | `01-gVisor与容器隔离.md` | WSL、runsc、RuntimeClass | 待实现 |
-| 2 | `02-Pod安全基线.md` | `internal/sandbox/spec.go` | 待实现 |
+| 1 | [gVisor 与容器隔离](01-gVisor与容器隔离.md) | WSL、runsc、RuntimeClass | 已完成并实测 |
+| 2 | `02-Pod安全基线.md` | `internal/sandbox/spec.go` | 进行中 |
 | 3 | `03-ServiceAccount与RBAC.md` | `deploy/rbac.yaml` | 待实现 |
-| 4 | `04-NetworkPolicy与CNI.md` | kind、Calico、NetworkPolicy | 待实现 |
+| 4 | `04-NetworkPolicy与CNI.md` | Calico、NetworkPolicy | Calico 已部署，策略待实现 |
 | 5 | `05-client-go与Exec.md` | Manager、remotecommand | 待实现 |
 | 6 | `06-Informer与控制器模式.md` | informer、lister、workqueue | 待实现 |
 | 7 | `07-预热池与CAS.md` | Pool、JSON Patch | 待实现 |
@@ -30,4 +30,3 @@
 10. 一分钟项目讲法。
 
 学习要求不是背答案，而是能从实际代码和命令输出解释每一个结论。
-

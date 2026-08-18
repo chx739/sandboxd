@@ -1,0 +1,29 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: sandboxd
+
+# Calico 需要接管 CNI；kindnetd 和 Calico 不能同时作为默认 Pod 网络。
+networking:
+  disableDefaultCNI: true
+  apiServerAddress: 127.0.0.1
+
+containerdConfigPatches:
+  - |-
+    # RuntimeClass 的 handler=runsc 最终会查找这个 containerd runtime。
+    [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
+      runtime_type = "io.containerd.runsc.v1"
+
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    extraMounts:
+      # 新版 runsc 会从相邻的 gvisor-bin 目录启动 Sentry 等 sidecar。
+      - hostPath: "@GVISOR_DIR@/runsc"
+        containerPath: /usr/local/bin/runsc
+        readOnly: true
+      - hostPath: "@GVISOR_DIR@/containerd-shim-runsc-v1"
+        containerPath: /usr/local/bin/containerd-shim-runsc-v1
+        readOnly: true
+      - hostPath: "@GVISOR_DIR@/gvisor-bin"
+        containerPath: /usr/local/bin/gvisor-bin
+        readOnly: true
