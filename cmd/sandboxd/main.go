@@ -62,8 +62,19 @@ func main() {
 		Image:        cfg.Image,
 		RuntimeClass: cfg.RuntimeClass,
 	}, podInformer.Lister())
-	apiServer := api.NewServer(manager, cfg.Token, cfg.CreateTimeout, cfg.ExecTimeout)
+	pool, err := sandbox.NewPool(
+		client,
+		podInformer.Lister(),
+		sharedPodInformer,
+		manager,
+		cfg.PoolSize,
+	)
+	if err != nil {
+		log.Fatalf("创建预热池: %v", err)
+	}
+	go pool.Run(ctx)
 
+	apiServer := api.NewServer(manager, pool, cfg.Token, cfg.CreateTimeout, cfg.ExecTimeout)
 	httpServer := &http.Server{
 		Addr:              cfg.Listen,
 		Handler:           apiServer.Handler(),

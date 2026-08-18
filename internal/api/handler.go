@@ -27,7 +27,7 @@ func (s *Server) createSandbox(response http.ResponseWriter, request *http.Reque
 	ctx, cancel := context.WithTimeout(request.Context(), s.createTimeout)
 	defer cancel()
 
-	created, err := s.manager.Create(ctx)
+	created, err := s.pool.Claim(ctx)
 	if err != nil {
 		writeJSON(response, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
@@ -50,7 +50,7 @@ func (s *Server) deleteSandbox(response http.ResponseWriter, request *http.Reque
 		writeJSON(response, http.StatusBadRequest, map[string]string{"error": "invalid sandbox id"})
 		return
 	}
-	if err := s.manager.Delete(request.Context(), id); err != nil {
+	if err := s.pool.Release(request.Context(), id); err != nil {
 		writeJSON(response, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}

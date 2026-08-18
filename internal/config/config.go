@@ -18,6 +18,7 @@ type Config struct {
 	Token         string
 	CreateTimeout time.Duration
 	ExecTimeout   time.Duration
+	PoolSize      int
 }
 
 func Parse(args []string) (Config, error) {
@@ -31,6 +32,7 @@ func Parse(args []string) (Config, error) {
 	flags.StringVar(&cfg.Kubeconfig, "kubeconfig", clientcmd.RecommendedHomeFile, "kubeconfig 路径")
 	flags.DurationVar(&cfg.CreateTimeout, "create-timeout", 3*time.Minute, "创建沙箱超时")
 	flags.DurationVar(&cfg.ExecTimeout, "exec-timeout", 30*time.Second, "单次命令最长执行时间")
+	flags.IntVar(&cfg.PoolSize, "pool-size", 2, "预热池 idle Pod 数量")
 
 	if err := flags.Parse(args); err != nil {
 		return Config{}, err
@@ -46,6 +48,9 @@ func Parse(args []string) (Config, error) {
 	}
 	if cfg.CreateTimeout <= 0 || cfg.ExecTimeout <= 0 {
 		return Config{}, errors.New("timeout 必须大于 0")
+	}
+	if cfg.PoolSize < 0 {
+		return Config{}, errors.New("pool-size 不能小于 0")
 	}
 	return cfg, nil
 }

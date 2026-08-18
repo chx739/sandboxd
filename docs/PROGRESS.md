@@ -4,37 +4,37 @@
 
 ## 当前阶段
 
-阶段 4：实现单 worker 预热池、Workqueue reconcile 和 JSON Patch CAS 并发认领。
+阶段 5：增加最小 Prometheus 指标，再实现 Deployment scale DryRun 与 Operator 审批门。
 
 ## 已完成
 
 - 建立 GitHub 仓库、目标锚点和跨上下文续作协议。
-- 完成 WSL2 用户目录工具链、Kubernetes 1.35.0 单节点 kind、gVisor release-20260810.0 和 Calico 3.32.0。
-- 真实 gVisor、PSA restricted、只读 RBAC、NetworkPolicy 允许/拒绝路径均有实测证据。
-- 实现 PodSpec Builder，安全基线测试、projected token/卷测试、vet 和 build 通过。
-- 引入 client-go 0.35.0，与 api/apimachinery 0.35.0 保持 minor 一致。
-- 实现 Manager：direct Pod 从创建时即为 busy，等待 Ready 只读 filtered informer/lister 缓存，删除使用 foreground propagation。
-- 实现 Exec：WebSocket 优先，仅协议升级/代理错误 fallback SPDY；保留 exit code；超时使用独立 10 秒 context 删除 Pod。
-- 实现基础 API：loopback 默认监听、Token 必填、常量时间鉴权、ID 校验、请求体/输出上限、create/list/delete/exec/health/ready。
-- 一键真实验收通过：401、201、exit 0 stdout/stderr、exit 7、504 自动删除、204 显式删除，结束后 managed Pod=0。
-- 发现并修复 informer lazy initialization 顺序问题，记录到 `docs/05-client-go与Exec.md`。
-- 新增 `docs/11-开发踩坑与排障.md`，以现象/根因/解决证据/面试讲法持续记录真实坑。
+- 完成 WSL2 + 单节点 kind + gVisor + Calico，并保留真实 `Starting gVisor` 证据。
+- 完成 Pod 安全基线、PSA restricted、只读 RBAC、NetworkPolicy 正反路径及学习文档。
+- 完成 Manager、filtered informer/lister、WebSocket/SPDY Exec、本地鉴权 HTTP API及超时清理。
+- 实现 typed rate-limiting workqueue；所有 Pod 事件只入固定 key，单 worker幂等 Reconcile。
+- Reconcile 统计 provisioning + Ready idle，维持默认 target=2；终态清理和超额缩减基于 lister 当前状态。
+- Claim 使用 JSON Patch `test idle` + `replace busy` CAS；缓存冲突继续候选，池空 direct cold start。
+- direct Pod 从创建时即为 busy；Release 删除而不复用，让 Reconcile 补新。
+- fake client 双并发测试重复 20 轮通过；真实 kind 五并发得到五个唯一 ID，source 为 pool=2/direct=3。
+- Release 后 idle 恢复到 2；脚本结束后服务停止、managed Pod=0、swap=0。
+- 完成 `docs/06-Informer与控制器模式.md`、`docs/07-预热池与CAS.md` 和阶段 4 证据记录。
+- `docs/11-开发踩坑与排障.md` 持续维护；新增 informer lazy init、CAS 错误包装等面试素材在对应模块文档中。
 
 ## 正在进行
 
-- 建立只有固定 key 的 workqueue 和单 reconcile worker。
-- 统计 provisioning idle + Ready idle，维持目标池大小 2。
-- 用 JSON Patch `test` + `replace` 实现原子认领。
+- 添加 acquire、pool size、claim conflict、exec、plan denied 等最小指标。
+- 暴露 `/metrics` 并在真实五并发流程中读取。
+- 设计仅支持 Deployment scale 的内存 Plan Store。
 
 ## 紧接着做
 
-1. Pool 复用 main 中同一个 informer，不重复 List/Watch。
-2. event handler 只入队 `pool` 固定 key，业务逻辑全部放 reconcile。
-3. reconcile 清理终态 Pod，按当前缓存状态补充或缩减 idle。
-4. Claim 随机候选并做 CAS；池空时调用 Manager.Create direct fallback。
-5. Release 直接删除，不复用可能被命令污染的 Pod。
-6. 默认并发 5 验证无重复 ID，记录 claim conflict 和资源变化。
-7. 完成 `docs/06-Informer与控制器模式.md`、`docs/07-预热池与CAS.md` 后提交推送。
+1. 指标包保持简单全局 Collector，不引入 tracing 或复杂 registry。
+2. 在 Manager、Pool、Exec 埋最少观测点，指标 label 保持低基数。
+3. Agent Token 只能 propose；Operator Token 才能 approve/reject。
+4. Propose 做 server-side dry-run，replicas 只允许 0–10，拒绝系统 namespace。
+5. Plan 保存 target UID/resourceVersion，Approve 前重新校验防 TOCTOU。
+6. 完成指标、审批门、双 Token 的真实验证和学习文档。
 
 ## 资源与安全约束
 
@@ -46,7 +46,6 @@
 
 ## 尚未开始
 
-- Workqueue/Pool/CAS 的具体实现。
-- Prometheus 指标、DryRun 计划和 Operator 审批门。
-- 一键最终 Demo、最小并发验证、README 最终实测数据。
-- 后续模块学习文档及最终面试问答手册。
+- Prometheus 指标具体实现。
+- DryRun Plan、Operator 审批门和相关 API。
+- 一键最终 Demo、README 最终实测数据和最终面试问答手册。

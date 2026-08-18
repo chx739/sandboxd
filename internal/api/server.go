@@ -13,6 +13,7 @@ const maxRequestBodyBytes = 16 << 10
 
 type Server struct {
 	manager       *sandbox.Manager
+	pool          *sandbox.Pool
 	token         string
 	createTimeout time.Duration
 	execTimeout   time.Duration
@@ -21,12 +22,14 @@ type Server struct {
 
 func NewServer(
 	manager *sandbox.Manager,
+	pool *sandbox.Pool,
 	token string,
 	createTimeout time.Duration,
 	execTimeout time.Duration,
 ) *Server {
 	server := &Server{
 		manager:       manager,
+		pool:          pool,
 		token:         token,
 		createTimeout: createTimeout,
 		execTimeout:   execTimeout,

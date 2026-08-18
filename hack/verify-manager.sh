@@ -31,6 +31,7 @@ mkdir -p "${cache_dir}"
 go build -o "${binary}" ./cmd/sandboxd
 SANDBOXD_TOKEN="${demo_token}" "${binary}" \
   --image curlimages/curl:8.12.1 \
+  --pool-size 0 \
   --create-timeout 180s \
   --exec-timeout 3s >"${server_log}" 2>&1 &
 server_pid="$!"
