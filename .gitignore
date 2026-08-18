@@ -1,0 +1,27 @@
+# 编译输出
+/bin/
+/dist/
+*.test
+*.out
+coverage.*
+
+# 本地工具和缓存
+/.tools/
+/.cache/
+
+# 本地配置和敏感信息
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.kubeconfig
+kubeconfig
+
+# 编辑器与系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
