@@ -12,7 +12,7 @@
 | 5 | [client-go 与 Exec](05-client-go与Exec.md) | Manager、remotecommand、基础 API | 已完成并实测 |
 | 6 | [Informer 与控制器模式](06-Informer与控制器模式.md) | informer、lister、workqueue | 已完成并实测 |
 | 7 | [预热池与 CAS](07-预热池与CAS.md) | Pool、JSON Patch | 已完成并发实测 |
-| 8 | `08-DryRun与审批门.md` | Gate、双 Token | 待实现 |
+| 8 | [DryRun 与 Operator 审批门](08-DryRun与审批门.md) | Plan Store、双 Token、TOCTOU | 已完成并实测 |
 | 9 | [Prometheus 指标与轻量性能验证](09-指标与性能测试.md) | metrics、真实低并发验收 | 已完成并实测 |
 | 10 | `10-面试问答与项目讲法.md` | Demo、README | 待实现 |
 | 11 | [开发踩坑与排障](11-开发踩坑与排障.md) | 全项目真实问题 | 持续维护 |

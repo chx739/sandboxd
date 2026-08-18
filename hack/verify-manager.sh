@@ -9,6 +9,7 @@ server_log="${cache_dir}/sandboxd.log"
 metrics_file="${cache_dir}/sandboxd-manager.metrics"
 base_url="http://127.0.0.1:8080"
 demo_token="$(tr -d '-' </proc/sys/kernel/random/uuid)"
+operator_token="$(tr -d '-' </proc/sys/kernel/random/uuid)"
 server_pid=""
 created_ids=()
 
@@ -30,7 +31,7 @@ trap cleanup EXIT
 mkdir -p "${cache_dir}"
 
 go build -o "${binary}" ./cmd/sandboxd
-SANDBOXD_TOKEN="${demo_token}" "${binary}" \
+SANDBOXD_TOKEN="${demo_token}" SANDBOXD_OPERATOR_TOKEN="${operator_token}" "${binary}" \
   --image curlimages/curl:8.12.1 \
   --pool-size 0 \
   --create-timeout 180s \

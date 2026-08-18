@@ -10,6 +10,7 @@ metrics_file="${cache_dir}/sandboxd-pool.metrics"
 base_url="http://127.0.0.1:8080"
 namespace="sandboxd-demo"
 demo_token="$(tr -d '-' </proc/sys/kernel/random/uuid)"
+operator_token="$(tr -d '-' </proc/sys/kernel/random/uuid)"
 server_pid=""
 claim_ids=()
 
@@ -37,7 +38,7 @@ if [[ -n "$(kubectl get pods --namespace "${namespace}" \
 fi
 
 go build -o "${binary}" ./cmd/sandboxd
-SANDBOXD_TOKEN="${demo_token}" "${binary}" \
+SANDBOXD_TOKEN="${demo_token}" SANDBOXD_OPERATOR_TOKEN="${operator_token}" "${binary}" \
   --image curlimages/curl:8.12.1 \
   --pool-size 2 \
   --create-timeout 180s \

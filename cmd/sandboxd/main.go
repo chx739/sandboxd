@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/chx739/sandboxd/internal/api"
+	"github.com/chx739/sandboxd/internal/approval"
 	"github.com/chx739/sandboxd/internal/config"
 	"github.com/chx739/sandboxd/internal/metrics"
 	"github.com/chx739/sandboxd/internal/sandbox"
@@ -81,7 +82,16 @@ func main() {
 	}
 	go pool.Run(ctx)
 
-	apiServer := api.NewServer(manager, pool, cfg.Token, cfg.CreateTimeout, cfg.ExecTimeout)
+	plans := approval.NewService(client)
+	apiServer := api.NewServer(
+		manager,
+		pool,
+		plans,
+		cfg.AgentToken,
+		cfg.OperatorToken,
+		cfg.CreateTimeout,
+		cfg.ExecTimeout,
+	)
 	httpServer := &http.Server{
 		Addr:              cfg.Listen,
 		Handler:           apiServer.Handler(),

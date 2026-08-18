@@ -9,7 +9,7 @@
 - client-go remotecommand、informer、lister 和 workqueue；
 - 预热池与 JSON Patch CAS 并发认领；
 - Prometheus 低基数指标与可观测性；
-- server-side dry-run 与受控写操作。
+- server-side dry-run、双 Token 与受控写操作。
 
 ## 当前状态
 
@@ -19,7 +19,8 @@
 - 安全：Pod restricted 基线、PSA、只读 RBAC、secrets/写入/exec 拒绝、DNS/API 之外默认拒绝网络；
 - 生命周期：Create/List/Delete、informer/lister 等待 Ready、WebSocket/SPDY Exec、超时销毁、本地鉴权 API；
 - 并发：typed workqueue 单 worker、目标为 2 的预热池、JSON Patch CAS、direct fallback、Release 后删除补新；
-- 可观测：acquire、pool size、CAS conflict、Exec duration/timeout、runtime 和审批拒绝指标。
+- 可观测：acquire、pool size、CAS conflict、Exec duration/timeout、runtime 和审批拒绝指标；
+- 审批：Deployment scale DryRun、Agent/Operator 分权、UID/resourceVersion 防 TOCTOU、批准/拒绝状态机。
 
 关键实测结果：
 
@@ -36,7 +37,9 @@ Concurrent Claim: 5 requests, 5 unique IDs
 Claim source: pool=2, direct=3
 Release + reconcile: idle restored to 2
 Metrics: runtime=gvisor, idle=2, busy=0, claim_conflicts=6
-Metrics: direct acquire=2, exec=3, timeout=1
+DryRun: replicas remained 0 before approval
+Role split: Agent approve -> 401, Operator approve -> 200
+TOCTOU: resourceVersion changed -> 409, Plan stale
 ```
 
 证据记录位于 [docs/evidence](docs/evidence)，当前开发位置见 [持续进度](docs/PROGRESS.md)。
@@ -54,9 +57,22 @@ export PATH="${HOME}/.local/bin:${PATH}"
 ./hack/verify-security.sh
 ./hack/verify-manager.sh
 ./hack/verify-pool.sh
+./hack/verify-approval.sh
 ```
 
 脚本在重操作前检查内存、swap、磁盘和容器。验证脚本使用低副本、小并发，并在退出时精确清理。
+
+## 启动 API
+
+Agent 与 Operator Token 必须设置且不能相同；服务默认只监听 `127.0.0.1:8080`：
+
+```bash
+export SANDBOXD_TOKEN='replace-with-agent-token'
+export SANDBOXD_OPERATOR_TOKEN='replace-with-different-operator-token'
+go run ./cmd/sandboxd
+```
+
+Token 只从环境变量读取，不提供命令行 flag，避免进入进程参数。教学 Demo 未实现 Secret 管理和轮转，请勿把示例值用于真实环境。
 
 ## 编译与测试
 
@@ -65,7 +81,7 @@ make build
 make test
 ```
 
-测试保持少而有价值：优先锁住安全基线和并发不变量，不追求覆盖率数字。
+测试保持少而有价值：优先锁住安全基线、并发认领、DryRun 不落地和 TOCTOU 拒绝，不追求覆盖率数字。
 
 ## 文档入口
 

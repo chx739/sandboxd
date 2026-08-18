@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sandboxd-target
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: approval-demo
+  namespace: sandboxd-target
+spec:
+  # 初始不创建 Pod；只有 Operator 批准 Plan 后才会扩到 1。
+  replicas: 0
+  selector:
+    matchLabels:
+      app: approval-demo
+  template:
+    metadata:
+      labels:
+        app: approval-demo
+    spec:
+      runtimeClassName: gvisor
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.10.1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

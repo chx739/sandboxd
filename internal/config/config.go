@@ -15,7 +15,8 @@ type Config struct {
 	Image         string
 	RuntimeClass  string
 	Kubeconfig    string
-	Token         string
+	AgentToken    string
+	OperatorToken string
 	CreateTimeout time.Duration
 	ExecTimeout   time.Duration
 	PoolSize      int
@@ -39,9 +40,16 @@ func Parse(args []string) (Config, error) {
 	}
 
 	// Token 只从环境变量读取，避免出现在 shell history 和进程参数中。
-	cfg.Token = os.Getenv("SANDBOXD_TOKEN")
-	if cfg.Token == "" {
-		return Config{}, errors.New("SANDBOXD_TOKEN 不能为空；服务不允许无鉴权启动")
+	cfg.AgentToken = os.Getenv("SANDBOXD_TOKEN")
+	cfg.OperatorToken = os.Getenv("SANDBOXD_OPERATOR_TOKEN")
+	if cfg.AgentToken == "" {
+		return Config{}, errors.New("SANDBOXD_TOKEN 不能为空；服务不允许无 Agent 鉴权启动")
+	}
+	if cfg.OperatorToken == "" {
+		return Config{}, errors.New("SANDBOXD_OPERATOR_TOKEN 不能为空；审批接口不允许无 Operator 鉴权启动")
+	}
+	if cfg.AgentToken == cfg.OperatorToken {
+		return Config{}, errors.New("Agent Token 与 Operator Token 必须不同")
 	}
 	if cfg.Namespace == "" || cfg.Image == "" {
 		return Config{}, errors.New("namespace 和 image 不能为空")
