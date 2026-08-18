@@ -4,36 +4,36 @@
 
 ## 当前阶段
 
-阶段 1：建立 Go 工程骨架和 PodSpec Builder，落实沙箱 Pod 的最小安全基线。
+阶段 2：实现 ServiceAccount/RBAC、Pod Security Admission 和 Calico NetworkPolicy，形成最小权限闭环。
 
 ## 已完成
 
 - 创建公开 GitHub 仓库：`https://github.com/chx739/sandboxd`，当前开发分支为 `agent/environment-gvisor`。
 - 固化 `GOAL.md`、`AGENTS.md` 和本进度文件，建立跨上下文续作协议。
-- 确认环境为 WSL2 Ubuntu 24.04、systemd、cgroup v2、Docker Engine 和 containerd 可用。
-- 确认宿主资源适合低资源 Demo：16 CPU、约 7.7 GiB 内存、2 GiB swap；采用单节点和小并发策略。
-- 安装并验证 Go 1.26.5、kind 0.31.0、gVisor release-20260810.0；工具位于用户目录，不修改系统级运行时。
-- 完成可重复的 `hack/install-tools.sh` 和只读资源门 `hack/check-resources.sh`。
-- 创建固定 Kubernetes 1.35.0 的单节点 kind 集群，节点 containerd 2.2.0 已注册 `io.containerd.runsc.v1`。
-- 完整挂载新版 gVisor 的 `runsc`、containerd shim 和 `gvisor-bin/`。
-- 安装 Calico 3.32.0，节点、calico-node 和 calico-kube-controllers 均 Ready。
+- 完成 WSL2 用户目录工具链：Go 1.26.5、kind 0.31.0、gVisor release-20260810.0。
+- 创建 Kubernetes 1.35.0 单节点 kind，containerd 2.2.0 注册 `io.containerd.runsc.v1`，完整挂载新版 gVisor 包。
+- 安装 Calico 3.32.0；节点和 CNI 组件 Ready。
 - 真实运行 gVisor smoke Pod：`RuntimeClass=gvisor`，Pod 内 `dmesg` 出现 `[0.000000] Starting gVisor...`。
-- 完成 `docs/01-gVisor与容器隔离.md` 和 `docs/evidence/phase0-gvisor.md`。
+- 完成阶段 0 可复现脚本、资源安全门、学习文档和验证记录，提交 `3e8cb23` 已推送。
+- 初始化 Go module `github.com/chx739/sandboxd`，依赖限定为 Kubernetes API 库。
+- 实现 `internal/sandbox/BuildPod`，集中设置 gVisor、非 root、seccomp、只读根、资源上限、deadline、有界 emptyDir 和受控 projected token。
+- 安全基线测试、projected token/卷测试、`go vet` 和 `go build` 均通过。
+- 完成 `docs/02-Pod安全基线.md`。
 
 ## 正在进行
 
-- 初始化 Go module 和最小目录结构。
-- 实现只负责构造安全 Pod 的 PodSpec Builder。
-- 为安全基线保留少量高价值单元测试。
+- 为 sandbox namespace 添加 Pod Security Admission `restricted` 标签。
+- 创建 `sandbox-reader` ServiceAccount、排除 secrets 的只读 RBAC。
+- 创建 Calico 可执行的默认拒绝、DNS 和 API Server 出站策略。
 
 ## 紧接着做
 
-1. 创建 `go.mod`、`cmd/sandboxd` 和 `internal/sandbox`。
-2. 实现 gVisor RuntimeClass、非 root、drop ALL、seccomp、禁止提权、只读根文件系统和资源限制。
-3. 为 `/tmp`、`/workspace` 使用带 `sizeLimit` 的 `emptyDir`。
-4. 默认禁止自动挂载 ServiceAccount token；随后加入受控 projected token 版本。
-5. 完成 `docs/02-Pod安全基线.md`，编译并运行最小测试。
-6. 进入 ServiceAccount/RBAC 和 NetworkPolicy 模块。
+1. 编写 namespace、ServiceAccount、ClusterRole/RoleBinding 清单。
+2. 用 `kubectl auth can-i` 验证读允许、写拒绝、secrets 拒绝。
+3. 编写默认拒绝和最小允许 NetworkPolicy。
+4. 用两个极小临时 Pod 验证 DNS/API 允许和普通外网拒绝。
+5. 完成 `docs/03-ServiceAccount与RBAC.md` 与 `docs/04-NetworkPolicy与CNI.md`。
+6. 更新实测证据、提交并推送，然后进入 Manager/Exec。
 
 ## 资源与安全约束
 
@@ -46,7 +46,6 @@
 
 ## 尚未开始
 
-- ServiceAccount/RBAC 和 NetworkPolicy 策略。
 - Manager、Exec、HTTP API。
 - Informer/Workqueue、预热池和 JSON Patch CAS。
 - Prometheus 指标、DryRun 计划和 Operator 审批门。

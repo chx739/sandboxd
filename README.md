@@ -22,7 +22,9 @@
 - Calico 3.32.0；
 - 临时 Pod 内实测出现 `[0.000000] Starting gVisor...`。
 
-详细命令输出见 [阶段 0 验证记录](docs/evidence/phase0-gvisor.md)。当前开发位置见 [持续进度](docs/PROGRESS.md)。
+阶段 1 的 PodSpec 安全基线也已完成：安全字段集中在 `BuildPod`，测试锁定非 root、禁止提权、只读根文件系统、drop ALL、seccomp、资源限制、有界 emptyDir 和受控 projected token。`go test`、`go vet`、`go build` 均已通过。
+
+详细环境输出见 [阶段 0 验证记录](docs/evidence/phase0-gvisor.md)。当前开发位置见 [持续进度](docs/PROGRESS.md)。
 
 ## 环境快速复现
 
@@ -38,12 +40,22 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 每次重操作前，脚本都会检查可用内存、swap、磁盘和现有容器。`verify-gvisor.sh` 只创建一个限制为 100m CPU、32 MiB 内存的临时 Pod，验证后自动删除。
 
+## 编译与测试
+
+```bash
+make build
+make test
+```
+
+测试保持少而有价值：优先锁住安全基线和后续并发不变量，不追求覆盖率数字。
+
 ## 文档入口
 
 - [持续开发目标与安全边界](GOAL.md)
 - [最小实现计划](docs/00-实现计划.md)
 - [学习文档索引](docs/README.md)
 - [gVisor 与容器隔离](docs/01-gVisor与容器隔离.md)
+- [Pod 安全基线](docs/02-Pod安全基线.md)
 
 ## 项目边界
 
