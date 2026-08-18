@@ -4,49 +4,47 @@
 
 ## 当前阶段
 
-阶段 2：实现 ServiceAccount/RBAC、Pod Security Admission 和 Calico NetworkPolicy，形成最小权限闭环。
+阶段 3：实现 client-go Manager、等待 Pod Ready、删除和 remotecommand Exec，再接最小 HTTP API。
 
 ## 已完成
 
-- 创建公开 GitHub 仓库：`https://github.com/chx739/sandboxd`，当前开发分支为 `agent/environment-gvisor`。
-- 固化 `GOAL.md`、`AGENTS.md` 和本进度文件，建立跨上下文续作协议。
-- 完成 WSL2 用户目录工具链：Go 1.26.5、kind 0.31.0、gVisor release-20260810.0。
-- 创建 Kubernetes 1.35.0 单节点 kind，containerd 2.2.0 注册 `io.containerd.runsc.v1`，完整挂载新版 gVisor 包。
-- 安装 Calico 3.32.0；节点和 CNI 组件 Ready。
-- 真实运行 gVisor smoke Pod：`RuntimeClass=gvisor`，Pod 内 `dmesg` 出现 `[0.000000] Starting gVisor...`。
-- 完成阶段 0 可复现脚本、资源安全门、学习文档和验证记录，提交 `3e8cb23` 已推送。
-- 初始化 Go module `github.com/chx739/sandboxd`，依赖限定为 Kubernetes API 库。
-- 实现 `internal/sandbox/BuildPod`，集中设置 gVisor、非 root、seccomp、只读根、资源上限、deadline、有界 emptyDir 和受控 projected token。
-- 安全基线测试、projected token/卷测试、`go vet` 和 `go build` 均通过。
-- 完成 `docs/02-Pod安全基线.md`。
+- 创建公开 GitHub 仓库并建立 `GOAL.md`、`AGENTS.md`、本进度文件的跨上下文续作协议。
+- 完成 WSL2 用户目录工具链、Kubernetes 1.35.0 单节点 kind、gVisor release-20260810.0 和 Calico 3.32.0。
+- 真实运行 gVisor smoke Pod，Pod 内 `dmesg` 出现 `[0.000000] Starting gVisor...`；阶段 0 提交 `3e8cb23` 已推送。
+- 实现 PodSpec Builder，集中设置非 root、seccomp、只读根、资源限制、有界 emptyDir 和受控 projected token；测试/vet/build 通过；提交 `462506b` 已推送。
+- namespace 启用 PSA restricted enforce/audit/warn；安全 Pod server dry-run 通过，故意不安全 Pod 被准入拒绝。
+- 创建 `sandbox-reader` ServiceAccount 和只读 ClusterRoleBinding；允许 get pods，拒绝 create pods、get secrets、create pods/exec。
+- Calico 策略默认拒绝 ingress/egress，只允许 CoreDNS 和动态 EndpointSlice 得到的 API Server endpoint。
+- 在真实 gVisor Pod 内使用 projected token 读取 Pod API 返回 HTTP 200，访问 example.com 连接超时并按预期拒绝。
+- 验收 Pod 限制为 100m CPU/64 MiB 并在脚本退出时删除；验证期间可用内存约 5.6 GiB，未使用 sudo。
+- 完成 `docs/03-ServiceAccount与RBAC.md`、`docs/04-NetworkPolicy与CNI.md` 和阶段 2 证据记录。
 
 ## 正在进行
 
-- 为 sandbox namespace 添加 Pod Security Admission `restricted` 标签。
-- 创建 `sandbox-reader` ServiceAccount、排除 secrets 的只读 RBAC。
-- 创建 Calico 可执行的默认拒绝、DNS 和 API Server 出站策略。
+- 引入 client-go 0.35.x，与 Kubernetes API 库保持 minor 一致。
+- 实现 Manager 的创建、缓存等待 Ready 和精确删除。
+- 实现 WebSocket executor 优先、SPDY fallback 的超时 Exec。
 
 ## 紧接着做
 
-1. 编写 namespace、ServiceAccount、ClusterRole/RoleBinding 清单。
-2. 用 `kubectl auth can-i` 验证读允许、写拒绝、secrets 拒绝。
-3. 编写默认拒绝和最小允许 NetworkPolicy。
-4. 用两个极小临时 Pod 验证 DNS/API 允许和普通外网拒绝。
-5. 完成 `docs/03-ServiceAccount与RBAC.md` 与 `docs/04-NetworkPolicy与CNI.md`。
-6. 更新实测证据、提交并推送，然后进入 Manager/Exec。
+1. 建立最小 kubeconfig/client 装配和 informer 工厂。
+2. Manager 统一调用 `BuildPod`，禁止在生命周期代码里修改安全 PodSpec。
+3. 等待 Ready 使用 informer/lister，而不是轮询 API Server。
+4. Exec 返回 stdout、stderr、exit code；超时使用新 cleanup context 删除 Pod。
+5. 实现基础 HTTP API 的 health、create/list/delete/exec，默认监听 127.0.0.1。
+6. 完成 `docs/05-client-go与Exec.md`，进行一个极小真实命令演示后提交。
 
 ## 资源与安全约束
 
-- kind：单 control-plane 节点；当前节点容器稳定后约占 1.1 GiB。
-- 预热池默认：2。
-- 并发验证默认：5；资源确认充足后上限 10。
+- kind：单 control-plane 节点；稳定后约占 1.1 GiB。
+- 预热池默认：2；并发验证默认 5，资源确认充足后上限 10。
 - 可用内存接近 2 GiB、持续使用 swap 或 WSL/Docker 异常时停止测试。
-- sudo 只用于经过确认、无法由普通用户完成的最小系统操作；密码不进入命令、脚本、日志或 Git。
+- sudo 仅用于无法由普通用户完成的最小系统操作；密码不进入命令、脚本、日志或 Git。
 - 只清理名称和来源都能确认属于 sandboxd 的容器、集群、网络和临时文件。
 
 ## 尚未开始
 
-- Manager、Exec、HTTP API。
+- Manager、Exec、HTTP API 的具体实现。
 - Informer/Workqueue、预热池和 JSON Patch CAS。
 - Prometheus 指标、DryRun 计划和 Operator 审批门。
 - 一键业务 Demo、最小并发验证、README 最终实测数据。

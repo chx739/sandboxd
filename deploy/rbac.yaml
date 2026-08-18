@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sandbox-reader
+  namespace: sandboxd-demo
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sandbox-reader
+rules:
+  # secrets 被刻意排除：读取 Secret 等价于拿到凭证，“只读”不等于安全。
+  - apiGroups: [""]
+    resources:
+      - pods
+      - pods/log
+      - services
+      - endpoints
+      - configmaps
+      - events
+      - nodes
+      - namespaces
+      - persistentvolumeclaims
+      - replicationcontrollers
+    verbs: ["get", "list", "watch"]
+  # pods/exec、pods/attach、pods/portforward 也刻意排除；这些 create 动作可用于横向移动。
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["pods", "nodes"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sandbox-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sandbox-reader
+subjects:
+  - kind: ServiceAccount
+    name: sandbox-reader
+    namespace: sandboxd-demo

@@ -7,9 +7,9 @@
 | 0 | [实现计划](00-实现计划.md) | 全项目 | 已完成 |
 | 1 | [gVisor 与容器隔离](01-gVisor与容器隔离.md) | WSL、runsc、RuntimeClass | 已完成并实测 |
 | 2 | [Pod 安全基线](02-Pod安全基线.md) | `internal/sandbox/spec.go` | 已完成并测试 |
-| 3 | `03-ServiceAccount与RBAC.md` | `deploy/rbac.yaml` | 进行中 |
-| 4 | `04-NetworkPolicy与CNI.md` | Calico、NetworkPolicy | Calico 已部署，策略进行中 |
-| 5 | `05-client-go与Exec.md` | Manager、remotecommand | 待实现 |
+| 3 | [ServiceAccount 与 RBAC](03-ServiceAccount与RBAC.md) | `deploy/rbac.yaml` | 已完成并实测 |
+| 4 | [NetworkPolicy 与 CNI](04-NetworkPolicy与CNI.md) | Calico、NetworkPolicy | 已完成并实测 |
+| 5 | `05-client-go与Exec.md` | Manager、remotecommand | 进行中 |
 | 6 | `06-Informer与控制器模式.md` | informer、lister、workqueue | 待实现 |
 | 7 | `07-预热池与CAS.md` | Pool、JSON Patch | 待实现 |
 | 8 | `08-DryRun与审批门.md` | Gate、双 Token | 待实现 |
