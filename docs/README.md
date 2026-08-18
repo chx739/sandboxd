@@ -9,12 +9,13 @@
 | 2 | [Pod 安全基线](02-Pod安全基线.md) | `internal/sandbox/spec.go` | 已完成并测试 |
 | 3 | [ServiceAccount 与 RBAC](03-ServiceAccount与RBAC.md) | `deploy/rbac.yaml` | 已完成并实测 |
 | 4 | [NetworkPolicy 与 CNI](04-NetworkPolicy与CNI.md) | Calico、NetworkPolicy | 已完成并实测 |
-| 5 | `05-client-go与Exec.md` | Manager、remotecommand | 进行中 |
-| 6 | `06-Informer与控制器模式.md` | informer、lister、workqueue | 待实现 |
-| 7 | `07-预热池与CAS.md` | Pool、JSON Patch | 待实现 |
+| 5 | [client-go 与 Exec](05-client-go与Exec.md) | Manager、remotecommand、基础 API | 已完成并实测 |
+| 6 | `06-Informer与控制器模式.md` | informer、lister、workqueue | 进行中 |
+| 7 | `07-预热池与CAS.md` | Pool、JSON Patch | 进行中 |
 | 8 | `08-DryRun与审批门.md` | Gate、双 Token | 待实现 |
 | 9 | `09-指标与性能测试.md` | Prometheus、bench | 待实现 |
 | 10 | `10-面试问答与项目讲法.md` | Demo、README | 待实现 |
+| 11 | [开发踩坑与排障](11-开发踩坑与排障.md) | 全项目真实问题 | 持续维护 |
 
 ## 每篇文档的固定结构
 
