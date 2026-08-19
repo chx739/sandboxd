@@ -52,6 +52,16 @@ class TaskStore:
             task = self._tasks.get(task_id)
             return task.model_copy(deep=True) if task else None
 
+    async def list_recent(self) -> list[AgentTask]:
+        async with self._lock:
+            self._prune_locked()
+            tasks = sorted(
+                self._tasks.values(),
+                key=lambda task: task.created_at,
+                reverse=True,
+            )
+            return [task.model_copy(deep=True) for task in tasks]
+
     async def worker(self, runner: AgentRunner) -> None:
         while True:
             task_id = await self._queue.get()

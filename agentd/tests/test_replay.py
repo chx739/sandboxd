@@ -39,6 +39,7 @@ class FakePrometheus:
 class FakeSandboxd:
     def __init__(self) -> None:
         self.read_operations: list[str] = []
+        self.pod_names: list[str] = []
         self.released: list[str] = []
         self.plans: list[dict[str, Any]] = []
 
@@ -69,6 +70,7 @@ class FakeSandboxd:
                 },
             )
         if operation == "get_pod_logs":
+            self.pod_names.append(str(arguments.get("name", "")))
             return HTTPResult(
                 200,
                 {
@@ -139,6 +141,7 @@ class ReplayGraphTest(unittest.IsolatedAsyncioTestCase):
             sandboxd.read_operations,
             ["list_pods", "get_pod_logs"],
         )
+        self.assertEqual(sandboxd.pod_names, ["crashloop-demo-abcde"])
         self.assertEqual(len(diagnosis.denied_actions), 1)
         self.assertEqual(diagnosis.denied_actions[0].layer, "agent-policy")
         self.assertIn("delete_namespace", diagnosis.denied_actions[0].action)

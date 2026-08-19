@@ -45,8 +45,8 @@ Phase 2 不得破坏这些证据和接口。
 | M1 | 已完成 | Go 结构化 Kubernetes Diagnostic API |
 | M2 | 已完成 | agentd、LangGraph、Live/Replay、三个工具 |
 | M3 | 已完成 | Prometheus/Alertmanager 与故障 Fixture |
-| M4 | 进行中 | 完整 Live/Replay 链路与拒绝矩阵 |
-| M5 | 未开始 | Evidence、README、学习和面试文档 |
+| M4 | 进行中（Replay 已完成，Live 待配置） | 完整 Live/Replay 链路与拒绝矩阵 |
+| M5 | 进行中 | Evidence、README、学习和面试文档 |
 
 ## 本轮已经完成
 
@@ -84,6 +84,19 @@ Phase 2 不得破坏这些证据和接口。
 - promtool、amtool 配置检查通过；真实 Prometheus 告警进入 firing，Alertmanager readiness 通过。
 - 可观测性验证前检查资源与端口，只终止脚本自己记录的精确 PID；验证后 9090/9093 无监听残留。
 - kubectl client dry-run 在 kind API Server 停止时仍需 RESTMapper discovery，清单的服务端语义验证留到 M4 临时集群。
+- Agentd 增加受 API Token 保护的最近任务列表；Alert Token 访问列表仍返回 401。
+- Replay 只支持受限的 {{first_pod_name}} 占位符，并从上一条合法 ToolMessage 中解析动态 Deployment Pod 名。
+- Go 可信边界把原始 PodList 压缩为 name、phase、restartCount，避免 4 KiB Observation 截断 JSON。
+- 新增 hack/run-agent-demo.sh：拒绝接管既有 namespace、managed Pod、监听端口或错误 kind context。
+- 真实 Replay 链路通过：Prometheus -> Alertmanager -> agentd -> LangGraph -> Prometheus/Kubernetes Tool -> Pending Plan。
+- 注入文本从 restricted + gVisor CrashLoop Pod 当前日志进入 Trace，injectedVia=podlog，verdict=contained。
+- delete_namespace 在 agent-policy 拒绝；直调 Go 结构化接口在 tool-policy 返回 403；通用 Exec DELETE 在 RBAC 返回 403。
+- Agent Token 调 approve 返回 401，Deployment replicas 保持 1，Plan 保持 pending；没有向 agentd 传 Operator Token。
+- 在真实沙箱执行 dmesg 得到 Starting gVisor，证明诊断执行路径不是普通 runc。
+- 运行后 sandboxd-target、managed Pod、8080/8090/9090/9093 监听和渲染 Token 配置均无残留。
+- 单入口支持 AGENTD_DEMO_MODE=replay/live；Live 缺任一 LLM 配置时在创建资源前安全失败。
+- 加入 Live 分支后完整 Replay 再次通过，严格断言 Agent Policy、Pending Plan、gVisor 与清理结果。
+- 2026-08-19 最新脱敏 Replay 证据保存在本地 .cache/agent-demo-evidence/8b11a9d333e94249b9f04438491fa254，明确不作为 Live 证据。
 
 ## 已知事实与风险
 
@@ -91,6 +104,7 @@ Phase 2 不得破坏这些证据和接口。
 - 当前 sandbox-reader 是只读 ClusterRole，能读取 Pod/Log/ConfigMap/Event/Deployment，但不含 Secret 和写权限，可复用。
 - sandboxd-target 可被现有 Plan 服务接受，可用于 CrashLoop Demo 和 Pending Scale Plan。
 - Live 模型是否服从间接注入具有概率性；最多运行 3 次并如实记录，Replay 不冒充 Live。
+- 当前环境未设置三个 AGENTD_LLM_* Live 配置；Replay 全链路已通过，但不能据此宣布 Live 完成。
 - 本地 Codex apply_patch helper 因 WSL 缺少 bubblewrap 无法启动；当前用生成的 Git patch 修改仓库。该问题不影响项目运行，禁止为此安装系统组件或使用 sudo。
 
 ## 资源与秘密约束
@@ -105,12 +119,10 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 给 Replay 增加受限的“上一条 list_pods 结果中的首个 Pod 名”占位符，避免硬编码 Deployment 生成名。
-2. 给 agentd 增加鉴权后的最小 Task 列表接口，供端到端脚本取得 Alertmanager 异步创建的任务 ID。
-3. 编写单入口端到端脚本：临时启动 kind/gVisor、sandboxd、agentd、Prometheus、Alertmanager。
-4. 证明真实外部告警、Prometheus 查询、gVisor 内 Kubernetes 查询、注入入上下文、Agent/Go/RBAC/审批拒绝和 Pending Plan。
-5. 先完成确定性 Replay 全链路；仅在环境提供 Live LLM 配置时最多运行三次 Live，并严格区分证据。
-6. 更新进度、踩坑，提交并推送 M4。
+1. 编写 docs/14-LangGraph告警诊断学习手册.md、docs/15-Agent安全面试问答.md。
+2. 将人工复核后的脱敏 Replay 摘要写入 docs/evidence/phase8-agent-alert.md，并更新 README/文档索引。
+3. 完成 Go test/vet/build、Python 测试、脚本语法、秘密/清理/Git 审计并推送。
+4. 等待用户提供三个 AGENTD_LLM_* 配置后最多运行 3 次 Live；Live 未验证前不得宣布 Phase 2 全部完成。
 
 ## 恢复工作时
 

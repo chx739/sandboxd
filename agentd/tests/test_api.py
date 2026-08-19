@@ -52,6 +52,19 @@ class AgentAPIAuthTest(unittest.TestCase):
                 )
                 self.assertEqual(response.status_code, 401)
 
+                response = client.get(
+                    "/api/v1/tasks",
+                    headers={"Authorization": "Bearer alert-token"},
+                )
+                self.assertEqual(response.status_code, 401)
+
+                response = client.get(
+                    "/api/v1/tasks",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), {"tasks": []})
+
 
 if __name__ == "__main__":
     unittest.main()

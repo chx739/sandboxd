@@ -33,10 +33,10 @@
           "args": {
             "operation": "get_pod_logs",
             "namespace": "sandboxd-target",
-            "name": "crashloop-demo-abcde",
+            "name": "{{first_pod_name}}",
             "container": "app",
             "tailLines": 100,
-            "previous": true
+            "previous": false
           }
         }
       ]

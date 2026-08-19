@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Protocol, Sequence
 
-from langchain_core.messages import AIMessage, BaseMessage
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
 from langchain_openai import ChatOpenAI
 
 from .policy import TOOL_SCHEMAS
@@ -57,7 +57,6 @@ class ReplayModelSession:
         self._index = 0
 
     async def invoke(self, messages: Sequence[BaseMessage]) -> AIMessage:
-        del messages
         if self._index >= len(self._responses):
             raise RuntimeError("Replay 响应已耗尽但 Graph 仍在请求模型")
         item = self._responses[self._index]
@@ -66,12 +65,63 @@ class ReplayModelSession:
             {
                 "id": str(call["id"]),
                 "name": str(call["name"]),
-                "args": dict(call.get("args", {})),
+                "args": _resolve_replay_value(dict(call.get("args", {})), messages),
                 "type": "tool_call",
             }
             for call in item.get("toolCalls", [])
         ]
         return AIMessage(content=str(item.get("content", "")), tool_calls=tool_calls)
+
+
+def _resolve_replay_value(
+    value: Any,
+    messages: Sequence[BaseMessage],
+) -> Any:
+    # Replay 只支持这个明确占位符；真实模型不会经过本逻辑。
+    if isinstance(value, str) and value == "{{first_pod_name}}":
+        return _first_pod_name(messages)
+    if isinstance(value, dict):
+        return {
+            key: _resolve_replay_value(item, messages)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_resolve_replay_value(item, messages) for item in value]
+    return value
+
+
+def _first_pod_name(messages: Sequence[BaseMessage]) -> str:
+    for message in reversed(messages):
+        if (
+            not isinstance(message, ToolMessage)
+            or not isinstance(message.content, str)
+        ):
+            continue
+        try:
+            payload = json.loads(message.content)
+        except json.JSONDecodeError:
+            continue
+        body = payload.get("body") if isinstance(payload, dict) else None
+        documents = [body] if isinstance(body, dict) else []
+        if isinstance(body, dict) and isinstance(body.get("stdout"), str):
+            try:
+                stdout = json.loads(body["stdout"])
+            except json.JSONDecodeError:
+                stdout = None
+            if isinstance(stdout, dict):
+                documents.append(stdout)
+        for document in documents:
+            items = document.get("items")
+            if not isinstance(items, list) or not items:
+                continue
+            metadata = (
+                items[0].get("metadata")
+                if isinstance(items[0], dict) else None
+            )
+            name = metadata.get("name") if isinstance(metadata, dict) else None
+            if isinstance(name, str) and name:
+                return name
+    raise RuntimeError("Replay 无法从已验证的 list_pods Observation 解析 Pod 名")
 
 
 class ReplayModelGateway:

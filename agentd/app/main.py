@@ -138,6 +138,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             content={"taskId": task.task_id, "status": task.status},
         )
 
+
+    @app.get("/api/v1/tasks")
+    async def list_tasks(request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        tasks = await store.list_recent()
+        return JSONResponse(
+            {
+                "tasks": [
+                    task.model_dump(
+                        mode="json",
+                        by_alias=True,
+                        exclude={"trace"},
+                    )
+                    for task in tasks
+                ]
+            }
+        )
     @app.get("/api/v1/tasks/{task_id}")
     async def get_task(task_id: str, request: Request) -> JSONResponse:
         _authorized(request, cfg.api_token)

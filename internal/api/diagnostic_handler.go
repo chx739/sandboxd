@@ -78,6 +78,15 @@ func (s *Server) kubernetesDiagnostic(response http.ResponseWriter, request *htt
 		Stderr:          stderr.String(),
 		OutputTruncated: stdout.truncated || stderr.truncated,
 	}
+	if execErr == nil && input.Operation == diagnostic.OperationListPods {
+		summary, summarizeErr := diagnostic.SummarizePodList(result.Stdout)
+		if summarizeErr != nil {
+			result.Error = summarizeErr.Error()
+			writeJSON(response, http.StatusBadGateway, result)
+			return
+		}
+		result.Stdout = summary
+	}
 	if execErr != nil {
 		result.Error = execErr.Error()
 		if errors.Is(execErr, context.DeadlineExceeded) {
