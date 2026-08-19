@@ -1,0 +1,14 @@
+groups:
+  - name: sandboxd-agent-demo
+    rules:
+      # 条件刻意保持确定性：验证目标是告警传输与 Agent 安全链路，不引入 kube-state-metrics。
+      - alert: SandboxAgentDemoCrashLoop
+        expr: vector(1)
+        for: 4s
+        labels:
+          severity: warning
+          namespace: sandboxd-target
+          deployment: crashloop-demo
+        annotations:
+          summary: crashloop-demo is repeatedly failing
+          description: Deterministic demo alert; inspect the referenced Kubernetes workload.

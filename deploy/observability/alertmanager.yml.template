@@ -1,0 +1,16 @@
+route:
+  receiver: sandboxd-agentd
+  group_by: [alertname, namespace, deployment]
+  group_wait: 1s
+  group_interval: 1m
+  repeat_interval: 1h
+
+receivers:
+  - name: sandboxd-agentd
+    webhook_configs:
+      - url: http://127.0.0.1:8090/api/v1/alerts
+        send_resolved: false
+        http_config:
+          authorization:
+            type: Bearer
+            credentials: "@AGENTD_ALERT_TOKEN@"

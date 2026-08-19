@@ -12,7 +12,7 @@ Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 正在进行。
 
 当前里程碑：
 
-    M3：Prometheus/Alertmanager 与故障 Fixture
+    M4：完整 Replay/Live 链路与拒绝矩阵
 
 ## Phase 1 已完成基线
 
@@ -44,8 +44,8 @@ Phase 2 不得破坏这些证据和接口。
 | M0 | 已完成 | 目标、计划、AGENTS、PROGRESS、分支和版本策略 |
 | M1 | 已完成 | Go 结构化 Kubernetes Diagnostic API |
 | M2 | 已完成 | agentd、LangGraph、Live/Replay、三个工具 |
-| M3 | 进行中 | Prometheus/Alertmanager 与故障 Fixture |
-| M4 | 未开始 | 完整 Live/Replay 链路与拒绝矩阵 |
+| M3 | 已完成 | Prometheus/Alertmanager 与故障 Fixture |
+| M4 | 进行中 | 完整 Live/Replay 链路与拒绝矩阵 |
 | M5 | 未开始 | Evidence、README、学习和面试文档 |
 
 ## 本轮已经完成
@@ -77,6 +77,13 @@ Phase 2 不得破坏这些证据和接口。
 - 踩坑新增“Body 必须流式限长”和“多 Tool Call 必须逐个闭合协议”。
 - 根目录审计发现并修复 app 导入依赖 cwd；统一为 agentd.app，并新增对应踩坑。
 - 使用文档中的 Uvicorn factory 命令启动单个 Replay agentd，/healthz 返回 200，随后按精确 PID 清理。
+- 用户态安装 Prometheus 3.14.0、Alertmanager 0.34.0，并使用官方 SHA256 固定供应链输入。
+- 增加 localhost-only Prometheus/Alertmanager 配置和携带独立 Bearer Token 的 Webhook 模板。
+- 增加确定性 SandboxAgentDemoCrashLoop 告警规则；明确它验证告警传输，不冒充真实异常检测。
+- 增加 restricted + gVisor CrashLoop Deployment 和含间接 Prompt Injection 的 ConfigMap Fixture。
+- promtool、amtool 配置检查通过；真实 Prometheus 告警进入 firing，Alertmanager readiness 通过。
+- 可观测性验证前检查资源与端口，只终止脚本自己记录的精确 PID；验证后 9090/9093 无监听残留。
+- kubectl client dry-run 在 kind API Server 停止时仍需 RESTMapper discovery，清单的服务端语义验证留到 M4 临时集群。
 
 ## 已知事实与风险
 
@@ -89,7 +96,7 @@ Phase 2 不得破坏这些证据和接口。
 ## 资源与秘密约束
 
 - kind 单节点；Agent Demo pool=1、worker=1、一次一条告警。
-- 可用内存接近 2 GiB、持续 swap 或 WSL/Docker 异常时立即停止。
+- 每次运行以 hack/check-resources.sh 的实时结果为准；持续 swap 或 WSL/Docker 异常时立即停止。
 - 默认不使用 sudo。
 - Operator Token 不传给 agentd。
 - 不提交任何密码、Token、API Key、认证头、ServiceAccount Token 或 kubeconfig。
@@ -98,11 +105,12 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 添加固定版本、SHA256 校验的 Prometheus/Alertmanager 用户态安装脚本。
-2. 添加 Prometheus 配置、确定性告警规则和 Alertmanager Webhook 模板。
-3. 添加 restricted CrashLoop Deployment、ConfigMap 和间接注入 Fixture。
-4. 添加低资源启停与 cleanup 脚本，先只验证配置和进程，不运行 Live 模型。
-5. 更新进度、踩坑，提交并推送 M3。
+1. 给 Replay 增加受限的“上一条 list_pods 结果中的首个 Pod 名”占位符，避免硬编码 Deployment 生成名。
+2. 给 agentd 增加鉴权后的最小 Task 列表接口，供端到端脚本取得 Alertmanager 异步创建的任务 ID。
+3. 编写单入口端到端脚本：临时启动 kind/gVisor、sandboxd、agentd、Prometheus、Alertmanager。
+4. 证明真实外部告警、Prometheus 查询、gVisor 内 Kubernetes 查询、注入入上下文、Agent/Go/RBAC/审批拒绝和 Pending Plan。
+5. 先完成确定性 Replay 全链路；仅在环境提供 Live LLM 配置时最多运行三次 Live，并严格区分证据。
+6. 更新进度、踩坑，提交并推送 M4。
 
 ## 恢复工作时
 
