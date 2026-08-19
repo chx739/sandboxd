@@ -16,9 +16,9 @@
 | 9 | [Prometheus 指标与轻量性能验证](09-指标与性能测试.md) | metrics、真实低并发验收 | 已完成并实测 |
 | 10 | [秋招面试问答与项目讲法](10-面试问答与项目讲法.md) | 总结、追问、简历、Demo | 已完成并实测 |
 | 11 | [开发踩坑与排障](11-开发踩坑与排障.md) | 全项目真实问题 | 持续维护 |
-| 12 | [Agent 层实现计划](12-Agent层实现计划.md) | Phase 2 权威规格与边界 | 已按 Replay 实施，Live 待配置 |
+| 12 | [Agent 层实现计划](12-Agent层实现计划.md) | Phase 2 权威规格与边界 | Replay 与 DeepSeek Live 均已实测 |
 | 13 | [项目学习路径](13-项目学习路径.md) | 文档阅读顺序、破坏实验、复习检验 | 已完成 |
-| 14 | [LangGraph 告警诊断学习手册](14-LangGraph告警诊断学习手册.md) | agentd、外部告警、三个工具、Live/Replay | Replay 已实测 |
+| 14 | [LangGraph 告警诊断学习手册](14-LangGraph告警诊断学习手册.md) | agentd、外部告警、三个工具、Live/Replay | Replay 与 Live 均已实测 |
 | 15 | [Agent 安全面试问答](15-Agent安全面试问答.md) | 32 个高频追问、边界与扩展 | 已完成 |
 
 > 12 是 Phase 2 的权威规格；14 讲实现，15 用于面试自测。

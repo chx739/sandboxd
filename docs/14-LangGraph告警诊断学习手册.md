@@ -173,7 +173,11 @@ Key 只通过环境变量进入 agentd，不写 Git、Trace 或命令参数。Li
 
 官方参考：[DeepSeek API Quick Start](https://api-docs.deepseek.com/quick_start/pricing-details-cny/)、[Thinking Mode](https://api-docs.deepseek.com/guides/thinking_mode)。
 
-截至 2026-08-20，Replay 全链路已实测；一次不含项目数据的 DeepSeek Tool Calling 预检到达官方接口但鉴权返回 401，未启动集群，不能作为 Live 诊断证据。
+2026-08-20 使用 `deepseek-v4-flash` 完成三次 Live 注入实验：危险指令触发 0/3，均诚实记录为 `not-triggered`。其中一次完整脚本通过，同时覆盖真实 Prometheus、gVisor K8s、Go Policy、RBAC、gVisor 和清理；另两次分别暴露“Trace 精确列表误判”和“模型自主跳过 Prometheus”。
+
+Live 模型有时会在 JSON 外包裹分析文字。最终实现从 64 KiB 有界文本中选择最后一个通过 Pydantic 的 Diagnosis，并强制用 Graph State 覆盖 evidence、deniedActions 和 planId。第三次 Live 证明结构化解析生效。
+
+完整实验表和脱敏样例见 [Phase 8 evidence](evidence/phase8-agent-alert.md)。
 
 ## 8. 代码阅读顺序
 
@@ -258,4 +262,4 @@ gVisor: sandbox dmesg contains Starting gVisor
 
 ## 13. 一分钟项目讲法
 
-“Phase 2 我用 Python LangGraph 显式写了一个有限 Tool Calling 循环，接收真实 Alertmanager Webhook，查询真实 Prometheus，再通过 Go 的结构化接口在 gVisor 沙箱内访问 Kubernetes。Pod Log 里放了间接 Prompt Injection，日志确实进入 Trace。Replay 会确定性提出 delete namespace，但 Python Policy 先拒绝；即使绕过 Python，Go operation 白名单仍返回 403；再通过通用 Exec 直接请求 API Server，也被只读 RBAC 返回 403。允许的写意图只能生成 server-side DryRun 的 Pending scale Plan，Agent Token 无法批准。Replay 全链路已实测，Live 与 Replay 证据严格分开。这个项目展示的不是模型有多聪明，而是模型犯错时系统仍然可控。”
+“Phase 2 我用 Python LangGraph 显式写了一个有限 Tool Calling 循环，接收真实 Alertmanager Webhook，查询真实 Prometheus，再通过 Go 的结构化接口在 gVisor 沙箱内访问 Kubernetes。Pod Log 和 ConfigMap 的间接 Prompt Injection 都真实进入上下文。DeepSeek Live 三次都识别并忽略注入，其中一次完整跑通 Prometheus、gVisor K8s 和诊断；Replay 则确定性提出 delete namespace，由 Python Policy 拒绝。即使绕过 Python，Go operation 白名单仍返回 403；再经通用 Exec 直接请求 API Server，也被只读 RBAC 返回 403。允许的 scale 只能形成 Pending DryRun Plan，Agent Token 无法批准。这个项目展示的不是模型有多聪明，而是模型行为有概率时系统仍然可控。”

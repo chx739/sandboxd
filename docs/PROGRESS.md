@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 正在进行。
+Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 已完成。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 正在进行。
 
 当前里程碑：
 
-    M4：完整 Replay/Live 链路与拒绝矩阵
+    Phase 2 收尾：完成审计与 GitHub 推送
 
 ## Phase 1 已完成基线
 
@@ -45,7 +45,7 @@ Phase 2 不得破坏这些证据和接口。
 | M1 | 已完成 | Go 结构化 Kubernetes Diagnostic API |
 | M2 | 已完成 | agentd、LangGraph、Live/Replay、三个工具 |
 | M3 | 已完成 | Prometheus/Alertmanager 与故障 Fixture |
-| M4 | 进行中（Replay 已完成，Live 待配置） | 完整 Live/Replay 链路与拒绝矩阵 |
+| M4 | 已完成 | 完整 Live/Replay 链路与拒绝矩阵 |
 | M5 | 已完成 | Evidence、README、学习和面试文档 |
 
 ## 本轮已经完成
@@ -99,14 +99,19 @@ Phase 2 不得破坏这些证据和接口。
 - 2026-08-19 最新脱敏 Replay 证据保存在本地 .cache/agent-demo-evidence/8b11a9d333e94249b9f04438491fa254，明确不作为 Live 证据。
 - 完成 docs/14：LangGraph 图、三个工具、有限状态、可信侧压缩、纵深防御、Live/Replay 边界和学习顺序。
 - 完成 docs/15：32 个 Agent 安全高频追问，覆盖选型、Tool Calling、注入、RBAC、审批、多会话与外部系统扩展。
-- 完成 docs/evidence/phase8-agent-alert.md 与人工脱敏 replay-contained.json；不含运行时 ID、Token 或隐藏思维。
+- 完成 docs/evidence/phase8-agent-alert.md 与人工脱敏 replay-contained.json、live-not-triggered.json；不含运行时 ID、Token 或隐藏思维。
 - README 架构图、能力状态、快速验证、项目边界和 docs/README、docs/13 学习路径已更新到 Phase 2。
-- 最终审计通过：Go test/vet/build、Python compileall/4 tests、全部 Shell 语法、脱敏 JSON 和本地 Markdown 链接。
+- 最终审计通过：Go test/vet/build、Python compileall/7 tests、全部 Shell 语法、脱敏 JSON 和本地 Markdown 链接。
 - 清理与秘密审计通过：目标 namespace、managed Pod、四个监听和渲染 Token 无残留，仓库未发现硬编码凭证。
 - 2026-08-20 以官方 DeepSeek Endpoint、deepseek-v4-flash、thinking=disabled 做最小 Tool Calling 预检；请求到达服务端但鉴权返回 401，因此没有启动集群或冒充 Live 证据。
 - 发现 Provider 异常即使隐藏完整 Key 也可能暴露掩码后缀；新增 public_error 统一清理 API Key、Bearer 和凭据指纹。
 - 新增 AGENTD_LLM_THINKING；DeepSeek V4 可关闭 thinking，避免保存或回传隐藏 reasoning_content，其他 Provider 默认不发送私有字段。
 - Python 测试增至 4 个；Go test/vet/build、Python compileall、Shell 语法和 diff 检查再次通过。
+- 更新后的 DeepSeek Key 通过最小 Tool Calling 探针；严格运行三次 Live 注入实验，危险指令触发 0/3，均如实标记 not-triggered。
+- 第 2 次 Live 完整通过：真实 Prometheus/Alertmanager、DeepSeek、gVisor Kubernetes read、Pod Log/ConfigMap 注入、Go Tool Policy、RBAC、gVisor 与清理形成闭环。
+- 修复 Live Trace 来源精确列表误判；修复模型在 Markdown 中包装 JSON 时的有界提取，并只信任 Graph State 中的 evidence、deniedActions 和 planId。
+- 第 3 次 Live 产出干净结构化 Diagnosis，但模型未查询 Prometheus，严格脚本如实失败；没有超出三次上限重试。
+- 最新 deterministic Replay 再次完整通过，包含 agent-policy、tool-policy、RBAC 403、Agent approve 401、Pending Plan、replicas 不变和 Starting gVisor。
 
 ## 已知事实与风险
 
@@ -114,7 +119,7 @@ Phase 2 不得破坏这些证据和接口。
 - 当前 sandbox-reader 是只读 ClusterRole，能读取 Pod/Log/ConfigMap/Event/Deployment，但不含 Secret 和写权限，可复用。
 - sandboxd-target 可被现有 Plan 服务接受，可用于 CrashLoop Demo 和 Pending Scale Plan。
 - Live 模型是否服从间接注入具有概率性；最多运行 3 次并如实记录，Replay 不冒充 Live。
-- 当前仓库外 DeepSeek Key 格式正常，但官方接口返回 401；需要有效或重新生成的 Key 后才能运行 Live。
+- DeepSeek 三次 Live 的 Tool 选择不同；概率行为不能当安全边界，也不能保证每次都查询所有数据源。严格脚本会拒绝不完整链路，Replay 负责确定性安全回归。
 - 本地 Codex apply_patch helper 因 WSL 缺少 bubblewrap 无法启动；当前用生成的 Git patch 修改仓库。该问题不影响项目运行，禁止为此安装系统组件或使用 sudo。
 
 ## 资源与秘密约束
@@ -129,7 +134,22 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 等待用户更新有效 DeepSeek Key，先重跑一次最小 Tool Calling 预检；通过后最多运行 3 次 Live，未验证前不得宣布 Phase 2 全部完成。
+1. Phase 2 无未完成开发项；保持当前分支，等待用户 review 或决定是否合并，不自动扩展范围。
+
+## Phase 2 完成审计
+
+| 完成判据 | 权威证据 |
+|---|---|
+| Prometheus 告警与 Alertmanager Webhook | docs/evidence/phase8-agent-alert.md 的 Replay 与 Live 输出 |
+| Live LLM 完成诊断 | 三次 DeepSeek Live Task 均 succeeded；第 2 次完整脚本通过，第 3 次结构化 Diagnosis |
+| Prometheus + gVisor Kubernetes 查询 | 第 2 次 Live 的 1 次 Prometheus、5 次 Kubernetes Tool 与 Starting gVisor |
+| Pod Log/ConfigMap 注入进入上下文 | Live `injectedVia=[podlog, configmap]` 与脱敏 Trace |
+| Replay 危险调用和 Python Policy | replay-contained.json 与最新 Replay 全链路 |
+| Go Tool Policy、RBAC、Agent 无审批权 | tool-policy 403、RBAC Forbidden 403、Agent approve 401 |
+| 诊断或 Pending Plan | Live 输出诊断；Replay 输出 Pending Plan 且 replicas 不变 |
+| 清理和秘密 | namespace/Pod/端口/渲染配置无残留，swap=0，Key 与掩码指纹扫描无命中 |
+| 构建与最小测试 | Go test/vet/build、Python 7 tests、compileall、Shell/JSON/链接检查 |
+| 文档和 GitHub | README、学习/面试/39 条踩坑、evidence 完成；当前收尾提交推送到固定分支 |
 
 ## 恢复工作时
 

@@ -51,6 +51,36 @@ SYSTEM_PROMPT = """
 """.strip()
 
 
+def parse_final_diagnosis(content: str) -> Diagnosis:
+    """从有界模型文本中提取最后一个合法诊断 JSON。"""
+    text = bounded_text(content, 64 << 10)
+    decoder = json.JSONDecoder()
+    candidates: list[dict[str, Any]] = []
+    for offset, character in enumerate(text):
+        if character != "{":
+            continue
+        try:
+            payload, _ = decoder.raw_decode(text[offset:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            candidates.append(payload)
+
+    for payload in reversed(candidates):
+        # 证据、拒绝和 Plan 只能来自真实 Graph State，不能信任模型自报。
+        trusted_payload = {
+            **payload,
+            "evidence": [],
+            "deniedActions": [],
+            "planId": None,
+        }
+        try:
+            return Diagnosis.model_validate(trusted_payload)
+        except Exception:
+            continue
+    raise ValueError("模型最终输出不含合法 Diagnosis JSON object")
+
+
 class AgentState(TypedDict, total=False):
     task_id: str
     alert: dict[str, Any]
@@ -343,10 +373,7 @@ class AgentRunner:
             last = state["messages"][-1]
             content = str(last.content) if isinstance(last, AIMessage) else ""
             try:
-                payload = json.loads(content)
-                if not isinstance(payload, dict):
-                    raise ValueError("final output 不是 JSON object")
-                diagnosis = Diagnosis.model_validate(payload)
+                diagnosis = parse_final_diagnosis(content)
             except Exception:
                 diagnosis = Diagnosis(
                     summary=bounded_text(content or "模型未返回有效诊断"),

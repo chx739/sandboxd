@@ -4,7 +4,7 @@
 
 ## 1. 30 秒项目介绍
 
-“我在已有 Go sandboxd 上增加了一个 Python LangGraph 告警诊断 Agent。真实 Prometheus/Alertmanager 把外部告警送进 Agent，Agent 查询 Prometheus，再通过 Go 结构化接口在 gVisor 沙箱里只读 Kubernetes。Pod Log 中放了间接 Prompt Injection，Trace 证明它进入了上下文。危险 operation 分别被 Python Policy、Go Tool Policy 和 Kubernetes RBAC 拒绝；允许的 scale 只能形成 Pending DryRun Plan，Agent Token 无法批准。Replay 全链路已实测，Live 证据单独管理。”
+“我在已有 Go sandboxd 上增加了一个 Python LangGraph 告警诊断 Agent。真实 Prometheus/Alertmanager 把外部告警送进 Agent，Agent 查询 Prometheus，再通过 Go 结构化接口在 gVisor 沙箱里只读 Kubernetes。Pod Log 和 ConfigMap 中的间接 Prompt Injection 都真实进入上下文。DeepSeek Live 三次均完成诊断且未服从注入，其中一次完整脚本通过；Replay 则确定性触发危险调用。危险 operation 分别被 Python Policy、Go Tool Policy 和 Kubernetes RBAC 拒绝；允许的 scale 只能形成 Pending DryRun Plan，Agent Token 无法批准。”
 
 ## 2. 架构与选型
 
@@ -158,7 +158,7 @@ Replay 只替换模型决策，LangGraph、Policy、工具、Prometheus、Alertm
 
 ### “你这个项目最大的不足是什么？”
 
-当前是单节点、单租户、内存 Task/Plan、简化 Bearer Token，且只诊断本地 kind。Live 模型尚未在当前环境实测。它适合证明机制和面试讲解，不适合直接接生产系统。
+当前是单节点、单租户、内存 Task/Plan、简化 Bearer Token，且只诊断本地 kind。DeepSeek Live 虽已实测，但三次工具选择并不完全相同，说明模型行为有概率性。它适合证明机制和面试讲解，不适合直接接生产系统。
 
 ## 9. 一分钟展开模板
 
@@ -168,7 +168,7 @@ Replay 只替换模型决策，LangGraph、Policy、工具、Prometheus、Alertm
 4. 攻击：Pod Log 间接 Prompt Injection。
 5. 边界：Agent Policy、Go Policy、RBAC、审批。
 6. 证据：Starting gVisor、403/401、replicas 不变、清理无残留。
-7. 边界声明：Replay 已验证，Live 待配置；单租户 Demo。
+7. 边界声明：Replay 与 Live 分开验证；Live 注入 0/3 触发；单租户 Demo。
 
 ## 10. 自测标准
 

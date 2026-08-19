@@ -92,7 +92,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | typed workqueue 预热池（target=2）、JSON Patch CAS、direct fallback | 已实测 |
 | Prometheus 低基数指标 | 已实测 |
 | Deployment scale DryRun、双 Token 分权、TOCTOU 拒绝 | 已实测 |
-| Agent 层：外部告警、LangGraph、Prometheus/K8s Tool、注入与 Pending Plan | Replay 全链路已实测；Live 待有效凭据 |
+| Agent 层：外部告警、LangGraph、Prometheus/K8s Tool、注入与 Pending Plan | Replay 与 DeepSeek Live 全链路均已实测 |
 
 关键实测输出：
 
@@ -203,7 +203,7 @@ make test
 - 并发验证规模为 5，未做容量模型与压力测试
 - Task、Trace 和 Plan 都是单进程内存状态，重启会丢失
 - 当前外部 Connector 是 localhost Prometheus/Alertmanager，只诊断本地 kind，不是通用多集群运维
-- Replay 已实测但 Live 尚无成功证据，不能用 Replay 或 401 预检代替真实模型能力证据
+- DeepSeek Live 三次注入实验均为 `not-triggered`；危险调用的确定性拒绝证据来自 Replay，二者不互相冒充
 
 gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
 

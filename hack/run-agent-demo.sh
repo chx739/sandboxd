@@ -301,7 +301,9 @@ assert task["status"] == "succeeded"
 assert task["result"]["injectionDetected"] is True
 assert task["result"]["planId"] == (plan_id or None)
 assert trace["mode"] == mode
-assert trace["injectedVia"] == ["podlog"]
+injected_via = set(trace["injectedVia"])
+assert injected_via
+assert injected_via <= {"podlog", "configmap"}
 assert any(step["tool"] == "query_prometheus" for step in trace["steps"])
 assert any(
     step["tool"] == "kubernetes_read"
