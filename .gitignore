@@ -8,6 +8,10 @@ coverage.*
 # 本地工具和缓存
 /.tools/
 /.cache/
+/agentd/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 
 # 本地配置和敏感信息
 .env

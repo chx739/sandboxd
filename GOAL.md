@@ -6,6 +6,18 @@
 
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
 
+## 当前开发目标：Phase 2 外部告警诊断 Agent
+
+Phase 1 已完成并保留。当前只在其外增加一个薄 Agent 层：
+
+- 新增 Python agentd，以 LangGraph StateGraph 实现有限 Tool Calling 状态机；
+- 使用真实用户态 Prometheus + Alertmanager 接入外部告警；
+- Live LLM 查询 Prometheus，并通过 Go sandboxd 的结构化接口在 gVisor 内读取当前 kind 的 Kubernetes 诊断数据；
+- 让 Pod Log/ConfigMap 中的间接 Prompt Injection 真实进入上下文，并由 Python Policy、Go Tool Policy、gVisor、NetworkPolicy、RBAC 和 Operator Approval 形成纵深边界；
+- 输出结构化诊断或只能由 Operator 审批的 Pending Deployment Scale Plan；
+- 同时提供明确标记的确定性 Replay，不冒充 Live 证据；
+- 开发范围、接口、文件结构、里程碑和完成证据以 docs/12-Agent层实现计划.md 为准。
+
 ## 不可偏移的约束
 
 1. **必须真实使用 gVisor。** 不接受只写 `RuntimeClass` YAML 或用普通 `runc` 冒充；必须保留 `runsc` 运行证据。
@@ -37,6 +49,8 @@
 - 不追求大规模压测、形式化安全证明、完整 e2e 矩阵或生产 SLA。
 - 不把简历、密钥目录或旧项目迁入/清入本仓库；它们不属于 sandboxd 的实现范围。
 
+Phase 2 额外不做：外部 Kubernetes、多集群、宿主机运维、多租户、多会话、文件传输、RAG、长期记忆、多 Agent、数据库、消息队列、自动审批、LangSmith 和生产级 HA。不得为展示框架而扩大这些范围。
+
 ## 完成判据
 
 只有同时具备以下证据，才可宣布目标完成：
@@ -49,12 +63,14 @@
 - README 记录真实运行结果、资源消耗、已知限制和演示顺序；各模块学习文档完整。
 - 所有应交付代码和文档都已提交并推送到 GitHub，仓库中不存在秘密信息。
 
+Phase 2 还必须证明：真实 Prometheus/Alertmanager 告警进入 agentd；至少一次 Live LLM 完成诊断；Agent 查询真实 Prometheus并通过 gVisor 查询 Kubernetes API；注入文本进入模型可见上下文；Replay 危险调用被拒绝且明确标记；Go Tool Policy、RBAC 和 Agent 无审批权都有真实证据；最终输出诊断或 Pending Plan；资源清理、脱敏 Trace、学习/面试/踩坑文档和 GitHub 推送全部完成。
+
 ## 上下文缺失时的续作协议
 
 后续执行者不得仅依赖聊天历史。每次继续开发都按下面顺序恢复上下文：
 
 1. 完整阅读 `GOAL.md`。
-2. 阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。
+2. 阅读 `docs/00-实现计划.md`、`docs/12-Agent层实现计划.md` 和 `docs/PROGRESS.md`。
 3. 查看 `git status`、最近提交和当前分支，保护用户已有改动。
 4. 阅读当前模块的代码、学习文档、脚本及最近一次验证输出。
 5. 从 `docs/PROGRESS.md` 标记的“下一步”继续，只完成当前最小闭环。
