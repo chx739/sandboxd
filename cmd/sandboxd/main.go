@@ -87,6 +87,7 @@ func main() {
 		manager,
 		pool,
 		plans,
+		cfg.DiagnosticNamespace,
 		cfg.AgentToken,
 		cfg.OperatorToken,
 		cfg.CreateTimeout,

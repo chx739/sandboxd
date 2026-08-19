@@ -10,16 +10,17 @@ import (
 )
 
 type Config struct {
-	Listen        string
-	Namespace     string
-	Image         string
-	RuntimeClass  string
-	Kubeconfig    string
-	AgentToken    string
-	OperatorToken string
-	CreateTimeout time.Duration
-	ExecTimeout   time.Duration
-	PoolSize      int
+	Listen              string
+	Namespace           string
+	DiagnosticNamespace string
+	Image               string
+	RuntimeClass        string
+	Kubeconfig          string
+	AgentToken          string
+	OperatorToken       string
+	CreateTimeout       time.Duration
+	ExecTimeout         time.Duration
+	PoolSize            int
 }
 
 func Parse(args []string) (Config, error) {
@@ -28,6 +29,7 @@ func Parse(args []string) (Config, error) {
 
 	flags.StringVar(&cfg.Listen, "listen", "127.0.0.1:8080", "HTTP 监听地址")
 	flags.StringVar(&cfg.Namespace, "namespace", "sandboxd-demo", "沙箱 namespace")
+	flags.StringVar(&cfg.DiagnosticNamespace, "diagnostic-namespace", "sandboxd-target", "Agent 只读诊断允许访问的 namespace")
 	flags.StringVar(&cfg.Image, "image", "curlimages/curl:8.12.1", "沙箱镜像")
 	flags.StringVar(&cfg.RuntimeClass, "runtime-class", "gvisor", "Kubernetes RuntimeClass；空值表示默认运行时")
 	flags.StringVar(&cfg.Kubeconfig, "kubeconfig", clientcmd.RecommendedHomeFile, "kubeconfig 路径")
@@ -51,8 +53,8 @@ func Parse(args []string) (Config, error) {
 	if cfg.AgentToken == cfg.OperatorToken {
 		return Config{}, errors.New("Agent Token 与 Operator Token 必须不同")
 	}
-	if cfg.Namespace == "" || cfg.Image == "" {
-		return Config{}, errors.New("namespace 和 image 不能为空")
+	if cfg.Namespace == "" || cfg.DiagnosticNamespace == "" || cfg.Image == "" {
+		return Config{}, errors.New("namespace、diagnostic-namespace 和 image 不能为空")
 	}
 	if cfg.CreateTimeout <= 0 || cfg.ExecTimeout <= 0 {
 		return Config{}, errors.New("timeout 必须大于 0")

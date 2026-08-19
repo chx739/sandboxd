@@ -1,5 +1,6 @@
 # 编译输出
 /bin/
+/sandboxd
 /dist/
 *.test
 *.out

@@ -14,34 +14,37 @@ import (
 const maxRequestBodyBytes = 16 << 10
 
 type Server struct {
-	manager       *sandbox.Manager
-	pool          *sandbox.Pool
-	plans         *approval.Service
-	agentToken    string
-	operatorToken string
-	createTimeout time.Duration
-	execTimeout   time.Duration
-	mux           *http.ServeMux
+	manager             *sandbox.Manager
+	pool                *sandbox.Pool
+	plans               *approval.Service
+	diagnosticNamespace string
+	agentToken          string
+	operatorToken       string
+	createTimeout       time.Duration
+	execTimeout         time.Duration
+	mux                 *http.ServeMux
 }
 
 func NewServer(
 	manager *sandbox.Manager,
 	pool *sandbox.Pool,
 	plans *approval.Service,
+	diagnosticNamespace string,
 	agentToken string,
 	operatorToken string,
 	createTimeout time.Duration,
 	execTimeout time.Duration,
 ) *Server {
 	server := &Server{
-		manager:       manager,
-		pool:          pool,
-		plans:         plans,
-		agentToken:    agentToken,
-		operatorToken: operatorToken,
-		createTimeout: createTimeout,
-		execTimeout:   execTimeout,
-		mux:           http.NewServeMux(),
+		manager:             manager,
+		pool:                pool,
+		plans:               plans,
+		diagnosticNamespace: diagnosticNamespace,
+		agentToken:          agentToken,
+		operatorToken:       operatorToken,
+		createTimeout:       createTimeout,
+		execTimeout:         execTimeout,
+		mux:                 http.NewServeMux(),
 	}
 	server.routes()
 	return server
@@ -61,6 +64,7 @@ func (s *Server) routes() {
 	s.mux.Handle("GET /api/v1/sandboxes", s.requireAgent(http.HandlerFunc(s.listSandboxes)))
 	s.mux.Handle("DELETE /api/v1/sandboxes/{id}", s.requireAgent(http.HandlerFunc(s.deleteSandbox)))
 	s.mux.Handle("POST /api/v1/sandboxes/{id}/exec", s.requireAgent(http.HandlerFunc(s.execSandbox)))
+	s.mux.Handle("POST /api/v1/sandboxes/{id}/diagnostics/kubernetes", s.requireAgent(http.HandlerFunc(s.kubernetesDiagnostic)))
 	s.mux.Handle("POST /api/v1/plans", s.requireAgent(http.HandlerFunc(s.proposePlan)))
 
 	// Operator 需要先读取 Plan 再决策，所以 list 同时允许两种角色。

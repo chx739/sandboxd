@@ -12,7 +12,7 @@ Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 正在进行。
 
 当前里程碑：
 
-    M1：Go 结构化 Kubernetes Diagnostic API
+    M2：agentd、LangGraph、Live/Replay 与三个工具
 
 ## Phase 1 已完成基线
 
@@ -42,8 +42,8 @@ Phase 2 不得破坏这些证据和接口。
 | 阶段 | 状态 | 内容 |
 |---|---|---|
 | M0 | 已完成 | 目标、计划、AGENTS、PROGRESS、分支和版本策略 |
-| M1 | 进行中 | Go 结构化 Kubernetes Diagnostic API |
-| M2 | 未开始 | agentd、LangGraph、Live/Replay、三个工具 |
+| M1 | 已完成 | Go 结构化 Kubernetes Diagnostic API |
+| M2 | 进行中 | agentd、LangGraph、Live/Replay、三个工具 |
 | M3 | 未开始 | Prometheus/Alertmanager 与故障 Fixture |
 | M4 | 未开始 | 完整 Live/Replay 链路与拒绝矩阵 |
 | M5 | 未开始 | Evidence、README、学习和面试文档 |
@@ -61,6 +61,11 @@ Phase 2 不得破坏这些证据和接口。
 - 固定并验证 Python 直接依赖可解析：langgraph 1.2.11、langchain-core 1.5.6、langchain-openai 1.5.2、fastapi 0.141.1、uvicorn 0.52.4、httpx 0.28.1。
 - 固定 Prometheus 3.14.0 与 Alertmanager 0.34.0 的官方 linux-amd64 SHA256。
 - 在踩坑文档增加“系统 Python 无 pip”和“LangSmith 传递依赖不等于启用 tracing”。
+- 完成 internal/diagnostic：五种只读 operation、固定 Kubernetes API 路径和固定 curl 命令。
+- 完成认证后的 POST /api/v1/sandboxes/{id}/diagnostics/kubernetes。
+- 未知 operation、错误 namespace 返回 403 + denyLayer=tool-policy；未知 JSON 字段返回 400。
+- 增加纯逻辑和 HTTP 边界测试；go test ./...、go vet ./...、go build 均通过。
+- 踩坑文档新增“调用方白名单不是服务端边界”和“kubectl 不是只读诊断必要条件”。
 
 ## 已知事实与风险
 
@@ -82,11 +87,11 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 实现 internal/diagnostic 的只读 operation、参数验证和 Kubernetes API 路径构造。
-2. 为拒绝 operation、namespace、名称和 tailLines 写最小表驱动测试。
-3. 接入 POST /api/v1/sandboxes/{id}/diagnostics/kubernetes Handler。
-4. 运行 Go test/vet/build，更新踩坑与进度。
-5. 提交并推送 M1。
+1. 创建 agentd/pyproject.toml，使用 uv 生成并提交 uv.lock。
+2. 实现 Agent 配置、数据模型、内存 Task Store 和 FastAPI 基础 API。
+3. 实现 LangGraph State、Live/Replay Model Gateway 和有限循环。
+4. 实现 Prometheus、Kubernetes、Plan 三个 Python 工具客户端。
+5. 先用 Mock HTTP 服务跑通 Replay，不启动 kind 重测试。
 
 ## 恢复工作时
 
