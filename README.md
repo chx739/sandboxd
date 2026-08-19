@@ -1,28 +1,96 @@
 # sandboxd
 
-`sandboxd` 是一个面向学习和秋招面试的 Kubernetes AI Agent 执行沙箱 Demo。
+在 Kubernetes 上实现一个**受限的 AI Agent 代码执行沙箱**：沙箱内只能读集群，任何写操作都必须经过 server-side dry-run 与独立 Operator 审批。
 
-项目重点不是生产化，而是通过一条能运行、能验证的最小链路理解并展示：
+核心命题：**不能用 prompt 防御 prompt injection，只能用执行层边界。** 所以本项目的重点不在 Agent 的能力，而在它的执行边界——即使模型被诱导生成了破坏性命令，那条命令在权限、网络和运行时三层都执行不了。
 
-- gVisor 与普通容器的隔离边界；
-- Pod `securityContext`、ServiceAccount、RBAC 与 NetworkPolicy；
-- client-go remotecommand、informer、lister 和 workqueue；
-- 预热池与 JSON Patch CAS 并发认领；
-- Prometheus 低基数指标与可观测性；
-- server-side dry-run、双 Token 与受控写操作。
+```mermaid
+graph LR
+    Agent["AI Agent / HTTP 客户端"] -->|Agent Token| API
+    Operator["Operator"] -->|Operator Token| API
+    subgraph sandboxd
+        API[api] --> Pool["pool<br/>informer + CAS 认领"]
+        API --> Mgr["manager<br/>生命周期 + exec"]
+        API --> Gate["approval<br/>dry-run + 审批门"]
+    end
+    Pool -->|List-Watch / JSON Patch| K8s[(kube-apiserver)]
+    Mgr -->|Pod 生命周期 / pods-exec| K8s
+    Gate -->|dry-run 与受控写入| K8s
+    K8s --> SB["沙箱 Pod<br/>gVisor · 只读 SA · 默认无出网"]
+    SB -->|只读 get/list/watch| K8s
+```
+
+## 读路径与写路径
+
+沙箱只能读，写必须绕出沙箱走审批门。这是整个项目的核心分流。
+
+```mermaid
+sequenceDiagram
+    participant A as Agent
+    participant S as sandboxd
+    participant K as kube-apiserver
+    participant P as 沙箱 Pod
+    participant O as Operator
+
+    Note over A,P: 读路径 —— 沙箱内直接执行
+    A->>S: POST /sandboxes 认领
+    S->>K: JSON Patch test+replace 抢占 idle
+    A->>S: POST /sandboxes/:id/exec
+    S->>K: pods/exec 子资源，协议升级
+    K->>P: 容器内执行 kubectl
+    P->>K: 只读 SA 查询
+    P-->>A: stdout 流式回传
+
+    Note over A,O: 写路径 —— 沙箱内无权限，必须绕出
+    A->>S: POST /plans 例如 scale replicas=3
+    S->>K: dry-run=server 走完整准入链
+    K-->>S: diff，未落地
+    O->>S: POST /plans/:id/approve
+    S->>K: 校验 UID 与 resourceVersion 后写入
+```
+
+## 安全设计
+
+五层独立边界，任一层失效其余仍然成立。
+
+**身份层** —— 沙箱 SA 只有 `get/list/watch`。**`secrets` 被刻意排除**：读 Secret 虽然是只读动作，但等于拿走集群全部凭证，「只读」不等于安全。`pods/exec`、`pods/portforward`、`pods/attach` 同样排除，它们在 RBAC 里是 `create` 动作，实质是横向移动能力。
+
+**准入层** —— PodSpec 里显式写全安全字段是第一层，namespace 开启 Pod Security Admission `restricted` 是第二层。**代码被改坏时准入层仍然拦得住**，`internal/sandbox/spec_test.go` 用单元测试锁死这些字段防止无声降级。
+
+**网络层** —— default-deny 加两条放通：kube-dns 与 apiserver 的真实 endpoint。不能用 Service ClusterIP 写 `ipBlock`，因为策略执行时目标通常已 DNAT。
+
+**运行时层** —— gVisor（`runsc`）用户态内核，环境不支持时降级 runc，`sandbox_runtime_info` 指标标记当前实际隔离级别。验证方式是 Pod 内 `dmesg` 看到 `Starting gVisor...`，不是只看 RuntimeClass YAML 存在。
+
+**治理层** —— server-side dry-run 出 diff、Agent/Operator 双 Token 分权、UID + resourceVersion 防 TOCTOU。审批是人的策略层，沙箱是技术执行层，**两者不能互相替代**。
+
+## 与 kubernetes-sigs/agent-sandbox 的关系
+
+Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent-sandbox) 提供 `Sandbox` / `SandboxTemplate` / `SandboxClaim` / `SandboxWarmPool` 四个 CRD，把沙箱生命周期与预热池标准化，并通过 `RuntimeClass` 把底层隔离委托给 gVisor 或 Kata。
+
+**本项目在沙箱生命周期与预热池上与它重合**，这说明设计方向和社区收敛的方向一致。差异在于：
+
+- agent-sandbox 的定位是**沙箱编排器**，scope 不包含权限边界与写操作治理——沙箱内 SA 有什么权限、写操作怎么审批、哪些动作即使批准也永久拒绝，都不在它的范围内。**本项目做的正是这一层。**
+- 第一版刻意用**裸 client-go** 手写而非直接使用它的 CRD，目的是真正掌握 informer、workqueue 与乐观并发控制的机制；现成 CRD 会把这些机制盖掉。
+
+合理的演进路径是把生命周期替换为 agent-sandbox 的 CRD，只保留权限层与审批门作为 extension——这也正是它 `extensions` 模块的设计意图。
 
 ## 当前状态
 
-已经实测完成：
+实测环境：Go 1.26.5、kind 0.31.0、Kubernetes 1.35.0、gVisor `release-20260810.0`、Calico 3.32.0、WSL2 单节点。
 
-- 环境：Go 1.26.5、kind 0.31.0、Kubernetes 1.35.0、gVisor `release-20260810.0`、Calico 3.32.0；
-- 安全：Pod restricted 基线、PSA、只读 RBAC、secrets/写入/exec 拒绝、DNS/API 之外默认拒绝网络；
-- 生命周期：Create/List/Delete、informer/lister 等待 Ready、WebSocket/SPDY Exec、超时销毁、本地鉴权 API；
-- 并发：typed workqueue 单 worker、目标为 2 的预热池、JSON Patch CAS、direct fallback、Release 后删除补新；
-- 可观测：acquire、pool size、CAS conflict、Exec duration/timeout、runtime 和审批拒绝指标；
-- 审批：Deployment scale DryRun、Agent/Operator 分权、UID/resourceVersion 防 TOCTOU、批准/拒绝状态机。
+| 能力 | 状态 |
+|---|---|
+| gVisor 真实隔离（Pod 内 `dmesg` 证据） | 已实测 |
+| Pod restricted 基线 + PSA + 短时 projected token | 已实测 |
+| 只读 RBAC：secrets / 写入 / exec 拒绝 | 已实测 |
+| NetworkPolicy default-deny 正反路径 | 已实测 |
+| Create/List/Delete、informer 等待 Ready、WebSocket/SPDY Exec、超时销毁 | 已实测 |
+| typed workqueue 预热池（target=2）、JSON Patch CAS、direct fallback | 已实测 |
+| Prometheus 低基数指标 | 已实测 |
+| Deployment scale DryRun、双 Token 分权、TOCTOU 拒绝 | 已实测 |
+| Agent 层（最小 ReAct + 注入实验） | 规划中，见 [docs/12](docs/12-Agent层实现计划.md) |
 
-关键实测结果：
+关键实测输出：
 
 ```text
 [   0.000000] Starting gVisor...
@@ -42,11 +110,13 @@ Role split: Agent approve -> 401, Operator approve -> 200
 TOCTOU: resourceVersion changed -> 409, Plan stale
 ```
 
-证据记录位于 [docs/evidence](docs/evidence)，当前开发位置见 [持续进度](docs/PROGRESS.md)。
+并发规模是 5 而非更高，这是 WSL2 单节点的主动约束（见 `GOAL.md`）。`claim_conflicts=6` 比并发数更能说明 CAS 在真实生效——**零冲突只意味着没有测到竞争**。
+
+完整证据见 [docs/evidence](docs/evidence)，开发位置见 [docs/PROGRESS.md](docs/PROGRESS.md)。
 
 ## 快速验证
 
-以下脚本默认只写用户目录和本仓库缓存，不需要 sudo：
+脚本默认只写用户目录和本仓库缓存，不需要 sudo；重操作前检查内存、swap、磁盘和容器，退出时精确清理。
 
 ```bash
 export PATH="${HOME}/.local/bin:${PATH}"
@@ -60,19 +130,15 @@ export PATH="${HOME}/.local/bin:${PATH}"
 ./hack/verify-approval.sh
 ```
 
-脚本在重操作前检查内存、swap、磁盘和容器。验证脚本使用低副本、小并发，并在退出时精确清理。
-
 ## 一键完整演示
 
-基础集群已准备好后，零额外依赖入口为：
+集群准备好后：
 
 ```bash
-./hack/demo.sh
+./hack/demo.sh          # 或 make demo
 ```
 
-它会先确认当前 context 精确为单节点 `kind-sandboxd`，再依次验证安全策略、gVisor、Manager/Exec、Pool/CAS/Metrics 和审批门，最后检查临时资源残留。脚本不会自动重建集群、安装系统包或调用 sudo。
-
-如果环境已安装 make，也可使用等价快捷方式 `make demo`。
+先确认当前 context 精确为单节点 `kind-sandboxd`，再依次验证安全策略、gVisor、Manager/Exec、Pool/CAS/Metrics 和审批门，最后检查临时资源残留。不会自动重建集群、安装系统包或调用 sudo。
 
 ## 启动 API
 
@@ -84,7 +150,7 @@ export SANDBOXD_OPERATOR_TOKEN='replace-with-different-operator-token'
 go run ./cmd/sandboxd
 ```
 
-Token 只从环境变量读取，不提供命令行 flag，避免进入进程参数。教学 Demo 未实现 Secret 管理和轮转，请勿把示例值用于真实环境。
+Token 只从环境变量读取，不提供命令行 flag，避免进入进程参数和 shell history。教学 Demo 未实现 Secret 管理与轮转，示例值不要用于真实环境。
 
 ## 编译与测试
 
@@ -93,16 +159,28 @@ make build
 make test
 ```
 
-测试保持少而有价值：优先锁住安全基线、并发认领、DryRun 不落地和 TOCTOU 拒绝，不追求覆盖率数字。
+测试少而有针对性：锁住 Pod 安全基线、并发认领唯一性、DryRun 不落地、TOCTOU 拒绝。不追求覆盖率数字。
 
-## 文档入口
+## 文档
 
-- [持续开发目标与安全边界](GOAL.md)
-- [最小实现计划](docs/00-实现计划.md)
-- [学习文档索引](docs/README.md)
-- [开发踩坑与排障](docs/11-开发踩坑与排障.md)
-- [秋招面试问答与项目讲法](docs/10-面试问答与项目讲法.md)
+| 文档 | 用途 |
+|---|---|
+| [GOAL.md](GOAL.md) | 目标锚点、边界与安全红线 |
+| [docs/README.md](docs/README.md) | 学习文档索引（01–13） |
+| [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 阅读顺序、破坏实验、复习检验 |
+| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 25 条真实问题与定位过程 |
+| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | Q1–Q35、架构选型取舍、项目讲法 |
+| [docs/12-Agent层实现计划.md](docs/12-Agent层实现计划.md) | Phase 2 规划，尚未实施 |
 
 ## 项目边界
 
-这是单机、单进程、单租户的教学与面试 Demo，不具备生产环境要求的多租户隔离、高可用、持久化审计、凭证轮转和完整限流能力。gVisor 是纵深防御的一层，不是“绝对安全”的承诺。
+单机、单进程、**单租户**的教学与验证 Demo。不具备生产要求的多租户隔离、高可用、持久化审计、凭证轮转与完整限流：
+
+- API 层没有归属检查——任何持 Agent Token 的调用方可操作任意沙箱
+- 沙箱共用一个 ServiceAccount 且绑 ClusterRole（全集群只读），多租户下这一条直接不成立
+- Plan 存内存，进程重启即丢失
+- 并发验证规模为 5，未做容量模型与压力测试
+
+gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
+
+
