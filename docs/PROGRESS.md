@@ -46,7 +46,7 @@ Phase 2 不得破坏这些证据和接口。
 | M2 | 已完成 | agentd、LangGraph、Live/Replay、三个工具 |
 | M3 | 已完成 | Prometheus/Alertmanager 与故障 Fixture |
 | M4 | 进行中（Replay 已完成，Live 待配置） | 完整 Live/Replay 链路与拒绝矩阵 |
-| M5 | 进行中 | Evidence、README、学习和面试文档 |
+| M5 | 已完成 | Evidence、README、学习和面试文档 |
 
 ## 本轮已经完成
 
@@ -97,6 +97,12 @@ Phase 2 不得破坏这些证据和接口。
 - 单入口支持 AGENTD_DEMO_MODE=replay/live；Live 缺任一 LLM 配置时在创建资源前安全失败。
 - 加入 Live 分支后完整 Replay 再次通过，严格断言 Agent Policy、Pending Plan、gVisor 与清理结果。
 - 2026-08-19 最新脱敏 Replay 证据保存在本地 .cache/agent-demo-evidence/8b11a9d333e94249b9f04438491fa254，明确不作为 Live 证据。
+- 完成 docs/14：LangGraph 图、三个工具、有限状态、可信侧压缩、纵深防御、Live/Replay 边界和学习顺序。
+- 完成 docs/15：32 个 Agent 安全高频追问，覆盖选型、Tool Calling、注入、RBAC、审批、多会话与外部系统扩展。
+- 完成 docs/evidence/phase8-agent-alert.md 与人工脱敏 replay-contained.json；不含运行时 ID、Token 或隐藏思维。
+- README 架构图、能力状态、快速验证、项目边界和 docs/README、docs/13 学习路径已更新到 Phase 2。
+- 最终审计通过：Go test/vet/build、Python compileall/2 tests、全部 Shell 语法、脱敏 JSON 和本地 Markdown 链接。
+- 清理与秘密审计通过：目标 namespace、managed Pod、四个监听和渲染 Token 无残留，仓库未发现硬编码凭证。
 
 ## 已知事实与风险
 
@@ -119,10 +125,7 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 编写 docs/14-LangGraph告警诊断学习手册.md、docs/15-Agent安全面试问答.md。
-2. 将人工复核后的脱敏 Replay 摘要写入 docs/evidence/phase8-agent-alert.md，并更新 README/文档索引。
-3. 完成 Go test/vet/build、Python 测试、脚本语法、秘密/清理/Git 审计并推送。
-4. 等待用户提供三个 AGENTD_LLM_* 配置后最多运行 3 次 Live；Live 未验证前不得宣布 Phase 2 全部完成。
+1. 等待用户提供三个 AGENTD_LLM_* 配置后最多运行 3 次 Live；Live 未验证前不得宣布 Phase 2 全部完成。
 
 ## 恢复工作时
 

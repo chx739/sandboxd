@@ -6,18 +6,22 @@
 
 ```mermaid
 graph LR
-    Agent["AI Agent / HTTP 客户端"] -->|Agent Token| API
+    AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>LangGraph StateGraph"]
+    Agentd -->|PromQL| Prom["Prometheus Query API"]
+    Agentd -->|Agent Token| API
     Operator["Operator"] -->|Operator Token| API
     subgraph sandboxd
         API[api] --> Pool["pool<br/>informer + CAS 认领"]
         API --> Mgr["manager<br/>生命周期 + exec"]
+        API --> Diag["diagnostic<br/>结构化只读 operation"]
         API --> Gate["approval<br/>dry-run + 审批门"]
     end
     Pool -->|List-Watch / JSON Patch| K8s[(kube-apiserver)]
     Mgr -->|Pod 生命周期 / pods-exec| K8s
     Gate -->|dry-run 与受控写入| K8s
     K8s --> SB["沙箱 Pod<br/>gVisor · 只读 SA · 默认无出网"]
-    SB -->|只读 get/list/watch| K8s
+    Diag -->|固定命令| SB
+    SB -->|固定 HTTPS GET| K8s
 ```
 
 ## 读路径与写路径
@@ -35,10 +39,10 @@ sequenceDiagram
     Note over A,P: 读路径 —— 沙箱内直接执行
     A->>S: POST /sandboxes 认领
     S->>K: JSON Patch test+replace 抢占 idle
-    A->>S: POST /sandboxes/:id/exec
-    S->>K: pods/exec 子资源，协议升级
-    K->>P: 容器内执行 kubectl
-    P->>K: 只读 SA 查询
+    A->>S: POST /sandboxes/:id/diagnostics/kubernetes
+    S->>K: pods/exec 子资源，执行固定命令
+    K->>P: 固定 curl + 服务端构造 URL
+    P->>K: projected SA 发只读 HTTPS GET
     P-->>A: stdout 流式回传
 
     Note over A,O: 写路径 —— 沙箱内无权限，必须绕出
@@ -88,7 +92,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | typed workqueue 预热池（target=2）、JSON Patch CAS、direct fallback | 已实测 |
 | Prometheus 低基数指标 | 已实测 |
 | Deployment scale DryRun、双 Token 分权、TOCTOU 拒绝 | 已实测 |
-| Agent 层（最小 ReAct + 注入实验） | 规划中，见 [docs/12](docs/12-Agent层实现计划.md) |
+| Agent 层：外部告警、LangGraph、Prometheus/K8s Tool、注入与 Pending Plan | Replay 全链路已实测；Live 待配置 |
 
 关键实测输出：
 
@@ -108,6 +112,11 @@ Metrics: runtime=gvisor, idle=2, busy=0, claim_conflicts=6
 DryRun: replicas remained 0 before approval
 Role split: Agent approve -> 401, Operator approve -> 200
 TOCTOU: resourceVersion changed -> 409, Plan stale
+Agent alert: Prometheus -> Alertmanager -> LangGraph task (replay)
+Injection: Pod Log -> Trace injectedVia=podlog
+Policy: agent-policy denied; Go tool-policy=403; RBAC DELETE=403
+Approval: Agent approve=401; Plan pending; replicas unchanged
+Agent sandbox: dmesg contains Starting gVisor
 ```
 
 并发规模是 5 而非更高，这是 WSL2 单节点的主动约束（见 `GOAL.md`）。`claim_conflicts=6` 比并发数更能说明 CAS 在真实生效——**零冲突只意味着没有测到竞争**。
@@ -128,6 +137,9 @@ export PATH="${HOME}/.local/bin:${PATH}"
 ./hack/verify-manager.sh
 ./hack/verify-pool.sh
 ./hack/verify-approval.sh
+./hack/install-observability-tools.sh
+./hack/verify-observability.sh
+./hack/run-agent-demo.sh
 ```
 
 ## 一键完整演示
@@ -139,6 +151,14 @@ export PATH="${HOME}/.local/bin:${PATH}"
 ```
 
 先确认当前 context 精确为单节点 `kind-sandboxd`，再依次验证安全策略、gVisor、Manager/Exec、Pool/CAS/Metrics 和审批门，最后检查临时资源残留。不会自动重建集群、安装系统包或调用 sudo。
+
+Agent Demo 会额外启动 pool=1、worker=1 的 localhost 服务并创建一个临时 CrashLoop Fixture；退出时清理 namespace、Pod、进程和渲染 Token：
+
+```bash
+./hack/run-agent-demo.sh
+AGENTD_DEMO_MODE=live ./hack/run-agent-demo.sh  # 还需三个 AGENTD_LLM_* 配置
+```
+
 
 ## 启动 API
 
@@ -166,11 +186,12 @@ make test
 | 文档 | 用途 |
 |---|---|
 | [GOAL.md](GOAL.md) | 目标锚点、边界与安全红线 |
-| [docs/README.md](docs/README.md) | 学习文档索引（01–13） |
+| [docs/README.md](docs/README.md) | 学习文档索引（01–15） |
 | [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 阅读顺序、破坏实验、复习检验 |
-| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 25 条真实问题与定位过程 |
-| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | Q1–Q35、架构选型取舍、项目讲法 |
-| [docs/12-Agent层实现计划.md](docs/12-Agent层实现计划.md) | Phase 2 规划，尚未实施 |
+| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 36 条真实问题与定位过程 |
+| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | Q1–Q33、架构选型取舍、项目讲法 |
+| [docs/14-LangGraph告警诊断学习手册.md](docs/14-LangGraph告警诊断学习手册.md) | Agent 实现、八股、验证和一分钟讲法 |
+| [docs/15-Agent安全面试问答.md](docs/15-Agent安全面试问答.md) | Agent 安全与扩展的 32 个高频追问 |
 
 ## 项目边界
 
@@ -180,6 +201,9 @@ make test
 - 沙箱共用一个 ServiceAccount 且绑 ClusterRole（全集群只读），多租户下这一条直接不成立
 - Plan 存内存，进程重启即丢失
 - 并发验证规模为 5，未做容量模型与压力测试
+- Task、Trace 和 Plan 都是单进程内存状态，重启会丢失
+- 当前外部 Connector 是 localhost Prometheus/Alertmanager，只诊断本地 kind，不是通用多集群运维
+- Replay 已实测但 Live 尚未配置，不能用 Replay 代替真实模型能力证据
 
 gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
 
