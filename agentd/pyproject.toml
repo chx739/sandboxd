@@ -1,0 +1,16 @@
+[project]
+name = "sandboxd-agentd"
+version = "0.1.0"
+description = "sandboxd Phase 2 最小告警诊断 Agent"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi==0.141.1",
+    "httpx==0.28.1",
+    "langchain-core==1.5.6",
+    "langchain-openai==1.5.2",
+    "langgraph==1.2.11",
+    "uvicorn==0.52.4",
+]
+
+[tool.uv]
+package = false

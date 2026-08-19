@@ -12,7 +12,7 @@ Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 正在进行。
 
 当前里程碑：
 
-    M2：agentd、LangGraph、Live/Replay 与三个工具
+    M3：Prometheus/Alertmanager 与故障 Fixture
 
 ## Phase 1 已完成基线
 
@@ -43,8 +43,8 @@ Phase 2 不得破坏这些证据和接口。
 |---|---|---|
 | M0 | 已完成 | 目标、计划、AGENTS、PROGRESS、分支和版本策略 |
 | M1 | 已完成 | Go 结构化 Kubernetes Diagnostic API |
-| M2 | 进行中 | agentd、LangGraph、Live/Replay、三个工具 |
-| M3 | 未开始 | Prometheus/Alertmanager 与故障 Fixture |
+| M2 | 已完成 | agentd、LangGraph、Live/Replay、三个工具 |
+| M3 | 进行中 | Prometheus/Alertmanager 与故障 Fixture |
 | M4 | 未开始 | 完整 Live/Replay 链路与拒绝矩阵 |
 | M5 | 未开始 | Evidence、README、学习和面试文档 |
 
@@ -66,6 +66,17 @@ Phase 2 不得破坏这些证据和接口。
 - 未知 operation、错误 namespace 返回 403 + denyLayer=tool-policy；未知 JSON 字段返回 400。
 - 增加纯逻辑和 HTTP 边界测试；go test ./...、go vet ./...、go build 均通过。
 - 踩坑文档新增“调用方白名单不是服务端边界”和“kubectl 不是只读诊断必要条件”。
+- 创建 agentd/pyproject.toml 和 uv.lock；uv frozen 环境可复现安装。
+- 完成配置、Pydantic 数据模型、有界 HTTP Client、Task Store、单 Worker 和 FastAPI Alert/Task/Trace API。
+- 以 StateGraph 显式实现 prepare、model、validate、execute、finalize 节点及有限循环。
+- 完成 query_prometheus、kubernetes_read、propose_plan 三个工具和 Python 前置策略。
+- 完成 OpenAI-compatible Live Gateway 构造验证和每任务独立 Replay Gateway。
+- deterministic-policy-case Replay 完整验证：读取注入、delete_namespace 在 agent-policy 拒绝、得到 Pending Plan、Sandbox finally 释放。
+- FastAPI 验证 Alert Token 不能读取 Task；Python compileall 和 2 个 unittest 通过。
+- Trace 仅写 .cache，尝试 0700/0600 权限，不包含 Header/Token/隐藏思维。
+- 踩坑新增“Body 必须流式限长”和“多 Tool Call 必须逐个闭合协议”。
+- 根目录审计发现并修复 app 导入依赖 cwd；统一为 agentd.app，并新增对应踩坑。
+- 使用文档中的 Uvicorn factory 命令启动单个 Replay agentd，/healthz 返回 200，随后按精确 PID 清理。
 
 ## 已知事实与风险
 
@@ -87,11 +98,11 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 创建 agentd/pyproject.toml，使用 uv 生成并提交 uv.lock。
-2. 实现 Agent 配置、数据模型、内存 Task Store 和 FastAPI 基础 API。
-3. 实现 LangGraph State、Live/Replay Model Gateway 和有限循环。
-4. 实现 Prometheus、Kubernetes、Plan 三个 Python 工具客户端。
-5. 先用 Mock HTTP 服务跑通 Replay，不启动 kind 重测试。
+1. 添加固定版本、SHA256 校验的 Prometheus/Alertmanager 用户态安装脚本。
+2. 添加 Prometheus 配置、确定性告警规则和 Alertmanager Webhook 模板。
+3. 添加 restricted CrashLoop Deployment、ConfigMap 和间接注入 Fixture。
+4. 添加低资源启停与 cleanup 脚本，先只验证配置和进程，不运行 Live 模型。
+5. 更新进度、踩坑，提交并推送 M3。
 
 ## 恢复工作时
 
