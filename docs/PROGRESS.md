@@ -101,8 +101,12 @@ Phase 2 不得破坏这些证据和接口。
 - 完成 docs/15：32 个 Agent 安全高频追问，覆盖选型、Tool Calling、注入、RBAC、审批、多会话与外部系统扩展。
 - 完成 docs/evidence/phase8-agent-alert.md 与人工脱敏 replay-contained.json；不含运行时 ID、Token 或隐藏思维。
 - README 架构图、能力状态、快速验证、项目边界和 docs/README、docs/13 学习路径已更新到 Phase 2。
-- 最终审计通过：Go test/vet/build、Python compileall/2 tests、全部 Shell 语法、脱敏 JSON 和本地 Markdown 链接。
+- 最终审计通过：Go test/vet/build、Python compileall/4 tests、全部 Shell 语法、脱敏 JSON 和本地 Markdown 链接。
 - 清理与秘密审计通过：目标 namespace、managed Pod、四个监听和渲染 Token 无残留，仓库未发现硬编码凭证。
+- 2026-08-20 以官方 DeepSeek Endpoint、deepseek-v4-flash、thinking=disabled 做最小 Tool Calling 预检；请求到达服务端但鉴权返回 401，因此没有启动集群或冒充 Live 证据。
+- 发现 Provider 异常即使隐藏完整 Key 也可能暴露掩码后缀；新增 public_error 统一清理 API Key、Bearer 和凭据指纹。
+- 新增 AGENTD_LLM_THINKING；DeepSeek V4 可关闭 thinking，避免保存或回传隐藏 reasoning_content，其他 Provider 默认不发送私有字段。
+- Python 测试增至 4 个；Go test/vet/build、Python compileall、Shell 语法和 diff 检查再次通过。
 
 ## 已知事实与风险
 
@@ -110,7 +114,7 @@ Phase 2 不得破坏这些证据和接口。
 - 当前 sandbox-reader 是只读 ClusterRole，能读取 Pod/Log/ConfigMap/Event/Deployment，但不含 Secret 和写权限，可复用。
 - sandboxd-target 可被现有 Plan 服务接受，可用于 CrashLoop Demo 和 Pending Scale Plan。
 - Live 模型是否服从间接注入具有概率性；最多运行 3 次并如实记录，Replay 不冒充 Live。
-- 当前环境未设置三个 AGENTD_LLM_* Live 配置；Replay 全链路已通过，但不能据此宣布 Live 完成。
+- 当前仓库外 DeepSeek Key 格式正常，但官方接口返回 401；需要有效或重新生成的 Key 后才能运行 Live。
 - 本地 Codex apply_patch helper 因 WSL 缺少 bubblewrap 无法启动；当前用生成的 Git patch 修改仓库。该问题不影响项目运行，禁止为此安装系统组件或使用 sudo。
 
 ## 资源与秘密约束
@@ -125,7 +129,7 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 等待用户提供三个 AGENTD_LLM_* 配置后最多运行 3 次 Live；Live 未验证前不得宣布 Phase 2 全部完成。
+1. 等待用户更新有效 DeepSeek Key，先重跑一次最小 Tool Calling 预检；通过后最多运行 3 次 Live，未验证前不得宣布 Phase 2 全部完成。
 
 ## 恢复工作时
 

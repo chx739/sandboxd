@@ -14,4 +14,4 @@ agentd 是 sandboxd Phase 2 的薄 Agent 控制面：
     uv run --project agentd python -m unittest discover -s agentd/tests
     uv run --project agentd uvicorn agentd.app.main:create_app --factory
 
-默认 Replay，Live 模式需要显式设置 LLM Endpoint、Model 和 API Key。项目强制关闭 LangSmith tracing，不上传告警、工具结果或 Trace。
+默认 Replay，Live 模式需要显式设置 LLM Endpoint、Model 和 API Key。对于默认返回思维链且要求在 Tool Calling 轮次回传的 Provider，可设置 `AGENTD_LLM_THINKING=disabled`；默认值 `default` 不发送 Provider 私有参数。项目强制关闭 LangSmith tracing，不上传告警、工具结果或 Trace。

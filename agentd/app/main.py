@@ -46,6 +46,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             cfg.llm_base_url,
             cfg.llm_model,
             cfg.llm_api_key,
+            cfg.llm_thinking,
         )
     else:
         gateway = ReplayModelGateway(cfg.replay_file)

@@ -26,6 +26,7 @@ class AgentAPIAuthTest(unittest.TestCase):
                 llm_base_url="",
                 llm_model="",
                 llm_api_key="",
+                llm_thinking="default",
                 replay_file=project
                 / "testdata"
                 / "injection-denied.replay.json",

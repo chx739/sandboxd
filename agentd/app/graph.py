@@ -33,6 +33,7 @@ from .policy import (
     bounded_text,
     validate_tool_call,
 )
+from .redaction import public_error
 
 SYSTEM_PROMPT = """
 你是一个只做证据驱动诊断的 Kubernetes 运维 Agent。
@@ -267,7 +268,7 @@ class AgentRunner:
                         payload = {
                             "ok": False,
                             "error": "%s: %s"
-                            % (type(exc).__name__, bounded_text(str(exc), 512)),
+                            % (type(exc).__name__, public_error(exc)),
                         }
 
                 observation = bounded_text(

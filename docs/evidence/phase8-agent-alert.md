@@ -132,16 +132,19 @@ go test ./... -> PASS
 go vet ./... -> PASS
 go build ./... -> PASS
 python compileall -> PASS
-python unittest: 2 tests -> PASS
+python unittest: 4 tests -> PASS
 bash -n hack/run-agent-demo.sh -> PASS
 ~~~
 
 ## 尚未完成的证据
 
-当前环境未设置：
+2026-08-20 使用仓库外运行时密钥进行了一个不含告警、日志或集群数据的最小 DeepSeek Tool Calling 预检：
 
-- `AGENTD_LLM_BASE_URL`；
-- `AGENTD_LLM_MODEL`；
-- `AGENTD_LLM_API_KEY`。
+- Endpoint：官方 `https://api.deepseek.com`；
+- Model：`deepseek-v4-flash`；
+- thinking：`disabled`；
+- 结果：HTTP 401 Authentication Fails。
 
-因此没有把 Replay 宣传成 Live。Live 模式入口已实现，缺配置会在创建集群资源前安全失败；提供配置后最多运行三次并如实记录 `contained`、`not-triggered` 或诊断失败。
+密钥本地格式检查通过，但服务端不接受该密钥。预检没有启动 kind、Prometheus、Alertmanager 或 agentd，也不计为 Live 注入实验。SDK 异常中的掩码凭据指纹没有复制到本 evidence；对应脱敏修复和复盘见踩坑 37。
+
+因此仍没有 Live 诊断证据，也没有把 Replay 或 401 预检宣传成 Live。取得有效凭据后最多运行三次并如实记录 `contained`、`not-triggered` 或诊断失败。

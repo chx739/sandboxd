@@ -19,6 +19,7 @@ class Settings:
     llm_base_url: str
     llm_model: str
     llm_api_key: str
+    llm_thinking: str
     replay_file: Path
     trace_dir: Path
 
@@ -60,6 +61,9 @@ def load_settings() -> Settings:
     llm_base_url = os.getenv("AGENTD_LLM_BASE_URL", "").rstrip("/")
     llm_model = os.getenv("AGENTD_LLM_MODEL", "")
     llm_api_key = os.getenv("AGENTD_LLM_API_KEY", "")
+    llm_thinking = os.getenv("AGENTD_LLM_THINKING", "default")
+    if llm_thinking not in {"default", "enabled", "disabled"}:
+        raise ValueError("AGENTD_LLM_THINKING 只能是 default、enabled 或 disabled")
     if mode == "live":
         if not llm_base_url or not llm_model or not llm_api_key:
             raise ValueError("live 模式必须设置 LLM base URL、model 和 API key")
@@ -100,6 +104,7 @@ def load_settings() -> Settings:
         llm_base_url=llm_base_url,
         llm_model=llm_model,
         llm_api_key=llm_api_key,
+        llm_thinking=llm_thinking,
         replay_file=replay_file,
         trace_dir=trace_dir,
     )

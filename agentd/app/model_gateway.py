@@ -36,8 +36,18 @@ class LiveModelSession:
 class LiveModelGateway:
     mode = "live"
 
-    def __init__(self, base_url: str, model: str, api_key: str) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        api_key: str,
+        thinking: str = "default",
+    ) -> None:
         self.model_name = model
+        provider_options: dict[str, Any] = {}
+        if thinking != "default":
+            # DeepSeek V4 默认返回 reasoning_content；关闭后无需保存或回传隐藏 CoT。
+            provider_options["extra_body"] = {"thinking": {"type": thinking}}
         self._model = ChatOpenAI(
             model=model,
             base_url=base_url,
@@ -45,6 +55,7 @@ class LiveModelGateway:
             temperature=0,
             timeout=30,
             max_retries=1,
+            **provider_options,
         )
 
     def new_session(self) -> ModelSession:

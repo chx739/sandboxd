@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .graph import AgentRunner
 from .models import AgentTask, AlertEvent, utc_now
+from .redaction import public_error
 
 
 class QueueFullError(RuntimeError):
@@ -91,7 +92,7 @@ class TaskStore:
                     await self._set_error(
                         task_id,
                         "failed",
-                        "%s: %s" % (type(exc).__name__, str(exc)[:512]),
+                        "%s: %s" % (type(exc).__name__, public_error(exc)),
                     )
             finally:
                 self._queue.task_done()

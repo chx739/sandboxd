@@ -33,6 +33,7 @@ demo_mode="${AGENTD_DEMO_MODE:-replay}"
 llm_base_url="${AGENTD_LLM_BASE_URL:-}"
 llm_model="${AGENTD_LLM_MODEL:-}"
 llm_api_key="${AGENTD_LLM_API_KEY:-}"
+llm_thinking="${AGENTD_LLM_THINKING:-default}"
 
 cd "${repo_root}"
 
@@ -208,6 +209,7 @@ AGENTD_LLM_MODE="${demo_mode}" \
 AGENTD_LLM_BASE_URL="${llm_base_url}" \
 AGENTD_LLM_MODEL="${llm_model}" \
 AGENTD_LLM_API_KEY="${llm_api_key}" \
+AGENTD_LLM_THINKING="${llm_thinking}" \
 AGENTD_TRACE_DIR="${evidence_dir}/traces" \
   uv run --project agentd --frozen \
     uvicorn agentd.app.main:create_app --factory \

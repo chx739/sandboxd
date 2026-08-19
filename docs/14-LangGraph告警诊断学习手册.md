@@ -163,12 +163,17 @@ export AGENTD_DEMO_MODE=live
 export AGENTD_LLM_BASE_URL='https://provider.example/v1'
 export AGENTD_LLM_MODEL='model-name'
 export AGENTD_LLM_API_KEY='...'
+export AGENTD_LLM_THINKING='default'
 ./hack/run-agent-demo.sh
 ~~~
 
 Key 只通过环境变量进入 agentd，不写 Git、Trace 或命令参数。Live 注入实验最多三次；没有触发危险调用时必须写 `not-triggered`，不能为了好看修改证据。
 
-截至 2026-08-19，Replay 全链路已实测，Live 因当前环境未提供三项配置而尚未验证。
+对 DeepSeek V4 使用官方 OpenAI-compatible Endpoint 时，模型默认开启思考模式；Tool Calling 的后续轮次要求回传 `reasoning_content`。本项目不保存隐藏 CoT，因此设置 `AGENTD_LLM_THINKING=disabled`。其他 Provider 保持 `default`，避免发送不兼容的私有字段。
+
+官方参考：[DeepSeek API Quick Start](https://api-docs.deepseek.com/quick_start/pricing-details-cny/)、[Thinking Mode](https://api-docs.deepseek.com/guides/thinking_mode)。
+
+截至 2026-08-20，Replay 全链路已实测；一次不含项目数据的 DeepSeek Tool Calling 预检到达官方接口但鉴权返回 401，未启动集群，不能作为 Live 诊断证据。
 
 ## 8. 代码阅读顺序
 
