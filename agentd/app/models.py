@@ -100,6 +100,8 @@ class TraceStep(BaseModel):
     node: str
     tool: str = ""
     arguments: dict[str, Any] = Field(default_factory=dict)
+    plugin_id: str = Field(default="", alias="pluginId")
+    plugin_version: str = Field(default="", alias="pluginVersion")
     denied: bool = False
     deny_layer: str = Field(default="", alias="denyLayer")
     observation: str = ""
@@ -115,6 +117,7 @@ class AgentTrace(BaseModel):
     model: str
     provider: str = ""
     capabilities: dict[str, Any] = Field(default_factory=dict)
+    plugins: list[dict[str, Any]] = Field(default_factory=list)
     model_usage: ModelUsage = Field(default_factory=ModelUsage, alias="modelUsage")
     sandbox_id: str | None = Field(default=None, alias="sandboxId")
     alert_fingerprint: str = Field(default="", alias="alertFingerprint")

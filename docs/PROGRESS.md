@@ -4,15 +4,15 @@
 
 ## 当前状态
 
-Phase 1、Phase 2 已完成并保留；Phase 2.1 Pi-inspired Agent 内核优化已启动。
+Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插拔 Agent Runtime 已启动。
 
 当前分支：
 
-    codex/phase2-langgraph-agent
+    codex/phase3-pi-runtime
 
 当前里程碑：
 
-    Phase 2.1 完成：等待用户 review
+    Phase 3 M0：目标与实现计划冻结，准备实现插件注册表
 
 ## Phase 1 已完成基线
 
@@ -57,6 +57,16 @@ Phase 2 不得破坏这些证据和接口。
 | P2 | 已完成 | 生命周期事件、模型 usage/finishReason |
 | P3 | 已完成 | 上下文预算、取消与独立清理 |
 | P4 | 已完成 | 最小验证、学习/面试/踩坑、README、GitHub |
+
+## Phase 3 里程碑
+
+| 阶段 | 状态 | 内容 |
+|---|---|---|
+| M0 | 已完成 | GOAL、AGENTS、计划、PROGRESS、分支和 9 个 Python 测试基线 |
+| M1 | 已完成 | 受信任插件接口、注册表、Prometheus/Kubernetes 插件 |
+| M2 | 进行中 | 手写双层 Agent Loop 替换 StateGraph |
+| M3 | 未开始 | 线性 Session-lite、steer/follow-up/cancel/resume API |
+| M4 | 未开始 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
 
 ## 本轮已经完成
 
@@ -144,7 +154,8 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. Phase 2.1 无未完成开发项；等待用户 review，不自动扩展到 Session、steer 或 follow-up。
+1. 用手写 Pi-style 双层 Loop 替换 StateGraph，保持现有安全链路和返回结构。
+2. M2 的 12 个轻量测试通过后，再实现 Session-lite 与交互控制。
 
 ## Phase 2 完成审计
 
@@ -167,10 +178,11 @@ Phase 2 不得破坏这些证据和接口。
 2. 阅读 docs/00-实现计划.md。
 3. 阅读 docs/12-Agent层实现计划.md。
 4. 阅读 docs/16-Pi-inspired-Agent内核优化计划.md。
-5. 阅读本文件。
-6. 阅读 AGENTS.md。
-7. 查看 git status、当前分支和最近提交。
-8. 只继续“下一步”的第一项未完成工作。
+5. 阅读 docs/17-Pi-style安全可插拔Agent实现计划.md。
+6. 阅读本文件。
+7. 阅读 AGENTS.md。
+8. 查看 git status、当前分支和最近提交。
+9. 只继续“下一步”的第一项未完成工作。
 
 ## Phase 2.1 本轮完成
 
@@ -181,3 +193,17 @@ Phase 2 不得破坏这些证据和接口。
 - Python 单测由 7 个增至 9 个，覆盖上下文协议、双通道事件和取消只释放一次。
 - 明确不实现 Pi Session、steer、follow-up、插件、长期记忆和工具并行。
 - 最终验证：Go test/vet/build、Python compileall/9 tests、diff check 全部通过；未启动真实集群或 Live LLM。
+
+## Phase 3 本轮记录
+
+- 2026-08-31 用户明确授权从 Phase 2.1 扩展到 Pi-style 极简 Runtime，并要求进入目标模式持续实现。
+- 已创建 `codex/phase3-pi-runtime`，基线为 `787d023`，创建前工作区干净。
+- 完成 Phase 3 权威目标、执行规则和实现计划；固定不重写 sandboxd。
+- 固定 Pi 只作为源码设计参考，不增加 Node、TypeScript、Pi 或新的 Agent 框架依赖。
+- 改造前轻量基线为 9 个 Python 单测通过；显式使用 `uv run --project agentd --frozen`，未启动集群或 Live LLM。
+- 本地 apply_patch 辅助器仍因缺少 bubblewrap 失败；用户允许安装，但标准 `git apply` 补丁已可继续，因此遵守最小系统改动原则暂不安装。
+- M1 新增显式受信任 Plugin Registry、Prometheus 插件和 Kubernetes/Plan 插件；没有目录扫描、动态安装或第三方代码加载。
+- 模型 Tool Schema 由 Registry 生成，删除 policy.py 中重复 Schema；Python Policy 校验逻辑保持独立。
+- Trace 增加插件清单及每步 pluginId/pluginVersion；只读 `GET /api/v1/plugins` 受 API Token 保护，Alert Token 返回 401。
+- 现有 Replay 的 Prometheus/Kubernetes/Plan 调用已经真实经过插件分派，危险调用仍在 agent-policy 被拒绝。
+- M1 验证为 Python compileall、diff check 和 12 个单测通过；sandboxd 零修改，未启动集群或 Live LLM。

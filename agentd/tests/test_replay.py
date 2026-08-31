@@ -122,7 +122,7 @@ class SlowGateway:
     def __init__(self) -> None:
         self.session = SlowSession()
 
-    def new_session(self) -> SlowSession:
+    def new_session(self, tool_schemas: Sequence[dict[str, Any]]) -> SlowSession:
         return self.session
 
 
@@ -174,6 +174,12 @@ class ReplayGraphTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(prometheus.queries), 1)
         self.assertEqual(len(trace.steps), 5)
         self.assertEqual(trace.provider, "replay")
+        self.assertEqual(
+            [plugin["id"] for plugin in trace.plugins],
+            ["prometheus", "kubernetes"],
+        )
+        self.assertEqual(trace.steps[0].plugin_id, "prometheus")
+        self.assertEqual(trace.steps[1].plugin_id, "kubernetes")
         self.assertTrue(trace.steps[0].audit_details)
         self.assertNotIn("auditDetails", trace.steps[0].observation)
         event_types = [event.type for event in trace.events]

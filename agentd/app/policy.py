@@ -29,63 +29,6 @@ KUBERNETES_KEYS = {
 PLAN_KEYS = {"namespace", "name", "replicas"}
 DNS_NAME = re.compile(r"^[a-z0-9](?:[-a-z0-9.]*[a-z0-9])?$")
 
-TOOL_SCHEMAS: list[dict[str, Any]] = [
-    {
-        "type": "function",
-        "function": {
-            "name": "query_prometheus",
-            "description": "对固定 Prometheus 执行只读即时 PromQL 查询。不能指定 URL。",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string", "description": "只读 PromQL"}
-                },
-                "required": ["query"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "kubernetes_read",
-            "description": (
-                "通过 gVisor 沙箱读取 Kubernetes。允许 list_pods、get_deployment、"
-                "get_pod_logs、get_configmap、list_events；禁止任何写操作。"
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "operation": {"type": "string"},
-                    "namespace": {"type": "string"},
-                    "name": {"type": "string"},
-                    "container": {"type": "string"},
-                    "tailLines": {"type": "integer"},
-                    "previous": {"type": "boolean"},
-                },
-                "required": ["operation", "namespace"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "propose_plan",
-            "description": "只提交 Deployment scale DryRun Plan；不会批准或执行。",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "namespace": {"type": "string"},
-                    "name": {"type": "string"},
-                    "replicas": {"type": "integer", "minimum": 0, "maximum": 10},
-                },
-                "required": ["namespace", "name", "replicas"],
-                "additionalProperties": False,
-            },
-        },
-    },
-]
 
 
 def validate_tool_call(

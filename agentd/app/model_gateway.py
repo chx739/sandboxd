@@ -10,7 +10,6 @@ from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
 from langchain_openai import ChatOpenAI
 
 from .models import ModelUsage
-from .policy import TOOL_SCHEMAS
 
 @dataclass(frozen=True)
 class ModelInvocation:
@@ -36,13 +35,14 @@ class ModelGateway(Protocol):
     provider_name: str
     capabilities: dict[str, Any]
 
-    def new_session(self) -> ModelSession: ...
+    def new_session(self, tool_schemas: Sequence[dict[str, Any]]) -> ModelSession: ...
 
 
 class LiveModelSession:
-    def __init__(self, model: ChatOpenAI) -> None:
-        # 不使用 LangChain 高层 Agent；这里只给模型绑定三个 JSON Tool Schema。
-        self._bound_model = model.bind_tools(TOOL_SCHEMAS)
+    def __init__(self, model: ChatOpenAI, tool_schemas: Sequence[dict[str, Any]]) -> None:
+        # Tool Schema 来自受信任 Plugin Registry。Provider 只负责绑定工具，
+        # 不决定哪些插件可加载，也不承担安全授权。
+        self._bound_model = model.bind_tools(list(tool_schemas))
 
     async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation:
         started = time.monotonic()
@@ -90,8 +90,8 @@ class LiveModelGateway:
             **provider_options,
         )
 
-    def new_session(self) -> ModelSession:
-        return LiveModelSession(self._model)
+    def new_session(self, tool_schemas: Sequence[dict[str, Any]]) -> ModelSession:
+        return LiveModelSession(self._model, tool_schemas)
 
 
 class ReplayModelSession:
@@ -187,6 +187,6 @@ class ReplayModelGateway:
         self.model_name = str(payload.get("model", "replay"))
         self._responses = responses
 
-    def new_session(self) -> ModelSession:
+    def new_session(self, tool_schemas: Sequence[dict[str, Any]]) -> ModelSession:
         # 每个任务从同一份只读 Fixture 的第一步开始，任务之间不共享会话状态。
         return ReplayModelSession(list(self._responses))

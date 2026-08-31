@@ -66,6 +66,22 @@ class AgentAPIAuthTest(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json(), {"tasks": []})
 
+                response = client.get(
+                    "/api/v1/plugins",
+                    headers={"Authorization": "Bearer alert-token"},
+                )
+                self.assertEqual(response.status_code, 401)
+
+                response = client.get(
+                    "/api/v1/plugins",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(
+                    [item["id"] for item in response.json()["plugins"]],
+                    ["prometheus", "kubernetes"],
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -6,7 +6,7 @@
 
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
 
-## 当前开发目标：Phase 2 外部告警诊断 Agent
+## 已完成目标：Phase 2 外部告警诊断 Agent
 
 Phase 1 已完成并保留。当前只在其外增加一个薄 Agent 层：
 
@@ -18,7 +18,7 @@ Phase 1 已完成并保留。当前只在其外增加一个薄 Agent 层：
 - 同时提供明确标记的确定性 Replay，不冒充 Live 证据；
 - 开发范围、接口、文件结构、里程碑和完成证据以 docs/12-Agent层实现计划.md 为准。
 
-## 当前增量目标：Phase 2.1 Pi-inspired Agent 内核优化
+## 已完成增量：Phase 2.1 Pi-inspired Agent 内核优化
 
 Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核的可解释性和工程闭环，不改变项目定位与可信边界：
 
@@ -29,6 +29,21 @@ Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核�
 - Provider 只增加轻量能力元数据，不重写现有 Gateway。
 
 详细接口、文件结构、测试和完成证据以 `docs/16-Pi-inspired-Agent内核优化计划.md` 为准。不得引入 Pi 依赖、TypeScript 重写、会话树、长期记忆、多会话、多 Agent、动态插件、任意 Bash/文件工具、工具并行或生产级事件总线。
+
+上段“不实现 Session、steer、follow-up、插件”的限制只约束已经完成的 Phase 2.1，不再约束用户明确授权的 Phase 3。Phase 2.1 的代码、证据和安全边界仍须保留，不得为了新功能篡改旧证据。
+
+## 当前开发目标：Phase 3 Pi-style 安全可插拔运维 Agent Runtime
+
+在**不重写 Go sandboxd** 的前提下，把 Python agentd 从单次 LangGraph 告警状态机演进为受 Pi 官方源码启发的极简 Agent Runtime：
+
+- 用简单、中文注释充分的手写双层循环表达 Pi 的核心设计：内层处理 Tool Call 与 steer，外层在 Agent 原本结束后处理 follow-up；
+- 保留有限轮数、工具预算、总超时、上下文裁剪、ToolResult 双通道、真实 Trace 和取消后独立释放 Sandbox；
+- 实现只加载仓库内受信任内置插件的 Plugin Registry，把 Prometheus 与 Kubernetes/Plan 工具迁移为插件；
+- 插件只扩展“Agent 看见哪些结构化工具”，不得扩展 sandboxd 默认允许的能力；所有敏感执行仍由 Python Policy、Go Tool Policy、RBAC、NetworkPolicy、gVisor 和 Operator Approval 约束；
+- 实现线性 append-only Session-lite，以及最小的 resume、cancel、steer、follow-up API；Session 只服务事故诊断，不做长期记忆；
+- 代码和配套文档必须能让用户快速学习 Agent Loop、Session、插件、能力安全、取消语义和 Pi 的设计取舍。
+
+Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi-style安全可插拔Agent实现计划.md` 为准。Pi 只作为源码和设计参考，不引入 Pi、Node 或 TypeScript 运行时依赖。
 
 ## 不可偏移的约束
 
@@ -61,7 +76,9 @@ Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核�
 - 不追求大规模压测、形式化安全证明、完整 e2e 矩阵或生产 SLA。
 - 不把简历、密钥目录或旧项目迁入/清入本仓库；它们不属于 sandboxd 的实现范围。
 
-Phase 2 额外不做：外部 Kubernetes、多集群、宿主机运维、多租户、多会话、文件传输、RAG、长期记忆、多 Agent、数据库、消息队列、自动审批、LangSmith 和生产级 HA。不得为展示框架而扩大这些范围。
+Phase 2 额外不做项是历史阶段边界。Phase 3 只解除“线性 Session、steer/follow-up、受信任内置插件”三项限制；仍不做外部 Kubernetes、多集群、多租户、文件传输、RAG、长期记忆、多 Agent、数据库、消息队列、自动审批、LangSmith 和生产级 HA。
+
+Phase 3 明确不做：Pi 完整复刻、Session 树/fork、TUI、插件市场、在线安装、任意第三方代码加载、任意 Shell、插件热更新、生产级身份系统、分布式 Session、复杂自动 Compaction 和大规模并行工具。若后续增加 Linux Host Connector，只允许固定只读操作和测试目标，不得把真实宿主机作为默认目标。
 
 ## 完成判据
 
@@ -83,6 +100,7 @@ Phase 2 还必须证明：真实 Prometheus/Alertmanager 告警进入 agentd；�
 
 1. 完整阅读 `GOAL.md`。
 2. 阅读 `docs/00-实现计划.md`、`docs/12-Agent层实现计划.md`、`docs/16-Pi-inspired-Agent内核优化计划.md` 和 `docs/PROGRESS.md`。
+   Phase 3 续作还必须阅读 `docs/17-Pi-style安全可插拔Agent实现计划.md`。
 3. 查看 `git status`、最近提交和当前分支，保护用户已有改动。
 4. 阅读当前模块的代码、学习文档、脚本及最近一次验证输出。
 5. 从 `docs/PROGRESS.md` 标记的“下一步”继续，只完成当前最小闭环。

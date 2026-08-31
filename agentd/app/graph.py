@@ -15,9 +15,11 @@ from langchain_core.messages import (
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 
-from .clients import HTTPResult, PrometheusClient, SandboxdClient
+from .clients import PrometheusClient, SandboxdClient
 from .context import transform_model_context
 from .model_gateway import ModelGateway, ModelSession
+from .plugins.base import PluginContext
+from .plugins.registry import PluginRegistry, build_builtin_registry
 from .models import (
     AgentEvent,
     AgentTrace,
@@ -127,10 +129,12 @@ class AgentRunner:
         prometheus: PrometheusClient,
         sandboxd: SandboxdClient,
         model_gateway: ModelGateway,
+        plugins: PluginRegistry | None = None,
     ) -> None:
         self._prometheus = prometheus
         self._sandboxd = sandboxd
         self._model_gateway = model_gateway
+        self._plugins = plugins or build_builtin_registry()
 
     async def run(
         self,
@@ -155,7 +159,7 @@ class AgentRunner:
                 elapsedMs=int((time.monotonic() - claim_started) * 1000),
             )
 
-            session = self._model_gateway.new_session()
+            session = self._model_gateway.new_session(self._plugins.tool_schemas)
             graph = self._build_graph(session)
             initial: AgentState = {
                 "task_id": task_id,
@@ -208,6 +212,14 @@ class AgentRunner:
                 model=self._model_gateway.model_name,
                 provider=self._model_gateway.provider_name,
                 capabilities=self._model_gateway.capabilities,
+                plugins=[
+                    {
+                        "id": manifest.plugin_id,
+                        "version": manifest.version,
+                        "capabilities": list(manifest.capabilities),
+                    }
+                    for manifest in self._plugins.manifests
+                ],
                 modelUsage=sum_model_usage(state.get("model_usages", [])),
                 sandboxId=sandbox_id,
                 alertFingerprint=alert.fingerprint,
@@ -347,6 +359,15 @@ class AgentRunner:
                 tool_started = time.monotonic()
                 name = str(call["name"])
                 arguments = dict(call["args"])
+                registered = self._plugins.resolve(name)
+                manifest = registered.plugin.manifest if registered else None
+                plugin_id = manifest.plugin_id if manifest else ""
+                plugin_version = manifest.version if manifest else ""
+                plugin_context = PluginContext(
+                    sandbox_id=state["sandbox_id"],
+                    prometheus=self._prometheus,
+                    sandboxd=self._sandboxd,
+                )
                 denied = not bool(call["allowed"])
                 deny_layer = str(call.get("denyLayer", "")) if denied else ""
                 _append_event(
@@ -354,6 +375,7 @@ class AgentRunner:
                     "tool.started",
                     iteration=state.get("iteration_count"),
                     tool=name,
+                    details={"pluginId": plugin_id, "pluginVersion": plugin_version},
                 )
 
                 if denied:
@@ -365,8 +387,10 @@ class AgentRunner:
                     }
                 else:
                     try:
-                        result = await self._dispatch_tool(
-                            state["sandbox_id"], name, arguments
+                        result = await self._plugins.execute(
+                            name,
+                            arguments,
+                            plugin_context,
                         )
                         payload = {
                             "ok": 200 <= result.status_code < 300,
@@ -412,6 +436,8 @@ class AgentRunner:
                         "denied": denied,
                         "denyLayer": deny_layer,
                         "statusCode": payload.get("statusCode"),
+                        "pluginId": plugin_id,
+                        "pluginVersion": plugin_version,
                     },
                 )
                 messages.append(
@@ -447,6 +473,8 @@ class AgentRunner:
                         tool=name,
                         arguments=arguments,
                         denied=denied,
+                        pluginId=plugin_id,
+                        pluginVersion=plugin_version,
                         denyLayer=deny_layer,
                         observation=result_view.model_content,
                         auditDetails=result_view.audit_details,
@@ -515,17 +543,3 @@ class AgentRunner:
         builder.add_edge("execute_tools", "call_model")
         builder.add_edge("finalize", END)
         return builder.compile()
-
-    async def _dispatch_tool(
-        self,
-        sandbox_id: str,
-        name: str,
-        arguments: dict[str, Any],
-    ) -> HTTPResult:
-        if name == "query_prometheus":
-            return await self._prometheus.query(str(arguments["query"]))
-        if name == "kubernetes_read":
-            return await self._sandboxd.kubernetes_read(sandbox_id, arguments)
-        if name == "propose_plan":
-            return await self._sandboxd.propose_plan(arguments)
-        raise ValueError("未知工具: %s" % name)

@@ -12,6 +12,7 @@ from .config import Settings, load_settings
 from .graph import AgentRunner
 from .model_gateway import LiveModelGateway, ReplayModelGateway
 from .models import AlertEvent, AlertmanagerPayload, ManualTaskRequest
+from .plugins import build_builtin_registry
 from .store import QueueFullError, TaskStore
 
 MAX_ALERT_BODY_BYTES = 64 << 10
@@ -51,7 +52,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     else:
         gateway = ReplayModelGateway(cfg.replay_file)
 
-    runner = AgentRunner(prometheus, sandboxd, gateway)
+    plugins = build_builtin_registry()
+    runner = AgentRunner(prometheus, sandboxd, gateway, plugins)
     store = TaskStore(cfg.trace_dir)
 
     @asynccontextmanager
@@ -84,6 +86,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/readyz")
     async def readyz() -> JSONResponse:
         return JSONResponse({"status": "ok"})
+
+    @app.get("/api/v1/plugins")
+    async def list_plugins(request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        return JSONResponse({"plugins": plugins.describe_plugins()})
+
 
     @app.post("/api/v1/alerts", status_code=202)
     async def receive_alerts(request: Request) -> JSONResponse:
