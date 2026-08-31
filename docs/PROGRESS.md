@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 与原生文件工具已启动。
+Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 与原生文件工具已完成并推送 GitHub。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 
 
 当前里程碑：
 
-    Phase 4 M5：只剩提交文档并推送 GitHub
+    Phase 4 M0–M5：全部完成
 
 ## Phase 1 已完成基线
 
@@ -77,7 +77,7 @@ Phase 2 不得破坏这些证据和接口。
 | M2 | 已完成 | 受限 SSH LinuxHostPlugin 与一次性 Demo Target |
 | M3 | 已完成 | list/read/search/write/edit task 工作区工具 |
 | M4 | 已完成 | Policy、Runtime、Session、Trace、Replay 接线与首次改造后 E2E |
-| M5 | 进行中 | 学习/面试/踩坑、最终验证、GitHub |
+| M5 | 已完成 | 学习/面试/踩坑、最终验证、GitHub |
 
 ## 本轮已经完成
 
@@ -165,9 +165,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 提交 README、学习手册、面试问答、踩坑与本完成证据。
-2. 推送 `codex/phase4-linux-files`，确认远端 branch 和提交。
-3. 推送完成后把 M5 与 GOAL 状态标记为已完成，不再扩写 Phase 4。
+1. Phase 4 没有未完成项；等待用户明确选择下一个阶段。
+2. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+3. 后续恢复时先读 GOAL、docs/20 和本文件，避免把已完成工作重复实现。
 
 ## Phase 4 本轮记录
 
@@ -193,6 +193,7 @@ Phase 2 不得破坏这些证据和接口。
 - 最终改造后 E2E 再次通过，证据为本地 `.cache/agent-demo-evidence/5b179a176e6a4448b5aa8a7daace3cd0`；新增直接 SSH `cat /etc/passwd` 的远端负向路径返回 126，原 gVisor、Policy、RBAC、审批链继续通过。
 - 最终清理审计只剩项目 kind control-plane；目标 namespace、Phase 4 Target、四个服务端口、`/tmp/sandboxd-linux-demo.*`、`/tmp/sandboxd-agent-workspace.*` 和旧测试空目录均无残留。
 - 实现代码、测试和脚本已形成提交 `1a4e98f`；三个新增 Shell 脚本通过 Git index 显式保存为 100755，避免 `/mnt/c` 的 `core.filemode=false` 丢失执行位。
+- 文档提交 `d71c4e9` 与实现提交 `1a4e98f` 已推送到 GitHub 分支 `codex/phase4-linux-files`；Phase 4 不创建 PR、不合并其他分支，等待用户后续决定。
 
 ## Phase 2 完成审计
 

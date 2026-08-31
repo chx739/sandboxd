@@ -47,7 +47,9 @@ Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核�
 
 Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi-style安全可插拔Agent实现计划.md` 为准。Pi 只作为源码和设计参考，不引入 Pi、Node 或 TypeScript 运行时依赖。
 
-## 当前开发目标：Phase 4 Linux Host 与原生文件工具
+## 已完成目标：Phase 4 Linux Host 与原生文件工具
+
+> 实现状态：Phase 4 M0–M5 已完成；代码、前后真实 E2E、学习/面试/踩坑文档均已推送到 `codex/phase4-linux-files`。后续不得把本节扩写成任意 SSH/Bash、远端写入或生产级主机平台；新阶段必须由用户明确授权。
 
 在 Phase 3 已完成并推送的基础上，增加一个真实但受限的外部 Linux 主机诊断闭环，以及 Pi-style 的任务工作区文件原语：
 
