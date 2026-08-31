@@ -18,6 +18,18 @@ Phase 1 已完成并保留。当前只在其外增加一个薄 Agent 层：
 - 同时提供明确标记的确定性 Replay，不冒充 Live 证据；
 - 开发范围、接口、文件结构、里程碑和完成证据以 docs/12-Agent层实现计划.md 为准。
 
+## 当前增量目标：Phase 2.1 Pi-inspired Agent 内核优化
+
+Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核的可解释性和工程闭环，不改变项目定位与可信边界：
+
+- 工具结果拆为“提供给模型的有界摘要”和“提供给审计的脱敏结构化详情”；
+- Trace 增加 Agent/Turn/Model/Tool/Sandbox 生命周期事件，以及模型耗时、Token 和结束原因；
+- 模型调用前经过显式上下文转换，安全提示必须保留，不可信 Observation 按预算裁剪；
+- 超时或取消必须停止后续步骤并在独立清理窗口释放已认领沙箱；
+- Provider 只增加轻量能力元数据，不重写现有 Gateway。
+
+详细接口、文件结构、测试和完成证据以 `docs/16-Pi-inspired-Agent内核优化计划.md` 为准。不得引入 Pi 依赖、TypeScript 重写、会话树、长期记忆、多会话、多 Agent、动态插件、任意 Bash/文件工具、工具并行或生产级事件总线。
+
 ## 不可偏移的约束
 
 1. **必须真实使用 gVisor。** 不接受只写 `RuntimeClass` YAML 或用普通 `runc` 冒充；必须保留 `runsc` 运行证据。
@@ -70,7 +82,7 @@ Phase 2 还必须证明：真实 Prometheus/Alertmanager 告警进入 agentd；�
 后续执行者不得仅依赖聊天历史。每次继续开发都按下面顺序恢复上下文：
 
 1. 完整阅读 `GOAL.md`。
-2. 阅读 `docs/00-实现计划.md`、`docs/12-Agent层实现计划.md` 和 `docs/PROGRESS.md`。
+2. 阅读 `docs/00-实现计划.md`、`docs/12-Agent层实现计划.md`、`docs/16-Pi-inspired-Agent内核优化计划.md` 和 `docs/PROGRESS.md`。
 3. 查看 `git status`、最近提交和当前分支，保护用户已有改动。
 4. 阅读当前模块的代码、学习文档、脚本及最近一次验证输出。
 5. 从 `docs/PROGRESS.md` 标记的“下一步”继续，只完成当前最小闭环。

@@ -1,22 +1,40 @@
 from __future__ import annotations
 
 import json
+import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol, Sequence
 
 from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
 from langchain_openai import ChatOpenAI
 
+from .models import ModelUsage
 from .policy import TOOL_SCHEMAS
+
+@dataclass(frozen=True)
+class ModelInvocation:
+    message: AIMessage
+    usage: ModelUsage
+    finish_reason: str
+    elapsed_ms: int
+
+
+def _non_negative_int(value: Any) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        return 0
+    return max(0, value)
 
 
 class ModelSession(Protocol):
-    async def invoke(self, messages: Sequence[BaseMessage]) -> AIMessage: ...
+    async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation: ...
 
 
 class ModelGateway(Protocol):
     mode: str
     model_name: str
+    provider_name: str
+    capabilities: dict[str, Any]
 
     def new_session(self) -> ModelSession: ...
 
@@ -26,15 +44,29 @@ class LiveModelSession:
         # 不使用 LangChain 高层 Agent；这里只给模型绑定三个 JSON Tool Schema。
         self._bound_model = model.bind_tools(TOOL_SCHEMAS)
 
-    async def invoke(self, messages: Sequence[BaseMessage]) -> AIMessage:
+    async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation:
+        started = time.monotonic()
         response = await self._bound_model.ainvoke(list(messages))
         if not isinstance(response, AIMessage):
             raise TypeError("模型没有返回 AIMessage")
-        return response
+        raw_usage = response.usage_metadata or {}
+        usage = ModelUsage(
+            inputTokens=_non_negative_int(raw_usage.get("input_tokens")),
+            outputTokens=_non_negative_int(raw_usage.get("output_tokens")),
+            totalTokens=_non_negative_int(raw_usage.get("total_tokens")),
+        )
+        return ModelInvocation(
+            message=response,
+            usage=usage,
+            finish_reason=str(response.response_metadata.get("finish_reason") or "unknown"),
+            elapsed_ms=int((time.monotonic() - started) * 1000),
+        )
 
 
 class LiveModelGateway:
     mode = "live"
+    provider_name = "openai-compatible"
+    capabilities = {"toolCalling": True, "usageMetadata": True}
 
     def __init__(
         self,
@@ -67,7 +99,7 @@ class ReplayModelSession:
         self._responses = responses
         self._index = 0
 
-    async def invoke(self, messages: Sequence[BaseMessage]) -> AIMessage:
+    async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation:
         if self._index >= len(self._responses):
             raise RuntimeError("Replay 响应已耗尽但 Graph 仍在请求模型")
         item = self._responses[self._index]
@@ -81,7 +113,12 @@ class ReplayModelSession:
             }
             for call in item.get("toolCalls", [])
         ]
-        return AIMessage(content=str(item.get("content", "")), tool_calls=tool_calls)
+        return ModelInvocation(
+            message=AIMessage(content=str(item.get("content", "")), tool_calls=tool_calls),
+            usage=ModelUsage(),
+            finish_reason="tool_calls" if tool_calls else "stop",
+            elapsed_ms=0,
+        )
 
 
 def _resolve_replay_value(
@@ -137,6 +174,8 @@ def _first_pod_name(messages: Sequence[BaseMessage]) -> str:
 
 class ReplayModelGateway:
     mode = "replay"
+    provider_name = "replay"
+    capabilities = {"toolCalling": True, "deterministic": True}
 
     def __init__(self, path: Path) -> None:
         payload = json.loads(path.read_text(encoding="utf-8"))

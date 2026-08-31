@@ -207,4 +207,8 @@ make test
 
 gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
 
+## Phase 2.1 Agent 内核增强
 
+Agentd 参考通用 Agent Runtime 的最小设计思想，新增 ToolResult 模型/审计双通道、Agent/Turn/Model/Tool/Sandbox 生命周期事件、确定性上下文预算，以及取消后独立释放沙箱。它仍是单告警短任务，不实现 Pi Session、steer、follow-up、插件或工具并行；最终安全边界仍是 Go Policy、gVisor、NetworkPolicy、RBAC 和 Operator Approval。
+
+实现范围与取舍见 [docs/16-Pi-inspired-Agent内核优化计划.md](docs/16-Pi-inspired-Agent内核优化计划.md)。

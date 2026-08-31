@@ -5,7 +5,8 @@
 1. `GOAL.md`：最高优先级目标、边界和安全红线。
 2. `docs/00-实现计划.md`：模块划分与实现顺序。
 3. `docs/12-Agent层实现计划.md`：Phase 2 架构、接口、安全边界和完成证据。
-4. `docs/PROGRESS.md`：已经完成、正在进行和下一步。
+4. `docs/16-Pi-inspired-Agent内核优化计划.md`：Phase 2.1 的固定范围、接口和验证顺序。
+5. `docs/PROGRESS.md`：已经完成、正在进行和下一步。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。
 
@@ -31,3 +32,10 @@ Phase 2 额外规则：
 - 默认禁用 LangSmith，不上传 Alert、模型输入、工具输出或 Trace。
 - 值得复盘的真实问题写入 docs/11-开发踩坑与排障.md，包含现象、根因、修复和面试价值。
 - 当前分支固定为 codex/phase2-langgraph-agent，每个里程碑更新进度后小步提交并推送。
+
+Phase 2.1 额外规则：
+
+- Pi 只作为设计参考，不增加 Pi/Node/TypeScript 运行时依赖，也不替换 LangGraph。
+- 模型上下文与审计数据必须分离；审计字段不能由 LLM 自报覆盖。
+- 安全 System Prompt 和最新拒绝证据不得被上下文转换移除。
+- 工具保持顺序执行；禁止为了模仿通用 Coding Agent 引入并行工具、插件或任意系统工具。

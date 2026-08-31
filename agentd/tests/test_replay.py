@@ -3,11 +3,13 @@ from __future__ import annotations
 import asyncio
 import unittest
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
+
+from langchain_core.messages import BaseMessage
 
 from agentd.app.clients import HTTPResult
 from agentd.app.graph import AgentRunner
-from agentd.app.model_gateway import ReplayModelGateway
+from agentd.app.model_gateway import ModelInvocation, ReplayModelGateway
 from agentd.app.models import AlertEvent
 
 
@@ -101,6 +103,29 @@ class FakeSandboxd:
             raise AssertionError("unexpected sandbox id: %s" % sandbox_id)
 
 
+class SlowSession:
+    def __init__(self) -> None:
+        self.started = asyncio.Event()
+
+    async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation:
+        self.started.set()
+        await asyncio.Event().wait()
+        raise AssertionError("unreachable")
+
+
+class SlowGateway:
+    mode = "replay"
+    model_name = "slow-replay"
+    provider_name = "replay"
+    capabilities = {"toolCalling": True, "deterministic": True}
+
+    def __init__(self) -> None:
+        self.session = SlowSession()
+
+    def new_session(self) -> SlowSession:
+        return self.session
+
+
 class ReplayGraphTest(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         asyncio.get_running_loop().slow_callback_duration = 1.0
@@ -148,6 +173,27 @@ class ReplayGraphTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(sandboxd.plans[0]["replicas"], 0)
         self.assertEqual(len(prometheus.queries), 1)
         self.assertEqual(len(trace.steps), 5)
+        self.assertEqual(trace.provider, "replay")
+        self.assertTrue(trace.steps[0].audit_details)
+        self.assertNotIn("auditDetails", trace.steps[0].observation)
+        event_types = [event.type for event in trace.events]
+        self.assertIn("model.completed", event_types)
+        self.assertIn("tool.denied", event_types)
+        self.assertEqual(event_types[-1], "sandbox.release.completed")
+
+    async def test_cancel_releases_claimed_sandbox_once(self) -> None:
+        prometheus = FakePrometheus()
+        sandboxd = FakeSandboxd()
+        gateway = SlowGateway()
+        runner = AgentRunner(prometheus, sandboxd, gateway)
+        task = asyncio.create_task(
+            runner.run("task-cancel", AlertEvent(fingerprint="cancel"))
+        )
+        await gateway.session.started.wait()
+        task.cancel()
+        with self.assertRaises(asyncio.CancelledError):
+            await task
+        self.assertEqual(sandboxd.released, ["replay-sandbox"])
 
 
 if __name__ == "__main__":

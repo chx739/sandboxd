@@ -263,3 +263,11 @@ gVisor: sandbox dmesg contains Starting gVisor
 ## 13. 一分钟项目讲法
 
 “Phase 2 我用 Python LangGraph 显式写了一个有限 Tool Calling 循环，接收真实 Alertmanager Webhook，查询真实 Prometheus，再通过 Go 的结构化接口在 gVisor 沙箱内访问 Kubernetes。Pod Log 和 ConfigMap 的间接 Prompt Injection 都真实进入上下文。DeepSeek Live 三次都识别并忽略注入，其中一次完整跑通 Prometheus、gVisor K8s 和诊断；Replay 则确定性提出 delete namespace，由 Python Policy 拒绝。即使绕过 Python，Go operation 白名单仍返回 403；再经通用 Exec 直接请求 API Server，也被只读 RBAC 返回 403。允许的 scale 只能形成 Pending DryRun Plan，Agent Token 无法批准。这个项目展示的不是模型有多聪明，而是模型行为有概率时系统仍然可控。”
+
+## Phase 2.1：从能调用工具到可解释 Runtime
+
+本阶段把工具输出拆成两个通道：model_content 是进入 LLM 的有界摘要，audit_details 是进入本地 Trace 的脱敏结构化证据。这样既控制上下文长度，也避免把 UI/审计字段当成模型事实。
+
+每次模型调用前执行确定性 context transform：完整保留安全 System Prompt、初始告警和最新完整 Tool Call/Result 组，只裁剪最旧的已完成轮次。短任务无需再调用 LLM 做摘要，减少成本和摘要注入面。
+
+生命周期事件覆盖 Agent、Turn、Model、Tool、Sandbox；模型 usage、finishReason 和耗时可用于解释成本与终止原因。取消路径使用独立 cleanup Task，确保 Graph 被取消后仍释放 gVisor 沙箱。

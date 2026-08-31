@@ -180,3 +180,17 @@ Replay 只替换模型决策，LangGraph、Policy、工具、Prometheus、Alertm
 - 从 Trace 找到注入来源和拒绝层；
 - 解释为何 Plan pending 但 Deployment 不变；
 - 说出三个生产化优先项和三个明确非目标。
+
+## Phase 2.1 补充问答
+
+### 为什么工具结果要分模型通道和审计通道？
+
+模型只需要有界、语义明确的 Observation；审计需要结构化状态码、拒绝层和响应详情。混在一起会浪费上下文，并让模型生成内容污染审计事实。
+
+### 为什么没有照搬 Pi 的 Session、steer 和 follow-up？
+
+当前是单告警短任务系统，Task 身份已经能关联 alert、sandbox 和 Trace。Session 适用于长期交互，还会引入持久化、恢复、消息队列、沙箱占用和权限语义。本项目用 cancel 表示停止、创建新 Task 表示后续工作、Operator Approval 表示危险动作批准。
+
+### 取消协程为什么仍可能泄漏资源？
+
+取消会在下一个 await 抛出 CancelledError；若 release 直接复用已取消的执行链，清理也可能被跳过。因此已认领沙箱由独立 Task 在短超时窗口内释放，并用单测验证只释放一次。

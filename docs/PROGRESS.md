@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 已完成。
+Phase 1、Phase 2 已完成并保留；Phase 2.1 Pi-inspired Agent 内核优化已启动。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1 已完成并保留；Phase 2 外部告警诊断 Agent 已完成。
 
 当前里程碑：
 
-    Phase 2 收尾：完成审计与 GitHub 推送
+    Phase 2.1 完成：等待用户 review
 
 ## Phase 1 已完成基线
 
@@ -47,6 +47,16 @@ Phase 2 不得破坏这些证据和接口。
 | M3 | 已完成 | Prometheus/Alertmanager 与故障 Fixture |
 | M4 | 已完成 | 完整 Live/Replay 链路与拒绝矩阵 |
 | M5 | 已完成 | Evidence、README、学习和面试文档 |
+
+## Phase 2.1 里程碑
+
+| 阶段 | 状态 | 内容 |
+|---|---|---|
+| P0 | 已完成 | 目标、计划、AGENTS、PROGRESS 与数据模型冻结 |
+| P1 | 已完成 | ToolResult 双通道 |
+| P2 | 已完成 | 生命周期事件、模型 usage/finishReason |
+| P3 | 已完成 | 上下文预算、取消与独立清理 |
+| P4 | 已完成 | 最小验证、学习/面试/踩坑、README、GitHub |
 
 ## 本轮已经完成
 
@@ -134,7 +144,7 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. Phase 2 无未完成开发项；保持当前分支，等待用户 review 或决定是否合并，不自动扩展范围。
+1. Phase 2.1 无未完成开发项；等待用户 review，不自动扩展到 Session、steer 或 follow-up。
 
 ## Phase 2 完成审计
 
@@ -156,7 +166,18 @@ Phase 2 不得破坏这些证据和接口。
 1. 阅读 GOAL.md。
 2. 阅读 docs/00-实现计划.md。
 3. 阅读 docs/12-Agent层实现计划.md。
-4. 阅读本文件。
-5. 阅读 AGENTS.md。
-6. 查看 git status、当前分支和最近提交。
-7. 只继续“下一步”的第一项未完成工作。
+4. 阅读 docs/16-Pi-inspired-Agent内核优化计划.md。
+5. 阅读本文件。
+6. 阅读 AGENTS.md。
+7. 查看 git status、当前分支和最近提交。
+8. 只继续“下一步”的第一项未完成工作。
+
+## Phase 2.1 本轮完成
+
+- 新增 ToolResult 双通道：model_content 进入模型，auditDetails 只进入有界本地 Trace。
+- 新增 Agent/Turn/Model/Tool/Sandbox 生命周期事件、provider capability、usage、finishReason 和耗时。
+- 新增 48 KiB 确定性上下文预算，保留安全 System Prompt 和完整 Tool Call/Result 组。
+- 取消后使用独立 10 秒 cleanup Task 释放 sandbox。
+- Python 单测由 7 个增至 9 个，覆盖上下文协议、双通道事件和取消只释放一次。
+- 明确不实现 Pi Session、steer、follow-up、插件、长期记忆和工具并行。
+- 最终验证：Go test/vet/build、Python compileall/9 tests、diff check 全部通过；未启动真实集群或 Live LLM。
