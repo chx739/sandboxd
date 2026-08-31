@@ -5,11 +5,15 @@ Agent Tool 列表。这种“保守插件化”便于演示扩展点，同时不
 """
 
 from .kubernetes import KubernetesPlugin
+from .linux_host import LinuxHostPlugin
+from .files import FileToolsPlugin
 from .prometheus import PrometheusPlugin
 from .registry import PluginRegistry, build_builtin_registry
 
 __all__ = [
     "KubernetesPlugin",
+    "LinuxHostPlugin",
+    "FileToolsPlugin",
     "PluginRegistry",
     "PrometheusPlugin",
     "build_builtin_registry",

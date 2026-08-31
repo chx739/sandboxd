@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import asyncio
 import time
+from pathlib import Path
 from typing import Sequence
 
 from langchain_core.messages import BaseMessage
 
-from .clients import PrometheusClient, SandboxdClient
+from .clients import LinuxHostClient, PrometheusClient, SandboxdClient
 from .model_gateway import ModelGateway
 from .models import AgentTrace, AlertEvent, Diagnosis, sum_model_usage
 from .plugins.base import PluginContext
@@ -15,6 +16,7 @@ from .policy import MAX_TASK_SECONDS
 from .runtime.control import AgentControl
 from .runtime.loop import AgentLoopState, PiStyleAgentLoop, append_event
 from .runtime.session import SessionJournal
+from .tools.files import FileWorkspace
 
 
 class AgentRunner:
@@ -30,11 +32,16 @@ class AgentRunner:
         sandboxd: SandboxdClient,
         model_gateway: ModelGateway,
         plugins: PluginRegistry | None = None,
+        linux_hosts: LinuxHostClient | None = None,
+        workspace_root: Path | None = None,
     ) -> None:
         self._prometheus = prometheus
         self._sandboxd = sandboxd
         self._model_gateway = model_gateway
         self._plugins = plugins or build_builtin_registry()
+        self._linux_hosts = linux_hosts or LinuxHostClient({})
+        # WSL 的 TMPDIR 可能指向 /mnt/c；DrvFS 未启用 metadata 时不能依赖 0700/0600。
+        self._workspace_root = workspace_root or Path("/tmp/sandboxd-agent-workspaces")
 
     async def run(
         self,
@@ -80,6 +87,9 @@ class AgentRunner:
                     sandbox_id=sandbox_id,
                     prometheus=self._prometheus,
                     sandboxd=self._sandboxd,
+                    linux_hosts=self._linux_hosts,
+                    # resume 会创建新 taskId，因此不会静默复用上一次运行的文件。
+                    workspace=FileWorkspace(self._workspace_root, task_id),
                 ),
                 control=control or AgentControl(),
                 state=state,

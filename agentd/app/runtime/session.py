@@ -16,7 +16,7 @@ from langchain_core.messages import (
 )
 
 from ..models import AlertEvent
-from ..redaction import public_error
+from ..redaction import public_error, safe_tool_arguments
 
 _SESSION_ID = re.compile(r"^session-[a-f0-9]{16}$")
 _MAX_MESSAGE_CHARS = 16 << 10
@@ -77,7 +77,17 @@ def _serialize_message(message: BaseMessage) -> dict[str, Any]:
     }
     if isinstance(message, AIMessage):
         # Tool 参数逐叶脱敏；不保存 additional_kwargs 和模型隐藏思维。
-        payload["toolCalls"] = _safe_json_value(message.tool_calls)
+        safe_calls = []
+        for call in message.tool_calls:
+            if not isinstance(call, dict):
+                continue
+            name = str(call.get("name", ""))
+            arguments = call.get("args", {})
+            safe_call = dict(call)
+            if isinstance(arguments, dict):
+                safe_call["args"] = safe_tool_arguments(name, arguments)
+            safe_calls.append(safe_call)
+        payload["toolCalls"] = _safe_json_value(safe_calls)
     if isinstance(message, ToolMessage):
         payload["toolCallId"] = str(message.tool_call_id)
     return payload

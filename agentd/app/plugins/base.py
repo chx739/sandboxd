@@ -3,7 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Protocol, Sequence
 
-from ..clients import HTTPResult, PrometheusClient, SandboxdClient
+from ..clients import HTTPResult, LinuxHostClient, PrometheusClient, SandboxdClient
+from ..tools.files import FileWorkspace
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,8 @@ class PluginContext:
     sandbox_id: str
     prometheus: PrometheusClient
     sandboxd: SandboxdClient
+    linux_hosts: LinuxHostClient
+    workspace: FileWorkspace
 
 
 class ToolPlugin(Protocol):

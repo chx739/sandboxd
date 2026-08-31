@@ -6,7 +6,9 @@ from typing import Any, Iterable
 
 from ..clients import HTTPResult
 from .base import PluginContext, PluginManifest, ToolPlugin
+from .files import FileToolsPlugin
 from .kubernetes import KubernetesPlugin
+from .linux_host import LinuxHostPlugin
 from .prometheus import PrometheusPlugin
 
 
@@ -102,5 +104,7 @@ def build_builtin_registry() -> PluginRegistry:
         [
             PrometheusPlugin(),
             KubernetesPlugin(),
+            LinuxHostPlugin(),
+            FileToolsPlugin(),
         ]
     )

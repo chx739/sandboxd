@@ -22,6 +22,8 @@ class Settings:
     llm_thinking: str
     replay_file: Path
     trace_dir: Path
+    linux_targets_file: Path | None = None
+    workspace_dir: Path | None = None
 
 
 def _required(name: str) -> str:
@@ -91,6 +93,11 @@ def load_settings() -> Settings:
             str(project_dir.parent / ".cache" / "agent-traces"),
         )
     )
+    linux_targets_value = os.getenv("AGENTD_LINUX_TARGETS_FILE", "")
+    workspace_value = os.getenv(
+        "AGENTD_WORKSPACE_DIR",
+        "/tmp/sandboxd-agent-workspaces",
+    )
 
     return Settings(
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),
@@ -107,4 +114,8 @@ def load_settings() -> Settings:
         llm_thinking=llm_thinking,
         replay_file=replay_file,
         trace_dir=trace_dir,
+        linux_targets_file=(
+            Path(linux_targets_value) if linux_targets_value else None
+        ),
+        workspace_dir=Path(workspace_value),
     )

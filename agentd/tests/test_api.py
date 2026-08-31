@@ -79,7 +79,7 @@ class AgentAPIAuthTest(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(
                     [item["id"] for item in response.json()["plugins"]],
-                    ["prometheus", "kubernetes"],
+                    ["prometheus", "kubernetes", "linux-host", "files"],
                 )
 
                 # 运行控制和 Session 管理只能使用 API Token，告警入口 Token

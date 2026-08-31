@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from .clients import PrometheusClient, SandboxdClient
+from .clients import LinuxHostClient, PrometheusClient, SandboxdClient
 from .config import Settings, load_settings
 from .graph import AgentRunner
 from .model_gateway import LiveModelGateway, ReplayModelGateway
@@ -53,6 +53,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     cfg = settings or load_settings()
     prometheus = PrometheusClient(cfg.prometheus_url)
     sandboxd = SandboxdClient(cfg.sandboxd_url, cfg.sandboxd_token)
+    linux_hosts = LinuxHostClient.from_file(cfg.linux_targets_file)
     if cfg.llm_mode == "live":
         gateway = LiveModelGateway(
             cfg.llm_base_url,
@@ -64,7 +65,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         gateway = ReplayModelGateway(cfg.replay_file)
 
     plugins = build_builtin_registry()
-    runner = AgentRunner(prometheus, sandboxd, gateway, plugins)
+    runner = AgentRunner(
+        prometheus,
+        sandboxd,
+        gateway,
+        plugins,
+        linux_hosts=linux_hosts,
+        workspace_root=cfg.workspace_dir,
+    )
     store = TaskStore(cfg.trace_dir)
 
     @asynccontextmanager

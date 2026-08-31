@@ -62,6 +62,8 @@ def _loop(
         sandbox_id="sandbox-test",
         prometheus=object(),  # type: ignore[arg-type]
         sandboxd=object(),  # type: ignore[arg-type]
+        linux_hosts=object(),  # type: ignore[arg-type]
+        workspace=object(),  # type: ignore[arg-type]
     )
     return PiStyleAgentLoop(
         session=session,

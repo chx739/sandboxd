@@ -1,1 +1,5 @@
-"""Agent 只允许使用本包内注册的三个结构化工具。"""
+"""Agent Runtime 原生工具；当前只包含 task 私有文件工作区。"""
+
+from .files import FileWorkspace
+
+__all__ = ["FileWorkspace"]

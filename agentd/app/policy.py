@@ -4,6 +4,10 @@ import json
 import re
 from typing import Any
 
+from .clients import LINUX_READ_OPERATIONS
+from .redaction import safe_tool_arguments
+from .tools.files import MAX_FILE_BYTES
+
 MAX_ITERATIONS = 6
 MAX_TOOL_CALLS = 8
 MAX_PROMETHEUS_CALLS = 4
@@ -28,6 +32,15 @@ KUBERNETES_KEYS = {
 }
 PLAN_KEYS = {"namespace", "name", "replicas"}
 DNS_NAME = re.compile(r"^[a-z0-9](?:[-a-z0-9.]*[a-z0-9])?$")
+TARGET_ID = re.compile(r"^[a-z0-9](?:[-a-z0-9]{0,62})$")
+SHA256 = re.compile(r"^[a-f0-9]{64}$")
+FILE_KEYS = {
+    "list_files": {"path"},
+    "read_file": {"path", "offset", "limit"},
+    "search_files": {"query", "path"},
+    "write_file": {"path", "content", "expectedSha256"},
+    "edit_file": {"path", "oldText", "newText", "expectedSha256"},
+}
 
 
 
@@ -117,6 +130,78 @@ def validate_tool_call(
         result["allowed"] = True
         return result
 
+    if name == "linux_read":
+        if set(arguments) != {"targetId", "operation"}:
+            result["reason"] = "linux_read 只接受 targetId 和 operation"
+            return result
+        target_id = arguments.get("targetId")
+        if not isinstance(target_id, str) or not TARGET_ID.fullmatch(target_id):
+            result["reason"] = "Linux targetId 格式无效"
+            return result
+        if arguments.get("operation") not in LINUX_READ_OPERATIONS:
+            result["reason"] = "Linux operation 不在只读白名单"
+            return result
+        result["allowed"] = True
+        return result
+
+    if name in FILE_KEYS:
+        if not set(arguments) <= FILE_KEYS[name]:
+            result["reason"] = "%s 包含未知字段" % name
+            return result
+        path = arguments.get("path", ".")
+        if not isinstance(path, str) or not path or len(path.encode("utf-8")) > 512:
+            result["reason"] = "文件 path 无效或过长"
+            return result
+        if name != "list_files" and name != "search_files" and "path" not in arguments:
+            result["reason"] = "%s 缺少 path" % name
+            return result
+        if name == "read_file":
+            offset = arguments.get("offset", 0)
+            limit = arguments.get("limit", 16384)
+            if (
+                isinstance(offset, bool)
+                or not isinstance(offset, int)
+                or not 0 <= offset <= MAX_FILE_BYTES
+                or isinstance(limit, bool)
+                or not isinstance(limit, int)
+                or not 1 <= limit <= MAX_FILE_BYTES
+            ):
+                result["reason"] = "read_file offset/limit 超出范围"
+                return result
+        elif name == "search_files":
+            query = arguments.get("query")
+            if not isinstance(query, str) or not query or len(query.encode("utf-8")) > 256:
+                result["reason"] = "search_files query 必须为 1 到 256 bytes"
+                return result
+        elif name == "write_file":
+            content = arguments.get("content")
+            expected = arguments.get("expectedSha256")
+            if not isinstance(content, str) or len(content.encode("utf-8")) > MAX_FILE_BYTES:
+                result["reason"] = "write_file content 超过文本大小上限"
+                return result
+            if expected is not None and (
+                not isinstance(expected, str) or not SHA256.fullmatch(expected)
+            ):
+                result["reason"] = "expectedSha256 格式无效"
+                return result
+        elif name == "edit_file":
+            expected = arguments.get("expectedSha256")
+            old_text = arguments.get("oldText")
+            new_text = arguments.get("newText")
+            if (
+                not isinstance(expected, str)
+                or not SHA256.fullmatch(expected)
+                or not isinstance(old_text, str)
+                or not old_text
+                or not isinstance(new_text, str)
+                or len(old_text.encode("utf-8")) > MAX_FILE_BYTES
+                or len(new_text.encode("utf-8")) > MAX_FILE_BYTES
+            ):
+                result["reason"] = "edit_file 参数或 expectedSha256 无效"
+                return result
+        result["allowed"] = True
+        return result
+
     result["reason"] = "未知工具: %s" % name
     return result
 
@@ -130,6 +215,12 @@ def bounded_text(value: str, limit: int = MAX_OBSERVATION_BYTES) -> str:
 
 def action_summary(name: str, arguments: dict[str, Any]) -> str:
     return bounded_text(
-        name + " " + json.dumps(arguments, ensure_ascii=False, sort_keys=True),
+        name
+        + " "
+        + json.dumps(
+            safe_tool_arguments(name, arguments),
+            ensure_ascii=False,
+            sort_keys=True,
+        ),
         1024,
     )

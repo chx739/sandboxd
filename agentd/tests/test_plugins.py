@@ -15,11 +15,21 @@ class PluginRegistryTest(unittest.TestCase):
         ]
         self.assertEqual(
             names,
-            ["query_prometheus", "kubernetes_read", "propose_plan"],
+            [
+                "query_prometheus",
+                "kubernetes_read",
+                "propose_plan",
+                "linux_read",
+                "list_files",
+                "read_file",
+                "search_files",
+                "write_file",
+                "edit_file",
+            ],
         )
         self.assertEqual(
             [manifest.plugin_id for manifest in registry.manifests],
-            ["prometheus", "kubernetes"],
+            ["prometheus", "kubernetes", "linux-host", "files"],
         )
 
     def test_tool_schemas_are_defensive_copies(self) -> None:
