@@ -12,7 +12,7 @@ Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插
 
 当前里程碑：
 
-    Phase 3 M4：补学习/面试/踩坑、README，做最终最小验证
+    Phase 3 M4：代码、文档与最小验证完成，等待 GitHub 推送
 
 ## Phase 1 已完成基线
 
@@ -154,9 +154,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 更新 README、学习路径、Phase 3 学习文档和面试问答。
-2. 追加 WSL Session 权限、取消和 JSONL 脱敏等真实踩坑。
-3. 做 Go/Python/Shell/秘密最小验证并推送当前分支。
+1. 提交 M4 代码与文档。
+2. 经用户明确授权后，把 `codex/phase3-pi-runtime` 推送到已核实的 `https://github.com/chx739/sandboxd.git`。
+3. 推送成功后记录最终提交并结束 Phase 3；不自动扩展新 Connector、TUI 或生产功能。
 
 ## Phase 2 完成审计
 
@@ -202,7 +202,7 @@ Phase 2 不得破坏这些证据和接口。
 - 完成 Phase 3 权威目标、执行规则和实现计划；固定不重写 sandboxd。
 - 固定 Pi 只作为源码设计参考，不增加 Node、TypeScript、Pi 或新的 Agent 框架依赖。
 - 改造前轻量基线为 9 个 Python 单测通过；显式使用 `uv run --project agentd --frozen`，未启动集群或 Live LLM。
-- 本地 apply_patch 辅助器仍因缺少 bubblewrap 失败；用户允许安装，但标准 `git apply` 补丁已可继续，因此遵守最小系统改动原则暂不安装。
+- 用户明确允许后，以 sudo 从 Ubuntu 软件源只安装 `bubblewrap 0.9.0-1ubuntu0.1`，恢复受保护的终端/补丁命令；未修改其他系统配置。
 - M1 新增显式受信任 Plugin Registry、Prometheus 插件和 Kubernetes/Plan 插件；没有目录扫描、动态安装或第三方代码加载。
 - 模型 Tool Schema 由 Registry 生成，删除 policy.py 中重复 Schema；Python Policy 校验逻辑保持独立。
 - Trace 增加插件清单及每步 pluginId/pluginVersion；只读 `GET /api/v1/plugins` 受 API Token 保护，Alert Token 返回 401。
@@ -220,3 +220,9 @@ Phase 2 不得破坏这些证据和接口。
 - Session 目录/文件在 Linux 文件系统上使用 0700/0600；测试发现 WSL 的 Windows TEMP 默认位于 `/mnt/c`，DrvFS 未启用 metadata 时不能验证 POSIX 权限，因此安全状态文件必须放 Linux 文件系统。
 - 修复“整段 JSON 先正则脱敏再解析”可能破坏引号或被截断的问题，改为对 Tool 参数叶子递归脱敏并保持合法 JSON。
 - M3 最小验证为 frozen 环境 16 个 Python 单测通过；没有启动 kind、Prometheus、Alertmanager 或 Live LLM。
+- M4 新增 docs/18 当前 Runtime 学习手册和 docs/19 的 30 个秋招问答；旧 docs/14/15 明确标记为 Phase 2 历史实现与证据。
+- README、agentd README、文档索引和项目学习路径已切到双层 Loop、受信任插件与 Session 身份，并保留 LangGraph 重构演进的讲解价值。
+- 踩坑新增 40–43：WSL `/mnt/c` 权限语义、结构化 JSON 脱敏、两类 CancelledError、Session/Task/Sandbox 身份分离。
+- 文档反查代码时发现 Alert Header 也可能含凭据；已改成结构化逐叶脱敏，并新增 Bearer 告警注解回归断言。
+- 最终轻量验证通过：Go test `-p 1`、go vet、go build `-p 1`、Python compileall、16 个 frozen 单测、全部 hack Shell 语法和 diff check。
+- 安装 bubblewrap 后，受管理 seccomp 环境会阻塞 FastAPI 线程和 Go 编译子进程；验证改在 WSL 沙箱外串行运行，仍未启动集群或 Live LLM，也没有残留进程。

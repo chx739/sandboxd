@@ -20,8 +20,12 @@
 | 13 | [项目学习路径](13-项目学习路径.md) | 文档阅读顺序、破坏实验、复习检验 | 已完成 |
 | 14 | [LangGraph 告警诊断学习手册](14-LangGraph告警诊断学习手册.md) | agentd、外部告警、三个工具、Live/Replay | Replay 与 Live 均已实测 |
 | 15 | [Agent 安全面试问答](15-Agent安全面试问答.md) | 32 个高频追问、边界与扩展 | 已完成 |
+| 16 | [Pi-inspired Agent 内核优化计划](16-Pi-inspired-Agent内核优化计划.md) | Phase 2.1 双通道、事件、上下文、取消 | 已完成（历史计划） |
+| 17 | [Pi-style 安全可插拔 Agent 实现计划](17-Pi-style安全可插拔Agent实现计划.md) | Phase 3 权威范围与恢复锚点 | 已完成 |
+| 18 | [Pi-style Agent Runtime 学习手册](18-Pi-style-Agent-Runtime学习手册.md) | 双层 Loop、Session、插件、身份 | 当前主学习文档 |
+| 19 | [Pi-style 运维 Agent 面试问答](19-Pi-style运维Agent面试问答.md) | 30 个 Phase 3 高频追问 | 当前自测文档 |
 
-> 12 是 Phase 2 的权威规格；14 讲实现，15 用于面试自测。
+> 12、14、15 保留 Phase 2/LangGraph 的历史实现与真实证据；当前代码以 17、18、19 为准。
 > 13 是**学习方法**不是模块文档，不遵循下面的固定结构。
 
 ## 每篇文档的固定结构
@@ -38,5 +42,3 @@
 10. 一分钟项目讲法。
 
 学习要求不是背答案，而是能从实际代码和命令输出解释每一个结论。
-
-- [16-Pi-inspired-Agent内核优化计划.md](16-Pi-inspired-Agent内核优化计划.md)：ToolResult 双通道、生命周期事件、上下文预算和取消清理。

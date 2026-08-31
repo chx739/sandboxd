@@ -1,6 +1,6 @@
 # Agent 安全面试问答
 
-> 回答顺序建议：先说项目事实，再解释原理，最后说明非生产边界。不要把 Replay 说成 Live，不要把 gVisor 说成绝对安全。
+> 历史说明：本文保留 Phase 2/LangGraph 的真实安全证据与原始讲法。Phase 3 当前 Runtime、Session 和插件问答请以 [19-Pi-style 运维 Agent 面试问答](19-Pi-style运维Agent面试问答.md) 为准。回答时不要把 Replay 说成 Live，不要把 gVisor 说成绝对安全。
 
 ## 1. 30 秒项目介绍
 

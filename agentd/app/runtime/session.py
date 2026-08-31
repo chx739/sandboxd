@@ -136,7 +136,10 @@ class SessionJournal:
             {
                 "sessionId": self.session_id,
                 "taskId": task_id,
-                "alert": alert.model_dump(mode="json", by_alias=True),
+                # 告警注解同样是不可信外部文本，可能夹带 Header 或 API Key。
+                "alert": _safe_json_value(
+                    alert.model_dump(mode="json", by_alias=True)
+                ),
             },
         )
 

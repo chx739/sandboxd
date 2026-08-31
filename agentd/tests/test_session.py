@@ -22,7 +22,10 @@ class SessionJournalTest(unittest.IsolatedAsyncioTestCase):
             journal = SessionJournal(session_dir, "session-0123456789abcdef")
             alert = AlertEvent(
                 labels={"alertname": "HighCPU"},
-                annotations={"summary": "CPU high"},
+                annotations={
+                    "summary": "CPU high",
+                    "description": "Authorization: Bearer alert-secret-value",
+                },
             )
             await journal.initialize("task-first", alert)
             await journal.append_command(
@@ -51,6 +54,7 @@ class SessionJournalTest(unittest.IsolatedAsyncioTestCase):
 
             raw = journal.path.read_text(encoding="utf-8")
             self.assertNotIn("session-super-secret", raw)
+            self.assertNotIn("alert-secret-value", raw)
             self.assertNotIn("sk-1234567890", raw)
             # 每一行都必须是完整 JSON；进程中断时最多丢失最后一行。
             for line in raw.splitlines():

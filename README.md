@@ -6,7 +6,7 @@
 
 ```mermaid
 graph LR
-    AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>LangGraph StateGraph"]
+    AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>Pi-style 双层 Loop<br/>Session + Plugins"]
     Agentd -->|PromQL| Prom["Prometheus Query API"]
     Agentd -->|Agent Token| API
     Operator["Operator"] -->|Operator Token| API
@@ -92,7 +92,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | typed workqueue 预热池（target=2）、JSON Patch CAS、direct fallback | 已实测 |
 | Prometheus 低基数指标 | 已实测 |
 | Deployment scale DryRun、双 Token 分权、TOCTOU 拒绝 | 已实测 |
-| Agent 层：外部告警、LangGraph、Prometheus/K8s Tool、注入与 Pending Plan | Replay 与 DeepSeek Live 全链路均已实测 |
+| Agent 层：外部告警、Pi-style Loop、插件、Session、注入与 Pending Plan | Phase 2 Replay/DeepSeek Live 已实测；Phase 3 离线回归通过 |
 
 关键实测输出：
 
@@ -112,7 +112,7 @@ Metrics: runtime=gvisor, idle=2, busy=0, claim_conflicts=6
 DryRun: replicas remained 0 before approval
 Role split: Agent approve -> 401, Operator approve -> 200
 TOCTOU: resourceVersion changed -> 409, Plan stale
-Agent alert: Prometheus -> Alertmanager -> LangGraph task (replay)
+Agent alert: Prometheus -> Alertmanager -> Pi-style task (replay)
 Injection: Pod Log -> Trace injectedVia=podlog
 Policy: agent-policy denied; Go tool-policy=403; RBAC DELETE=403
 Approval: Agent approve=401; Plan pending; replicas unchanged
@@ -186,12 +186,14 @@ make test
 | 文档 | 用途 |
 |---|---|
 | [GOAL.md](GOAL.md) | 目标锚点、边界与安全红线 |
-| [docs/README.md](docs/README.md) | 学习文档索引（01–15） |
+| [docs/README.md](docs/README.md) | 学习文档索引（01–19） |
 | [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 阅读顺序、破坏实验、复习检验 |
 | [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 36 条真实问题与定位过程 |
 | [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | Q1–Q33、架构选型取舍、项目讲法 |
 | [docs/14-LangGraph告警诊断学习手册.md](docs/14-LangGraph告警诊断学习手册.md) | Agent 实现、八股、验证和一分钟讲法 |
 | [docs/15-Agent安全面试问答.md](docs/15-Agent安全面试问答.md) | Agent 安全与扩展的 32 个高频追问 |
+| [docs/18-Pi-style-Agent-Runtime学习手册.md](docs/18-Pi-style-Agent-Runtime学习手册.md) | 当前 Agent Loop、Session、插件和身份主学习文档 |
+| [docs/19-Pi-style运维Agent面试问答.md](docs/19-Pi-style运维Agent面试问答.md) | Phase 3 秋招追问与一分钟讲法 |
 
 ## 项目边界
 
@@ -201,14 +203,31 @@ make test
 - 沙箱共用一个 ServiceAccount 且绑 ClusterRole（全集群只读），多租户下这一条直接不成立
 - Plan 存内存，进程重启即丢失
 - 并发验证规模为 5，未做容量模型与压力测试
-- Task、Trace 和 Plan 都是单进程内存状态，重启会丢失
+- Task、Trace 索引和 Plan 是单进程内存状态；Session Transcript 用本地 JSONL 最小持久化，但不是数据库
 - 当前外部 Connector 是 localhost Prometheus/Alertmanager，只诊断本地 kind，不是通用多集群运维
 - DeepSeek Live 三次注入实验均为 `not-triggered`；危险调用的确定性拒绝证据来自 Replay，二者不互相冒充
 
 gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
 
-## Phase 2.1 Agent 内核增强
+## Phase 2.1 Agent 内核增强（历史基线）
 
-Agentd 参考通用 Agent Runtime 的最小设计思想，新增 ToolResult 模型/审计双通道、Agent/Turn/Model/Tool/Sandbox 生命周期事件、确定性上下文预算，以及取消后独立释放沙箱。它仍是单告警短任务，不实现 Pi Session、steer、follow-up、插件或工具并行；最终安全边界仍是 Go Policy、gVisor、NetworkPolicy、RBAC 和 Operator Approval。
+Agentd 在 Phase 2.1 新增 ToolResult 模型/审计双通道、生命周期事件、确定性上下文预算，以及取消后独立释放沙箱。当时不实现 Session、steer、follow-up 或插件；这些历史限制已由 Phase 3 的明确授权解除。
 
 实现范围与取舍见 [docs/16-Pi-inspired-Agent内核优化计划.md](docs/16-Pi-inspired-Agent内核优化计划.md)。
+
+## Phase 3 Pi-style Runtime
+
+当前 agentd 不再依赖 LangGraph：`runtime/loop.py` 用内层 Tool/steer、外层 follow-up 的双层循环显式表达控制流；静态受信任 Plugin Registry 暴露 Prometheus 与 Kubernetes/Plan；线性 Session-lite 用 append-only JSONL 支持最小 resume。每次 resume 都创建新 Task 和新 gVisor Sandbox，不恢复旧进程。
+
+控制接口只接受 API Token，Alert Token 仍只能提交告警：
+
+```text
+POST /api/v1/tasks/{taskId}/steer
+POST /api/v1/tasks/{taskId}/follow-up
+POST /api/v1/tasks/{taskId}/cancel
+GET  /api/v1/sessions/{sessionId}
+POST /api/v1/sessions/{sessionId}/resume
+GET  /api/v1/plugins
+```
+
+插件只扩展模型可见的结构化工具，不扩展 sandboxd/RBAC 允许的能力。当前不做动态插件、任意 Shell、Session 树、多进程 Worker 或生产级多租户身份。

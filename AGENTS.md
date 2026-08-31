@@ -27,16 +27,16 @@
 Phase 2 额外规则：
 
 - Go sandboxd 是可信执行边界，Python agentd 和 LLM 均视为不可信调用方。
-- LangGraph 只负责编排，不得把 Prompt、Tool Schema 或 Graph 分支宣传为最终安全边界。
+- Phase 2 当时使用 LangGraph 编排；无论编排实现为何，都不得把 Prompt、Tool Schema 或循环分支宣传为最终安全边界。
 - agentd 不得接收、保存或使用 Operator Token，不得调用 approve/reject。
 - Live 与 Replay 证据必须明确区分；人工 Replay 标记为 deterministic-policy-case。
 - 默认禁用 LangSmith，不上传 Alert、模型输入、工具输出或 Trace。
 - 值得复盘的真实问题写入 docs/11-开发踩坑与排障.md，包含现象、根因、修复和面试价值。
-- 当前分支固定为 codex/phase2-langgraph-agent，每个里程碑更新进度后小步提交并推送。
+- Phase 2 历史分支为 codex/phase2-langgraph-agent；当前分支以 Phase 3 规则为准。
 
 Phase 2.1 额外规则：
 
-- Pi 只作为设计参考，不增加 Pi/Node/TypeScript 运行时依赖，也不替换 LangGraph。
+- Pi 当时只用于改进事件、上下文与取消，不替换 LangGraph；这是 Phase 2.1 历史范围。
 - 模型上下文与审计数据必须分离；审计字段不能由 LLM 自报覆盖。
 - 安全 System Prompt 和最新拒绝证据不得被上下文转换移除。
 - 工具保持顺序执行；禁止为了模仿通用 Coding Agent 引入并行工具、插件或任意系统工具。

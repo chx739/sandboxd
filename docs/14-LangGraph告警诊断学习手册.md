@@ -1,5 +1,7 @@
 # LangGraph 告警诊断学习手册
 
+> 历史说明：本文记录 Phase 2 已真实验证的 LangGraph 架构与 Live/Replay 证据。Phase 3 当前代码已改为手写双层循环；学习当前实现请读 [18-Pi-style Agent Runtime 学习手册](18-Pi-style-Agent-Runtime学习手册.md)。
+
 ## 1. 这个模块解决什么问题
 
 Phase 1 已经证明沙箱、RBAC、网络策略和审批门能工作，但它还不是 Agent：没有模型循环，也没有外部告警进入、工具查询、证据回灌和结构化诊断。
