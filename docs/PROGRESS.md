@@ -64,8 +64,8 @@ Phase 2 不得破坏这些证据和接口。
 |---|---|---|
 | M0 | 已完成 | GOAL、AGENTS、计划、PROGRESS、分支和 9 个 Python 测试基线 |
 | M1 | 已完成 | 受信任插件接口、注册表、Prometheus/Kubernetes 插件 |
-| M2 | 进行中 | 手写双层 Agent Loop 替换 StateGraph |
-| M3 | 未开始 | 线性 Session-lite、steer/follow-up/cancel/resume API |
+| M2 | 已完成 | 手写双层 Agent Loop 替换 StateGraph |
+| M3 | 进行中 | 线性 Session-lite、steer/follow-up/cancel/resume API |
 | M4 | 未开始 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
 
 ## 本轮已经完成
@@ -154,8 +154,8 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 用手写 Pi-style 双层 Loop 替换 StateGraph，保持现有安全链路和返回结构。
-2. M2 的 12 个轻量测试通过后，再实现 Session-lite 与交互控制。
+1. 实现线性 Session-lite 和 TaskStore 中的运行控制身份。
+2. 接通 steer/follow-up/cancel/resume API，并保持 Alert Token 最小权限。
 
 ## Phase 2 完成审计
 
@@ -207,3 +207,9 @@ Phase 2 不得破坏这些证据和接口。
 - Trace 增加插件清单及每步 pluginId/pluginVersion；只读 `GET /api/v1/plugins` 受 API Token 保护，Alert Token 返回 401。
 - 现有 Replay 的 Prometheus/Kubernetes/Plan 调用已经真实经过插件分派，危险调用仍在 agent-policy 被拒绝。
 - M1 验证为 Python compileall、diff check 和 12 个单测通过；sandboxd 零修改，未启动集群或 Live LLM。
+- M2 新增 `runtime/loop.py` 双层循环：内层 Tool Call/steer，外层 follow-up；工具继续顺序执行。
+- 新增 `runner.py` 隔离 Sandbox 生命周期；旧 `graph.py` 缩为兼容导入层，Phase 2 调用路径不破坏。
+- 专门单测证明 steer 在当前 Turn 后进入下一轮，follow-up 只在自然结束后进入外层循环。
+- 删除 LangGraph 直接依赖并离线更新 uv.lock，同时移除四个 LangGraph/ormsgpack 包。
+- 原 Replay 注入拦截、Pending Plan、插件 Trace 和取消只释放一次继续通过。
+- M2 验证为 frozen 环境 14 个 Python 单测通过；未启动集群或 Live LLM。
