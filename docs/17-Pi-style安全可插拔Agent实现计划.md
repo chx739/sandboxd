@@ -100,7 +100,7 @@ agentd/app/
 ### M3：Session-lite 与交互控制
 
 - 每个 Task 对应一个 Session ID；
-- Session 使用 0600 JSONL，Header、Message、Command、Result 分类型追加；
+- Session 使用 0600 JSONL，Header、Transcript、Command、Result 分类型追加；
 - API 支持查看 Session 摘要、steer、follow-up、cancel；
 - 第一版 resume 只恢复线性消息并创建新的 Sandbox，不恢复旧进程和旧 Sandbox。
 

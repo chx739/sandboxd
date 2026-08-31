@@ -33,6 +33,10 @@ class ManualTaskRequest(BaseModel):
     labels: dict[str, str] = Field(default_factory=dict)
 
 
+class ControlMessageRequest(BaseModel):
+    content: str = Field(min_length=1, max_length=4096)
+
+
 class Evidence(BaseModel):
     source: str
     summary: str
@@ -57,7 +61,15 @@ class Diagnosis(BaseModel):
     plan_id: str | None = Field(default=None, alias="planId")
 
 
-TaskStatus = Literal["queued", "running", "succeeded", "failed", "limit_exceeded"]
+TaskStatus = Literal[
+    "queued",
+    "running",
+    "cancelling",
+    "cancelled",
+    "succeeded",
+    "failed",
+    "limit_exceeded",
+]
 
 class ToolResult(BaseModel):
     """工具的模型通道与审计通道，避免把 Trace 结构直接回灌给 LLM。"""
@@ -134,6 +146,7 @@ class AgentTask(BaseModel):
 
     task_id: str = Field(alias="taskId")
     status: TaskStatus
+    session_id: str = Field(alias="sessionId")
     alert: AlertEvent
     created_at: datetime = Field(default_factory=utc_now, alias="createdAt")
     updated_at: datetime = Field(default_factory=utc_now, alias="updatedAt")

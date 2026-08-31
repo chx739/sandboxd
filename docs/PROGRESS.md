@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插拔 Agent Runtime 已启动。
+Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插拔 Agent Runtime 正在收尾。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插
 
 当前里程碑：
 
-    Phase 3 M0：目标与实现计划冻结，准备实现插件注册表
+    Phase 3 M4：补学习/面试/踩坑、README，做最终最小验证
 
 ## Phase 1 已完成基线
 
@@ -65,8 +65,8 @@ Phase 2 不得破坏这些证据和接口。
 | M0 | 已完成 | GOAL、AGENTS、计划、PROGRESS、分支和 9 个 Python 测试基线 |
 | M1 | 已完成 | 受信任插件接口、注册表、Prometheus/Kubernetes 插件 |
 | M2 | 已完成 | 手写双层 Agent Loop 替换 StateGraph |
-| M3 | 进行中 | 线性 Session-lite、steer/follow-up/cancel/resume API |
-| M4 | 未开始 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
+| M3 | 已完成 | 线性 Session-lite、steer/follow-up/cancel/resume API |
+| M4 | 进行中 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
 
 ## 本轮已经完成
 
@@ -140,7 +140,7 @@ Phase 2 不得破坏这些证据和接口。
 - sandboxd-target 可被现有 Plan 服务接受，可用于 CrashLoop Demo 和 Pending Scale Plan。
 - Live 模型是否服从间接注入具有概率性；最多运行 3 次并如实记录，Replay 不冒充 Live。
 - DeepSeek 三次 Live 的 Tool 选择不同；概率行为不能当安全边界，也不能保证每次都查询所有数据源。严格脚本会拒绝不完整链路，Replay 负责确定性安全回归。
-- 本地 Codex apply_patch helper 因 WSL 缺少 bubblewrap 无法启动；当前用生成的 Git patch 修改仓库。该问题不影响项目运行，禁止为此安装系统组件或使用 sudo。
+- 用户明确允许后，以 sudo 从 Ubuntu 软件源只安装 `bubblewrap 0.9.0-1ubuntu0.1`，恢复受保护的终端/补丁命令；未修改其他系统配置。
 
 ## 资源与秘密约束
 
@@ -154,8 +154,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 实现线性 Session-lite 和 TaskStore 中的运行控制身份。
-2. 接通 steer/follow-up/cancel/resume API，并保持 Alert Token 最小权限。
+1. 更新 README、学习路径、Phase 3 学习文档和面试问答。
+2. 追加 WSL Session 权限、取消和 JSONL 脱敏等真实踩坑。
+3. 做 Go/Python/Shell/秘密最小验证并推送当前分支。
 
 ## Phase 2 完成审计
 
@@ -213,3 +214,9 @@ Phase 2 不得破坏这些证据和接口。
 - 删除 LangGraph 直接依赖并离线更新 uv.lock，同时移除四个 LangGraph/ormsgpack 包。
 - 原 Replay 注入拦截、Pending Plan、插件 Trace 和取消只释放一次继续通过。
 - M2 验证为 frozen 环境 14 个 Python 单测通过；未启动集群或 Live LLM。
+- M3 为每次运行生成 taskId、为线性事故上下文生成 sessionId；resume 沿用 sessionId，但创建新 taskId 和新 Sandbox。
+- 新增独立 steer/follow-up FIFO、真实 asyncio cancel，以及五个受 API Token 保护的控制/Session API；Alert Token 无权控制任务。
+- Session 使用 append-only JSONL 保存脱敏 Header、Command、Transcript 和 Result；不保存 additional_kwargs、隐藏思维或原始凭据。
+- Session 目录/文件在 Linux 文件系统上使用 0700/0600；测试发现 WSL 的 Windows TEMP 默认位于 `/mnt/c`，DrvFS 未启用 metadata 时不能验证 POSIX 权限，因此安全状态文件必须放 Linux 文件系统。
+- 修复“整段 JSON 先正则脱敏再解析”可能破坏引号或被截断的问题，改为对 Tool 参数叶子递归脱敏并保持合法 JSON。
+- M3 最小验证为 frozen 环境 16 个 Python 单测通过；没有启动 kind、Prometheus、Alertmanager 或 Live LLM。

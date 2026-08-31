@@ -11,9 +11,20 @@ from .clients import PrometheusClient, SandboxdClient
 from .config import Settings, load_settings
 from .graph import AgentRunner
 from .model_gateway import LiveModelGateway, ReplayModelGateway
-from .models import AlertEvent, AlertmanagerPayload, ManualTaskRequest
+from .models import (
+    AlertEvent,
+    AlertmanagerPayload,
+    ControlMessageRequest,
+    ManualTaskRequest,
+)
 from .plugins import build_builtin_registry
-from .store import QueueFullError, TaskStore
+from .store import (
+    ControlKind,
+    QueueFullError,
+    TaskConflictError,
+    TaskNotFoundError,
+    TaskStore,
+)
 
 MAX_ALERT_BODY_BYTES = 64 << 10
 
@@ -144,7 +155,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
         return JSONResponse(
             status_code=202,
-            content={"taskId": task.task_id, "status": task.status},
+            content={
+                "taskId": task.task_id,
+                "sessionId": task.session_id,
+                "status": task.status,
+            },
         )
 
 
@@ -187,5 +202,97 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if task.trace is None:
             raise HTTPException(status_code=409, detail="trace not ready")
         return JSONResponse(task.trace.model_dump(mode="json", by_alias=True))
+
+    async def control_task(
+        task_id: str,
+        kind: ControlKind,
+        request: Request,
+    ) -> JSONResponse:
+        """把 HTTP 控制命令翻译成进程内队列，不直接打断正在执行的工具。"""
+
+        _authorized(request, cfg.api_token)
+        try:
+            payload = ControlMessageRequest.model_validate_json(
+                await _body(request)
+            )
+            task = await store.send_control(
+                task_id,
+                kind,
+                payload.content,
+            )
+        except HTTPException:
+            raise
+        except TaskNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except TaskConflictError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="invalid control payload",
+            ) from exc
+        return JSONResponse(
+            status_code=202,
+            content={
+                "taskId": task.task_id,
+                "sessionId": task.session_id,
+                "status": task.status,
+                "accepted": kind,
+            },
+        )
+
+    @app.post("/api/v1/tasks/{task_id}/steer", status_code=202)
+    async def steer_task(task_id: str, request: Request) -> JSONResponse:
+        return await control_task(task_id, "steer", request)
+
+    @app.post("/api/v1/tasks/{task_id}/follow-up", status_code=202)
+    async def follow_up_task(task_id: str, request: Request) -> JSONResponse:
+        return await control_task(task_id, "follow-up", request)
+
+    @app.post("/api/v1/tasks/{task_id}/cancel", status_code=202)
+    async def cancel_task(task_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            task = await store.cancel(task_id)
+        except TaskNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except TaskConflictError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return JSONResponse(
+            status_code=202,
+            content={
+                "taskId": task.task_id,
+                "sessionId": task.session_id,
+                "status": task.status,
+            },
+        )
+
+    @app.get("/api/v1/sessions/{session_id}")
+    async def get_session(session_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(await store.get_session(session_id))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.post("/api/v1/sessions/{session_id}/resume", status_code=202)
+    async def resume_session(session_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            task = await store.resume(session_id)
+        except TaskNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except QueueFullError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        return JSONResponse(
+            status_code=202,
+            content={
+                "taskId": task.task_id,
+                "sessionId": task.session_id,
+                "status": task.status,
+            },
+        )
 
     return app

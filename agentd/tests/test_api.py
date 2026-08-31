@@ -82,6 +82,34 @@ class AgentAPIAuthTest(unittest.TestCase):
                     ["prometheus", "kubernetes"],
                 )
 
+                # 运行控制和 Session 管理只能使用 API Token，告警入口 Token
+                # 不能转向、追加或取消 Agent。
+                response = client.post(
+                    "/api/v1/tasks/missing/steer",
+                    headers={"Authorization": "Bearer alert-token"},
+                    json={"content": "change direction"},
+                )
+                self.assertEqual(response.status_code, 401)
+
+                response = client.post(
+                    "/api/v1/tasks/missing/steer",
+                    headers={"Authorization": "Bearer api-token"},
+                    json={"content": "change direction"},
+                )
+                self.assertEqual(response.status_code, 404)
+
+                response = client.post(
+                    "/api/v1/tasks/missing/cancel",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 404)
+
+                response = client.get(
+                    "/api/v1/sessions/session-0123456789abcdef",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 404)
+
 
 if __name__ == "__main__":
     unittest.main()

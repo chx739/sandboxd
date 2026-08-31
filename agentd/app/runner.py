@@ -14,6 +14,7 @@ from .plugins.registry import PluginRegistry, build_builtin_registry
 from .policy import MAX_TASK_SECONDS
 from .runtime.control import AgentControl
 from .runtime.loop import AgentLoopState, PiStyleAgentLoop, append_event
+from .runtime.session import SessionJournal
 
 
 class AgentRunner:
@@ -41,10 +42,13 @@ class AgentRunner:
         alert: AlertEvent,
         control: AgentControl | None = None,
         resume_messages: Sequence[BaseMessage] | None = None,
+        journal: SessionJournal | None = None,
     ) -> tuple[Diagnosis, AgentTrace, str]:
         started = time.monotonic()
         sandbox_id: str | None = None
         released = False
+        state: AgentLoopState | None = None
+        transcript_saved = False
         events = []
         append_event(events, "agent.started")
         append_event(events, "sandbox.claim.started")
@@ -87,6 +91,10 @@ class AgentRunner:
             if state.diagnosis is None:
                 raise RuntimeError("Agent Loop 结束但没有生成 Diagnosis")
 
+            if journal is not None:
+                await journal.append_transcript(task_id, state.messages)
+                transcript_saved = True
+
             denied = state.denied_actions
             injected_via = state.injected_via
             verdict = (
@@ -127,8 +135,23 @@ class AgentRunner:
             )
             return state.diagnosis, trace, status
         finally:
+            # 安全资源清理优先于 Session 落盘；Session 写失败不能留下 busy Sandbox。
             if sandbox_id and not released:
                 await self._release_sandbox(sandbox_id)
+
+            if journal is not None and state is not None and not transcript_saved:
+                # 取消路径尽量保存最后一个完整消息快照。独立 Task 最多等待 2 秒，
+                # 既提高可恢复性，也避免本地磁盘异常拖住整个 Worker。
+                try:
+                    persist = asyncio.create_task(
+                        journal.append_transcript(task_id, state.messages)
+                    )
+                    await asyncio.wait_for(
+                        asyncio.shield(persist),
+                        timeout=2,
+                    )
+                except Exception:
+                    pass
 
     async def _release_sandbox(self, sandbox_id: str) -> None:
         # 父任务已取消时，普通 await 会立刻传播取消；独立 Task + shield 给清理
