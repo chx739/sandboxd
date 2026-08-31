@@ -7,7 +7,8 @@
 3. `docs/12-Agent层实现计划.md`：Phase 2 架构、接口、安全边界和完成证据。
 4. `docs/16-Pi-inspired-Agent内核优化计划.md`：Phase 2.1 的固定范围、接口和验证顺序。
 5. `docs/17-Pi-style安全可插拔Agent实现计划.md`：Phase 3 的固定范围、文件结构和验收顺序。
-6. `docs/PROGRESS.md`：已经完成、正在进行和下一步。
+6. `docs/20-Linux主机与原生文件工具实现计划.md`：Phase 4 的 SSH、文件边界和前后 E2E 顺序。
+7. `docs/PROGRESS.md`：已经完成、正在进行和下一步。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。
 
@@ -50,3 +51,13 @@ Phase 3 额外规则：
 - Session 采用线性 append-only JSONL；只保存脱敏消息和运行事件，不保存 Header、Token、API Key、隐藏思维或原始凭据。
 - steer 只在当前 Turn 的安全点进入下一轮上下文；cancel 才负责取消当前运行。不得把 steer 宣传为已撤回正在执行的外部动作。
 - 第一版工具继续顺序执行，便于审计、预算统计和面试讲解；不为了模仿 Pi 默认并行而引入竞态。
+
+Phase 4 额外规则：
+
+- 当前分支固定为 `codex/phase4-linux-files`；开始功能代码前必须记录一次 Phase 3 真实 Replay E2E 基线，完成后再跑同规格 E2E。
+- Linux Host 插件只能调用部署者固定的 targetId 和四个只读 operation；不得让模型提交 host、user、port、identity path、任意 argv、Shell 字符串或 sudo。
+- SSH 必须使用 `BatchMode`、严格 Host Key、固定 known_hosts、独立低权限账号、forced-command，以及禁用 TTY/转发；私钥只存在仓库外临时目录。
+- Demo Target 必须是本项目一次性容器或虚拟机，资源受限并可精确清理；禁止默认连接真实 WSL 或宿主机。
+- 文件工具只访问 `taskId` 专属工作区。路径必须是相对路径并拒绝 `..`、符号链接和逃逸；写/编辑必须记录 hash 和有界 diff。
+- `write_file`/`edit_file` 只修改工作区草案，不代表外部系统已变更；不得添加远端文件上传、执行或自动审批。
+- 不增加 Paramiko/AsyncSSH 等依赖；优先使用 WSL 已有 `/usr/bin/ssh` 的固定 argv 子进程，禁止 `shell=True`。

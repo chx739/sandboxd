@@ -47,6 +47,20 @@ Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核�
 
 Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi-style安全可插拔Agent实现计划.md` 为准。Pi 只作为源码和设计参考，不引入 Pi、Node 或 TypeScript 运行时依赖。
 
+## 当前开发目标：Phase 4 Linux Host 与原生文件工具
+
+在 Phase 3 已完成并推送的基础上，增加一个真实但受限的外部 Linux 主机诊断闭环，以及 Pi-style 的任务工作区文件原语：
+
+- 改造代码前后各运行一次同规格、低资源真实 Replay E2E，防止在未知回归上继续叠加功能；
+- Linux Host 使用静态受信任 `LinuxHostPlugin`，模型只提交固定 `targetId` 与只读 operation；SSH 只在 Connector 内部使用，必须开启严格 Host Key 校验、低权限账号和远端 forced-command 白名单；
+- 第一版 Linux operation 仅有 `host_summary`、`process_list`、`disk_usage`、`read_demo_log`，不得接收任意命令、主机、用户、端口、路径或 sudo；
+- Runtime 原生文件工具命名为 `list_files`、`read_file`、`search_files`、`write_file`、`edit_file`，只访问每个 taskId 的专属工作区；
+- 文件层拒绝绝对路径、`..`、符号链接和越界解析，限制文件/输出/搜索规模；覆盖与编辑使用 SHA256 条件和原子替换，并返回有界 Diff；
+- 文件写入只生成任务草案或报告，不会自动上传、执行或修改 Prometheus、Kubernetes、Linux Host；外部写动作仍须走 Connector 专用 Plan 与审批门；
+- SSH Demo 只能使用一次性低权限测试目标，不得把真实 WSL、宿主机或用户其他系统作为默认测试目标。
+
+Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据以 `docs/20-Linux主机与原生文件工具实现计划.md` 为准。仍不实现任意 Bash、任意 SSH、远端文件写入、sudo、动态插件、多租户、生产级凭据系统或大规模并发。
+
 ## 不可偏移的约束
 
 1. **必须真实使用 gVisor。** 不接受只写 `RuntimeClass` YAML 或用普通 `runc` 冒充；必须保留 `runsc` 运行证据。
@@ -80,7 +94,7 @@ Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi
 
 Phase 2 额外不做项是历史阶段边界。Phase 3 只解除“线性 Session、steer/follow-up、受信任内置插件”三项限制；仍不做外部 Kubernetes、多集群、多租户、文件传输、RAG、长期记忆、多 Agent、数据库、消息队列、自动审批、LangSmith 和生产级 HA。
 
-Phase 3 明确不做：Pi 完整复刻、Session 树/fork、TUI、插件市场、在线安装、任意第三方代码加载、任意 Shell、插件热更新、生产级身份系统、分布式 Session、复杂自动 Compaction 和大规模并行工具。若后续增加 Linux Host Connector，只允许固定只读操作和测试目标，不得把真实宿主机作为默认目标。
+Phase 3 明确不做：Pi 完整复刻、Session 树/fork、TUI、插件市场、在线安装、任意第三方代码加载、任意 Shell、插件热更新、生产级身份系统、分布式 Session、复杂自动 Compaction 和大规模并行工具。Phase 4 只解除“受限 Linux Host Connector”和“task 专属工作区文件工具”两项限制；其他限制继续有效。
 
 ## 完成判据
 
@@ -103,6 +117,7 @@ Phase 2 还必须证明：真实 Prometheus/Alertmanager 告警进入 agentd；�
 1. 完整阅读 `GOAL.md`。
 2. 阅读 `docs/00-实现计划.md`、`docs/12-Agent层实现计划.md`、`docs/16-Pi-inspired-Agent内核优化计划.md` 和 `docs/PROGRESS.md`。
    Phase 3 续作还必须阅读 `docs/17-Pi-style安全可插拔Agent实现计划.md`。
+   Phase 4 续作还必须阅读 `docs/20-Linux主机与原生文件工具实现计划.md`。
 3. 查看 `git status`、最近提交和当前分支，保护用户已有改动。
 4. 阅读当前模块的代码、学习文档、脚本及最近一次验证输出。
 5. 从 `docs/PROGRESS.md` 标记的“下一步”继续，只完成当前最小闭环。

@@ -4,15 +4,15 @@
 
 ## 当前状态
 
-Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插拔 Agent Runtime 已完成。
+Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 与原生文件工具已启动。
 
 当前分支：
 
-    codex/phase3-pi-runtime
+    codex/phase4-linux-files
 
 当前里程碑：
 
-    Phase 3 M0–M4：全部完成并推送 GitHub
+    Phase 4 M1：执行改造前真实 Replay E2E
 
 ## Phase 1 已完成基线
 
@@ -67,6 +67,17 @@ Phase 2 不得破坏这些证据和接口。
 | M2 | 已完成 | 手写双层 Agent Loop 替换 StateGraph |
 | M3 | 已完成 | 线性 Session-lite、steer/follow-up/cancel/resume API |
 | M4 | 已完成 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
+
+## Phase 4 里程碑
+
+| 阶段 | 状态 | 内容 |
+|---|---|---|
+| M0 | 已完成 | GOAL、AGENTS、计划、PROGRESS、分支和资源审计 |
+| M1 | 进行中 | 改造前低资源真实 Replay E2E |
+| M2 | 未开始 | 受限 SSH LinuxHostPlugin 与一次性 Demo Target |
+| M3 | 未开始 | list/read/search/write/edit task 工作区工具 |
+| M4 | 未开始 | Policy、Runtime、Session、Trace、Replay 接线与改造后 E2E |
+| M5 | 未开始 | 学习/面试/踩坑、最终验证、GitHub |
 
 ## 本轮已经完成
 
@@ -154,9 +165,18 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. Phase 3 没有未完成实现项。
-2. 后续若要增加 Connector、TUI 或生产能力，先由用户明确新目标、优先级和边界，再更新 GOAL/计划后开始。
-3. 未收到新目标时保持当前安全边界，不自动扩大范围。
+1. 只启动已核实的项目 kind 节点，执行改造前 Replay E2E；失败时先定位，不写功能代码掩盖基线问题。
+2. E2E 通过后检查本地固定镜像是否能承载一次性 SSH Demo Target。
+3. 在 M1 证据写入本文件并小步提交后才开始 LinuxHostPlugin 代码。
+
+## Phase 4 本轮记录
+
+- 2026-08-31 用户明确授权 Phase 4 并开启目标模式：实现受限 Linux Host 插件和不带 artifact 前缀的五个原生文件工具。
+- 从已完成并同步远端的 `42bb744` 创建 `codex/phase4-linux-files`，创建前工作区干净。
+- 固定工具名为 `linux_read`、`list_files`、`read_file`、`search_files`、`write_file`、`edit_file`；不增加任意 Bash/SSH/远端写能力。
+- 固定 Linux Host 使用静态 targetId、四个只读 operation、严格 Host Key、低权限 forced-command；SSH 不经过 gVisor，禁止混淆两条信任边界。
+- 改造前资源审计：16 CPU、可用内存 7076 MiB、swap 0、Linux 根盘可用 937 GiB、Windows 盘可用 197 GiB、运行容器 0。
+- kind 元数据仍指向项目单节点 `sandboxd-control-plane`，但容器已停止约 27 小时且 API 拒绝连接；下一步只启动这个已核实带 kind 集群标签的容器。
 
 ## Phase 2 完成审计
 
