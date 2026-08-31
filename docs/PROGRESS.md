@@ -1,6 +1,6 @@
 # sandboxd 持续开发进度
 
-> 本文件是跨会话进度快照。最高目标以 ../GOAL.md 为准，Phase 2 细节以 12-Agent层实现计划.md 为准。
+> 本文件是跨会话进度快照。最高目标以 ../GOAL.md 为准；Phase 4 细节以 20-Linux主机与原生文件工具实现计划.md 为准。
 
 ## 当前状态
 
@@ -12,7 +12,7 @@ Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 
 
 当前里程碑：
 
-    Phase 4 M1：执行改造前真实 Replay E2E
+    Phase 4 M2：实现受限 SSH LinuxHostPlugin 与一次性 Demo Target
 
 ## Phase 1 已完成基线
 
@@ -73,8 +73,8 @@ Phase 2 不得破坏这些证据和接口。
 | 阶段 | 状态 | 内容 |
 |---|---|---|
 | M0 | 已完成 | GOAL、AGENTS、计划、PROGRESS、分支和资源审计 |
-| M1 | 进行中 | 改造前低资源真实 Replay E2E |
-| M2 | 未开始 | 受限 SSH LinuxHostPlugin 与一次性 Demo Target |
+| M1 | 已完成 | 改造前低资源真实 Replay E2E |
+| M2 | 进行中 | 受限 SSH LinuxHostPlugin 与一次性 Demo Target |
 | M3 | 未开始 | list/read/search/write/edit task 工作区工具 |
 | M4 | 未开始 | Policy、Runtime、Session、Trace、Replay 接线与改造后 E2E |
 | M5 | 未开始 | 学习/面试/踩坑、最终验证、GitHub |
@@ -165,9 +165,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 只启动已核实的项目 kind 节点，执行改造前 Replay E2E；失败时先定位，不写功能代码掩盖基线问题。
-2. E2E 通过后检查本地固定镜像是否能承载一次性 SSH Demo Target。
-3. 在 M1 证据写入本文件并小步提交后才开始 LinuxHostPlugin 代码。
+1. 检查本地固定镜像是否能承载一次性、低资源 SSH Demo Target；不得连接真实 WSL 主机。
+2. 实现静态 targetId、四个只读 operation、严格 Host Key 与 forced-command 双重白名单。
+3. 完成 LinuxHostPlugin 单测和独立最小 Demo 后，再进入 task 工作区文件工具。
 
 ## Phase 4 本轮记录
 
@@ -176,7 +176,11 @@ Phase 2 不得破坏这些证据和接口。
 - 固定工具名为 `linux_read`、`list_files`、`read_file`、`search_files`、`write_file`、`edit_file`；不增加任意 Bash/SSH/远端写能力。
 - 固定 Linux Host 使用静态 targetId、四个只读 operation、严格 Host Key、低权限 forced-command；SSH 不经过 gVisor，禁止混淆两条信任边界。
 - 改造前资源审计：16 CPU、可用内存 7076 MiB、swap 0、Linux 根盘可用 937 GiB、Windows 盘可用 197 GiB、运行容器 0。
-- kind 元数据仍指向项目单节点 `sandboxd-control-plane`，但容器已停止约 27 小时且 API 拒绝连接；下一步只启动这个已核实带 kind 集群标签的容器。
+- kind 元数据仍指向项目单节点 `sandboxd-control-plane`；只启动了经镜像摘要和 kind 标签核实的该容器，没有创建第二个集群。
+- 启动后节点、控制面、Calico、CoreDNS 和 local-path 均恢复 Ready；E2E 前可用内存约 6400 MiB、swap 0、运行容器 1。
+- 2026-08-31 改造前真实 Replay E2E 完整通过：Prometheus -> Alertmanager -> agentd、Prometheus/Kubernetes 查询、Pod Log 注入、agent-policy/tool-policy/RBAC 拒绝、Agent approve 401、Pending Plan、replicas 不变和 `Starting gVisor` 均有脚本断言。
+- 改造前脱敏证据位于本地 `.cache/agent-demo-evidence/4e111abd02e44029bc50c45d29326351`；该目录不提交 Git，也不冒充 Live LLM 证据。
+- E2E 自动清理本轮 `sandboxd-target`、managed Pod、四个服务监听和渲染配置；基线通过后才允许开始 Phase 4 功能代码。
 
 ## Phase 2 完成审计
 
