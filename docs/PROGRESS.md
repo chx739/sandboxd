@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插拔 Agent Runtime 正在收尾。
+Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插拔 Agent Runtime 已完成。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1、Phase 2、Phase 2.1 已完成并保留；Phase 3 Pi-style 安全可插
 
 当前里程碑：
 
-    Phase 3 M4：代码、文档与最小验证完成，等待 GitHub 推送
+    Phase 3 M0–M4：全部完成并推送 GitHub
 
 ## Phase 1 已完成基线
 
@@ -66,7 +66,7 @@ Phase 2 不得破坏这些证据和接口。
 | M1 | 已完成 | 受信任插件接口、注册表、Prometheus/Kubernetes 插件 |
 | M2 | 已完成 | 手写双层 Agent Loop 替换 StateGraph |
 | M3 | 已完成 | 线性 Session-lite、steer/follow-up/cancel/resume API |
-| M4 | 进行中 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
+| M4 | 已完成 | 最小验证、Demo、学习/面试/踩坑、README、GitHub |
 
 ## 本轮已经完成
 
@@ -154,9 +154,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 提交 M4 代码与文档。
-2. 经用户明确授权后，把 `codex/phase3-pi-runtime` 推送到已核实的 `https://github.com/chx739/sandboxd.git`。
-3. 推送成功后记录最终提交并结束 Phase 3；不自动扩展新 Connector、TUI 或生产功能。
+1. Phase 3 没有未完成实现项。
+2. 后续若要增加 Connector、TUI 或生产能力，先由用户明确新目标、优先级和边界，再更新 GOAL/计划后开始。
+3. 未收到新目标时保持当前安全边界，不自动扩大范围。
 
 ## Phase 2 完成审计
 
@@ -226,3 +226,4 @@ Phase 2 不得破坏这些证据和接口。
 - 文档反查代码时发现 Alert Header 也可能含凭据；已改成结构化逐叶脱敏，并新增 Bearer 告警注解回归断言。
 - 最终轻量验证通过：Go test `-p 1`、go vet、go build `-p 1`、Python compileall、16 个 frozen 单测、全部 hack Shell 语法和 diff check。
 - 安装 bubblewrap 后，受管理 seccomp 环境会阻塞 FastAPI 线程和 Go 编译子进程；验证改在 WSL 沙箱外串行运行，仍未启动集群或 Live LLM，也没有残留进程。
+- Phase 3 四个实现提交 `42c75af..fe0273b` 已推送到 `https://github.com/chx739/sandboxd.git` 的 `codex/phase3-pi-runtime`；未合并或改写其他远端分支。

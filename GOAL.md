@@ -34,6 +34,8 @@ Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核�
 
 ## 当前开发目标：Phase 3 Pi-style 安全可插拔运维 Agent Runtime
 
+> 实现状态：Phase 3 M0–M4 已完成，代码、学习/面试文档与最小验证已推送到 `codex/phase3-pi-runtime`。后续不得把本节继续扩写成动态插件、任意 Shell 或生产级平台；新阶段必须先由用户明确选择目标。
+
 在**不重写 Go sandboxd** 的前提下，把 Python agentd 从单次 LangGraph 告警状态机演进为受 Pi 官方源码启发的极简 Agent Runtime：
 
 - 用简单、中文注释充分的手写双层循环表达 Pi 的核心设计：内层处理 Tool Call 与 steer，外层在 Agent 原本结束后处理 follow-up；
