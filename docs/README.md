@@ -24,8 +24,13 @@
 | 17 | [Pi-style 安全可插拔 Agent 实现计划](17-Pi-style安全可插拔Agent实现计划.md) | Phase 3 权威范围与恢复锚点 | 已完成 |
 | 18 | [Pi-style Agent Runtime 学习手册](18-Pi-style-Agent-Runtime学习手册.md) | 双层 Loop、Session、插件、身份 | 当前主学习文档 |
 | 19 | [Pi-style 运维 Agent 面试问答](19-Pi-style运维Agent面试问答.md) | 30 个 Phase 3 高频追问 | 当前自测文档 |
+| 20 | [Linux Host 与文件工具实现计划](20-Linux主机与原生文件工具实现计划.md) | Phase 4 权威范围、接口与恢复锚点 | 已实现 |
+| 21 | [Linux SSH Connector 学习手册](21-Linux-SSH-Connector学习手册.md) | strict host key、固定 argv、forced-command | 当前主学习文档 |
+| 22 | [Agent 原生文件工具学习手册](22-Agent原生文件工具学习手册.md) | task 工作区、路径、CAS、原子写、脱敏 | 当前主学习文档 |
+| 23 | [Linux 与文件工具面试问答](23-Linux与文件工具面试问答.md) | 20 个 Phase 4 高频追问与 90 秒讲法 | 当前自测文档 |
 
 > 12、14、15 保留 Phase 2/LangGraph 的历史实现与真实证据；当前代码以 17、18、19 为准。
+> Phase 4 的 SSH 与文件能力以 20–23 为准；SSH 不经过 gVisor，不能混淆信任边界。
 > 13 是**学习方法**不是模块文档，不遵循下面的固定结构。
 
 ## 每篇文档的固定结构

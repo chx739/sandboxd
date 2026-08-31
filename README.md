@@ -8,6 +8,8 @@
 graph LR
     AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>Pi-style 双层 Loop<br/>Session + Plugins"]
     Agentd -->|PromQL| Prom["Prometheus Query API"]
+    Agentd -->|固定 targetId + operation| SSH["Linux SSH Target<br/>strict host key · forced-command"]
+    Agentd --> WS["Task Workspace<br/>list/read/search/write/edit"]
     Agentd -->|Agent Token| API
     Operator["Operator"] -->|Operator Token| API
     subgraph sandboxd
@@ -93,6 +95,8 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | Prometheus 低基数指标 | 已实测 |
 | Deployment scale DryRun、双 Token 分权、TOCTOU 拒绝 | 已实测 |
 | Agent 层：外部告警、Pi-style Loop、插件、Session、注入与 Pending Plan | Phase 2 Replay/DeepSeek Live 已实测；Phase 3 离线回归通过 |
+| Linux Host：静态 Target、strict host key、低权限双 forced-command | Phase 4 真实 SSH Replay 已实测 |
+| 原生文件：task 工作区、路径/symlink、CAS、原子写、脱敏 Trace | Phase 4 真实 Replay 与单测已实测 |
 
 关键实测输出：
 
@@ -117,6 +121,9 @@ Injection: Pod Log -> Trace injectedVia=podlog
 Policy: agent-policy denied; Go tool-policy=403; RBAC DELETE=403
 Approval: Agent approve=401; Plan pending; replicas unchanged
 Agent sandbox: dmesg contains Starting gVisor
+Linux Connector: strict host key + low privilege + forced-command
+Linux injection: Trace injectedVia=linux_log; arbitrary SSH command -> 126
+Task files: write/read succeeded; content absent from Trace/Session
 ```
 
 并发规模是 5 而非更高，这是 WSL2 单节点的主动约束（见 `GOAL.md`）。`claim_conflicts=6` 比并发数更能说明 CAS 在真实生效——**零冲突只意味着没有测到竞争**。
@@ -140,6 +147,7 @@ export PATH="${HOME}/.local/bin:${PATH}"
 ./hack/install-observability-tools.sh
 ./hack/verify-observability.sh
 ./hack/run-agent-demo.sh
+./hack/run-linux-agent-demo.sh
 ```
 
 ## 一键完整演示
@@ -157,6 +165,7 @@ Agent Demo 会额外启动 pool=1、worker=1 的 localhost 服务并创建一个
 ```bash
 ./hack/run-agent-demo.sh
 AGENTD_DEMO_MODE=live ./hack/run-agent-demo.sh  # 还需有效的 AGENTD_LLM_* 配置
+./hack/run-linux-agent-demo.sh                  # Replay + 一次性受限 SSH Target + 文件工具
 ```
 
 
@@ -186,14 +195,17 @@ make test
 | 文档 | 用途 |
 |---|---|
 | [GOAL.md](GOAL.md) | 目标锚点、边界与安全红线 |
-| [docs/README.md](docs/README.md) | 学习文档索引（01–19） |
+| [docs/README.md](docs/README.md) | 学习文档索引（01–23） |
 | [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 阅读顺序、破坏实验、复习检验 |
-| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 36 条真实问题与定位过程 |
+| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 47 条真实问题与定位过程 |
 | [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | Q1–Q33、架构选型取舍、项目讲法 |
 | [docs/14-LangGraph告警诊断学习手册.md](docs/14-LangGraph告警诊断学习手册.md) | Agent 实现、八股、验证和一分钟讲法 |
 | [docs/15-Agent安全面试问答.md](docs/15-Agent安全面试问答.md) | Agent 安全与扩展的 32 个高频追问 |
 | [docs/18-Pi-style-Agent-Runtime学习手册.md](docs/18-Pi-style-Agent-Runtime学习手册.md) | 当前 Agent Loop、Session、插件和身份主学习文档 |
 | [docs/19-Pi-style运维Agent面试问答.md](docs/19-Pi-style运维Agent面试问答.md) | Phase 3 秋招追问与一分钟讲法 |
+| [docs/21-Linux-SSH-Connector学习手册.md](docs/21-Linux-SSH-Connector学习手册.md) | 受限 SSH、Host Key、forced-command 与真实踩坑 |
+| [docs/22-Agent原生文件工具学习手册.md](docs/22-Agent原生文件工具学习手册.md) | task 工作区、路径安全、CAS、原子写与脱敏 |
+| [docs/23-Linux与文件工具面试问答.md](docs/23-Linux与文件工具面试问答.md) | Phase 4 的 20 个秋招追问与 90 秒讲法 |
 
 ## 项目边界
 
@@ -204,7 +216,9 @@ make test
 - Plan 存内存，进程重启即丢失
 - 并发验证规模为 5，未做容量模型与压力测试
 - Task、Trace 索引和 Plan 是单进程内存状态；Session Transcript 用本地 JSONL 最小持久化，但不是数据库
-- 当前外部 Connector 是 localhost Prometheus/Alertmanager，只诊断本地 kind，不是通用多集群运维
+- 当前有 localhost Prometheus/Alertmanager 和静态 Linux SSH Target；没有生产级多主机归属、凭据轮转或堡垒机
+- SSH Connector 不经过 gVisor；它依赖 Target Registry、strict host key、低权限账号和 forced-command
+- 文件工具只写 task 工作区草案，不会上传远端、修改仓库或自动执行 Plan
 - DeepSeek Live 三次注入实验均为 `not-triggered`；危险调用的确定性拒绝证据来自 Replay，二者不互相冒充
 
 gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
@@ -231,3 +245,9 @@ GET  /api/v1/plugins
 ```
 
 插件只扩展模型可见的结构化工具，不扩展 sandboxd/RBAC 允许的能力。当前不做动态插件、任意 Shell、Session 树、多进程 Worker 或生产级多租户身份。
+
+## Phase 4 Linux Host 与原生文件工具
+
+当前 Registry 新增 `linux-host` 和 `files` 两个受信任内置插件。`linux_read` 只允许部署者预登记 targetId 的四个只读 operation；五个文件工具不带 artifact 前缀，只访问当前 task 的 Linux 文件系统工作区。
+
+`hack/run-linux-agent-demo.sh` 会离线校验本地固定 kicbase image ID，启动一个 0.25 CPU、192 MiB、64 PID、read-only rootfs 的一次性 SSH Target；Key 和配置只在 `/tmp`，退出精确删除。它复用完整 Agent E2E，同时断言 Linux/Pod 两路注入、文件正文脱敏、forced-command 负向拒绝，以及原有 gVisor、RBAC、Policy、审批门不退化。

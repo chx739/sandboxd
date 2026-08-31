@@ -12,7 +12,7 @@ Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 
 
 当前里程碑：
 
-    Phase 4 M2：实现受限 SSH LinuxHostPlugin 与一次性 Demo Target
+    Phase 4 M5：只剩提交文档并推送 GitHub
 
 ## Phase 1 已完成基线
 
@@ -74,10 +74,10 @@ Phase 2 不得破坏这些证据和接口。
 |---|---|---|
 | M0 | 已完成 | GOAL、AGENTS、计划、PROGRESS、分支和资源审计 |
 | M1 | 已完成 | 改造前低资源真实 Replay E2E |
-| M2 | 进行中 | 受限 SSH LinuxHostPlugin 与一次性 Demo Target |
-| M3 | 未开始 | list/read/search/write/edit task 工作区工具 |
-| M4 | 未开始 | Policy、Runtime、Session、Trace、Replay 接线与改造后 E2E |
-| M5 | 未开始 | 学习/面试/踩坑、最终验证、GitHub |
+| M2 | 已完成 | 受限 SSH LinuxHostPlugin 与一次性 Demo Target |
+| M3 | 已完成 | list/read/search/write/edit task 工作区工具 |
+| M4 | 已完成 | Policy、Runtime、Session、Trace、Replay 接线与首次改造后 E2E |
+| M5 | 进行中 | 学习/面试/踩坑、最终验证、GitHub |
 
 ## 本轮已经完成
 
@@ -165,9 +165,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 检查本地固定镜像是否能承载一次性、低资源 SSH Demo Target；不得连接真实 WSL 主机。
-2. 实现静态 targetId、四个只读 operation、严格 Host Key 与 forced-command 双重白名单。
-3. 完成 LinuxHostPlugin 单测和独立最小 Demo 后，再进入 task 工作区文件工具。
+1. 提交 README、学习手册、面试问答、踩坑与本完成证据。
+2. 推送 `codex/phase4-linux-files`，确认远端 branch 和提交。
+3. 推送完成后把 M5 与 GOAL 状态标记为已完成，不再扩写 Phase 4。
 
 ## Phase 4 本轮记录
 
@@ -181,6 +181,18 @@ Phase 2 不得破坏这些证据和接口。
 - 2026-08-31 改造前真实 Replay E2E 完整通过：Prometheus -> Alertmanager -> agentd、Prometheus/Kubernetes 查询、Pod Log 注入、agent-policy/tool-policy/RBAC 拒绝、Agent approve 401、Pending Plan、replicas 不变和 `Starting gVisor` 均有脚本断言。
 - 改造前脱敏证据位于本地 `.cache/agent-demo-evidence/4e111abd02e44029bc50c45d29326351`；该目录不提交 Git，也不冒充 Live LLM 证据。
 - E2E 自动清理本轮 `sandboxd-target`、managed Pod、四个服务监听和渲染配置；基线通过后才允许开始 Phase 4 功能代码。
+- M2 完成 `LinuxHostClient`、`linux_read` 与静态 Target Registry：固定 `/usr/bin/ssh` argv、strict host key、输出/超时上限，失败不回显凭据路径；Connector 对未知 target/operation 独立返回 `connector-policy`。
+- 一次性 Target 基于本地已核实 image ID 的 kicbase v0.0.50，资源限制为 0.25 CPU、192 MiB、64 PID、read-only rootfs，只绑定随机 localhost 端口；低权限 UID 10001 无 sudo，authorized_keys command 与 sshd ForceCommand 双重收口。
+- M3 完成 `list_files`、`read_file`、`search_files`、`write_file`、`edit_file`；task 工作区使用 Linux 0700/0600，限制路径/层级/symlink/256 KiB，覆盖使用 SHA256 CAS，写入使用同目录原子替换并返回有界脱敏 diff。
+- Trace/Session 对 write content 和 edit old/new text 只保存 bytes + SHA256；read/search/diff 对常见 API Key/Bearer 做模式脱敏。它不是完整 DLP，工作区仍不得存生产秘密。
+- 首次 Phase 4 真实 E2E 通过，证据为本地 `.cache/agent-demo-evidence/f2d0ba2e986244f1a55fc9de56c3ca23`：Linux SSH、文件写读、Linux/Pod 两路注入、原 gVisor/Policy/RBAC/审批链均通过，正文未进入 Trace/Session。
+- 实测后只剩项目 kind control-plane；`sandboxd-target`、Phase 4 Target、8080/8090/9090/9093 监听和 `/tmp/sandboxd-linux-demo.*` 均无残留。
+- Python frozen 单测由 16 增至 22，覆盖 SSH 固定 argv/二次拒绝、路径逃逸/symlink/CAS/权限/任务隔离，以及 Phase 4 Replay 的 8 次 Tool Call 和 Trace 脱敏。
+- 实现中记录四个可讲坑：BuildKit 离线 digest 解析、`/run` tmpfs 遮挡、sshd 降权读取 authorized_keys、Docker 随机端口语法；均先做最小实验再修复，没有放宽安全边界。
+- 最终静态审计通过：Go `test -p 1`/vet/build、Python compileall/22 tests、全部 Shell 语法、Replay JSON、Markdown 本地链接和 diff check；Go `cmd/internal` 与既有 Kubernetes 安全清单零修改。
+- 最终改造后 E2E 再次通过，证据为本地 `.cache/agent-demo-evidence/5b179a176e6a4448b5aa8a7daace3cd0`；新增直接 SSH `cat /etc/passwd` 的远端负向路径返回 126，原 gVisor、Policy、RBAC、审批链继续通过。
+- 最终清理审计只剩项目 kind control-plane；目标 namespace、Phase 4 Target、四个服务端口、`/tmp/sandboxd-linux-demo.*`、`/tmp/sandboxd-agent-workspace.*` 和旧测试空目录均无残留。
+- 实现代码、测试和脚本已形成提交 `1a4e98f`；三个新增 Shell 脚本通过 Git index 显式保存为 100755，避免 `/mnt/c` 的 `core.filemode=false` 丢失执行位。
 
 ## Phase 2 完成审计
 

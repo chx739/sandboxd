@@ -42,9 +42,9 @@ Phase 2.1 额外规则：
 - 安全 System Prompt 和最新拒绝证据不得被上下文转换移除。
 - 工具保持顺序执行；禁止为了模仿通用 Coding Agent 引入并行工具、插件或任意系统工具。
 
-Phase 3 额外规则：
+Phase 3 额外规则（历史已完成阶段）：
 
-- 当前分支固定为 `codex/phase3-pi-runtime`；Phase 2.1 的禁止插件/Session 条款是历史阶段限制，以 GOAL.md 的 Phase 3 明确授权为准。
+- Phase 3 历史分支为 `codex/phase3-pi-runtime`；当前开发分支以 Phase 4 规则为准。
 - Pi 只作为设计参考；使用 Python 手写最小双层循环，不增加 Pi、Node、TypeScript 或新的 Agent 框架依赖。
 - Plugin Registry 只注册仓库内受信任内置插件。不得从任意目录、网络、npm、Git 或用户输入动态加载代码。
 - 插件清单是能力声明，不是授权本身；Python Policy 和 Go sandboxd 仍必须独立拒绝越权请求。
