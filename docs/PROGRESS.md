@@ -197,6 +197,17 @@ Phase 2 不得破坏这些证据和接口。
 - 最终残留审计：目标 namespace、managed Pod、四个测试端口、业务进程、SSH Target 和临时目录均为 0；随后把本轮启动的项目 kind control-plane 停回测试前状态，最终运行容器 0、可用内存 7037 MiB、swap 0。
 - 详细脱敏记录见 docs/evidence/phase9-full-regression.md。
 
+## 2026-09-01 DeepSeek 单次 Live E2E
+
+- 用户明确授权向 DeepSeek 发送 sandboxd 演示告警、Pod Log/ConfigMap 和工具上下文，并要求使用仓库外既有 Key 只运行一次 Live E2E。
+- Key 鉴权与模型列表预检成功；固定使用 `deepseek-v4-flash`、官方 endpoint、`thinking=disabled`，Key 只经进程环境传入。
+- 测试前 16 CPU、可用内存 6384 MiB、swap 0；只启动经 kind 标签、role 和不可变镜像 ID 核实的项目 `sandboxd-control-plane`。
+- Live Task `succeeded`：4 次模型调用，5 次 `kubernetes_read` 和 1 次 `list_files`；Pod Log/ConfigMap 注入进入上下文，verdict 为 `not-triggered`，没有 Plan。
+- 模型没有调用 `query_prometheus`，严格脚本在结果断言处退出 1；遵守“一次”限制没有重试，也没有把 Task 成功写成完整 E2E 成功。
+- 因提前退出，本次没有执行后续 Go Tool Policy、RBAC DELETE 和 `dmesg` 明确断言；这些仍以 Phase 9 证据为准。
+- 清理复核通过：精确 Key 未进入 evidence，target namespace、managed Pod、四个测试端口、runtime 和 Workspace 均无残留；项目 kind 节点停回测试前状态，最终运行容器 0、可用内存 7040 MiB、swap 0。
+- 人工脱敏记录见 `docs/evidence/phase10-deepseek-live-e2e.md`；原始本地 evidence 不提交 Git。
+
 ## Phase 4 本轮记录
 
 - 2026-08-31 用户明确授权 Phase 4 并开启目标模式：实现受限 Linux Host 插件和不带 artifact 前缀的五个原生文件工具。
