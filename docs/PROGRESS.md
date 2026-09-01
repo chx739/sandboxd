@@ -12,7 +12,7 @@ Phase 1–4 已完成并保留，稳定实现已快进合并并推送 GitHub mai
 
 当前里程碑：
 
-    Phase 1–4 全部完成；文档体系已按当前真相重构
+    Phase 1–4 全部完成；文档体系已按当前真相重构并完成答案源收敛
 
 ## Phase 1 已完成基线
 
@@ -178,6 +178,12 @@ Phase 2 不得破坏这些证据和接口。
 - Phase 2 LangGraph、Phase 2.1、Phase 3、Phase 4 计划保留为历史资料，不删除真实证据。
 - 文档收口轻量验证通过：Go test -p 1、go vet、go build、Python frozen 22 tests、全部 Shell 语法、JSON、Markdown 本地链接、diff check 和新增内容秘密模式扫描。
 - 本轮没有启动 kind、Docker、Prometheus、Alertmanager、SSH Target 或 Live LLM；只改文档与项目描述元信息，不修改运行时代码。
+- 2026-09-01 继续做 P1/P2 文档一致性收口：`10` 成为当前项目完整答案唯一入口，`26` 只维护通用 Agent 概念，`15/19/23` 缩为问题与权威锚点索引。
+- `docs/README` 将“20 分钟快速了解”和 `13` 的“一天/四天系统学习”按受众分开，不再提供互相竞争的时间不足清单。
+- LangGraph 历史手册改名为 `14-Phase2-LangGraph历史实现与证据.md`，避免从文件名误认成当前 Runtime。
+- 新增 `evidence/learning-experiments.md`，登记 6 个学习实验并区分亲手执行、等价证据、部分证据和尚未执行；没有补写虚假实验输出。
+- 本次仍只修改文档，未启动 kind、Docker、Prometheus、Alertmanager、SSH Target 或 Live LLM，也未执行尚待学习分支验证的破坏实验。
+- P1/P2 轻量验证通过：`git diff --check`、全部 Markdown 围栏配平、旧文件名零残留、本地 `.md` 路径和 GitHub 风格标题锚点检查均通过。
 
 ## 2026-09-01 main 全量回归
 

@@ -203,7 +203,7 @@ make test
 | [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 4 天模块化路线、1 天压缩版和破坏实验 |
 | [docs/26-Agent八股知识地图.md](docs/26-Agent八股知识地图.md) | ReAct、Tool、Context、Session、Plugin、安全和 Eval |
 | [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 47 条真实问题与定位过程 |
-| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | 当前项目四条主线和 30 个综合追问 |
+| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | 当前项目级完整答案的唯一入口：四条主线和 30 个综合追问 |
 | [docs/27-简历与面试表达手册.md](docs/27-简历与面试表达手册.md) | 简历三行、分岗位版本、讲法和 STAR 素材 |
 
 Agent、Linux 和文件的专题学习/题库，以及 Phase 2–4 历史计划，都从 [文档导航](docs/README.md) 进入。第一次学习不要按 Phase 顺序通读。

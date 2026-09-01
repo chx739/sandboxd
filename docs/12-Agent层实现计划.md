@@ -305,7 +305,7 @@ hack/run-agent-demo.sh
 hack/verify-agent-replay.sh
 hack/verify-agent-live.sh
 
-docs/14-LangGraph告警诊断学习手册.md
+docs/14-Phase2-LangGraph历史实现与证据.md
 docs/15-Agent安全面试问答.md
 docs/evidence/phase8-agent-alert.md
 docs/evidence/agent-traces/

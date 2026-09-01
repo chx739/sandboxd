@@ -14,7 +14,7 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
 
 - `../docs/24-项目全景与心智模型.md`；
 - `../docs/25-代码导读与模块地图.md` 的 Agent 主链；
-- `../docs/26-Agent八股知识地图.md`。
+- `../docs/26-Agent八股知识地图.md`（通用概念；项目完整答案统一查 `../docs/10-面试问答与项目讲法.md`）。
 
 本地依赖使用已有用户态 uv：
 
@@ -64,4 +64,4 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
 
     ./hack/run-linux-agent-demo.sh
 
-学习文档见 `../docs/21-Linux-SSH-Connector学习手册.md`、`../docs/22-Agent原生文件工具学习手册.md` 和 `../docs/23-Linux与文件工具面试问答.md`。
+学习文档见 `../docs/21-Linux-SSH-Connector学习手册.md`、`../docs/22-Agent原生文件工具学习手册.md`；问题索引见 `../docs/23-Linux与文件工具面试问答.md`，完整项目回答统一查 `../docs/10-面试问答与项目讲法.md`。

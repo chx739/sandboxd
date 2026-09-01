@@ -1,4 +1,4 @@
-# LangGraph 告警诊断学习手册
+# Phase 2 LangGraph 历史实现与证据
 
 > 历史说明：本文记录 Phase 2 已真实验证的 LangGraph 架构与 Live/Replay 证据。Phase 3 当前代码已改为手写双层循环；学习当前实现请读 [18-Pi-style Agent Runtime 学习手册](18-Pi-style-Agent-Runtime学习手册.md)。
 
