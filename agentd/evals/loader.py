@@ -9,8 +9,28 @@ from pydantic import ValidationError
 from .models import EvalCase
 
 
-DEFAULT_SUITE_PATH = Path(__file__).resolve().parent / "cases" / "v1.jsonl"
+CASES_DIR = Path(__file__).resolve().parent / "cases"
+V1_SUITE_PATH = CASES_DIR / "v1.jsonl"
+V2_SUITE_PATH = CASES_DIR / "v2.jsonl"
+DEFAULT_SUITE_PATH = V2_SUITE_PATH
 EXPECTED_V1_COUNTS = {"clean": 4, "attack": 12, "hard-negative": 4}
+EXPECTED_V2_COUNTS = {"clean": 8, "attack": 24, "hard-negative": 8}
+V2_GOALS = {
+    "goal:k8s-write",
+    "goal:secret-access",
+    "goal:approval-bypass",
+    "goal:shell",
+    "goal:path-escape",
+    "goal:exfiltration",
+}
+V2_TECHNIQUES = {
+    "technique:explicit-en",
+    "technique:chinese",
+    "technique:authority",
+    "technique:obfuscated",
+    "technique:multi-step",
+    "technique:social-engineering",
+}
 
 
 def load_cases(path: Path = DEFAULT_SUITE_PATH) -> list[EvalCase]:
@@ -54,6 +74,63 @@ def validate_v1_shape(cases: list[EvalCase]) -> None:
     actual_sources = {case.source for case in cases}
     if not required_sources <= actual_sources:
         raise ValueError("v1 缺少来源: %s" % sorted(required_sources - actual_sources))
+
+
+def validate_v2_shape(cases: list[EvalCase]) -> None:
+    counts = Counter(case.kind for case in cases)
+    if len(cases) != 40 or dict(counts) != EXPECTED_V2_COUNTS:
+        raise ValueError(
+            "v2 必须是 40 条且 clean/attack/hard-negative=8/24/8，实际=%s"
+            % dict(counts)
+        )
+    required_sources = {
+        "alert",
+        "prometheus",
+        "podlog",
+        "configmap",
+        "event",
+        "linux_log",
+        "file",
+    }
+    actual_sources = {case.source for case in cases}
+    if not required_sources <= actual_sources:
+        raise ValueError("v2 缺少来源: %s" % sorted(required_sources - actual_sources))
+
+    actual_goals: set[str] = set()
+    actual_techniques: set[str] = set()
+    for case in cases:
+        goals = {tag for tag in case.tags if tag.startswith("goal:")}
+        techniques = {tag for tag in case.tags if tag.startswith("technique:")}
+        if case.kind == "attack":
+            if len(goals) != 1 or len(techniques) != 1:
+                raise ValueError(
+                    "%s: attack 必须恰好有一个 goal 和 technique tag" % case.id
+                )
+            actual_goals.update(goals)
+            actual_techniques.update(techniques)
+        elif goals:
+            raise ValueError("%s: 非 attack 不能声明 goal tag" % case.id)
+        elif case.kind == "clean" and "task:clean" not in case.tags:
+            raise ValueError("%s: clean 缺少 task:clean" % case.id)
+        elif case.kind == "hard-negative" and "task:hard-negative" not in case.tags:
+            raise ValueError("%s: hard-negative 缺少对应 task tag" % case.id)
+
+    if actual_goals != V2_GOALS:
+        raise ValueError("v2 goal 覆盖不完整: %s" % sorted(V2_GOALS - actual_goals))
+    if actual_techniques != V2_TECHNIQUES:
+        raise ValueError(
+            "v2 technique 覆盖不完整: %s"
+            % sorted(V2_TECHNIQUES - actual_techniques)
+        )
+
+
+def validate_suite_shape(cases: list[EvalCase]) -> None:
+    """允许显式回归历史 v1，默认 40 条时按 v2 的更严格标签校验。"""
+
+    if len(cases) == 20:
+        validate_v1_shape(cases)
+        return
+    validate_v2_shape(cases)
 
 
 def _validate_case_semantics(case: EvalCase, path: Path, line_number: int) -> None:

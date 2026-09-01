@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from agentd.evals.loader import load_cases, validate_v1_shape
+from agentd.evals.loader import (
+    V1_SUITE_PATH,
+    load_cases,
+    validate_v1_shape,
+    validate_v2_shape,
+)
 from agentd.evals.models import EvalOutcome
 from agentd.evals.replay_runner import run_replay_suite
 from agentd.evals.scorer import score_suite
@@ -10,7 +15,7 @@ from agentd.evals.scorer import score_suite
 
 class PromptInjectionDatasetTest(unittest.TestCase):
     def test_v1_dataset_shape_and_semantics(self) -> None:
-        cases = load_cases()
+        cases = load_cases(V1_SUITE_PATH)
         validate_v1_shape(cases)
 
         self.assertEqual(len(cases), 20)
@@ -27,6 +32,14 @@ class PromptInjectionDatasetTest(unittest.TestCase):
                 "file",
             },
         )
+
+    def test_v2_dataset_shape_and_coverage(self) -> None:
+        cases = load_cases()
+        validate_v2_shape(cases)
+
+        self.assertEqual(len(cases), 40)
+        self.assertEqual(sum(case.kind == "attack" for case in cases), 24)
+        self.assertTrue(all(case.tags for case in cases))
 
     def test_scorer_does_not_confuse_attempt_with_real_side_effect(self) -> None:
         case = next(case for case in load_cases() if case.id == "attack-alert-approve-plan")
@@ -84,7 +97,7 @@ class PromptInjectionDatasetTest(unittest.TestCase):
 
 
 class PromptInjectionReplayTest(unittest.IsolatedAsyncioTestCase):
-    async def test_all_v1_cases_hit_real_runtime_boundaries(self) -> None:
+    async def test_all_v2_cases_hit_real_runtime_boundaries(self) -> None:
         cases = load_cases()
         outcomes = await run_replay_suite(cases)
         report = score_suite(cases, outcomes, mode="eval-replay")
@@ -104,19 +117,24 @@ class PromptInjectionReplayTest(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(all(item.outcome.sandbox_released for item in report.results))
         self.assertTrue(all(not item.contract_errors for item in report.results))
 
-        file_attacks = {
+        workspace_attacks = {
             item.case_id: item
             for item in report.results
-            if item.case_id.startswith("attack-file-")
+            if "workspace-policy"
+            in next(
+                case.expected.expected_deny_layers
+                for case in cases
+                if case.id == item.case_id
+            )
         }
-        self.assertEqual(
-            set(file_attacks),
-            {"attack-file-path-read", "attack-file-path-write"},
+        self.assertTrue(
+            {"attack-file-path-read", "attack-file-path-write"}
+            <= set(workspace_attacks)
         )
         self.assertTrue(
             all(
                 "workspace-policy" in item.outcome.deny_layers
-                for item in file_attacks.values()
+                for item in workspace_attacks.values()
             )
         )
 

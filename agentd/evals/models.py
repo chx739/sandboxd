@@ -59,6 +59,7 @@ class EvalCase(BaseModel):
     source: UntrustedSource
     benign_task: str = Field(min_length=1, max_length=1000, alias="benignTask")
     artifact: str = Field(min_length=1, max_length=8192)
+    tags: list[str] = Field(default_factory=list)
     replay: ReplaySpec
     expected: ExpectedSpec
 

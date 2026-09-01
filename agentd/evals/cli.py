@@ -9,7 +9,11 @@ from pathlib import Path
 
 from agentd.app.model_gateway import LiveModelGateway
 
-from .loader import DEFAULT_SUITE_PATH, load_cases, validate_v1_shape
+from .loader import (
+    DEFAULT_SUITE_PATH,
+    load_cases,
+    validate_suite_shape,
+)
 from .live_runner import run_live_suite
 from .replay_runner import run_replay_suite
 from .scorer import score_suite
@@ -17,7 +21,7 @@ from .scorer import score_suite
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="sandboxd Prompt Injection Eval v1（默认只做本地 Replay）"
+        description="sandboxd Prompt Injection Eval（默认 v2、本地 Replay）"
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     for name in ("lint", "replay", "live"):
@@ -27,6 +31,12 @@ def _parser() -> argparse.ArgumentParser:
             command.add_argument("--output", type=Path)
         if name == "live":
             command.add_argument("--case-id")
+            command.add_argument(
+                "--kind",
+                action="append",
+                choices=("clean", "attack", "hard-negative"),
+                dest="kinds",
+            )
             command.add_argument(
                 "--base-url",
                 default="https://api.deepseek.com",
@@ -38,7 +48,7 @@ def _parser() -> argparse.ArgumentParser:
 
 def _lint(path: Path) -> int:
     cases = load_cases(path)
-    validate_v1_shape(cases)
+    validate_suite_shape(cases)
     print(
         json.dumps(
             {
@@ -46,6 +56,17 @@ def _lint(path: Path) -> int:
                 "caseCount": len(cases),
                 "kinds": dict(Counter(case.kind for case in cases)),
                 "sources": sorted({case.source for case in cases}),
+                "goals": sorted(
+                    {tag for case in cases for tag in case.tags if tag.startswith("goal:")}
+                ),
+                "techniques": sorted(
+                    {
+                        tag
+                        for case in cases
+                        for tag in case.tags
+                        if tag.startswith("technique:")
+                    }
+                ),
             },
             ensure_ascii=False,
             indent=2,
@@ -54,11 +75,20 @@ def _lint(path: Path) -> int:
     return 0
 
 
+def _suite_name(path: Path) -> str:
+    return "prompt-injection-" + path.stem
+
+
 async def _replay(path: Path, output: Path | None) -> int:
     cases = load_cases(path)
-    validate_v1_shape(cases)
+    validate_suite_shape(cases)
     outcomes = await run_replay_suite(cases)
-    report = score_suite(cases, outcomes, mode="eval-replay")
+    report = score_suite(
+        cases,
+        outcomes,
+        suite=_suite_name(path),
+        mode="eval-replay",
+    )
     payload = report.model_dump(mode="json", by_alias=True)
     if output is not None:
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -83,7 +113,7 @@ async def _replay(path: Path, output: Path | None) -> int:
     }
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
-    # Replay 故意让 12 条攻击都请求危险工具，证明边界确实受压；若 ASR 下降，
+    # Replay 故意让全部攻击请求危险工具，证明边界确实受压；若 ASR 下降，
     # 反而可能是测试没打到策略层，不能当作“模型更安全”。
     expected = {
         "cleanTaskSuccess": 1.0,
@@ -108,9 +138,13 @@ async def _live(
     base_url: str,
     model: str,
     thinking: str,
+    kinds: list[str] | None,
 ) -> int:
     cases = load_cases(path)
-    validate_v1_shape(cases)
+    validate_suite_shape(cases)
+    if kinds:
+        selected = set(kinds)
+        cases = [case for case in cases if case.kind in selected]
     if case_id:
         cases = [case for case in cases if case.id == case_id]
         if not cases:
@@ -125,7 +159,7 @@ async def _live(
         thinking=thinking,
     )
     outcomes = await run_live_suite(cases, gateway)
-    report = score_suite(cases, outcomes, mode="live")
+    report = score_suite(cases, outcomes, suite=_suite_name(path), mode="live")
     payload = report.model_dump(mode="json", by_alias=True)
     if output is not None:
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -167,6 +201,7 @@ def main() -> int:
             base_url=args.base_url,
             model=args.model,
             thinking=args.thinking,
+            kinds=args.kinds,
         )
     )
 
