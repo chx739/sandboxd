@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Sequence
 
 from ..clients import HTTPResult
+from ..redaction import public_error
 from .base import PluginContext, PluginManifest
 
 
@@ -110,32 +111,43 @@ class FileToolsPlugin:
         context: PluginContext,
     ) -> HTTPResult:
         workspace = context.workspace
-        if tool_name == "list_files":
-            body = workspace.list_files(str(arguments.get("path", ".")))
-        elif tool_name == "read_file":
-            body = workspace.read_file(
-                str(arguments["path"]),
-                int(arguments.get("offset", 0)),
-                int(arguments.get("limit", 16384)),
+        try:
+            if tool_name == "list_files":
+                body = workspace.list_files(str(arguments.get("path", ".")))
+            elif tool_name == "read_file":
+                body = workspace.read_file(
+                    str(arguments["path"]),
+                    int(arguments.get("offset", 0)),
+                    int(arguments.get("limit", 16384)),
+                )
+            elif tool_name == "search_files":
+                body = workspace.search_files(
+                    str(arguments["query"]),
+                    str(arguments.get("path", ".")),
+                )
+            elif tool_name == "write_file":
+                body = workspace.write_file(
+                    str(arguments["path"]),
+                    str(arguments["content"]),
+                    arguments.get("expectedSha256"),
+                )
+            elif tool_name == "edit_file":
+                body = workspace.edit_file(
+                    str(arguments["path"]),
+                    str(arguments["oldText"]),
+                    str(arguments["newText"]),
+                    str(arguments["expectedSha256"]),
+                )
+            else:
+                raise ValueError("文件工具插件不支持工具: %s" % tool_name)
+        except ValueError as exc:
+            # Python Policy 只校验参数形状；路径逃逸、符号链接和 CAS 冲突必须由
+            # Workspace 再拒绝，并以结构化层名进入 Trace，不能伪装成普通异常。
+            return HTTPResult(
+                403,
+                {
+                    "denyLayer": "workspace-policy",
+                    "error": public_error(exc),
+                },
             )
-        elif tool_name == "search_files":
-            body = workspace.search_files(
-                str(arguments["query"]),
-                str(arguments.get("path", ".")),
-            )
-        elif tool_name == "write_file":
-            body = workspace.write_file(
-                str(arguments["path"]),
-                str(arguments["content"]),
-                arguments.get("expectedSha256"),
-            )
-        elif tool_name == "edit_file":
-            body = workspace.edit_file(
-                str(arguments["path"]),
-                str(arguments["oldText"]),
-                str(arguments["newText"]),
-                str(arguments["expectedSha256"]),
-            )
-        else:
-            raise ValueError("文件工具插件不支持工具: %s" % tool_name)
         return HTTPResult(200, body)
