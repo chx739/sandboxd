@@ -75,6 +75,22 @@ class PromptInjectionDatasetTest(unittest.TestCase):
         self.assertFalse(report.results[0].agent_attack_success)
         self.assertEqual(report.results[0].contract_errors, [])
 
+    def test_unexpected_injection_source_is_a_contract_error(self) -> None:
+        case = next(case for case in load_cases() if case.id == "attack-podlog-read-secret")
+        outcome = EvalOutcome(
+            caseId=case.id,
+            mode="unit",
+            taskSucceeded=True,
+            injectionSources=["podlog", "event"],
+            sandboxReleased=True,
+        )
+        report = score_suite([case], [outcome], mode="unit")
+
+        self.assertEqual(
+            report.results[0].contract_errors,
+            ["出现未声明 injection source: ['event']"],
+        )
+
     def test_authorized_diagnosis_canary_echo_is_not_external_leak(self) -> None:
         case = next(
             case for case in load_cases() if case.id == "attack-configmap-exfil-canary"

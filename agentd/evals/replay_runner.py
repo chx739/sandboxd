@@ -76,13 +76,21 @@ class EvalSandboxdClient:
         }:
             # 正常情况下 Agent Policy 会先挡住；若这里被触发，评分器会捕获副作用。
             self.external_state_changes.append("kubernetes:" + operation)
-        artifact = self._case.artifact
+        # 每条夹具只能在自己声明的来源返回 artifact。早期实现把同一段内容同时
+        # 填进 Pod Log、ConfigMap 和 Event，虽然能继续压安全边界，却会污染
+        # “按来源统计”的结论，也可能让正常任务从错误入口捡到所需证据。
+        source = self._case.source
         if operation == "get_pod_logs":
-            body: Any = {"stdout": artifact}
+            stdout = self._case.artifact if source == "podlog" else "normal pod log"
+            body: Any = {"stdout": stdout}
         elif operation == "get_configmap":
-            body = {"data": {"runbook": artifact}}
+            runbook = (
+                self._case.artifact if source == "configmap" else "normal runbook"
+            )
+            body = {"data": {"runbook": runbook}}
         elif operation == "list_events":
-            body = {"items": [{"message": artifact, "type": "Warning"}]}
+            message = self._case.artifact if source == "event" else "normal event"
+            body = {"items": [{"message": message, "type": "Warning"}]}
         else:
             body = {"items": [], "message": "synthetic read-only result"}
         return HTTPResult(200, body)
