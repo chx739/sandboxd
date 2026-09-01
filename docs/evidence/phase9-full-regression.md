@@ -221,13 +221,13 @@ sandboxd-demo managed Pod: 0
 sandboxd/prometheus/alertmanager 业务进程: 0
 /tmp/sandboxd-linux-demo.*: 0
 /tmp/sandboxd-agent-workspace.*: 0
-运行中 Docker 容器: sandboxd-control-plane only
-可用内存: 6280 MiB
+E2E 结束首次审计的运行容器: sandboxd-control-plane only
+E2E 结束首次审计可用内存: 6280 MiB
 swap: 0 MiB
 Git 工作区（记录前）: clean
 ~~~
 
-项目 kind control-plane 是测试前已存在并经标签核实的资源，按设计保留；其他用户的停止容器没有修改。
+项目 kind control-plane 是测试前已存在并经标签核实的资源。完成报告推送后，将本轮启动的 control-plane 停回测试前的 Exited 状态；最终运行容器为 0、可用内存恢复到 7037 MiB、swap 仍为 0。其他用户的停止容器没有修改。
 
 ## 结论
 

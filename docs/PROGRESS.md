@@ -188,7 +188,7 @@ Phase 2 不得破坏这些证据和接口。
 - Agent Replay 全链通过：Prometheus/Alertmanager、Prometheus Query、gVisor Kubernetes read、Pod Log 注入、agent-policy、tool-policy 403、RBAC 403、Agent approve 401、Pending Plan 和 replicas 不变。
 - Linux/File Replay 全链通过：strict host key、低权限双 forced-command、任意命令 exit 126、Linux Log 注入、task Workspace、文件正文 Trace/Session 脱敏，原链路不退化。
 - Live DeepSeek 未执行：外部请求会发送告警和日志上下文，已有 Key 使用授权不等于项目数据外传授权；安全审查在请求前停止，没有发送数据或暴露 Key。
-- 最终残留审计：目标 namespace、managed Pod、四个测试端口、业务进程、SSH Target 和临时目录均为 0；仅保留原项目 kind control-plane，可用内存 6280 MiB、swap 0。
+- 最终残留审计：目标 namespace、managed Pod、四个测试端口、业务进程、SSH Target 和临时目录均为 0；随后把本轮启动的项目 kind control-plane 停回测试前状态，最终运行容器 0、可用内存 7037 MiB、swap 0。
 - 详细脱敏记录见 docs/evidence/phase9-full-regression.md。
 
 ## Phase 4 本轮记录
