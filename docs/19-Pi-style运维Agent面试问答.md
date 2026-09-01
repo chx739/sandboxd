@@ -10,21 +10,21 @@
 
 | 问题 | 核对出处 |
 |---|---|
-| 为什么从 LangGraph 改成手写循环？ | [10 Q20](10-面试问答与项目讲法.md#q20为什么从-langgraph-改成手写循环)、[18 §2](18-Pi-style-Agent-Runtime学习手册.md) |
-| 为什么不直接接入 Pi？借鉴了哪些设计？ | [18 学习手册](18-Pi-style-Agent-Runtime学习手册.md)、[17 历史实现计划](17-Pi-style安全可插拔Agent实现计划.md) |
+| 为什么从 LangGraph 改成手写循环？ | [10 Q20](10-面试问答与项目讲法.md#q20为什么从-langgraph-改成手写循环)、[18 §4 双层循环怎么读](18-Pi-style-Agent-Runtime学习手册.md#4-双层循环怎么读) |
+| 为什么不直接接入 Pi？借鉴了哪些设计？ | [17 §2 为什么不重写 sandboxd](17-Pi-style安全可插拔Agent实现计划.md#2-为什么做为什么不重写-sandboxd)、[18 §6 受信任内置插件](18-Pi-style-Agent-Runtime学习手册.md#6-插件为什么叫受信任内置插件) |
 | 当前 Runtime 还是不是 ReAct？ | [10 Q19](10-面试问答与项目讲法.md#q19这是不是-react)、[26 §2](26-Agent八股知识地图.md#2-react-和-tool-calling) |
 | 为什么 Python 负责编排，Go 继续负责安全执行？ | [24 §2](24-项目全景与心智模型.md#2-四层架构)、[25 代码导读](25-代码导读与模块地图.md) |
-| 为什么 Runtime 重构没有修改底层 sandboxd？ | [24 §2](24-项目全景与心智模型.md#2-四层架构)、[18 学习手册](18-Pi-style-Agent-Runtime学习手册.md) |
+| 为什么 Runtime 重构没有修改底层 sandboxd？ | [24 §2](24-项目全景与心智模型.md#2-四层架构)、[18 §13 明确边界](18-Pi-style-Agent-Runtime学习手册.md#13-明确边界) |
 
 ## 3. 双层循环与交互控制
 
 | 问题 | 核对出处 |
 |---|---|
 | 为什么使用内外双层循环？ | [24 §6](24-项目全景与心智模型.md#6-agent-内核的最小心智模型)、[10 Q20–Q21](10-面试问答与项目讲法.md#7-agent-runtime-高频问答) |
-| 一次 Turn 的边界是什么？ | [26 §3](26-Agent八股知识地图.md#3-一次-turn-是什么)、[18 学习手册](18-Pi-style-Agent-Runtime学习手册.md) |
+| 一次 Turn 的边界是什么？ | [26 §3](26-Agent八股知识地图.md#3-一次-turn-是什么)、[18 §4.1 Turn 的定义](18-Pi-style-Agent-Runtime学习手册.md#41-turn-的定义) |
 | steer、follow-up 和 cancel 如何区分？ | [10 Q21](10-面试问答与项目讲法.md#q21steerfollow-up-和-cancel-有何区别)、[26 §6](26-Agent八股知识地图.md#6-steerfollow-up-和-cancel) |
 | steer 为什么不能撤销正在执行的工具？ | [10 Q21](10-面试问答与项目讲法.md#q21steerfollow-up-和-cancel-有何区别)、[26 §16](26-Agent八股知识地图.md#16-取消超时和补偿动作) |
-| cancel 为什么不是一条普通消息？ | [18 学习手册](18-Pi-style-Agent-Runtime学习手册.md)、[25 代码导读](25-代码导读与模块地图.md) |
+| cancel 为什么不是一条普通消息？ | [18 §5 三者区别](18-Pi-style-Agent-Runtime学习手册.md#5-steerfollow-upcancel-的区别)、[11 坑 42](11-开发踩坑与排障.md#42-worker-关闭和用户-cancel-都会抛-cancellederror但语义不同) |
 | `finally` 释放 Sandbox 为什么使用独立清理 Task？ | [10 Q14](10-面试问答与项目讲法.md#q14超时后为什么用独立-context-清理)、[26 §16](26-Agent八股知识地图.md#16-取消超时和补偿动作) |
 | 为什么工具保持顺序执行？ | [10 Q24](10-面试问答与项目讲法.md#q24为什么工具顺序执行)、[26 §17](26-Agent八股知识地图.md#17-顺序工具和并行工具) |
 
@@ -33,17 +33,17 @@
 | 问题 | 核对出处 |
 |---|---|
 | taskId、sessionId、sandboxId、planId 有何区别？ | [24 §5](24-项目全景与心智模型.md#5-五类身份不要混)、[10 Q22](10-面试问答与项目讲法.md#q22sessiontasksandbox-有何区别) |
-| 为什么 Session-lite 使用 append-only JSONL？ | [26 §12](26-Agent八股知识地图.md#12-memory-和-session)、[18 学习手册](18-Pi-style-Agent-Runtime学习手册.md) |
-| resume 恢复什么，为什么不恢复旧 Sandbox？ | [24 §5](24-项目全景与心智模型.md#5-五类身份不要混)、[10 Q22](10-面试问答与项目讲法.md#q22sessiontasksandbox-有何区别) |
-| 为什么 Session 不保存隐藏思维？ | [26 §12](26-Agent八股知识地图.md#12-memory-和-session)、[26 §19](26-Agent八股知识地图.md#19-agent-可观测性) |
-| WSL 中 0600 为什么不一定生效？ | [11 开发踩坑](11-开发踩坑与排障.md)、[18 学习手册](18-Pi-style-Agent-Runtime学习手册.md) |
+| 为什么 Session-lite 使用 append-only JSONL？ | [26 §12](26-Agent八股知识地图.md#12-memory-和-session)、[18 §7.1 为什么用 JSONL](18-Pi-style-Agent-Runtime学习手册.md#71-为什么用-jsonl) |
+| resume 恢复什么，为什么不恢复旧 Sandbox？ | [24 §5](24-项目全景与心智模型.md#5-五类身份不要混)、[18 §7.4 resume 的真实含义](18-Pi-style-Agent-Runtime学习手册.md#74-resume-的真实含义) |
+| 为什么 Session 不保存隐藏思维？ | [26 §12](26-Agent八股知识地图.md#12-memory-和-session)、[18 §7.2 保存什么](18-Pi-style-Agent-Runtime学习手册.md#72-保存什么不保存什么) |
+| WSL 中 0600 为什么不一定生效？ | [18 §7.3 文件权限与 WSL 坑](18-Pi-style-Agent-Runtime学习手册.md#73-文件权限与-wsl-坑)、[11 坑 40](11-开发踩坑与排障.md#40-wsl-的-python-临时目录可能落在-mntcchmod-测试会失真) |
 | 当前实现算多会话、多沙箱或多租户吗？ | [24 §5](24-项目全景与心智模型.md#5-五类身份不要混)、[10 §10](10-面试问答与项目讲法.md#10-生产化差距) |
 
 ## 5. Plugin 与能力安全
 
 | 问题 | 核对出处 |
 |---|---|
-| 插件化解决什么问题？ | [26 §8](26-Agent八股知识地图.md#8-plugintool-和-connector)、[18 学习手册](18-Pi-style-Agent-Runtime学习手册.md) |
+| 插件化解决什么问题？ | [26 §8](26-Agent八股知识地图.md#8-plugintool-和-connector)、[18 §6 受信任内置插件](18-Pi-style-Agent-Runtime学习手册.md#6-插件为什么叫受信任内置插件) |
 | 为什么只注册仓库内受信任插件，不动态加载？ | [26 §21](26-Agent八股知识地图.md#21-常见-agent-架构取舍)、[24 §9](24-项目全景与心智模型.md#9-当前做到了什么没有做到什么) |
 | Plugin Manifest 是权限吗？ | [10 Q23](10-面试问答与项目讲法.md#q23plugin-manifest-是权限吗)、[24 §8](24-项目全景与心智模型.md#8-安全的核心不是-prompt) |
 | 插件为什么不能直接获得 kubeconfig、SSH 私钥或 Operator Token？ | [24 §2](24-项目全景与心智模型.md#2-四层架构)、[26 §15](26-Agent八股知识地图.md#15-身份和能力安全) |

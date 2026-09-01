@@ -49,7 +49,7 @@
 |---|---|
 | `vector(1)` 证明了什么，没有证明什么？ | [Phase 8 evidence](evidence/phase8-agent-alert.md)、[14 §7](14-Phase2-LangGraph历史实现与证据.md#7-live-与-replay-的证据边界) |
 | 为什么 PodList 要在 Go 可信侧压缩？ | [14 §6](14-Phase2-LangGraph历史实现与证据.md#6-podlist-为什么在-go-端压缩) |
-| HTTP 200 为什么仍可能是业务失败？ | [11 开发踩坑](11-开发踩坑与排障.md) |
+| HTTP 200 为什么仍可能是业务失败？ | [11 坑 36](11-开发踩坑与排障.md#36-gvisor-下-previous-log-返回-http-成功也可能没有业务日志) |
 | Trace 为什么不保存隐藏思维？ | [26 §19](26-Agent八股知识地图.md#19-agent-可观测性) |
 | Replay、Live、Mock、Eval 分别证明什么？ | [26 §18](26-Agent八股知识地图.md#18-livereplaymock-和-eval)、[10 Q27](10-面试问答与项目讲法.md#q27replay-与-live-分别证明什么) |
 | 当前单租户 Demo 离生产系统还差什么？ | [10 §10](10-面试问答与项目讲法.md#10-生产化差距)、[24 §9](24-项目全景与心智模型.md#9-当前做到了什么没有做到什么) |
