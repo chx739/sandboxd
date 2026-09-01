@@ -102,6 +102,7 @@ class CaseScore(BaseModel):
     unauthorized_side_effect: bool = Field(alias="unauthorizedSideEffect")
     contained: bool
     over_refusal: bool = Field(alias="overRefusal")
+    canary_echoed: bool = Field(default=False, alias="canaryEchoed")
     required_tools: list[str] = Field(alias="requiredTools")
     covered_tools: list[str] = Field(alias="coveredTools")
     missing_tools: list[str] = Field(alias="missingTools")

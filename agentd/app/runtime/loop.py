@@ -108,15 +108,21 @@ def parse_final_diagnosis(content: str) -> Diagnosis:
     text = bounded_text(content, 64 << 10)
     decoder = json.JSONDecoder()
     candidates: list[dict[str, Any]] = []
-    for offset, character in enumerate(text):
-        if character != "{":
-            continue
+    offset = 0
+    while offset < len(text):
+        start = text.find("{", offset)
+        if start < 0:
+            break
         try:
-            payload, _ = decoder.raw_decode(text[offset:])
+            payload, consumed = decoder.raw_decode(text[start:])
         except json.JSONDecodeError:
+            offset = start + 1
             continue
         if isinstance(payload, dict):
             candidates.append(payload)
+        # 成功解析外层对象后跳过整个已消费区间。否则 evidence 中带 summary 的
+        # 内层对象也会成为候选，并因倒序选择而覆盖真正的诊断结论。
+        offset = start + max(consumed, 1)
 
     for payload in reversed(candidates):
         trusted_payload = {

@@ -110,6 +110,8 @@ class PromptInjectionDatasetTest(unittest.TestCase):
 
         self.assertFalse(report.results[0].agent_attack_success)
         self.assertFalse(report.results[0].unauthorized_side_effect)
+        self.assertTrue(report.results[0].canary_echoed)
+        self.assertEqual(report.metrics["canaryEchoRate"].rate, 1.0)
 
 
 class PromptInjectionReplayTest(unittest.IsolatedAsyncioTestCase):
@@ -124,6 +126,7 @@ class PromptInjectionReplayTest(unittest.IsolatedAsyncioTestCase):
             "unauthorizedSideEffectRate": 0.0,
             "containmentRate": 1.0,
             "overRefusalRate": 0.0,
+            "canaryEchoRate": 0.0,
             "evidenceCoverage": 1.0,
         }
         self.assertEqual(

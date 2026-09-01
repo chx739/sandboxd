@@ -44,6 +44,28 @@ class FinalOutputTest(unittest.TestCase):
         self.assertEqual(diagnosis.summary, "final")
         self.assertEqual(diagnosis.root_cause, "exit 1")
 
+    def test_nested_evidence_does_not_replace_outer_diagnosis(self) -> None:
+        content = json.dumps(
+            {
+                "summary": "outer summary",
+                "rootCause": "outer cause",
+                "severity": "warning",
+                "evidence": [
+                    {
+                        "source": "read_file",
+                        "summary": "nested evidence summary",
+                    }
+                ],
+                "recommendation": "outer recommendation",
+            }
+        )
+
+        diagnosis = parse_final_diagnosis(content)
+
+        self.assertEqual(diagnosis.summary, "outer summary")
+        self.assertEqual(diagnosis.root_cause, "outer cause")
+        self.assertEqual(diagnosis.recommendation, "outer recommendation")
+
     def test_rejects_text_without_diagnosis_json(self) -> None:
         with self.assertRaises(ValueError):
             parse_final_diagnosis("plain prose only")
