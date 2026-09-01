@@ -179,6 +179,18 @@ Phase 2 不得破坏这些证据和接口。
 - 文档收口轻量验证通过：Go test -p 1、go vet、go build、Python frozen 22 tests、全部 Shell 语法、JSON、Markdown 本地链接、diff check 和新增内容秘密模式扫描。
 - 本轮没有启动 kind、Docker、Prometheus、Alertmanager、SSH Target 或 Live LLM；只改文档与项目描述元信息，不修改运行时代码。
 
+## 2026-09-01 main 全量回归
+
+- 在提交 2c47579 上串行执行完整静态检查与 Phase 1–4 E2E；开始时 16 CPU、可用内存 7097 MiB、swap 0。
+- 经 kind 标签、角色和固定镜像摘要核实后，只启动已停止的项目 sandboxd-control-plane；未触碰停止的 minikube 和 minio-tutorial。
+- Go test -p 1/vet/build、Python compileall/22 tests、Shell、JSON、Markdown 链接、diff 和秘密模式检查全部通过。
+- Phase 1 demo 全部通过：gVisor、RBAC/NetworkPolicy、Manager/Exec、5 并发唯一认领、6 次 CAS 冲突、Metrics、DryRun、Agent/Operator 分权和 stale Plan。
+- Agent Replay 全链通过：Prometheus/Alertmanager、Prometheus Query、gVisor Kubernetes read、Pod Log 注入、agent-policy、tool-policy 403、RBAC 403、Agent approve 401、Pending Plan 和 replicas 不变。
+- Linux/File Replay 全链通过：strict host key、低权限双 forced-command、任意命令 exit 126、Linux Log 注入、task Workspace、文件正文 Trace/Session 脱敏，原链路不退化。
+- Live DeepSeek 未执行：外部请求会发送告警和日志上下文，已有 Key 使用授权不等于项目数据外传授权；安全审查在请求前停止，没有发送数据或暴露 Key。
+- 最终残留审计：目标 namespace、managed Pod、四个测试端口、业务进程、SSH Target 和临时目录均为 0；仅保留原项目 kind control-plane，可用内存 6280 MiB、swap 0。
+- 详细脱敏记录见 docs/evidence/phase9-full-regression.md。
+
 ## Phase 4 本轮记录
 
 - 2026-08-31 用户明确授权 Phase 4 并开启目标模式：实现受限 Linux Host 插件和不带 artifact 前缀的五个原生文件工具。

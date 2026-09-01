@@ -84,6 +84,7 @@ LangGraph 显式图
 - [47 条真实开发坑](11-开发踩坑与排障.md)：优先挑 5 条能讲完整“现象—根因—修复—价值”的。
 - [evidence/](evidence/)：人工脱敏的真实运行证据；Replay 与 Live 必须区分。
 - [phase8 Agent 告警证据](evidence/phase8-agent-alert.md)：完整外部告警、注入、策略、审批链路。
+- [phase9 main 全量回归](evidence/phase9-full-regression.md)：2026-09-01 静态、Phase 1–4 E2E、残留与 Live 边界。
 
 ## 学习纪律
 
