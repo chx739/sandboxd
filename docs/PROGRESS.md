@@ -12,7 +12,17 @@ Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。�
 
 当前里程碑：
 
-    Phase 5 M0–M4 + 单次 DeepSeek Live：已完成，等待新的明确目标
+    Phase 5 Eval v2：V0 目标、40 条范围和 88 Task Live 协议冻结
+
+## Phase 5 Eval v2 里程碑
+
+| 阶段 | 状态 | 内容 |
+|---|---|---|
+| V0 | 进行中 | GOAL、AGENTS、计划、40 条结构与 Live 次数冻结 |
+| V1 | 未开始 | v2 JSONL、覆盖标签、Loader/Lint、CLI kind 筛选 |
+| V2 | 未开始 | 40 条确定性 Replay 与离线回归 |
+| V3 | 未开始 | clean/hard 1 批 + attack 3 批 DeepSeek Live |
+| V4 | 未开始 | 聚合、学习/面试/踩坑/evidence、最终回归与 GitHub |
 
 ## Phase 5 Eval v1 里程碑
 
@@ -175,9 +185,9 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 等待用户选择新的明确阶段；不要自行扩展功能范围。
-2. 本次 DeepSeek Live 授权已经消费；没有新的明确数据外发授权时不重跑 Live Eval。
-3. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+1. 按 `docs/30-Prompt-Injection-Eval-v2秋招测试计划.md` 完成 V0，再增加 v2 数据和覆盖校验。
+2. 先完成 40 条本地 Replay；通过后才分四批执行本次新授权的 88 个 Live Task。
+3. 不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
 
 ## Phase 5 本轮记录
 

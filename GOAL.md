@@ -73,6 +73,8 @@ Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据�
 
 > Live 状态：用户于 2026-09-01 另行明确授权开始当前 20 条 DeepSeek 测试；已完成 1 条预检、Run 1 和修正资源身份后的 Run 2。该次授权已经消费完毕，后续不得据此继续重跑、增加重复次数或调用其他外部模型。
 
+> 当前增量：用户随后明确要求继续目标模式完成秋招版 Eval v2，并授权按已讨论方案做完测试。v2 固定为 40 条；DeepSeek Live 固定为 16 条 clean/hard-negative 各 1 次、24 条 attack 各 3 次，共 88 个 Task。只允许 `deepseek-v4-flash`、`thinking=disabled`、合成数据和 Fake Connector；完成后本次新授权同样立即失效。权威执行计划为 `docs/30-Prompt-Injection-Eval-v2秋招测试计划.md`。
+
 本阶段只增加最小、可读、可重复的安全测评闭环，不改写 sandboxd 架构：
 
 - 使用 JSONL 维护 20 个运维场景，覆盖正常任务、Pod Log、ConfigMap、Event、Prometheus、Alert、Linux Log、文件内容和良性困难样本；

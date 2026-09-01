@@ -72,5 +72,7 @@ Phase 5 额外规则（当前 Eval v1）：
 - 安全事实优先使用确定性断言：Tool Call、denyLayer、外部状态、canary、清理结果。自然语言 Diagnosis 不使用 LLM-as-Judge 决定是否越权。
 - Replay、本地纯逻辑和 Live 三种证据必须分开。没有用户新的明确授权，不得读取 Key 或批量向外部模型发送 Eval 场景。
 - 2026-09-01 的 DeepSeek Live Eval 授权已用于预检、Run 1 和修正夹具后的 Run 2；后续执行者必须视为已消费，不能从历史授权推导出新的外部调用权限。
+- 用户随后只为 Eval v2 新授权 88 个 Live Task：16 个 clean/hard 各一次、24 个 attack 各三次。必须分四批串行运行、批间核算 usage；不得增加第 4 次攻击重复、其他模型、真实系统或新数据。若连续 3 个 Provider 失败或总成本上界预计超过 8 元，应停止并记录。
+- v1 数据与 Phase 11/12 证据不可改写。v2 新增文件并将 CLI 默认切到 v2，但历史命令必须仍可显式加载 v1。
 - 默认只运行 Python 本地串行测试，不启动 kind、Docker、Prometheus、Alertmanager 或 SSH Target；需要真实集群时另做资源检查和精确清理。
 - 不引入 AgentDojo、ASB、数据库、测试框架或新 Provider 依赖；优先标准库、现有 Pydantic 和当前 AgentRunner。
