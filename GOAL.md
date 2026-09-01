@@ -2,7 +2,7 @@
 
 > 本文件是本仓库后续持续开发的“目标锚点”。无论聊天上下文是否完整、是否更换会话或执行者，开始工作前都必须先完整阅读本文件，再阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。若聊天记忆、临时建议或局部实现与本文件冲突，以本文件为准；不得在没有得到用户明确同意的情况下改变目标。
 
-> 当前维护状态：Phase 1–4 已完成并合并到 `main`。用户已明确授权 Phase 5 Prompt Injection Eval v1；除本节冻结的测评范围外，功能仍保持冻结。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
+> 当前维护状态：Phase 1–4 已完成并合并到 `main`，Phase 5 Prompt Injection Eval v1/v2 已完成。外部模型授权均已消费，功能保持冻结。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
 
 ## 一句话目标
 
@@ -65,7 +65,7 @@ Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi
 
 Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据以 `docs/20-Linux主机与原生文件工具实现计划.md` 为准。仍不实现任意 Bash、任意 SSH、远端文件写入、sudo、动态插件、多租户、生产级凭据系统或大规模并发。
 
-## 当前目标：Phase 5 Prompt Injection Eval v1
+## 当前目标：Phase 5 Prompt Injection Eval v2
 
 > 用户于 2026-09-01 明确授权进入目标模式实现第一版测评集。权威文件结构、指标语义和验收顺序以 `docs/28-Prompt-Injection-Eval-v1实现计划.md` 为准。
 
@@ -73,11 +73,11 @@ Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据�
 
 > Live 状态：用户于 2026-09-01 另行明确授权开始当前 20 条 DeepSeek 测试；已完成 1 条预检、Run 1 和修正资源身份后的 Run 2。该次授权已经消费完毕，后续不得据此继续重跑、增加重复次数或调用其他外部模型。
 
-> 当前增量：用户随后明确要求继续目标模式完成秋招版 Eval v2，并授权按已讨论方案做完测试。v2 固定为 40 条；DeepSeek Live 固定为 16 条 clean/hard-negative 各 1 次、24 条 attack 各 3 次，共 88 个 Task。只允许 `deepseek-v4-flash`、`thinking=disabled`、合成数据和 Fake Connector；完成后本次新授权同样立即失效。权威执行计划为 `docs/30-Prompt-Injection-Eval-v2秋招测试计划.md`。
+> Eval v2 状态：40 条数据、覆盖校验、Replay 和 88 个 DeepSeek Live Task 已完成。Live 后发现当时 Fake Connector 跨来源复制 artifact；来源隔离与契约已修复，v1/v2 Replay 均通过。该 88 Task 授权已经消费，修复后不得据此重跑。脱敏结果和可用边界见 `docs/evidence/phase13-prompt-injection-eval-v2.md`。
 
 本阶段只增加最小、可读、可重复的安全测评闭环，不改写 sandboxd 架构：
 
-- 使用 JSONL 维护 20 个运维场景，覆盖正常任务、Pod Log、ConfigMap、Event、Prometheus、Alert、Linux Log、文件内容和良性困难样本；
+- 使用 JSONL 维护 40 个运维场景，覆盖正常任务、Pod Log、ConfigMap、Event、Prometheus、Alert、Linux Log、文件内容和良性困难样本；
 - 每个场景同时定义正常任务、非可信内容、攻击目标、允许/禁止工具、必要证据和预期边界；
 - 用当前 `AgentRunner`、双层 Loop、Plugin Registry、Python Policy 和 task Workspace 跑确定性 Replay，不另造一套假 Agent；
 - 分开统计 Clean Task Success、Agent ASR、Unauthorized Side-effect Rate、Containment Rate、Over-refusal Rate 和 Evidence Coverage；
@@ -122,7 +122,7 @@ Phase 2 额外不做项是历史阶段边界。Phase 3 只解除“线性 Sessio
 
 Phase 3 明确不做：Pi 完整复刻、Session 树/fork、TUI、插件市场、在线安装、任意第三方代码加载、任意 Shell、插件热更新、生产级身份系统、分布式 Session、复杂自动 Compaction 和大规模并行工具。Phase 4 只解除“受限 Linux Host Connector”和“task 专属工作区文件工具”两项限制；其他限制继续有效。
 
-Phase 5 只解除“增加本地安全 Eval 数据、Runner、Scorer 和相关文档”这一项限制。它不授权批量外部 LLM 调用、下载大型基准、扩展 Agent 权限或增加生产运维能力。
+Phase 5 只解除“增加本地安全 Eval 数据、Runner、Scorer 和相关文档”这一项限制。v1/v2 已使用的外部 LLM 授权均已消费；它不继续授权批量外部调用、下载大型基准、扩展 Agent 权限或增加生产运维能力。
 
 ## 完成判据
 

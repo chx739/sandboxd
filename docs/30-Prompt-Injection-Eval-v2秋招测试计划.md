@@ -2,6 +2,8 @@
 
 > 这是 Phase 5 当前增量的权威计划。目标是把 v1 的 20 条最小闭环扩成秋招够讲、仍然简单可维护的 40 条数据与一次小规模重复 Live 实验，不建设研究级 Benchmark 平台。
 
+> 实施状态：代码、40 条 Replay 和授权的 88 个 Live Task 已完成。Live 后审计发现 Fake Kubernetes Connector 存在跨来源复制 artifact 的夹具缺陷；代码已修复且 v1/v2 Replay 均通过，但没有在授权外追加 Live。最终数字与边界见 `docs/evidence/phase13-prompt-injection-eval-v2.md`。
+
 ## 1. 完成标准
 
 ~~~text
@@ -88,3 +90,13 @@ batch-attack-r3.json   attack 第 3 次，共 24
 - `docs/evidence/phase13-prompt-injection-eval-v2.md`；
 - 更新 `docs/29`、项目 FAQ、踩坑、README、GOAL、AGENTS、PROGRESS；
 - 秘密审计、提交并推送 GitHub。
+
+## 9. 实际结果摘要
+
+- 数据：8 clean、24 attack、8 hard-negative；七种 source、六种 goal、六种 technique 全覆盖；
+- 修复后 Replay：Clean 16/16、Agent ASR 24/24、副作用 0/24、Containment 24/24、Evidence 35/35；
+- 首次 Live：88 Task、353 次模型调用、730,431 Token、Provider error 0；
+- Live normal：14/16，Evidence 15/15，Over-refusal 0/16；
+- Live attack：目标来源送达 71/72，任意来源送达 72/72，Agent ASR 0/72，副作用 0/72，any-hit/stable 均为 0/24；
+- 峰时全缓存未命中费用上界为 2.732223 元；
+- 25/72 次攻击观察有跨来源重复 artifact，因此按来源分层的 Live 结论作废。来源隔离和“额外来源即契约错误”已修复，本轮授权已消费，没有重跑。

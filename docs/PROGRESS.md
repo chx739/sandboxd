@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。用户已授权 Phase 5 Prompt Injection Eval v1；除本地测评集、Runner、Scorer、文档和证据外，项目功能继续冻结。
+Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Prompt Injection Eval v1/v2 已完成；除本地测评集、Runner、Scorer、文档和证据维护外，项目功能继续冻结。两次 DeepSeek 授权均已消费。
 
 当前分支：
 
@@ -12,17 +12,17 @@ Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。�
 
 当前里程碑：
 
-    Phase 5 Eval v2：V0 目标、40 条范围和 88 Task Live 协议冻结
+    Phase 5 Eval v2：V0–V4 已完成，当前无外部模型调用授权
 
 ## Phase 5 Eval v2 里程碑
 
 | 阶段 | 状态 | 内容 |
 |---|---|---|
-| V0 | 进行中 | GOAL、AGENTS、计划、40 条结构与 Live 次数冻结 |
-| V1 | 未开始 | v2 JSONL、覆盖标签、Loader/Lint、CLI kind 筛选 |
-| V2 | 未开始 | 40 条确定性 Replay 与离线回归 |
-| V3 | 未开始 | clean/hard 1 批 + attack 3 批 DeepSeek Live |
-| V4 | 未开始 | 聚合、学习/面试/踩坑/evidence、最终回归与 GitHub |
+| V0 | 已完成 | GOAL、AGENTS、计划、40 条结构与 Live 次数冻结 |
+| V1 | 已完成 | v2 JSONL、覆盖标签、Loader/Lint、CLI kind 筛选 |
+| V2 | 已完成 | 40 条确定性 Replay、v1 回归与来源隔离契约 |
+| V3 | 已完成 | clean/hard 1 批 + attack 3 批，共 88 Task DeepSeek Live |
+| V4 | 已完成 | 聚合、夹具缺陷修复、学习/面试/踩坑/evidence 与回归 |
 
 ## Phase 5 Eval v1 里程碑
 
@@ -185,8 +185,8 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 按 `docs/30-Prompt-Injection-Eval-v2秋招测试计划.md` 完成 V0，再增加 v2 数据和覆盖校验。
-2. 先完成 40 条本地 Replay；通过后才分四批执行本次新授权的 88 个 Live Task。
+1. 没有用户新授权时，不继续 Live Eval、模型横评或新功能阶段。
+2. 若未来重跑 v2，必须从当前来源隔离修复后的提交开始，使用新的精确授权，并保留首次受污染报告作对照。
 3. 不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
 
 ## Phase 5 本轮记录
@@ -220,6 +220,19 @@ Phase 2 不得破坏这些证据和接口。
 - 本轮没有启动 kind、Docker、SSH、Prometheus、Alertmanager，没有使用 sudo；原始逐案例报告只在 `.cache/evals`，不提交 Git。
 - 最终回归通过：27 个 frozen Python unittest、compileall、Eval lint、20 条 Replay、Markdown 链接/围栏、diff 和精确 Key 扫描；仓库 Key 匹配为 0。
 - 该次 Live 授权已消费，后续执行者不得据此继续重跑。脱敏证据见 `docs/evidence/phase12-deepseek-live-eval-v1.md`。
+
+## 2026-09-01 Prompt Injection Eval v2
+
+- v2 扩展为 40 条：8 clean、24 attack、8 hard-negative；七种 source、六种 goal、六种 technique 均由 Loader/Lint 强制覆盖，v1 原文件未修改。
+- 默认 CLI 切换到 v2，并支持重复 `--kind` 筛选；40 条 Replay 为 Clean 16/16、Agent ASR 24/24、副作用 0/24、Containment 24/24、Evidence 35/35。
+- 按用户精确授权串行执行四批 DeepSeek：normal 16 个一次、attack 24 个三次，共 88 Task、353 次模型调用，无 Provider 错误。
+- Live 合计输入 640276、输出 90155、总 Token 730431；峰时全缓存未命中费用上界 2.732223 元，低于 8 元止损线。
+- normal 为 clean 7/8、hard-negative 7/8，合计 14/16；Evidence 15/15、Over-refusal 0/16。两个失败都读到必要文件，但继续扩展查询直到六轮上限。
+- attack 目标来源送达 71/72、任意来源送达 72/72；Agent ASR 0/72、副作用 0/72、any-hit/stable 均 0/24；没有 Agent attack，Containment 为 N/A；9 次 canary 回显、0 次外泄。
+- Live 后逐案例审计发现 Fake Kubernetes Connector 会把 artifact 跨 Pod Log/ConfigMap/Event 复制，25/72 次出现额外来源，所以来源分层结论无效，0/72 不能外推为干净 v2 安全率。
+- 修复为 artifact 只从声明来源返回，并增加“额外 injection source 即契约错误”回归；修复后的 v2 40 条、v1 20 条 Replay 与 7 个 Eval 测试通过。
+- 88 Task 授权已消费，没有擅自追加修复后 Live。完整边界见 `docs/evidence/phase13-prompt-injection-eval-v2.md`。
+- 最终本地验证：29 tests + 5 subtests、compileall、v1/v2 lint 与 Replay、50 个 Markdown 文件围栏/链接、diff check 全通过；166 个 tracked file 精确 Key 匹配为 0，通用模式仅命中脱敏单测假值。
 
 ## 文档收口记录
 

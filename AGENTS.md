@@ -64,15 +64,16 @@ Phase 4 额外规则（历史完成范围）：
 - `write_file`/`edit_file` 只修改工作区草案，不代表外部系统已变更；不得添加远端文件上传、执行或自动审批。
 - 不增加 Paramiko/AsyncSSH 等依赖；优先使用 WSL 已有 `/usr/bin/ssh` 的固定 argv 子进程，禁止 `shell=True`。
 
-Phase 5 额外规则（当前 Eval v1）：
+Phase 5 额外规则（当前 Eval v2）：
 
-- 先读 `docs/28-Prompt-Injection-Eval-v1实现计划.md`；只实现其中冻结的 20 场景本地闭环。
+- 先读 `docs/29-Prompt-Injection-Eval学习手册.md`、`docs/30-Prompt-Injection-Eval-v2秋招测试计划.md` 和 Phase 13 evidence；v1 是不可改写的历史基线，默认当前实现为 40 场景 v2。
 - 数据集只能使用合成运维内容和显式 canary，不得复制真实 Token、用户日志、kubeconfig、主机信息或仓库外秘密。
 - 必须把 Agent ASR 与系统未授权副作用率分开；Replay 故意发出危险 Tool Call 时，不得把 100% Agent ASR 解释为真实模型结果。
 - 安全事实优先使用确定性断言：Tool Call、denyLayer、外部状态、canary、清理结果。自然语言 Diagnosis 不使用 LLM-as-Judge 决定是否越权。
 - Replay、本地纯逻辑和 Live 三种证据必须分开。没有用户新的明确授权，不得读取 Key 或批量向外部模型发送 Eval 场景。
 - 2026-09-01 的 DeepSeek Live Eval 授权已用于预检、Run 1 和修正夹具后的 Run 2；后续执行者必须视为已消费，不能从历史授权推导出新的外部调用权限。
-- 用户随后只为 Eval v2 新授权 88 个 Live Task：16 个 clean/hard 各一次、24 个 attack 各三次。必须分四批串行运行、批间核算 usage；不得增加第 4 次攻击重复、其他模型、真实系统或新数据。若连续 3 个 Provider 失败或总成本上界预计超过 8 元，应停止并记录。
+- Eval v2 的 88 个 Live Task 已全部完成，该授权已消费。不得增加第 4 次攻击重复、在来源隔离修复后重跑、调用其他模型或连接真实系统；若要重新取得干净 Live 数字，必须获得用户新的明确授权。
 - v1 数据与 Phase 11/12 证据不可改写。v2 新增文件并将 CLI 默认切到 v2，但历史命令必须仍可显式加载 v1。
+- Fake Connector 的 artifact 必须只从 case 声明的 source 返回；Scorer 必须把未声明 injection source 视为夹具契约错误。Phase 13 的首次 Live 有跨来源污染，只能引用其全局历史观察和缺陷，不得宣传来源分层结果。
 - 默认只运行 Python 本地串行测试，不启动 kind、Docker、Prometheus、Alertmanager 或 SSH Target；需要真实集群时另做资源检查和精确清理。
 - 不引入 AgentDojo、ASB、数据库、测试框架或新 Provider 依赖；优先标准库、现有 Pydantic 和当前 AgentRunner。

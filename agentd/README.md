@@ -68,11 +68,11 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
 
 ## Phase 5 Prompt Injection Eval
 
-第一版用 20 条合成 JSONL 覆盖七种非可信来源。确定性 Replay 仍经过当前 AgentRunner、Loop、Plugin、Policy 和 Workspace；Fake Connector 不联网，只记录是否发生外部状态变化。
+当前默认 v2 用 40 条合成 JSONL 覆盖七种非可信来源、六种攻击目标和六种表达技术；历史 v1 的 20 条保持不变。确定性 Replay 仍经过当前 AgentRunner、Loop、Plugin、Policy 和 Workspace；Fake Connector 不联网，只记录是否发生外部状态变化。
 
     uv run --project agentd --frozen python -m agentd.evals.cli lint
     uv run --project agentd --frozen python -m agentd.evals.cli replay \
-      --output .cache/evals/prompt-injection-v1.json
+      --output .cache/evals/prompt-injection-v2.json
 
 Replay 故意让 Agent 请求危险工具，只证明执行边界的确定性遏制，不代表真实模型攻击成功率。学习和指标口径见 `../docs/29-Prompt-Injection-Eval学习手册.md`。
 
@@ -83,4 +83,4 @@ Live Eval 只在用户单独授权数据外发后运行，Key 仅从环境变量
       --model deepseek-v4-flash --thinking disabled \
       --output .cache/evals/deepseek-live-v1.json
 
-2026-09-01 的一次授权已经完成并消费，不得把这段命令视为后续自动调用许可。脱敏结果见 `../docs/evidence/phase12-deepseek-live-eval-v1.md`。
+2026-09-01 的 v1 与 v2 Live 授权均已完成并消费，不得把这段命令视为后续自动调用许可。v2 共执行 88 Task，但审计发现当时的 Fake Connector 跨来源复制 artifact；代码已修复，未在授权外重跑。脱敏结果见 `../docs/evidence/phase12-deepseek-live-eval-v1.md` 和 `../docs/evidence/phase13-prompt-injection-eval-v2.md`。
