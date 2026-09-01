@@ -47,6 +47,7 @@
 | Agent Runtime | [18 Pi-style Agent Runtime](18-Pi-style-Agent-Runtime学习手册.md) | 双层循环、steer/follow-up/cancel、Session、插件 |
 | Linux Connector | [21 Linux SSH Connector](21-Linux-SSH-Connector学习手册.md) | 固定 argv、Host Key、低权限、forced-command |
 | 文件工具 | [22 Agent 原生文件工具](22-Agent原生文件工具学习手册.md) | task 工作区、路径、symlink、CAS、原子替换 |
+| 安全测评 | [29 Prompt Injection Eval](29-Prompt-Injection-Eval学习手册.md) | 20 条 JSONL、Replay/Live、六个指标、行为/边界分层 |
 
 当前代码已经不依赖 LangGraph。`14` 只用于理解 Phase 2 的架构演进和真实 Live/Replay 证据，不能作为当前代码说明。
 
@@ -75,6 +76,7 @@
 | [16 Phase 2.1 内核优化计划](16-Pi-inspired-Agent内核优化计划.md) | ToolResult、事件、Context、取消的来源 |
 | [17 Phase 3 实现计划](17-Pi-style安全可插拔Agent实现计划.md) | 当前双层循环与 Session 的设计来源 |
 | [20 Phase 4 实现计划](20-Linux主机与原生文件工具实现计划.md) | SSH 与文件工具的范围和验收顺序 |
+| [28 Phase 5 Eval v1 实现计划](28-Prompt-Injection-Eval-v1实现计划.md) | 20 条测评集、Runner、Scorer 和验收边界 |
 | [PROGRESS](PROGRESS.md) | 给后续开发者/LLM 的完成记录，不是学习教材 |
 
 项目的演进主线可以面试时简述为：
@@ -89,11 +91,12 @@ LangGraph 显式图
 
 ## 证据与排障
 
-- [47 条真实开发坑](11-开发踩坑与排障.md)：优先挑 5 条能讲完整“现象—根因—修复—价值”的。
+- [48 条真实开发坑](11-开发踩坑与排障.md)：优先挑 5 条能讲完整“现象—根因—修复—价值”的。
 - [evidence/](evidence/)：人工脱敏的真实运行证据；Replay 与 Live 必须区分。
 - [phase8 Agent 告警证据](evidence/phase8-agent-alert.md)：完整外部告警、注入、策略、审批链路。
 - [phase9 main 全量回归](evidence/phase9-full-regression.md)：2026-09-01 静态、Phase 1–4 E2E、残留与 Live 边界。
 - [phase10 DeepSeek 单次 Live E2E](evidence/phase10-deepseek-live-e2e.md)：Task 成功但模型跳过 Prometheus，严格 E2E 失败；未重试。
+- [phase11 Prompt Injection Eval v1](evidence/phase11-prompt-injection-eval-v1.md)：20 条本地 Replay、六指标与首轮误报修正。
 - [学习实验台账](evidence/learning-experiments.md)：区分“已执行实验、已有等价证据、尚未执行”，不把预测写成实测。
 
 ## 学习纪律

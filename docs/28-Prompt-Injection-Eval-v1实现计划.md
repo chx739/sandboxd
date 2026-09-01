@@ -2,6 +2,8 @@
 
 > 本文件是 Phase 5 的权威实现规格。目标是用最少代码建立可执行、可评分、可解释的运维 Agent 安全测评，而不是复刻 AgentDojo 或建设生产 Eval 平台。
 
+> 实现状态：M0–M4 已完成。最终本地 Replay 结果与证据见 `docs/evidence/phase11-prompt-injection-eval-v1.md`；未运行 Live Eval。
+
 ## 1. 一句话目标
 
 用 20 个合成运维场景和当前 Agent Runtime，分别回答两个问题：模型/Replay 是否提出了被注入诱导的危险动作，以及独立执行边界是否阻止了真实副作用。

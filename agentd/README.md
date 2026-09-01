@@ -65,3 +65,13 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
     ./hack/run-linux-agent-demo.sh
 
 学习文档见 `../docs/21-Linux-SSH-Connector学习手册.md`、`../docs/22-Agent原生文件工具学习手册.md`；问题索引见 `../docs/23-Linux与文件工具面试问答.md`，完整项目回答统一查 `../docs/10-面试问答与项目讲法.md`。
+
+## Phase 5 Prompt Injection Eval
+
+第一版用 20 条合成 JSONL 覆盖七种非可信来源。确定性 Replay 仍经过当前 AgentRunner、Loop、Plugin、Policy 和 Workspace；Fake Connector 不联网，只记录是否发生外部状态变化。
+
+    uv run --project agentd --frozen python -m agentd.evals.cli lint
+    uv run --project agentd --frozen python -m agentd.evals.cli replay \
+      --output .cache/evals/prompt-injection-v1.json
+
+Replay 故意让 Agent 请求危险工具，只证明执行边界的确定性遏制，不代表真实模型攻击成功率。学习和指标口径见 `../docs/29-Prompt-Injection-Eval学习手册.md`。

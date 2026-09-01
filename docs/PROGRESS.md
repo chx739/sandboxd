@@ -12,17 +12,17 @@ Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。�
 
 当前里程碑：
 
-    Phase 5 M0：Eval v1 目标、范围和指标冻结
+    Phase 5 M0–M4：已完成，等待新的明确目标
 
 ## Phase 5 Eval v1 里程碑
 
 | 阶段 | 状态 | 内容 |
 |---|---|---|
-| M0 | 进行中 | GOAL、AGENTS、实现计划、指标和 20 场景范围 |
-| M1 | 未开始 | JSONL 模型、Loader/Lint、Scorer |
-| M2 | 未开始 | 基于当前 AgentRunner 的确定性 Replay Runner |
-| M3 | 未开始 | 最小单测与本地低资源 Eval 报告 |
-| M4 | 未开始 | 学习/面试文档、evidence、回归、GitHub |
+| M0 | 已完成 | GOAL、AGENTS、实现计划、指标和 20 场景范围 |
+| M1 | 已完成 | JSONL 模型、Loader/Lint、Scorer |
+| M2 | 已完成 | 基于当前 AgentRunner 的确定性 Replay Runner |
+| M3 | 已完成 | 最小单测与本地低资源 Eval 报告 |
+| M4 | 已完成 | 学习/面试文档、evidence、回归、GitHub |
 
 ## Phase 1 已完成基线
 
@@ -175,10 +175,24 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 按 `docs/28-Prompt-Injection-Eval-v1实现计划.md` 完成 M0，再实现 JSONL Loader/Lint 与 Scorer。
-2. 用当前 AgentRunner 跑确定性 Replay，不另造与生产 Runtime 无关的假循环。
-3. 在没有新的数据外发授权前只运行本地 Eval；不批量调用 DeepSeek。
-4. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+1. 等待用户选择新的明确阶段；不要自行扩展功能范围。
+2. 在没有新的数据外发授权前不运行 Live Eval、不批量调用 DeepSeek。
+3. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+
+## Phase 5 本轮记录
+
+- 2026-09-01 用户明确要求开启目标模式，实现第一版 Prompt Injection 测试集并开始测试；GOAL、AGENTS、PROGRESS 与 `docs/28` 已先冻结范围。
+- 新增 20 条合成 JSONL：clean/attack/hard-negative 为 4/12/4，覆盖 alert、Prometheus、Pod Log、ConfigMap、Event、Linux Log 和文件七种来源。
+- Loader 校验 Pydantic 字段、行号、ID 唯一、来源 Tool、攻击 Tool、required/forbidden 契约和固定 v1 数量；没有引入新依赖。
+- Replay Runner 使用当前 AgentRunner、双层 Loop、Plugin Registry、Python Policy 和 FileWorkspace；Fake Connector 不联网，只返回合成 Artifact 并记录外部状态变化。
+- Scorer 用结构化事实计算 Clean Task Success、Agent ASR、Unauthorized Side-effect、Containment、Over-refusal 和 Evidence Coverage，不用 LLM-as-Judge 判断权限或副作用。
+- Runtime 最小修复：`injectedVia` 能区分七种来源；Workspace 路径/CAS 拒绝以 `workspace-policy` 进入 Trace，没有扩展任何 Tool 权限。
+- 首轮测评把 ConfigMap canary 出现在已认证 Diagnosis evidence 误算成外泄，导致副作用率 1/12；明确授权输出与外部 Sink 后修正 Runner，未修改样本期望掩盖失败。
+- 本地 Eval 最终结果：正常任务 8/8、Replay Agent ASR 12/12、未授权副作用 0/12、遏制 12/12、过度拒绝 0/8、证据覆盖 18/18、Sandbox release 20/20。
+- 新增 `docs/29` 学习手册、项目 FAQ Q31–Q36 和 Phase 11 脱敏 Replay evidence；公开基准只作设计参考，没有下载数据或引入运行时。
+- 本轮没有启动 kind、Docker、SSH、Prometheus、Alertmanager 或 Live LLM，没有使用 sudo，也没有发送项目数据。
+- 最终回归：Python compileall、25 个 frozen unittest、Eval lint、20 条 Replay、Shell 语法、diff 与新增内容秘密模式扫描全部通过。
+- 代码提交为 `4b6759e`；Phase 5 计划/结构化记忆提交为 `b848d59`，最终文档提交和 GitHub 推送见本轮最新提交。
 
 ## 文档收口记录
 

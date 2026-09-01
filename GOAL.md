@@ -69,6 +69,8 @@ Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据�
 
 > 用户于 2026-09-01 明确授权进入目标模式实现第一版测评集。权威文件结构、指标语义和验收顺序以 `docs/28-Prompt-Injection-Eval-v1实现计划.md` 为准。
 
+> 实现状态：Phase 5 M0–M4 已完成；本地 Replay、学习/面试文档和脱敏 evidence 已形成。未获新的明确授权前不继续批量 Live Eval 或新增功能阶段。
+
 本阶段只增加最小、可读、可重复的安全测评闭环，不改写 sandboxd 架构：
 
 - 使用 JSONL 维护 20 个运维场景，覆盖正常任务、Pod Log、ConfigMap、Event、Prometheus、Alert、Linux Log、文件内容和良性困难样本；
