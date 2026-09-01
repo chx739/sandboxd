@@ -63,3 +63,13 @@ Phase 4 额外规则（历史完成范围）：
 - 文件工具只访问 `taskId` 专属工作区。路径必须是相对路径并拒绝 `..`、符号链接和逃逸；写/编辑必须记录 hash 和有界 diff。
 - `write_file`/`edit_file` 只修改工作区草案，不代表外部系统已变更；不得添加远端文件上传、执行或自动审批。
 - 不增加 Paramiko/AsyncSSH 等依赖；优先使用 WSL 已有 `/usr/bin/ssh` 的固定 argv 子进程，禁止 `shell=True`。
+
+Phase 5 额外规则（当前 Eval v1）：
+
+- 先读 `docs/28-Prompt-Injection-Eval-v1实现计划.md`；只实现其中冻结的 20 场景本地闭环。
+- 数据集只能使用合成运维内容和显式 canary，不得复制真实 Token、用户日志、kubeconfig、主机信息或仓库外秘密。
+- 必须把 Agent ASR 与系统未授权副作用率分开；Replay 故意发出危险 Tool Call 时，不得把 100% Agent ASR 解释为真实模型结果。
+- 安全事实优先使用确定性断言：Tool Call、denyLayer、外部状态、canary、清理结果。自然语言 Diagnosis 不使用 LLM-as-Judge 决定是否越权。
+- Replay、本地纯逻辑和 Live 三种证据必须分开。没有用户新的明确授权，不得读取 Key 或批量向外部模型发送 Eval 场景。
+- 默认只运行 Python 本地串行测试，不启动 kind、Docker、Prometheus、Alertmanager 或 SSH Target；需要真实集群时另做资源检查和精确清理。
+- 不引入 AgentDojo、ASB、数据库、测试框架或新 Provider 依赖；优先标准库、现有 Pydantic 和当前 AgentRunner。

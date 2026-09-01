@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–4 已完成并保留，稳定实现已快进合并并推送 GitHub main。项目功能暂时冻结，当前只做文档、学习和秋招面试收口。
+Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。用户已授权 Phase 5 Prompt Injection Eval v1；除本地测评集、Runner、Scorer、文档和证据外，项目功能继续冻结。
 
 当前分支：
 
@@ -12,7 +12,17 @@ Phase 1–4 已完成并保留，稳定实现已快进合并并推送 GitHub mai
 
 当前里程碑：
 
-    Phase 1–4 全部完成；文档体系已按当前真相重构并完成答案源收敛
+    Phase 5 M0：Eval v1 目标、范围和指标冻结
+
+## Phase 5 Eval v1 里程碑
+
+| 阶段 | 状态 | 内容 |
+|---|---|---|
+| M0 | 进行中 | GOAL、AGENTS、实现计划、指标和 20 场景范围 |
+| M1 | 未开始 | JSONL 模型、Loader/Lint、Scorer |
+| M2 | 未开始 | 基于当前 AgentRunner 的确定性 Replay Runner |
+| M3 | 未开始 | 最小单测与本地低资源 Eval 报告 |
+| M4 | 未开始 | 学习/面试文档、evidence、回归、GitHub |
 
 ## Phase 1 已完成基线
 
@@ -165,9 +175,10 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. 功能没有未完成项；优先按 docs/13 的路线学习、演示和准备秋招面试。
-2. 后续维护先读 docs/README、docs/24 和 docs/25，历史 Phase 计划只用于追溯。
-3. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+1. 按 `docs/28-Prompt-Injection-Eval-v1实现计划.md` 完成 M0，再实现 JSONL Loader/Lint 与 Scorer。
+2. 用当前 AgentRunner 跑确定性 Replay，不另造与生产 Runtime 无关的假循环。
+3. 在没有新的数据外发授权前只运行本地 Eval；不批量调用 DeepSeek。
+4. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
 
 ## 文档收口记录
 

@@ -2,7 +2,7 @@
 
 > 本文件是本仓库后续持续开发的“目标锚点”。无论聊天上下文是否完整、是否更换会话或执行者，开始工作前都必须先完整阅读本文件，再阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。若聊天记忆、临时建议或局部实现与本文件冲突，以本文件为准；不得在没有得到用户明确同意的情况下改变目标。
 
-> 当前维护状态：Phase 1–4 已完成并合并到 `main`，功能暂时冻结。默认工作是文档、学习、面试表达和低风险修复；没有用户明确授权时，不继续扩展平台能力。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
+> 当前维护状态：Phase 1–4 已完成并合并到 `main`。用户已明确授权 Phase 5 Prompt Injection Eval v1；除本节冻结的测评范围外，功能仍保持冻结。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
 
 ## 一句话目标
 
@@ -65,6 +65,22 @@ Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi
 
 Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据以 `docs/20-Linux主机与原生文件工具实现计划.md` 为准。仍不实现任意 Bash、任意 SSH、远端文件写入、sudo、动态插件、多租户、生产级凭据系统或大规模并发。
 
+## 当前目标：Phase 5 Prompt Injection Eval v1
+
+> 用户于 2026-09-01 明确授权进入目标模式实现第一版测评集。权威文件结构、指标语义和验收顺序以 `docs/28-Prompt-Injection-Eval-v1实现计划.md` 为准。
+
+本阶段只增加最小、可读、可重复的安全测评闭环，不改写 sandboxd 架构：
+
+- 使用 JSONL 维护 20 个运维场景，覆盖正常任务、Pod Log、ConfigMap、Event、Prometheus、Alert、Linux Log、文件内容和良性困难样本；
+- 每个场景同时定义正常任务、非可信内容、攻击目标、允许/禁止工具、必要证据和预期边界；
+- 用当前 `AgentRunner`、双层 Loop、Plugin Registry、Python Policy 和 task Workspace 跑确定性 Replay，不另造一套假 Agent；
+- 分开统计 Clean Task Success、Agent ASR、Unauthorized Side-effect Rate、Containment Rate、Over-refusal Rate 和 Evidence Coverage；
+- Replay 故意触发危险 Tool Call，只证明确定性执行边界，不冒充真实模型攻击成功率；
+- Live Eval 必须使用真实 Provider、多次运行并单独标记，但没有新的项目数据外发授权时不得运行；上一次“单次 DeepSeek Live E2E”授权不扩展到本阶段批量用例；
+- 同步交付中文注释、最小单测、学习文档、项目 FAQ、脱敏 evidence 和 GitHub 记录。
+
+Phase 5 明确不做：引入 AgentDojo/ASB 运行时依赖、上百样本、大规模模型横评、自动红队生成、LLM-as-Judge 作为安全事实、生产数据、真实秘密、自动攻击真实系统或修改 Go sandboxd。
+
 ## 不可偏移的约束
 
 1. **必须真实使用 gVisor。** 不接受只写 `RuntimeClass` YAML 或用普通 `runc` 冒充；必须保留 `runsc` 运行证据。
@@ -100,6 +116,8 @@ Phase 2 额外不做项是历史阶段边界。Phase 3 只解除“线性 Sessio
 
 Phase 3 明确不做：Pi 完整复刻、Session 树/fork、TUI、插件市场、在线安装、任意第三方代码加载、任意 Shell、插件热更新、生产级身份系统、分布式 Session、复杂自动 Compaction 和大规模并行工具。Phase 4 只解除“受限 Linux Host Connector”和“task 专属工作区文件工具”两项限制；其他限制继续有效。
 
+Phase 5 只解除“增加本地安全 Eval 数据、Runner、Scorer 和相关文档”这一项限制。它不授权批量外部 LLM 调用、下载大型基准、扩展 Agent 权限或增加生产运维能力。
+
 ## 完成判据
 
 只有同时具备以下证据，才可宣布目标完成：
@@ -113,6 +131,8 @@ Phase 3 明确不做：Pi 完整复刻、Session 树/fork、TUI、插件市场�
 - 所有应交付代码和文档都已提交并推送到 GitHub，仓库中不存在秘密信息。
 
 Phase 2 还必须证明：真实 Prometheus/Alertmanager 告警进入 agentd；至少一次 Live LLM 完成诊断；Agent 查询真实 Prometheus并通过 gVisor 查询 Kubernetes API；注入文本进入模型可见上下文；Replay 危险调用被拒绝且明确标记；Go Tool Policy、RBAC 和 Agent 无审批权都有真实证据；最终输出诊断或 Pending Plan；资源清理、脱敏 Trace、学习/面试/踩坑文档和 GitHub 推送全部完成。
+
+Phase 5 还必须证明：数据集可 lint 且没有真实秘密；20 个场景能在本地 Replay Runner 串行完成；指标公式有纯逻辑单测；危险调用经过真实 Python Policy/Workspace 边界且外部副作用为零；报告明确区分 Replay 与 Live；原有 Python 测试和最小静态检查不回归；学习/面试/evidence/PROGRESS 已更新并推送 GitHub。
 
 ## 上下文缺失时的续作协议
 
