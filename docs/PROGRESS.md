@@ -1,18 +1,18 @@
 # sandboxd 持续开发进度
 
-> 本文件是跨会话进度快照。最高目标以 ../GOAL.md 为准；Phase 4 细节以 20-Linux主机与原生文件工具实现计划.md 为准。
+> 本文件是跨会话进度快照。最高目标以 ../GOAL.md 为准；当前学习与项目口径以 README.md、docs/README.md 和 24-项目全景与心智模型.md 为准。
 
 ## 当前状态
 
-Phase 1、Phase 2、Phase 2.1、Phase 3 已完成并保留；Phase 4 Linux Host 与原生文件工具已完成并推送 GitHub。
+Phase 1–4 已完成并保留，稳定实现已快进合并并推送 GitHub main。项目功能暂时冻结，当前只做文档、学习和秋招面试收口。
 
 当前分支：
 
-    codex/phase4-linux-files
+    main
 
 当前里程碑：
 
-    Phase 4 M0–M5：全部完成
+    Phase 1–4 全部完成；文档体系已按当前真相重构
 
 ## Phase 1 已完成基线
 
@@ -165,9 +165,19 @@ Phase 2 不得破坏这些证据和接口。
 
 ## 下一步
 
-1. Phase 4 没有未完成项；等待用户明确选择下一个阶段。
-2. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
-3. 后续恢复时先读 GOAL、docs/20 和本文件，避免把已完成工作重复实现。
+1. 功能没有未完成项；优先按 docs/13 的路线学习、演示和准备秋招面试。
+2. 后续维护先读 docs/README、docs/24 和 docs/25，历史 Phase 计划只用于追溯。
+3. 未获新授权前，不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+
+## 文档收口记录
+
+- Phase 4 完整历史已快进合并到 main，并推送 GitHub；没有 merge commit 和冲突。
+- 文档从“按 Phase 开发顺序”改为“当前真相、模块学习、面试表达、历史证据”四层导航。
+- 新增项目全景与心智模型、代码导读与模块地图、Agent 八股知识地图、简历与面试表达手册。
+- 重写项目学习路径和综合面试题库，当前口径统一为手写 Pi-style 双层循环和九个结构化工具。
+- Phase 2 LangGraph、Phase 2.1、Phase 3、Phase 4 计划保留为历史资料，不删除真实证据。
+- 文档收口轻量验证通过：Go test -p 1、go vet、go build、Python frozen 22 tests、全部 Shell 语法、JSON、Markdown 本地链接、diff check 和新增内容秘密模式扫描。
+- 本轮没有启动 kind、Docker、Prometheus、Alertmanager、SSH Target 或 Live LLM；只改文档与项目描述元信息，不修改运行时代码。
 
 ## Phase 4 本轮记录
 
@@ -213,14 +223,11 @@ Phase 2 不得破坏这些证据和接口。
 ## 恢复工作时
 
 1. 阅读 GOAL.md。
-2. 阅读 docs/00-实现计划.md。
-3. 阅读 docs/12-Agent层实现计划.md。
-4. 阅读 docs/16-Pi-inspired-Agent内核优化计划.md。
-5. 阅读 docs/17-Pi-style安全可插拔Agent实现计划.md。
-6. 阅读本文件。
-7. 阅读 AGENTS.md。
-8. 查看 git status、当前分支和最近提交。
-9. 只继续“下一步”的第一项未完成工作。
+2. 阅读 docs/README.md 和 docs/24-项目全景与心智模型.md。
+3. 阅读本文件与 AGENTS.md。
+4. 查看 git status、当前分支和最近提交。
+5. 只读取本次任务涉及的历史计划、代码和证据。
+6. 只继续“下一步”的第一项未完成工作；没有用户授权时不新增功能阶段。
 
 ## Phase 2.1 本轮完成
 

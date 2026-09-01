@@ -1,6 +1,6 @@
 # Phase 3：Pi-style 安全可插拔运维 Agent Runtime 实现计划
 
-> 本文是 Phase 3 的权威实现规格。目标是解释并最小实现 Pi 的 Agent Runtime 设计哲学，而不是复刻 Pi Coding Agent。任何续作都必须先读 `../GOAL.md`、本文和 `PROGRESS.md`。
+> 历史状态：Phase 3 已完成并合并到 `main`。本文保留设计范围和取舍；学习当前代码优先阅读 [Runtime 学习手册](18-Pi-style-Agent-Runtime学习手册.md) 与 [代码导读](25-代码导读与模块地图.md)。
 
 ## 1. 一句话目标
 

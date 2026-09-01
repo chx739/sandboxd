@@ -2,6 +2,8 @@
 
 > 本文件是本仓库后续持续开发的“目标锚点”。无论聊天上下文是否完整、是否更换会话或执行者，开始工作前都必须先完整阅读本文件，再阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。若聊天记忆、临时建议或局部实现与本文件冲突，以本文件为准；不得在没有得到用户明确同意的情况下改变目标。
 
+> 当前维护状态：Phase 1–4 已完成并合并到 `main`，功能暂时冻结。默认工作是文档、学习、面试表达和低风险修复；没有用户明确授权时，不继续扩展平台能力。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
+
 ## 一句话目标
 
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
@@ -32,7 +34,7 @@ Phase 2 已完成并保留全部真实证据。本阶段只优化 agentd 内核�
 
 上段“不实现 Session、steer、follow-up、插件”的限制只约束已经完成的 Phase 2.1，不再约束用户明确授权的 Phase 3。Phase 2.1 的代码、证据和安全边界仍须保留，不得为了新功能篡改旧证据。
 
-## 当前开发目标：Phase 3 Pi-style 安全可插拔运维 Agent Runtime
+## 已完成目标：Phase 3 Pi-style 安全可插拔运维 Agent Runtime
 
 > 实现状态：Phase 3 M0–M4 已完成，代码、学习/面试文档与最小验证已推送到 `codex/phase3-pi-runtime`。后续不得把本节继续扩写成动态插件、任意 Shell 或生产级平台；新阶段必须先由用户明确选择目标。
 
@@ -49,7 +51,7 @@ Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi
 
 ## 已完成目标：Phase 4 Linux Host 与原生文件工具
 
-> 实现状态：Phase 4 M0–M5 已完成；代码、前后真实 E2E、学习/面试/踩坑文档均已推送到 `codex/phase4-linux-files`。后续不得把本节扩写成任意 SSH/Bash、远端写入或生产级主机平台；新阶段必须由用户明确授权。
+> 实现状态：Phase 4 M0–M5 已完成；代码、前后真实 E2E、学习/面试/踩坑文档已经由历史分支合并到 `main`。后续不得把本节扩写成任意 SSH/Bash、远端写入或生产级主机平台；新阶段必须由用户明确授权。
 
 在 Phase 3 已完成并推送的基础上，增加一个真实但受限的外部 Linux 主机诊断闭环，以及 Pi-style 的任务工作区文件原语：
 
@@ -117,9 +119,8 @@ Phase 2 还必须证明：真实 Prometheus/Alertmanager 告警进入 agentd；�
 后续执行者不得仅依赖聊天历史。每次继续开发都按下面顺序恢复上下文：
 
 1. 完整阅读 `GOAL.md`。
-2. 阅读 `docs/00-实现计划.md`、`docs/12-Agent层实现计划.md`、`docs/16-Pi-inspired-Agent内核优化计划.md` 和 `docs/PROGRESS.md`。
-   Phase 3 续作还必须阅读 `docs/17-Pi-style安全可插拔Agent实现计划.md`。
-   Phase 4 续作还必须阅读 `docs/20-Linux主机与原生文件工具实现计划.md`。
+2. 阅读 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/PROGRESS.md`。
+   只有修改历史模块时才继续阅读对应计划：Phase 1 为 `00`、Phase 2 为 `12`、Phase 2.1 为 `16`、Phase 3 为 `17`、Phase 4 为 `20`。
 3. 查看 `git status`、最近提交和当前分支，保护用户已有改动。
 4. 阅读当前模块的代码、学习文档、脚本及最近一次验证输出。
 5. 从 `docs/PROGRESS.md` 标记的“下一步”继续，只完成当前最小闭环。

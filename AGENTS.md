@@ -1,14 +1,16 @@
 # 后续开发执行规则
 
+> 当前仓库状态：Phase 1–4 已完成并合并到 `main`，功能暂时冻结。除非用户明确开启新阶段，否则优先维护文档一致性、最小测试和面试学习材料，不从历史计划的“下一步”自行扩展功能。
+
 本仓库的任何自动化编码助手在开始工作前，必须完整阅读：
 
 1. `GOAL.md`：最高优先级目标、边界和安全红线。
-2. `docs/00-实现计划.md`：模块划分与实现顺序。
-3. `docs/12-Agent层实现计划.md`：Phase 2 架构、接口、安全边界和完成证据。
-4. `docs/16-Pi-inspired-Agent内核优化计划.md`：Phase 2.1 的固定范围、接口和验证顺序。
-5. `docs/17-Pi-style安全可插拔Agent实现计划.md`：Phase 3 的固定范围、文件结构和验收顺序。
-6. `docs/20-Linux主机与原生文件工具实现计划.md`：Phase 4 的 SSH、文件边界和前后 E2E 顺序。
-7. `docs/PROGRESS.md`：已经完成、正在进行和下一步。
+2. `docs/README.md`：当前文档分层和权威入口。
+3. `docs/24-项目全景与心智模型.md`：当前实现、信任边界和项目口径。
+4. `docs/PROGRESS.md`：已经完成、正在进行和下一步。
+5. 与本次任务直接相关的代码、学习文档和最近验证证据。
+
+只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。
 
@@ -33,7 +35,7 @@ Phase 2 额外规则：
 - Live 与 Replay 证据必须明确区分；人工 Replay 标记为 deterministic-policy-case。
 - 默认禁用 LangSmith，不上传 Alert、模型输入、工具输出或 Trace。
 - 值得复盘的真实问题写入 docs/11-开发踩坑与排障.md，包含现象、根因、修复和面试价值。
-- Phase 2 历史分支为 codex/phase2-langgraph-agent；当前分支以 Phase 3 规则为准。
+- Phase 2 历史分支为 codex/phase2-langgraph-agent；最终代码以 main 和当前 Runtime 文档为准。
 
 Phase 2.1 额外规则：
 
@@ -44,7 +46,7 @@ Phase 2.1 额外规则：
 
 Phase 3 额外规则（历史已完成阶段）：
 
-- Phase 3 历史分支为 `codex/phase3-pi-runtime`；当前开发分支以 Phase 4 规则为准。
+- Phase 3 历史分支为 `codex/phase3-pi-runtime`；最终代码以 main 和 Phase 4 后的当前文档为准。
 - Pi 只作为设计参考；使用 Python 手写最小双层循环，不增加 Pi、Node、TypeScript 或新的 Agent 框架依赖。
 - Plugin Registry 只注册仓库内受信任内置插件。不得从任意目录、网络、npm、Git 或用户输入动态加载代码。
 - 插件清单是能力声明，不是授权本身；Python Policy 和 Go sandboxd 仍必须独立拒绝越权请求。
@@ -52,9 +54,9 @@ Phase 3 额外规则（历史已完成阶段）：
 - steer 只在当前 Turn 的安全点进入下一轮上下文；cancel 才负责取消当前运行。不得把 steer 宣传为已撤回正在执行的外部动作。
 - 第一版工具继续顺序执行，便于审计、预算统计和面试讲解；不为了模仿 Pi 默认并行而引入竞态。
 
-Phase 4 额外规则：
+Phase 4 额外规则（历史完成范围）：
 
-- 当前分支固定为 `codex/phase4-linux-files`；开始功能代码前必须记录一次 Phase 3 真实 Replay E2E 基线，完成后再跑同规格 E2E。
+- Phase 4 历史分支为 `codex/phase4-linux-files`，最终实现已经合并到 `main`；不得再把历史分支要求误当成当前分支要求。
 - Linux Host 插件只能调用部署者固定的 targetId 和四个只读 operation；不得让模型提交 host、user、port、identity path、任意 argv、Shell 字符串或 sudo。
 - SSH 必须使用 `BatchMode`、严格 Host Key、固定 known_hosts、独立低权限账号、forced-command，以及禁用 TTY/转发；私钥只存在仓库外临时目录。
 - Demo Target 必须是本项目一次性容器或虚拟机，资源受限并可精确清理；禁止默认连接真实 WSL 或宿主机。

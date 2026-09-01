@@ -10,6 +10,12 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
 - 五个原生文件工具只访问当前 task 私有工作区；
 - agentd 永远不持有 Operator Token。
 
+快速建立当前心智模型请先读：
+
+- `../docs/24-项目全景与心智模型.md`；
+- `../docs/25-代码导读与模块地图.md` 的 Agent 主链；
+- `../docs/26-Agent八股知识地图.md`。
+
 本地依赖使用已有用户态 uv：
 
     uv sync --project agentd --frozen

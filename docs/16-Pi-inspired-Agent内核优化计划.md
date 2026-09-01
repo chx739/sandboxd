@@ -1,6 +1,6 @@
 # Phase 2.1 Pi-inspired Agent 内核优化计划
 
-> 本文是 Phase 2.1 的目标锚点。Pi 只作为 Agent 内核设计参考；实现仍使用 Python、LangGraph 和现有三个固定工具。
+> 历史状态：Phase 2.1 已完成。本文记录 ToolResult 双通道、生命周期事件、上下文治理和取消清理的设计来源；当前 Runtime 已在 Phase 3 改为手写双层循环。
 
 ## 1. 目标与边界
 

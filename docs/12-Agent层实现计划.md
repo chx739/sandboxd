@@ -1,6 +1,6 @@
 # Phase 2 外部告警诊断 Agent 实现计划
 
-> 状态：M0 目标与设计已冻结，按 docs/PROGRESS.md 逐里程碑实施。
+> 状态：Phase 2 已完成的历史规格。当前代码已在 Phase 3 改为手写 Pi-style 双层循环，不再依赖 LangGraph；本文仅用于追溯外部告警、Live/Replay 和安全边界的设计来源。
 > 阅读顺序：GOAL.md → docs/00-实现计划.md → 本文 → docs/PROGRESS.md → AGENTS.md。
 
 ## 1. 一句话目标

@@ -1,6 +1,8 @@
-# sandboxd
+# sandboxd：安全运维 Agent 与 Kubernetes 沙箱
 
-在 Kubernetes 上实现一个**受限的 AI Agent 代码执行沙箱**：沙箱内只能读集群，任何写操作都必须经过 server-side dry-run 与独立 Operator 审批。
+在 WSL2/Linux 中实现一个**受限运维 Agent 与 Kubernetes 安全执行沙箱 Demo**：外部告警进入 Agent，模型只能调用结构化诊断工具；Kubernetes 读取进入真实 gVisor，集群写操作必须经过 server-side dry-run 与独立 Operator 审批。
+
+Go sandboxd 保留通用 Exec API 用于沙箱机制验证，但当前 Python agentd **不会向模型暴露任意 Bash 或任意代码执行**。项目重点是“灵活决策、窄能力、强边界”，不是通用 Coding Agent。
 
 核心命题：**不能用 prompt 防御 prompt injection，只能用执行层边界。** 所以本项目的重点不在 Agent 的能力，而在它的执行边界——即使模型被诱导生成了破坏性命令，那条命令在权限、网络和运行时三层都执行不了。
 
@@ -65,7 +67,7 @@ sequenceDiagram
 
 **网络层** —— default-deny 加两条放通：kube-dns 与 apiserver 的真实 endpoint。不能用 Service ClusterIP 写 `ipBlock`，因为策略执行时目标通常已 DNAT。
 
-**运行时层** —— gVisor（`runsc`）用户态内核，环境不支持时降级 runc，`sandbox_runtime_info` 指标标记当前实际隔离级别。验证方式是 Pod 内 `dmesg` 看到 `Starting gVisor...`，不是只看 RuntimeClass YAML 存在。
+**运行时层** —— gVisor（`runsc`）用户态内核，`sandbox_runtime_info` 指标标记实际隔离级别。代码允许显式关闭 RuntimeClass 以做纯逻辑开发，但正式 Demo 不用 runc 冒充成功；验收必须在 Pod 内 `dmesg` 看到 `Starting gVisor...`，不能只看 RuntimeClass YAML。
 
 **治理层** —— server-side dry-run 出 diff、Agent/Operator 双 Token 分权、UID + resourceVersion 防 TOCTOU。审批是人的策略层，沙箱是技术执行层，**两者不能互相替代**。
 
@@ -195,17 +197,16 @@ make test
 | 文档 | 用途 |
 |---|---|
 | [GOAL.md](GOAL.md) | 目标锚点、边界与安全红线 |
-| [docs/README.md](docs/README.md) | 学习文档索引（01–23） |
-| [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 阅读顺序、破坏实验、复习检验 |
+| [docs/README.md](docs/README.md) | 文档唯一入口：当前、学习、面试、历史和证据分层 |
+| [docs/24-项目全景与心智模型.md](docs/24-项目全景与心智模型.md) | 四层架构、读写分流、身份和完整告警链路 |
+| [docs/25-代码导读与模块地图.md](docs/25-代码导读与模块地图.md) | 从 API 入口沿调用链阅读 Go/Python 代码 |
+| [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 4 天模块化路线、1 天压缩版和破坏实验 |
+| [docs/26-Agent八股知识地图.md](docs/26-Agent八股知识地图.md) | ReAct、Tool、Context、Session、Plugin、安全和 Eval |
 | [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 47 条真实问题与定位过程 |
-| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | Q1–Q33、架构选型取舍、项目讲法 |
-| [docs/14-LangGraph告警诊断学习手册.md](docs/14-LangGraph告警诊断学习手册.md) | Agent 实现、八股、验证和一分钟讲法 |
-| [docs/15-Agent安全面试问答.md](docs/15-Agent安全面试问答.md) | Agent 安全与扩展的 32 个高频追问 |
-| [docs/18-Pi-style-Agent-Runtime学习手册.md](docs/18-Pi-style-Agent-Runtime学习手册.md) | 当前 Agent Loop、Session、插件和身份主学习文档 |
-| [docs/19-Pi-style运维Agent面试问答.md](docs/19-Pi-style运维Agent面试问答.md) | Phase 3 秋招追问与一分钟讲法 |
-| [docs/21-Linux-SSH-Connector学习手册.md](docs/21-Linux-SSH-Connector学习手册.md) | 受限 SSH、Host Key、forced-command 与真实踩坑 |
-| [docs/22-Agent原生文件工具学习手册.md](docs/22-Agent原生文件工具学习手册.md) | task 工作区、路径安全、CAS、原子写与脱敏 |
-| [docs/23-Linux与文件工具面试问答.md](docs/23-Linux与文件工具面试问答.md) | Phase 4 的 20 个秋招追问与 90 秒讲法 |
+| [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | 当前项目四条主线和 30 个综合追问 |
+| [docs/27-简历与面试表达手册.md](docs/27-简历与面试表达手册.md) | 简历三行、分岗位版本、讲法和 STAR 素材 |
+
+Agent、Linux 和文件的专题学习/题库，以及 Phase 2–4 历史计划，都从 [文档导航](docs/README.md) 进入。第一次学习不要按 Phase 顺序通读。
 
 ## 项目边界
 

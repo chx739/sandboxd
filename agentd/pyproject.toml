@@ -1,7 +1,7 @@
 [project]
 name = "sandboxd-agentd"
 version = "0.1.0"
-description = "sandboxd Phase 3 Pi-style 安全可插拔运维 Agent Runtime"
+description = "sandboxd Pi-style 安全运维 Agent Runtime"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi==0.141.1",
