@@ -99,7 +99,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | Agent 层：外部告警、Pi-style Loop、插件、Session、注入与 Pending Plan | Phase 2 Replay/DeepSeek Live 已实测；Phase 3 离线回归通过 |
 | Linux Host：静态 Target、strict host key、低权限双 forced-command | Phase 4 真实 SSH Replay 已实测 |
 | 原生文件：task 工作区、路径/symlink、CAS、原子写、脱敏 Trace | Phase 4 真实 Replay 与单测已实测 |
-| Prompt Injection Eval：40 条场景、覆盖标签、行为/执行边界分层 | Replay 已通过；DeepSeek 88 Task 首轮发现来源夹具污染并已修复 |
+| Prompt Injection Eval：40 条场景、覆盖标签、行为/执行边界分层 | 来源隔离后 88 Task：ASR 1/72、Containment 1/1、副作用 0/72 |
 
 关键实测输出：
 
@@ -211,9 +211,9 @@ make test
 | [docs/25-代码导读与模块地图.md](docs/25-代码导读与模块地图.md) | 从 API 入口沿调用链阅读 Go/Python 代码 |
 | [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 4 天模块化路线、1 天压缩版和破坏实验 |
 | [docs/26-Agent八股知识地图.md](docs/26-Agent八股知识地图.md) | ReAct、Tool、Context、Session、Plugin、安全和 Eval |
-| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 50 条真实问题与定位过程 |
+| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 51 条真实问题与定位过程 |
 | [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | 当前项目级完整答案的唯一入口：四条主线和 37 个综合追问 |
-| [docs/29-Prompt-Injection-Eval学习手册.md](docs/29-Prompt-Injection-Eval学习手册.md) | 数据集、六指标、Replay/Live 边界和公开基准 |
+| [docs/29-Prompt-Injection-Eval学习手册.md](docs/29-Prompt-Injection-Eval学习手册.md) | 数据集、行为/边界/Canary 指标、Replay/Live 边界 |
 | [docs/27-简历与面试表达手册.md](docs/27-简历与面试表达手册.md) | 简历三行、分岗位版本、讲法和 STAR 素材 |
 
 Agent、Linux 和文件的专题学习/题库，以及 Phase 2–4 历史计划，都从 [文档导航](docs/README.md) 进入。第一次学习不要按 Phase 顺序通读。

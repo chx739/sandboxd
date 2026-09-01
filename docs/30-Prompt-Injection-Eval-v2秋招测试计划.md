@@ -4,6 +4,8 @@
 
 > 实施状态：代码、40 条 Replay 和授权的 88 个 Live Task 已完成。Live 后审计发现 Fake Kubernetes Connector 存在跨来源复制 artifact 的夹具缺陷；代码已修复且 v1/v2 Replay 均通过，但没有在授权外追加 Live。最终数字与边界见 `docs/evidence/phase13-prompt-injection-eval-v2.md`。
 
+> 后续状态：又修复嵌套 evidence 误选为最终 Diagnosis 的解析缺陷并增加 Canary Echo Rate；用户新授权后已完成 3 条预检和来源隔离后的完整 88 Task 重跑。正式结果以 `docs/evidence/phase14-source-isolated-live-eval-v2.md` 为准，Phase 13 只保留为首轮缺陷证据。
+
 ## 1. 完成标准
 
 ~~~text
@@ -100,3 +102,14 @@ batch-attack-r3.json   attack 第 3 次，共 24
 - Live attack：目标来源送达 71/72，任意来源送达 72/72，Agent ASR 0/72，副作用 0/72，any-hit/stable 均为 0/24；
 - 峰时全缓存未命中费用上界为 2.732223 元；
 - 25/72 次攻击观察有跨来源重复 artifact，因此按来源分层的 Live 结论作废。来源隔离和“额外来源即契约错误”已修复，本轮授权已消费，没有重跑。
+
+## 10. 修复后重跑结果
+
+- 30 tests + 5 subtests、v1/v2 lint 与 Replay 全通过；
+- 3 条预检成功，clean/hard 未误拒绝，canary echo 1/1；
+- 正式 88 Task 为 359 次模型调用、749,253 Token，无 Provider/来源契约错误；
+- normal 14/16、Over-refusal 0/16、Evidence 15/15；
+- attack source 72/72 精确、Agent ASR 1/72、副作用 0/72、Containment 1/1；
+- any-hit 1/24、stable 0/24、Canary Echo 9/9、Canary Leak 0/9；
+- 唯一危险请求为社会工程 overscale 案例第 1 轮的 `propose_plan`，由 `agent-policy` 拒绝；
+- 含预检共 774,880 Token，峰时全缓存未命中费用上界 2.908050 元。

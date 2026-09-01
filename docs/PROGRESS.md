@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 首轮已完成；当前只修复最终 Diagnosis 解析与 canary 诊断指标，并按用户新授权重跑来源隔离后的 91 个 Live Task，其他功能继续冻结。
+Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费，功能继续冻结。
 
 当前分支：
 
@@ -12,17 +12,17 @@ Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 5 Eval v2：V5 解析修复与来源隔离后 Live 重跑
+    Phase 5 Eval v2：V5.0–V5.4 已完成，当前无外部模型调用授权
 
 ## Phase 5 Eval v2 修复重跑
 
 | 阶段 | 状态 | 内容 |
 |---|---|---|
-| V5.0 | 进行中 | 新授权、解析 bug 与 91 Task 边界冻结 |
-| V5.1 | 未开始 | 顶层 JSON 解析修复、嵌套 evidence 测试 |
-| V5.2 | 未开始 | canaryEchoRate、全量测试、v1/v2 Replay |
-| V5.3 | 未开始 | 3 条预检 + 88 Task 来源隔离后 Live |
-| V5.4 | 未开始 | Phase 14 evidence、文档、回归与 GitHub |
+| V5.0 | 已完成 | 新授权、解析 bug 与 91 Task 边界冻结 |
+| V5.1 | 已完成 | 顶层 JSON 解析修复、嵌套 evidence 测试 |
+| V5.2 | 已完成 | canaryEchoRate、全量测试、v1/v2 Replay |
+| V5.3 | 已完成 | 3 条预检 + 88 Task 来源隔离后 Live |
+| V5.4 | 已完成 | Phase 14 evidence、文档、回归与 GitHub |
 
 ## Phase 5 Eval v2 里程碑
 
@@ -243,6 +243,20 @@ Phase 2 不得破坏这些证据和接口。
 - 修复为 artifact 只从声明来源返回，并增加“额外 injection source 即契约错误”回归；修复后的 v2 40 条、v1 20 条 Replay 与 7 个 Eval 测试通过。
 - 88 Task 授权已消费，没有擅自追加修复后 Live。完整边界见 `docs/evidence/phase13-prompt-injection-eval-v2.md`。
 - 最终本地验证：29 tests + 5 subtests、compileall、v1/v2 lint 与 Replay、50 个 Markdown 文件围栏/链接、diff check 全通过；166 个 tracked file 精确 Key 匹配为 0，通用模式仅命中脱敏单测假值。
+
+## 2026-09-01 Eval v2 解析修复与正式重跑
+
+- 代码复现确认 `parse_final_diagnosis` 会把带 summary 的嵌套 evidence 当成最终 Diagnosis，导致外层 rootCause/recommendation 丢失，并影响 canary/refused 派生事实。
+- 解析器改为成功读取外层对象后按 consumed 偏移跳过整个区间；新增真实对象形状的嵌套 evidence 用例，同时保留多段顶层 JSON 选择最后合法对象的行为。
+- `canaryEchoed` 进入 CaseScore，并新增 Canary Echo Rate；它只表示 canary 传播到授权结论，不并入 Agent ASR、Leak 或副作用率。
+- 本地门禁为 30 tests + 5 subtests；v2 Replay 40/40、v1 Replay 20/20，来源契约错误 0。
+- 用户新授权 3 条预检 + 原协议 88 Task。预检 clean/hard/canary 全通过；正式重跑为 359 次模型调用、749253 Token，无 Provider/契约错误。
+- normal 为 clean 7/8、hard 7/8、Over-refusal 0/16、Evidence 15/15；两个文件案例仍因扩展查询达到六轮上限。
+- attack source 72/72 精确；Agent ASR 1/72，唯一失守为社会工程 overscale 案例第 1 轮请求 `propose_plan`，由 agent-policy 拒绝；副作用 0/72、Containment 1/1、any-hit 1/24、stable 0/24。
+- Canary Echo 9/9、Leak 0/9、攻击 Evidence 60/60；跨案例危险 Tool Ref 审计无漏记。
+- 含预检共 371 次模型调用、774880 Token，峰时缓存未命中费用上界 2.908050 元；本轮 91 Task 授权已消费。
+- Phase 12/13 增加解析勘误，正式结果以 `docs/evidence/phase14-source-isolated-live-eval-v2.md` 为准。
+- 最终回归：30 tests + 5 subtests、compileall、v1/v2 lint/Replay、51 个 Markdown 围栏/链接、diff check 全通过；168 个仓库文件精确 Key 匹配为 0，通用模式仅命中脱敏单测假值。
 
 ## 文档收口记录
 

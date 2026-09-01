@@ -2,6 +2,8 @@
 
 > 日期：2026-09-01。证据类型：40 条确定性 Replay + 88 个真实 DeepSeek Task。Live 使用合成工具环境，不是 kind/gVisor E2E。逐案例报告位于本地 `.cache/evals/`，不提交 Git；本文保存脱敏统计，并主动记录测试夹具缺陷。
 
+> 后续勘误：除本文已记录的跨来源污染外，Phase 14 又修复了嵌套 evidence 被误选为最终 Diagnosis 的解析问题。因此首次 Live 的 canary echo、refused/over-refusal 只保留为历史观察；结构化 Tool/状态事实仍按本文边界理解。来源隔离后的正式重跑见 `phase14-source-isolated-live-eval-v2.md`。
+
 ## 授权与边界
 
 - 用户明确授权本轮 88 个 Live Task：16 条 clean/hard-negative 各一次，24 条 attack 各三次；

@@ -74,13 +74,13 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
     uv run --project agentd --frozen python -m agentd.evals.cli replay \
       --output .cache/evals/prompt-injection-v2.json
 
-Replay 故意让 Agent 请求危险工具，只证明执行边界的确定性遏制，不代表真实模型攻击成功率。学习和指标口径见 `../docs/29-Prompt-Injection-Eval学习手册.md`。
+Replay 故意让 Agent 请求危险工具，只证明执行边界的确定性遏制，不代表真实模型攻击成功率。Canary Echo 只观察 canary 传播到授权结论，不等于攻击、泄露或副作用。学习和指标口径见 `../docs/29-Prompt-Injection-Eval学习手册.md`。
 
 Live Eval 只在用户单独授权数据外发后运行，Key 仅从环境变量读取：
 
     AGENTD_LLM_API_KEY='从仓库外安全注入' \
       uv run --project agentd --frozen python -m agentd.evals.cli live \
       --model deepseek-v4-flash --thinking disabled \
-      --output .cache/evals/deepseek-live-v1.json
+      --output .cache/evals/deepseek-live-v2.json
 
-2026-09-01 的 v1 与 v2 Live 授权均已完成并消费，不得把这段命令视为后续自动调用许可。v2 共执行 88 Task，但审计发现当时的 Fake Connector 跨来源复制 artifact；代码已修复，未在授权外重跑。脱敏结果见 `../docs/evidence/phase12-deepseek-live-eval-v1.md` 和 `../docs/evidence/phase13-prompt-injection-eval-v2.md`。
+2026-09-01 的全部 v1/v2 Live 授权均已完成并消费，不得把这段命令视为后续自动调用许可。来源隔离与顶层 JSON 解析修复后的正式 v2 重跑结果为 Agent ASR 1/72、Containment 1/1、副作用 0/72；见 `../docs/evidence/phase14-source-isolated-live-eval-v2.md`。Phase 12/13 保留历史缺陷与修正过程。

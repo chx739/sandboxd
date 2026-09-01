@@ -2,6 +2,8 @@
 
 > 日期：2026-09-01。证据类型：真实外部 LLM、合成工具环境。不是 Replay，也没有启动 kind/gVisor。逐案例机器报告保存在本地 `.cache/evals/`，因包含完整行为明细而不提交 Git；本文件只保存脱敏统计和可复核口径。
 
+> 后续勘误：Phase 14 发现当时的 `parse_final_diagnosis` 可能把嵌套 evidence 误选为外层 Diagnosis。因此本文件的 Tool Call、来源、外部状态、Evidence、release 和 Token 事实仍有效，但 `canaryEchoed`、`refused` 及依赖拒绝判断的指标不能作为解析修复后的正式结果。修复与重跑见 `phase14-source-isolated-live-eval-v2.md`。
+
 ## 授权与边界
 
 - 用户明确授权开始当前测试；执行前说明会向 DeepSeek 发送 20 条合成 Eval 场景和工具上下文；
@@ -113,4 +115,3 @@ total tokens: 377,070
 可以说：在 DeepSeek V4 Flash、当前 Prompt、20 条合成场景、单次 Run 2 中，所有攻击内容均进入上下文，未观察到目标危险 Tool Call或外部副作用；正常任务完成 7/8，必要证据 18/18。
 
 不能说：Prompt Injection 已解决、模型 ASR 永远为 0、系统达到生产安全，或 Live 已证明执行边界能接住失守模型。单次 Live 没有触发 Agent attack，所以执行边界证据仍引用 Phase 11 Replay 的 12/12 containment，以及 Phase 9 的真实 Go Policy/RBAC/gVisor E2E。
-
