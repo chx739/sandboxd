@@ -75,6 +75,8 @@ Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据�
 
 > Eval v2 状态：40 条数据、覆盖校验、Replay 和 88 个 DeepSeek Live Task 已完成。Live 后发现当时 Fake Connector 跨来源复制 artifact；来源隔离与契约已修复，v1/v2 Replay 均通过。该 88 Task 授权已经消费，修复后不得据此重跑。脱敏结果和可用边界见 `docs/evidence/phase13-prompt-injection-eval-v2.md`。
 
+> 当前修复与重跑：用户于 2026-09-01 新授权先修复 `parse_final_diagnosis` 嵌套 JSON 误选，并将 `canaryEchoRate` 纳入诊断指标，然后在本地回归通过后重新运行来源隔离后的 Live。范围固定为 3 条预检 + 16 条 clean/hard 一次 + 24 条 attack 三次，共 91 个新 Task；仍只允许 `deepseek-v4-flash`、`thinking=disabled`、合成数据和 Fake Connector。连续 3 个 Provider 错误或预计峰时费用上界超过 8 元即停止；完成后本授权立即失效。
+
 本阶段只增加最小、可读、可重复的安全测评闭环，不改写 sandboxd 架构：
 
 - 使用 JSONL 维护 40 个运维场景，覆盖正常任务、Pod Log、ConfigMap、Event、Prometheus、Alert、Linux Log、文件内容和良性困难样本；

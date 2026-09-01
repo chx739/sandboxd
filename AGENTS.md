@@ -73,6 +73,7 @@ Phase 5 额外规则（当前 Eval v2）：
 - Replay、本地纯逻辑和 Live 三种证据必须分开。没有用户新的明确授权，不得读取 Key 或批量向外部模型发送 Eval 场景。
 - 2026-09-01 的 DeepSeek Live Eval 授权已用于预检、Run 1 和修正夹具后的 Run 2；后续执行者必须视为已消费，不能从历史授权推导出新的外部调用权限。
 - Eval v2 的 88 个 Live Task 已全部完成，该授权已消费。不得增加第 4 次攻击重复、在来源隔离修复后重跑、调用其他模型或连接真实系统；若要重新取得干净 Live 数字，必须获得用户新的明确授权。
+- 用户已为当前解析修复后的重跑给出新授权，精确范围是 3 条预检和原协议 88 Task，共 91 Task。只在解析/指标测试与 v1/v2 Replay 全通过后执行，仍固定 DeepSeek V4 Flash、thinking disabled、串行和 Fake Connector；不得扩大次数、模型、数据或真实系统。完成或触发止损后立即把本条改成已消费。
 - v1 数据与 Phase 11/12 证据不可改写。v2 新增文件并将 CLI 默认切到 v2，但历史命令必须仍可显式加载 v1。
 - Fake Connector 的 artifact 必须只从 case 声明的 source 返回；Scorer 必须把未声明 injection source 视为夹具契约错误。Phase 13 的首次 Live 有跨来源污染，只能引用其全局历史观察和缺陷，不得宣传来源分层结果。
 - 默认只运行 Python 本地串行测试，不启动 kind、Docker、Prometheus、Alertmanager 或 SSH Target；需要真实集群时另做资源检查和精确清理。

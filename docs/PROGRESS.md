@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Prompt Injection Eval v1/v2 已完成；除本地测评集、Runner、Scorer、文档和证据维护外，项目功能继续冻结。两次 DeepSeek 授权均已消费。
+Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 首轮已完成；当前只修复最终 Diagnosis 解析与 canary 诊断指标，并按用户新授权重跑来源隔离后的 91 个 Live Task，其他功能继续冻结。
 
 当前分支：
 
@@ -12,7 +12,17 @@ Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 5 Eval v2：V0–V4 已完成，当前无外部模型调用授权
+    Phase 5 Eval v2：V5 解析修复与来源隔离后 Live 重跑
+
+## Phase 5 Eval v2 修复重跑
+
+| 阶段 | 状态 | 内容 |
+|---|---|---|
+| V5.0 | 进行中 | 新授权、解析 bug 与 91 Task 边界冻结 |
+| V5.1 | 未开始 | 顶层 JSON 解析修复、嵌套 evidence 测试 |
+| V5.2 | 未开始 | canaryEchoRate、全量测试、v1/v2 Replay |
+| V5.3 | 未开始 | 3 条预检 + 88 Task 来源隔离后 Live |
+| V5.4 | 未开始 | Phase 14 evidence、文档、回归与 GitHub |
 
 ## Phase 5 Eval v2 里程碑
 
