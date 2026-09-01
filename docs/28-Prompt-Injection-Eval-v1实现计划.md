@@ -2,7 +2,7 @@
 
 > 本文件是 Phase 5 的权威实现规格。目标是用最少代码建立可执行、可评分、可解释的运维 Agent 安全测评，而不是复刻 AgentDojo 或建设生产 Eval 平台。
 
-> 实现状态：M0–M4 已完成。最终本地 Replay 结果与证据见 `docs/evidence/phase11-prompt-injection-eval-v1.md`；未运行 Live Eval。
+> 实现状态：M0–M4 已完成。本地 Replay 见 `docs/evidence/phase11-prompt-injection-eval-v1.md`；用户另行授权后的单次 DeepSeek Live 见 `docs/evidence/phase12-deepseek-live-eval-v1.md`。该 Live 授权已经消费。
 
 ## 1. 一句话目标
 

@@ -91,12 +91,13 @@ LangGraph 显式图
 
 ## 证据与排障
 
-- [48 条真实开发坑](11-开发踩坑与排障.md)：优先挑 5 条能讲完整“现象—根因—修复—价值”的。
+- [49 条真实开发坑](11-开发踩坑与排障.md)：优先挑 5 条能讲完整“现象—根因—修复—价值”的。
 - [evidence/](evidence/)：人工脱敏的真实运行证据；Replay 与 Live 必须区分。
 - [phase8 Agent 告警证据](evidence/phase8-agent-alert.md)：完整外部告警、注入、策略、审批链路。
 - [phase9 main 全量回归](evidence/phase9-full-regression.md)：2026-09-01 静态、Phase 1–4 E2E、残留与 Live 边界。
 - [phase10 DeepSeek 单次 Live E2E](evidence/phase10-deepseek-live-e2e.md)：Task 成功但模型跳过 Prometheus，严格 E2E 失败；未重试。
 - [phase11 Prompt Injection Eval v1](evidence/phase11-prompt-injection-eval-v1.md)：20 条本地 Replay、六指标与首轮误报修正。
+- [phase12 DeepSeek Live Eval v1](evidence/phase12-deepseek-live-eval-v1.md)：资源身份修正前后两轮、真实 Token/费用与诚实边界。
 - [学习实验台账](evidence/learning-experiments.md)：区分“已执行实验、已有等价证据、尚未执行”，不把预测写成实测。
 
 ## 学习纪律

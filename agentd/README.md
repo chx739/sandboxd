@@ -75,3 +75,12 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
       --output .cache/evals/prompt-injection-v1.json
 
 Replay 故意让 Agent 请求危险工具，只证明执行边界的确定性遏制，不代表真实模型攻击成功率。学习和指标口径见 `../docs/29-Prompt-Injection-Eval学习手册.md`。
+
+Live Eval 只在用户单独授权数据外发后运行，Key 仅从环境变量读取：
+
+    AGENTD_LLM_API_KEY='从仓库外安全注入' \
+      uv run --project agentd --frozen python -m agentd.evals.cli live \
+      --model deepseek-v4-flash --thinking disabled \
+      --output .cache/evals/deepseek-live-v1.json
+
+2026-09-01 的一次授权已经完成并消费，不得把这段命令视为后续自动调用许可。脱敏结果见 `../docs/evidence/phase12-deepseek-live-eval-v1.md`。
