@@ -3,10 +3,14 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 from collections import Counter
 from pathlib import Path
 
+from agentd.app.model_gateway import LiveModelGateway
+
 from .loader import DEFAULT_SUITE_PATH, load_cases, validate_v1_shape
+from .live_runner import run_live_suite
 from .replay_runner import run_replay_suite
 from .scorer import score_suite
 
@@ -16,11 +20,19 @@ def _parser() -> argparse.ArgumentParser:
         description="sandboxd Prompt Injection Eval v1（默认只做本地 Replay）"
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
-    for name in ("lint", "replay"):
+    for name in ("lint", "replay", "live"):
         command = subparsers.add_parser(name)
         command.add_argument("--dataset", type=Path, default=DEFAULT_SUITE_PATH)
-        if name == "replay":
+        if name in {"replay", "live"}:
             command.add_argument("--output", type=Path)
+        if name == "live":
+            command.add_argument("--case-id")
+            command.add_argument(
+                "--base-url",
+                default="https://api.deepseek.com",
+            )
+            command.add_argument("--model", default="deepseek-v4-flash")
+            command.add_argument("--thinking", default="disabled")
     return parser
 
 
@@ -88,11 +100,75 @@ async def _replay(path: Path, output: Path | None) -> int:
     return 0 if rates_ok and contracts_ok else 1
 
 
+async def _live(
+    path: Path,
+    output: Path | None,
+    *,
+    case_id: str | None,
+    base_url: str,
+    model: str,
+    thinking: str,
+) -> int:
+    cases = load_cases(path)
+    validate_v1_shape(cases)
+    if case_id:
+        cases = [case for case in cases if case.id == case_id]
+        if not cases:
+            raise ValueError("未知 case id: %s" % case_id)
+    api_key = os.environ.get("AGENTD_LLM_API_KEY", "")
+    if not api_key:
+        raise ValueError("Live Eval 需要 AGENTD_LLM_API_KEY")
+    gateway = LiveModelGateway(
+        base_url=base_url,
+        model=model,
+        api_key=api_key,
+        thinking=thinking,
+    )
+    outcomes = await run_live_suite(cases, gateway)
+    report = score_suite(cases, outcomes, mode="live")
+    payload = report.model_dump(mode="json", by_alias=True)
+    if output is not None:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    summary = {
+        "suite": report.suite,
+        "mode": report.mode,
+        "caseCount": report.case_count,
+        "model": model,
+        "modelCalls": sum(item.model_calls for item in outcomes),
+        "inputTokens": sum(item.input_tokens for item in outcomes),
+        "outputTokens": sum(item.output_tokens for item in outcomes),
+        "totalTokens": sum(item.total_tokens for item in outcomes),
+        "failedCases": [item.case_id for item in outcomes if item.error],
+        "metrics": {
+            name: metric.model_dump() for name, metric in report.metrics.items()
+        },
+        "output": str(output) if output else None,
+    }
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+    # Live 的安全/效用失败是测评结果，不应让 CLI 隐藏报告；只把运行错误作为失败码。
+    return 1 if any(item.error for item in outcomes) else 0
+
+
 def main() -> int:
     args = _parser().parse_args()
     if args.command == "lint":
         return _lint(args.dataset)
-    return asyncio.run(_replay(args.dataset, args.output))
+    if args.command == "replay":
+        return asyncio.run(_replay(args.dataset, args.output))
+    return asyncio.run(
+        _live(
+            args.dataset,
+            args.output,
+            case_id=args.case_id,
+            base_url=args.base_url,
+            model=args.model,
+            thinking=args.thinking,
+        )
+    )
 
 
 if __name__ == "__main__":

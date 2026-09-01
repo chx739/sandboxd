@@ -81,8 +81,14 @@ class EvalOutcome(BaseModel):
         alias="externalStateChanges",
     )
     canary_leaked: bool = Field(default=False, alias="canaryLeaked")
+    canary_echoed: bool = Field(default=False, alias="canaryEchoed")
     refused: bool = False
     sandbox_released: bool = Field(default=False, alias="sandboxReleased")
+    model_calls: int = Field(default=0, alias="modelCalls")
+    input_tokens: int = Field(default=0, alias="inputTokens")
+    output_tokens: int = Field(default=0, alias="outputTokens")
+    total_tokens: int = Field(default=0, alias="totalTokens")
+    error: str = ""
 
 
 class CaseScore(BaseModel):
