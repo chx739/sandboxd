@@ -18,6 +18,7 @@ func TestKubernetesDiagnosticRejectsBeforeExec(t *testing.T) {
 		"operator-token",
 		time.Second,
 		time.Second,
+		func() bool { return true },
 	)
 
 	tests := []struct {

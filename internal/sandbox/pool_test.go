@@ -1,12 +1,19 @@
 package sandbox
 
 import (
+	"bytes"
 	"context"
+	"errors"
+	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/client-go/kubernetes/fake"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
@@ -29,9 +36,10 @@ func TestConcurrentClaimReturnsDifferentPods(t *testing.T) {
 	lister := corelisters.NewPodLister(indexer)
 	manager := &Manager{client: client, config: Config{Namespace: "sandboxd-demo"}, podLister: lister}
 	pool := &Pool{
-		client:  client,
-		lister:  lister,
-		manager: manager,
+		client:        client,
+		lister:        lister,
+		manager:       manager,
+		createTimeout: time.Minute,
 		queue: workqueue.NewTypedRateLimitingQueue(
 			workqueue.DefaultTypedControllerRateLimiter[string](),
 		),
@@ -90,5 +98,111 @@ func readyIdlePod(id string) *corev1.Pod {
 				Status: corev1.ConditionTrue,
 			}},
 		},
+	}
+}
+
+func TestReconcileCreateIdleIsBounded(t *testing.T) {
+	// 场景：Pod 创建后永远停在 Pending（fake informer 不推进状态，
+	// 等价于不可调度——没有 kubelet 执行 ActiveDeadlineSeconds）。
+	// 补池如果缺少单次超时，唯一的 worker 会在这里永久挂死。
+	client := fake.NewSimpleClientset()
+	indexer := cache.NewIndexer(cache.MetaNamespaceKeyFunc, cache.Indexers{
+		cache.NamespaceIndex: cache.MetaNamespaceIndexFunc,
+	})
+	lister := corelisters.NewPodLister(indexer)
+	manager := &Manager{client: client, config: Config{Namespace: "sandboxd-demo"}, podLister: lister}
+	pool := &Pool{
+		client:        client,
+		lister:        lister,
+		manager:       manager,
+		target:        1,
+		createTimeout: 100 * time.Millisecond,
+		queue: workqueue.NewTypedRateLimitingQueue(
+			workqueue.DefaultTypedControllerRateLimiter[string](),
+		),
+	}
+	defer pool.queue.ShutDown()
+
+	done := make(chan error, 1)
+	go func() {
+		done <- pool.Reconcile(context.Background())
+	}()
+
+	select {
+	case err := <-done:
+		if err == nil {
+			t.Fatal("永不 Ready 的创建应返回错误，而不是被当作成功")
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("Reconcile 被未 Ready 的创建永久卡住：补池缺少单次超时")
+	}
+
+	// 超时创建的 Pod 必须被清理，不能残留占用 namespace 与池配额。
+	pods, err := client.CoreV1().Pods("sandboxd-demo").List(context.Background(), metav1.ListOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(pods.Items) != 0 {
+		t.Fatalf("超时创建的 Pod 应被删除，残留 %d 个", len(pods.Items))
+	}
+}
+
+func TestClaimPatchPathMatchesStateLabel(t *testing.T) {
+	// claimPatch 是手写 JSON，路径与 types.go 的 LabelState 是两份独立知识；
+	// 改 label key 不会编译报错而是静默失效（test/replace 落在不存在路径上），
+	// 必须用测试锁死，防止 CAS 语义无声退化。
+	escaped := strings.ReplaceAll(LabelState, "/", "~1")
+	path := "/metadata/labels/" + escaped
+	if !bytes.Contains(claimPatch, []byte(path)) {
+		t.Fatalf("claimPatch 未引用 state label 路径 %s，CAS 会静默失效", path)
+	}
+}
+
+func TestIsClaimConflict(t *testing.T) {
+	tests := []struct {
+		name string
+		err  error
+		want bool
+	}{
+		{
+			name: "json patch test 失败返回 422 invalid",
+			err: apierrors.NewInvalid(
+				schema.GroupKind{Group: "", Kind: "Pod"},
+				"sandbox-x",
+				field.ErrorList{field.Invalid(field.NewPath("metadata"), nil, "test failed")},
+			),
+			want: true,
+		},
+		{
+			name: "版本冲突返回 409",
+			err: apierrors.NewConflict(
+				schema.GroupResource{Group: "", Resource: "pods"},
+				"sandbox-x",
+				errors.New("the object has been modified"),
+			),
+			want: true,
+		},
+		{
+			name: "错误文本包含 test failed 时兜底放行",
+			err:  errors.New("the server rejected our request: test failed"),
+			want: true,
+		},
+		{
+			name: "权限与网络类错误必须中止 Claim",
+			err: apierrors.NewForbidden(
+				schema.GroupResource{Group: "", Resource: "pods"},
+				"sandbox-x",
+				errors.New("forbidden"),
+			),
+			want: false,
+		},
+		{name: "普通基础设施错误", err: errors.New("connection refused"), want: false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := isClaimConflict(test.err); got != test.want {
+				t.Fatalf("isClaimConflict(%v) = %v, want %v", test.err, got, test.want)
+			}
+		})
 	}
 }

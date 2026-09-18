@@ -76,6 +76,8 @@ func main() {
 		sharedPodInformer,
 		manager,
 		cfg.PoolSize,
+		// 补池与 HTTP 冷启动共用同一个创建超时，保证池 worker 不会无限等待。
+		cfg.CreateTimeout,
 	)
 	if err != nil {
 		log.Fatalf("创建预热池: %v", err)
@@ -92,6 +94,8 @@ func main() {
 		cfg.OperatorToken,
 		cfg.CreateTimeout,
 		cfg.ExecTimeout,
+		// readyz 必须回答“informer 缓存是否同步”，而不是复用 healthz 的常量 ok。
+		sharedPodInformer.HasSynced,
 	)
 	httpServer := &http.Server{
 		Addr:              cfg.Listen,

@@ -28,12 +28,13 @@ var claimPatch = []byte(`[
 ]`)
 
 type Pool struct {
-	client   kubernetes.Interface
-	lister   corelisters.PodLister
-	informer cache.SharedIndexInformer
-	queue    workqueue.TypedRateLimitingInterface[string]
-	manager  *Manager
-	target   int
+	client        kubernetes.Interface
+	lister        corelisters.PodLister
+	informer      cache.SharedIndexInformer
+	queue         workqueue.TypedRateLimitingInterface[string]
+	manager       *Manager
+	target        int
+	createTimeout time.Duration
 }
 
 func NewPool(
@@ -42,20 +43,25 @@ func NewPool(
 	informer cache.SharedIndexInformer,
 	manager *Manager,
 	target int,
+	createTimeout time.Duration,
 ) (*Pool, error) {
 	if target < 0 {
 		return nil, fmt.Errorf("pool target 不能小于 0")
 	}
+	if createTimeout <= 0 {
+		return nil, fmt.Errorf("pool createTimeout 必须大于 0")
+	}
 
 	pool := &Pool{
-		client:   client,
-		lister:   lister,
-		informer: informer,
+		client:        client,
+		lister:        lister,
+		informer:      informer,
+		manager:       manager,
+		target:        target,
+		createTimeout: createTimeout,
 		queue: workqueue.NewTypedRateLimitingQueue(
 			workqueue.DefaultTypedControllerRateLimiter[string](),
 		),
-		manager: manager,
-		target:  target,
 	}
 
 	// handler 不做业务判断，只触发一次基于最新缓存的 reconcile。
@@ -126,7 +132,14 @@ func (p *Pool) Reconcile(ctx context.Context) error {
 
 	if len(idle) < p.target {
 		for range p.target - len(idle) {
-			if _, err := p.manager.CreateIdle(ctx); err != nil {
+			// 每次补池必须单独限时。WaitReady 只对 Failed/Succeeded 提前退出；
+			// 不可调度的 Pod 没有节点上的 kubelet 去执行 ActiveDeadlineSeconds，
+			// 会永远停在 Pending。而池只有一个 worker，一次无限期的等待就会把
+			// 整个对账循环（包括 Failed Pod 清理）永久卡死，直到进程重启。
+			createCtx, cancel := context.WithTimeout(ctx, p.createTimeout)
+			_, err := p.manager.CreateIdle(createCtx)
+			cancel()
+			if err != nil {
 				return fmt.Errorf("补充预热池: %w", err)
 			}
 		}
@@ -189,8 +202,8 @@ func (p *Pool) Claim(ctx context.Context) (*Sandbox, error) {
 				Source:    "pool",
 			}, nil
 		}
-		// JSON Patch test 失败通常是 422；缓存仍显示 idle，但对象已被其他请求认领。
-		if apierrors.IsInvalid(patchErr) || apierrors.IsConflict(patchErr) || strings.Contains(patchErr.Error(), "test failed") {
+		// JSON Patch test 失败说明候选已被其他请求抢走；缓存仍显示 idle 是正常的。
+		if isClaimConflict(patchErr) {
 			metrics.ClaimConflicts.Inc()
 			continue
 		}
@@ -198,6 +211,16 @@ func (p *Pool) Claim(ctx context.Context) (*Sandbox, error) {
 	}
 
 	return p.manager.Create(ctx)
+}
+
+// isClaimConflict 判断 CAS 失败是否只是“候选被别人抢走”，可以换下一个候选继续。
+// JSON Patch test 失败由 API Server 以 422/409 返回；错误文本匹配只作最后兜底，
+// 因为不同版本对 test 失败的 StatusReason 可能不完全一致，宁可多试一个候选，
+// 也不能把可恢复的冲突误判成基础设施错误而让整个 Claim 失败。
+func isClaimConflict(err error) bool {
+	return apierrors.IsInvalid(err) ||
+		apierrors.IsConflict(err) ||
+		strings.Contains(err.Error(), "test failed")
 }
 
 // Release 直接删除而不复用，避免上一个命令留下文件或子进程污染下一次任务。

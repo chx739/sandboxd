@@ -10,6 +10,11 @@ networking:
 containerdConfigPatches:
   - |-
     # RuntimeClass 的 handler=runsc 最终会查找这个 containerd runtime。
+    # 注意：kind 节点实际运行 containerd 2.2（配置 version 3，生效路径为
+    # plugins."io.containerd.cri.v1.runtime"）。这里写旧 v1 路径是刻意的——
+    # kind 在导入 patch 时会做旧→新路径转换，直接写 v3 路径反而可能被拒绝。
+    # 排障时请以节点内 /etc/containerd/config.toml 的实际内容为准，
+    # 详见 docs/11-开发踩坑与排障.md 坑 4。
     [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
       runtime_type = "io.containerd.runsc.v1"
 

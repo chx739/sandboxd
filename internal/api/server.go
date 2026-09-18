@@ -22,7 +22,9 @@ type Server struct {
 	operatorToken       string
 	createTimeout       time.Duration
 	execTimeout         time.Duration
-	mux                 *http.ServeMux
+	// ready 回答“依赖是否可用”（informer 是否同步）；nil 视为未就绪，fail closed。
+	ready func() bool
+	mux   *http.ServeMux
 }
 
 func NewServer(
@@ -34,6 +36,7 @@ func NewServer(
 	operatorToken string,
 	createTimeout time.Duration,
 	execTimeout time.Duration,
+	ready func() bool,
 ) *Server {
 	server := &Server{
 		manager:             manager,
@@ -44,6 +47,7 @@ func NewServer(
 		operatorToken:       operatorToken,
 		createTimeout:       createTimeout,
 		execTimeout:         execTimeout,
+		ready:               ready,
 		mux:                 http.NewServeMux(),
 	}
 	server.routes()
@@ -56,7 +60,8 @@ func (s *Server) Handler() http.Handler {
 
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", textOK)
-	s.mux.HandleFunc("GET /readyz", textOK)
+	// healthz 只说明进程活着；readyz 必须回答依赖是否可用。
+	s.mux.HandleFunc("GET /readyz", s.readiness)
 	s.mux.Handle("GET /metrics", promhttp.Handler())
 
 	// Agent 可以使用沙箱并提交计划，但不能越过 Operator 执行集群写操作。
@@ -101,6 +106,16 @@ func authenticate(tokens []string, next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(response, request)
 	})
+}
+
+// readiness 检查 informer 缓存是否同步。未同步时对账与列表都基于过期缓存，
+// 宁可返回 503 让调用方等待，也不能给出“可以安全使用”的假信号。
+func (s *Server) readiness(response http.ResponseWriter, _ *http.Request) {
+	if s.ready == nil || !s.ready() {
+		writeJSON(response, http.StatusServiceUnavailable, map[string]string{"error": "not ready"})
+		return
+	}
+	textOK(response, nil)
 }
 
 func textOK(response http.ResponseWriter, _ *http.Request) {
