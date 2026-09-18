@@ -8,7 +8,8 @@
 
 - target 默认为 2；
 - Reconcile 统计所有非终态 idle，包括 Pending provisioning；
-- idle 少于 target 时调用 `Manager.CreateIdle`，多于 target 时删除最老的多余 Pod；
+- idle 少于 target 时调用 `Manager.CreateIdle`，每次补池单独限时（复用 create-timeout）；
+- idle 多于 target 时删除最老的多余 Pod；
 - Claim 只选择 Ready idle；
 - 用 JSON Patch `test idle` + `replace busy` 原子认领；
 - 候选冲突后继续下一个，全部失败则 direct cold start；
@@ -18,6 +19,10 @@
 ## 为什么 provisioning 也要计入容量
 
 假设 target=2，两个 idle Pod 正在拉镜像但还没 Ready。如果只统计 Ready，下一次事件又会创建两个，反复对账后池会膨胀。容量判断计入 Pending idle，Claim 候选才要求 Ready，这两个判断解决不同问题。
+
+## 为什么每次补池必须单独限时
+
+`WaitReady` 只对 `PodFailed/PodSucceeded` 提前退出；不可调度的 Pod 没有 kubelet 执行 `ActiveDeadlineSeconds`，会永远停在 Pending。池只有一个 worker，一次无限期的 `CreateIdle` 会把补充和 Failed Pod 清理一起卡死到进程重启，卡住的坏 Pod 还永久占用容量（因为 Pending idle 计入容量）。修复是每次补池用 `context.WithTimeout(ctx, createTimeout)` 包住创建；超时后清理路径删除坏 Pod，Reconcile 走 rate-limited 重试。单测 `TestReconcileCreateIdleIsBounded` 用"永不 Ready 的创建"锁住这个行为（见 `docs/11` 坑 52）。
 
 ## JSON Patch CAS
 
@@ -104,6 +109,7 @@ Release + reconcile: idle restored to 2
 
 ```bash
 go test ./internal/sandbox -run TestConcurrentClaimReturnsDifferentPods -count=20
+go test ./internal/sandbox -run 'TestReconcileCreateIdleIsBounded|TestClaimPatchPathMatchesStateLabel'
 ./hack/verify-pool.sh
 ```
 

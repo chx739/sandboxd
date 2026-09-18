@@ -198,6 +198,17 @@ Phase 2 不得破坏这些证据和接口。
 1. 没有用户新授权时，不继续 Live Eval、模型横评或新功能阶段。
 2. 若未来重跑 v2，必须从当前来源隔离修复后的提交开始，使用新的精确授权，并保留首次受污染报告作对照。
 3. 不增加任意 SSH/Bash、远端写入、动态插件或生产级功能。
+4. 评审建议的后续路线（exec 端点收紧、RBAC 收敛为 namespace Role、Plan 审计持久化、停止条件修复、真实集群+真实 LLM 联合 E2E、agent-sandbox CRD 对接）均须用户逐项明确授权后才能开始。
+
+## 2026-09-18 Phase 6 加固（评审路线 A + Eval Harness 自检）
+
+- 用户明确授权执行架构评审的路线 A（bug 级加固）与 C2（Eval harness 自检）；全程不改架构、不新增功能、不消耗外部模型授权。
+- Go 侧：`NewPool` 新增 `createTimeout` 并在 `Reconcile` 每次补池时 `WithTimeout` 包住 `CreateIdle`，修复不可调度 Pod 永远 Pending 导致单 worker 对账永久卡死的缺陷（`docs/11` 坑 52）；`deleteSandbox` 改用独立 10s context；`readyz` 真实检查 `informer.HasSynced`（未同步 503）；create/list/delete 的 5xx 错误脱敏进日志；创建超时映射 504；CAS 冲突判定集中为 `isClaimConflict`。
+- 新增 Go 测试：`TestReconcileCreateIdleIsBounded`（修复前会永久挂起）、`TestClaimPatchPathMatchesStateLabel`、`TestIsClaimConflict`、`TestReadyzReflectsReadiness`；`go build/vet/test ./...` 全绿。
+- Python 侧：`policy.py` 显式化 `MAX_CLAIM_SECONDS=190` / `MAX_RELEASE_SECONDS=10` 并注明三段预算与“claim 不能共用 loop 预算”的原因；`runner.py` 的 claim 进入 `wait_for`；新增 `test_slow_claim_is_bounded_by_claim_budget`。
+- Eval 自检：Loader 新增 `SOURCE_CHANNELS` 通道契约与 injectionSources 恰等校验，lint 即可静态拒绝“声明 podlog 却从 get_configmap 取 artifact”类夹具错误（v1/v2 数据零修改通过）；新增 golden Replay 基线 `agentd/testdata/eval-replay-golden-v2.json` 与 `test_eval_golden.py`，钉死 40 条 case 的确定性工具流，`AGENTD_UPDATE_EVAL_GOLDEN=1` 可重新生成。
+- 本轮验证仅本地：Go build/vet/test、34 个 Python 串行 unittest、evals `lint`（v1+v2）与 `replay` CLI 门禁全部通过；未启动 kind、Docker、Prometheus、Alertmanager、SSH Target，未调用外部 LLM，未使用 sudo。
+- 实现提交：`fix: bound pool replenishment and harden API edge cases`、`fix: give sandbox claim and release explicit budgets`、`test: add eval fixture contract lint and golden replay baseline`；文档与推送见本轮后续提交。
 
 ## Phase 5 本轮记录
 

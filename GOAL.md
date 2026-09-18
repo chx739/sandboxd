@@ -2,7 +2,7 @@
 
 > 本文件是本仓库后续持续开发的“目标锚点”。无论聊天上下文是否完整、是否更换会话或执行者，开始工作前都必须先完整阅读本文件，再阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。若聊天记忆、临时建议或局部实现与本文件冲突，以本文件为准；不得在没有得到用户明确同意的情况下改变目标。
 
-> 当前维护状态：Phase 1–4 已完成并合并到 `main`，Phase 5 Prompt Injection Eval v1/v2 已完成。外部模型授权均已消费，功能保持冻结。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
+> 当前维护状态：Phase 1–5 已完成并合并到 `main`。2026-09-18 用户明确授权 Phase 6 加固（评审路线 A 的 bug 修复 + Eval harness 自检）并已实现。外部模型授权均已消费。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
 
 ## 一句话目标
 
@@ -88,6 +88,20 @@ Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据�
 - 同步交付中文注释、最小单测、学习文档、项目 FAQ、脱敏 evidence 和 GitHub 记录。
 
 Phase 5 明确不做：引入 AgentDojo/ASB 运行时依赖、上百样本、大规模模型横评、自动红队生成、LLM-as-Judge 作为安全事实、生产数据、真实秘密、自动攻击真实系统或修改 Go sandboxd。
+
+## 已完成目标：Phase 6 加固（评审路线 A + Eval Harness 自检）
+
+> 用户于 2026-09-18 明确授权。范围是修复架构评审发现的确定性缺陷并补齐测评自检，不新增功能、不改架构、不消耗任何外部模型授权。
+
+- 预热池补池路径增加单次创建超时（`NewPool` 新增 `createTimeout`，与 HTTP 冷启动共用 `cfg.CreateTimeout`），修复“不可调度 Pod 把单 worker 对账永久卡死”的缺陷；配套单测 `TestReconcileCreateIdleIsBounded`（见 `docs/11` 坑 52）。
+- agentd 的 claim/release 显式化为独立预算常量 `MAX_CLAIM_SECONDS` / `MAX_RELEASE_SECONDS`，任务三段预算（claim/loop/release）在 `policy.py` 一处声明并解释为什么 claim 不能共用 loop 预算；claim 进入 `asyncio.wait_for`。
+- `deleteSandbox` 使用独立 10 秒 context，客户端断开不再中断清理；`readyz` 真实检查 informer 同步（未同步返回 503，fail closed）；create/list/delete 的 5xx 内部错误脱敏并记录服务端日志；创建超时映射 504 与 exec 一致。
+- CAS 冲突判定集中为 `isClaimConflict` 并配单测；`claimPatch` 静态 JSON 与 `LabelState` 的双份知识用 `TestClaimPatchPathMatchesStateLabel` 锁死。
+- Eval Loader 增加 source→sourceTool 通道契约（`SOURCE_CHANNELS`）与 injectionSources 恰等校验：lint 阶段即可拒绝夹具契约错误，v1/v2 数据集零修改通过；新增 golden Replay 基线 `agentd/testdata/eval-replay-golden-v2.json` 钉死 40 条 case 的确定性结果，防第四个 harness 缺陷。
+- kind 模板补充 containerd v1/v3 配置路径的澄清注释，不改已验证的配置。
+- 验证只用本地手段：`go build/vet/test`、Python 串行 unittest（34 个）、evals `lint`/`replay` CLI 门禁；未启动 kind、Docker、Prometheus、Alertmanager、SSH Target，未调用外部 LLM。
+
+Phase 6 不做：新功能、架构重写、agent-sandbox CRD 对接、exec 端点收紧、RBAC 收敛、Plan 审计持久化（这些是评审建议的后续路线，须另行逐项授权）。
 
 ## 不可偏移的约束
 

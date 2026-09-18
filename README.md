@@ -211,7 +211,7 @@ make test
 | [docs/25-代码导读与模块地图.md](docs/25-代码导读与模块地图.md) | 从 API 入口沿调用链阅读 Go/Python 代码 |
 | [docs/13-项目学习路径.md](docs/13-项目学习路径.md) | 4 天模块化路线、1 天压缩版和破坏实验 |
 | [docs/26-Agent八股知识地图.md](docs/26-Agent八股知识地图.md) | ReAct、Tool、Context、Session、Plugin、安全和 Eval |
-| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 51 条真实问题与定位过程 |
+| [docs/11-开发踩坑与排障.md](docs/11-开发踩坑与排障.md) | 52 条真实问题与定位过程 |
 | [docs/10-面试问答与项目讲法.md](docs/10-面试问答与项目讲法.md) | 当前项目级完整答案的唯一入口：四条主线和 37 个综合追问 |
 | [docs/29-Prompt-Injection-Eval学习手册.md](docs/29-Prompt-Injection-Eval学习手册.md) | 数据集、行为/边界/Canary 指标、Replay/Live 边界 |
 | [docs/27-简历与面试表达手册.md](docs/27-简历与面试表达手册.md) | 简历三行、分岗位版本、讲法和 STAR 素材 |
