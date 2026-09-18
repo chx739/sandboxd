@@ -12,7 +12,16 @@ MAX_ITERATIONS = 6
 MAX_TOOL_CALLS = 8
 MAX_PROMETHEUS_CALLS = 4
 MAX_OBSERVATION_BYTES = 4 << 10
+# 任务预算是三段独立窗口：claim（获取沙箱）→ loop（模型与工具）→ release（清理）。
+# MAX_TASK_SECONDS 只约束 Agent Loop；claim 不能共用这个预算——冷启动慢于 120s 时
+# 取消一个服务端可能已创建成功的 claim，会得到没有 id 的 busy Pod，只能等
+# Pod 的 1 小时 ActiveDeadlineSeconds 兜底回收。
 MAX_TASK_SECONDS = 120
+# claim 预算略高于 sandboxd 的 create-timeout（默认 3 分钟）加网络余量：
+# 到达这个上限时服务端必然已经自己超时，此时取消不会丢掉真实存在的沙箱。
+MAX_CLAIM_SECONDS = 190
+# release 是清理窗口；父任务已取消时由独立 Task + shield 保证执行（见 runner.py）。
+MAX_RELEASE_SECONDS = 10
 DIAGNOSTIC_NAMESPACE = "sandboxd-target"
 
 KUBERNETES_READ_OPERATIONS = {

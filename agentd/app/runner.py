@@ -12,7 +12,7 @@ from .model_gateway import ModelGateway
 from .models import AgentTrace, AlertEvent, Diagnosis, sum_model_usage
 from .plugins.base import PluginContext
 from .plugins.registry import PluginRegistry, build_builtin_registry
-from .policy import MAX_TASK_SECONDS
+from .policy import MAX_CLAIM_SECONDS, MAX_RELEASE_SECONDS, MAX_TASK_SECONDS
 from .runtime.control import AgentControl
 from .runtime.loop import AgentLoopState, PiStyleAgentLoop, append_event
 from .runtime.session import SessionJournal
@@ -62,7 +62,13 @@ class AgentRunner:
         claim_started = time.monotonic()
 
         try:
-            claimed = await self._sandboxd.claim()
+            # claim 使用独立预算而非 MAX_TASK_SECONDS：预算见 policy.py 注释。
+            # 若不显式 wait_for，claim 只受 httpx 单请求超时约束，任务总时长
+            # 的组成就不在同一个地方可审计。
+            claimed = await asyncio.wait_for(
+                self._sandboxd.claim(),
+                timeout=MAX_CLAIM_SECONDS,
+            )
             sandbox_id = str(claimed.get("id", ""))
             if not sandbox_id:
                 raise RuntimeError("sandboxd 返回的 Sandbox 没有 id")
@@ -165,6 +171,6 @@ class AgentRunner:
 
     async def _release_sandbox(self, sandbox_id: str) -> None:
         # 父任务已取消时，普通 await 会立刻传播取消；独立 Task + shield 给清理
-        # 一个最多 10 秒的窗口，避免把 busy Sandbox 永久留在池中。
+        # 一个最多 MAX_RELEASE_SECONDS 的窗口，避免把 busy Sandbox 永久留在池中。
         cleanup = asyncio.create_task(self._sandboxd.release(sandbox_id))
-        await asyncio.wait_for(asyncio.shield(cleanup), timeout=10)
+        await asyncio.wait_for(asyncio.shield(cleanup), timeout=MAX_RELEASE_SECONDS)

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, Sequence
+from unittest import mock
 
 from langchain_core.messages import BaseMessage
 
@@ -125,6 +127,14 @@ class FakeLinuxHosts:
         )
 
 
+class HangingSandboxd(FakeSandboxd):
+    """claim 永远不返回：模拟服务端挂起，验证 claim 有自己的预算。"""
+
+    async def claim(self) -> dict[str, Any]:
+        await asyncio.Event().wait()
+        raise AssertionError("unreachable")
+
+
 class SlowSession:
     def __init__(self) -> None:
         self.started = asyncio.Event()
@@ -232,6 +242,29 @@ class ReplayGraphTest(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(asyncio.CancelledError):
             await task
         self.assertEqual(sandboxd.released, ["replay-sandbox"])
+
+    async def test_slow_claim_is_bounded_by_claim_budget(self) -> None:
+        from agentd.app import runner as runner_module
+
+        sandboxd = HangingSandboxd()
+        runner = AgentRunner(
+            FakePrometheus(),
+            sandboxd,
+            SlowGateway(),
+            workspace_root=Path(self.workspace.name),
+        )
+
+        started = time.monotonic()
+        with mock.patch.object(runner_module, "MAX_CLAIM_SECONDS", 0.05):
+            with self.assertRaises(asyncio.TimeoutError):
+                await runner.run(
+                    "task-slow-claim",
+                    AlertEvent(fingerprint="slow-claim"),
+                )
+        self.assertLess(time.monotonic() - started, 5)
+
+        # claim 成功前没有 sandbox id，不可能也不应该调用 release。
+        self.assertEqual(sandboxd.released, [])
 
     async def test_phase4_linux_and_file_tools_keep_content_out_of_trace(self) -> None:
         prometheus = FakePrometheus()
