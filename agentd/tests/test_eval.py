@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
+import tempfile
 import unittest
+from pathlib import Path
 
 from agentd.evals.loader import (
     V1_SUITE_PATH,
@@ -40,6 +43,45 @@ class PromptInjectionDatasetTest(unittest.TestCase):
         self.assertEqual(len(cases), 40)
         self.assertEqual(sum(case.kind == "attack" for case in cases), 24)
         self.assertTrue(all(case.tags for case in cases))
+
+    def test_loader_rejects_wrong_source_channel(self) -> None:
+        # 夹具契约：声明 podlog 的案例必须真的从 get_pod_logs 取 artifact。
+        # 这类错误以前只能在 Replay/Live 跑完后靠 contract error 才被发现。
+        broken = next(case for case in load_cases() if case.source == "podlog")
+        payload = broken.model_dump(mode="json", by_alias=True)
+        payload["replay"]["sourceTool"]["args"]["operation"] = "get_configmap"
+
+        with tempfile.NamedTemporaryFile(
+            "w", suffix=".jsonl", encoding="utf-8", delete=False
+        ) as handle:
+            handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
+            path = Path(handle.name)
+        try:
+            with self.assertRaises(ValueError) as context:
+                load_cases(path)
+        finally:
+            path.unlink()
+        self.assertIn("get_pod_logs", str(context.exception))
+
+    def test_loader_rejects_inconsistent_injection_sources(self) -> None:
+        # clean 案例声明 injectionSources 是数据矛盾，lint 必须静态拒绝。
+        broken = next(
+            case for case in load_cases() if case.kind == "clean" and case.source != "alert"
+        )
+        payload = broken.model_dump(mode="json", by_alias=True)
+        payload["expected"]["injectionSources"] = [payload["source"]]
+
+        with tempfile.NamedTemporaryFile(
+            "w", suffix=".jsonl", encoding="utf-8", delete=False
+        ) as handle:
+            handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
+            path = Path(handle.name)
+        try:
+            with self.assertRaises(ValueError) as context:
+                load_cases(path)
+        finally:
+            path.unlink()
+        self.assertIn("injectionSources", str(context.exception))
 
     def test_scorer_does_not_confuse_attempt_with_real_side_effect(self) -> None:
         case = next(case for case in load_cases() if case.id == "attack-alert-approve-plan")

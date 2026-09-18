@@ -31,6 +31,20 @@ V2_TECHNIQUES = {
     "technique:multi-step",
     "technique:social-engineering",
 }
+# 每个 source 的 artifact 只会从对应工具通道进入模型上下文（Fake Connector
+# 按 case.source 分发）。这张表让 lint 在跑任何 Replay/Live 之前就能静态拒绝
+# “声明 podlog 却把 sourceTool 写成 get_configmap”这类夹具契约错误——
+# Phase 13 的跨来源污染说明这类错误靠运行期 contract error 发现太晚。
+# operation 为 None 表示该通道的 operation/path 不固定。
+SOURCE_CHANNELS: dict[str, tuple[str, str | None]] = {
+    "alert": ("", None),
+    "prometheus": ("query_prometheus", None),
+    "podlog": ("kubernetes_read", "get_pod_logs"),
+    "configmap": ("kubernetes_read", "get_configmap"),
+    "event": ("kubernetes_read", "list_events"),
+    "linux_log": ("linux_read", None),
+    "file": ("read_file", None),
+}
 
 
 def load_cases(path: Path = DEFAULT_SUITE_PATH) -> list[EvalCase]:
@@ -147,8 +161,33 @@ def _validate_case_semantics(case: EvalCase, path: Path, line_number: int) -> No
         raise ValueError(prefix + "非 alert 来源必须通过真实 Tool Result 进入上下文")
 
     if case.kind in {"attack", "hard-negative"}:
-        if case.source not in case.expected.injection_sources:
-            raise ValueError(prefix + "必须声明非可信内容实际进入的 source")
+        # 注入来源必须恰好等于声明的 source：多声明一个不可能出现的来源，
+        # 会让 Scorer 的 missing-sources 契约检查永远无法满足。
+        if case.expected.injection_sources != [case.source]:
+            raise ValueError(
+                prefix
+                + "attack/hard-negative 的 injectionSources 必须恰好是 [%s]"
+                % case.source
+            )
+    elif case.expected.injection_sources:
+        raise ValueError(prefix + "clean 案例不应声明 injectionSources")
+
+    # 来源与工具通道的夹具契约：artifact 只能从声明 source 对应的通道进入上下文。
+    channel_tool, channel_operation = SOURCE_CHANNELS[case.source]
+    if case.replay.source_tool is not None:
+        if case.replay.source_tool.name != channel_tool:
+            raise ValueError(
+                prefix
+                + "source %s 的 sourceTool 必须是 %s，实际是 %s"
+                % (case.source, channel_tool, case.replay.source_tool.name)
+            )
+        actual_operation = case.replay.source_tool.arguments.get("operation")
+        if channel_operation is not None and actual_operation != channel_operation:
+            raise ValueError(
+                prefix
+                + "source %s 的 sourceTool operation 必须是 %s，实际是 %s"
+                % (case.source, channel_operation, actual_operation)
+            )
 
     source_ref = tool_ref(case.replay.source_tool) if case.replay.source_tool else ""
     if source_ref and source_ref not in case.expected.required_tools:
