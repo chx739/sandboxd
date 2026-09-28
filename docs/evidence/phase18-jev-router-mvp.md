@@ -6,6 +6,6 @@
 - `ModelRouter` 对高置信度使用候选；低于 0.7、非法模型等级、超时、异常分别确定性回退。异常内容不写 Trace，Trace 只记有限原因。
 - Runner 假沙箱完整调用：选 `cheap` Gateway 一次、`strong` 零次，生成 Diagnosis，Trace `effectiveTier=economy`、模型 token 用量 100/50、按夹具价格估算下游 `$0.00006` 与 Jev `$0.0000105`，沙箱释放一次。没有真实 gVisor、Jev 或 LLM。
 - `python -m agentd.router_eval`：8 条固定合成任务，等级准确 7/8、回退 2。固定经济成功 4/8、假设费用 `$0.00179`、假设平均下游延迟 526.25 ms；固定强 8/8、`$0.02136`、1207.5 ms；Fake 路由 8/8、假设总费用 `$0.016274`（下游 `$0.01619` + Jev `$0.000084`），假设总平均延迟 1070 ms（下游 1010 + Jev 60）。价格、成功与耗时全部由夹具预设，不是实测模型效果；夹具即使分类报错也假设 Jev 计费一次。
-- `python -m unittest agentd.tests.test_router -v` **4/4** 通过；此前完整 `unittest discover` **57/57** 通过。完整回归 398.759 秒主要落在 WSL `/mnt/c` 上的记忆 CLI 子进程启动，不能解释为 Jev 或下游模型时延。
+- `python -m unittest agentd.tests.test_router -v` **4/4** 通过；Jev 费用记录修复后完整 `unittest discover` **57/57** 通过。完整回归 279.838 秒主要落在 WSL `/mnt/c` 上的记忆 CLI 子进程启动，不能解释为 Jev 或下游模型时延。
 
 代码和学习路径见 [36 Jev 路由学习手册](../36-Jev模型路由学习手册.md)。Live 评测仅在新的具体服务、样本量与费用上限授权后进行。
