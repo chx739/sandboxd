@@ -4,15 +4,22 @@
 
 ## 当前状态
 
-Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费，功能继续冻结。
+Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户提出会话树、Codex 风格记忆、混合检索与 Jev 路由的下一阶段目标；目前只完成代码/环境审计与方案，功能尚未实施。
 
 当前分支：
 
-    main
+    codex/agent-memory-rag-plan（本轮方案分支；实施前重新检查 git status）
 
 当前里程碑：
 
-    Phase 5 Eval v2：V5.0–V5.4 已完成，当前无外部模型调用授权
+    下一阶段方案与环境审计；当前无外部模型调用授权
+
+## 2026-09-28 新阶段方案审计
+
+- 用户目标：Pi 风格 Session 树与分支恢复、Codex 风格分层记忆、Milvus dense + ES BM25 + RRF + BGE Reranker、TypeSafe Jev 模型路由；每项均要求最小可运行、可测评，并有持续记录与学习文档。
+- 已建立 [31 方案](31-Agent记忆检索与路由最小实现方案.md) 和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。四项均**未实现、未测评**。
+- 只读环境核对：Docker 客户端/服务端 29.2.1，Compose v5.1.0，daemon 约 23 GiB/12 CPU，当前无运行容器；WSL Python 为 3.10.12，`python3.12` 与 `uv` 不在 PATH；RTX 5060 8 GiB。没有拉镜像、下载模型、读取 Key 或调用外部 LLM。
+- 下一步：从方案 M0 开始，先备齐 Python 3.12/uv 与离线夹具；各模块依次独立实现、测评并记录证据。任何 Live 模型/Jev 调用需新的明确授权和预算；历史 DeepSeek Eval 授权已消费。
 
 ## Phase 5 Eval v2 修复重跑
 
