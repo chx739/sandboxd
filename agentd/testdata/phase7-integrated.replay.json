@@ -1,0 +1,17 @@
+{
+  "kind": "deterministic-policy-case",
+  "model": "phase7-replay-economy",
+  "responses": [
+    {
+      "content": "",
+      "toolCalls": [{
+        "id": "lookup-1",
+        "name": "search_knowledge",
+        "args": {"query": "How do I investigate a CrashLoopBackOff pod?", "topK": 1}
+      }]
+    },
+    {
+      "content": "{\"summary\":\"CrashLoopBackOff runbook found\",\"rootCause\":\"This Replay does not assert a real root cause\",\"severity\":\"info\",\"recommendation\":\"Inspect previous container logs and restart count\",\"injectionDetected\":false}"
+    }
+  ]
+}

@@ -17,14 +17,21 @@ rag = [
     "sentence-transformers==5.1.2",
     "torch==2.8.0+cpu",
 ]
+jev = ["typesafe-sdk==0.7.2"]
 
 [tool.uv]
 package = false
 
 [tool.uv.sources]
 torch = { index = "pytorch-cpu" }
+typesafe-sdk = { index = "pypi-typesafe" }
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pypi-typesafe"
+url = "https://pypi.org/simple"
 explicit = true

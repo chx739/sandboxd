@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+import json
+import math
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -30,6 +32,11 @@ class Settings:
     retrieval_queries: Path | None = None
     retrieval_embedding_dir: Path | None = None
     retrieval_reranker_dir: Path | None = None
+    router_mode: str = "off"
+    router_economy_model: str = ""
+    router_strong_model: str = ""
+    router_jev_api_key: str = ""
+    router_prices: dict[str, dict[str, float]] = field(default_factory=dict)
 
 
 def _required(name: str) -> str:
@@ -110,6 +117,27 @@ def load_settings() -> Settings:
     retrieval_queries = os.getenv("AGENTD_RETRIEVAL_QUERIES", "")
     if bool(retrieval_corpus) != bool(retrieval_queries):
         raise ValueError("检索工具必须同时配置 corpus 与 queries")
+    router_mode = os.getenv("AGENTD_ROUTER_MODE", "off")
+    if router_mode not in {"off", "jev"}:
+        raise ValueError("AGENTD_ROUTER_MODE 只能是 off 或 jev")
+    router_economy_model = os.getenv("AGENTD_ROUTER_ECONOMY_MODEL", "")
+    router_strong_model = os.getenv("AGENTD_ROUTER_STRONG_MODEL", llm_model)
+    router_jev_api_key = os.getenv("TYPESAFE_API_KEY", "") if router_mode == "jev" else ""
+    if router_mode == "jev" and (
+        mode != "live" or not router_economy_model or not router_strong_model or not router_jev_api_key
+    ):
+        raise ValueError("Jev 路由需 Live、两个下游模型和 TYPESAFE_API_KEY")
+    router_prices = json.loads(os.getenv("AGENTD_ROUTER_PRICES_JSON", "{}"))
+    if not isinstance(router_prices, dict) or set(router_prices) - {"economy", "strong"}:
+        raise ValueError("路由价格表仅允许 economy/strong")
+    for item in router_prices.values():
+        if (
+            not isinstance(item, dict)
+            or set(item) != {"inputUsdPerMillion", "outputUsdPerMillion"}
+            or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                   or not math.isfinite(value) or value < 0 for value in item.values())
+        ):
+            raise ValueError("路由价格表必须提供非负的每百万 token 美元单价")
 
     return Settings(
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),
@@ -142,4 +170,9 @@ def load_settings() -> Settings:
             "AGENTD_RETRIEVAL_RERANKER_DIR",
             str(Path.home() / ".local/share/sandboxd/models/bge-reranker-base-2cfc18c"),
         )),
+        router_mode=router_mode,
+        router_economy_model=router_economy_model,
+        router_strong_model=router_strong_model,
+        router_jev_api_key=router_jev_api_key,
+        router_prices=router_prices,
     )

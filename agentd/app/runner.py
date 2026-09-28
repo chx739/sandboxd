@@ -14,6 +14,8 @@ from .models import AgentTrace, AlertEvent, Diagnosis, sum_model_usage
 from .plugins.base import PluginContext
 from .plugins.registry import PluginRegistry, build_builtin_registry
 from .policy import MAX_CLAIM_SECONDS, MAX_RELEASE_SECONDS, MAX_TASK_SECONDS
+from .router import ModelRouter
+from .redaction import public_error
 from .runtime.control import AgentControl
 from .runtime.loop import AgentLoopState, PiStyleAgentLoop, append_event
 from .runtime.session import SessionJournal
@@ -36,6 +38,7 @@ class AgentRunner:
         linux_hosts: LinuxHostClient | None = None,
         workspace_root: Path | None = None,
         memory_store: MemoryStore | None = None,
+        model_router: ModelRouter | None = None,
     ) -> None:
         self._prometheus = prometheus
         self._sandboxd = sandboxd
@@ -45,6 +48,7 @@ class AgentRunner:
         # WSL 的 TMPDIR 可能指向 /mnt/c；DrvFS 未启用 metadata 时不能依赖 0700/0600。
         self._workspace_root = workspace_root or Path("/tmp/sandboxd-agent-workspaces")
         self._memory_store = memory_store
+        self._model_router = model_router
 
     async def run(
         self,
@@ -61,6 +65,15 @@ class AgentRunner:
         transcript_saved = False
         events = []
         append_event(events, "agent.started")
+        gateway = self._model_gateway
+        routing: dict[str, object] = {}
+        if self._model_router is not None:
+            # 只在 task 开始前路由一次；失败或低置信度由 Router 选择固定默认模型。
+            gateway, route = await self._model_router.choose(
+                public_error(alert.annotations.get("summary", ""), limit=512)
+            )
+            routing = route.as_trace()
+            append_event(events, "model.route.completed", details=routing)
         append_event(events, "sandbox.claim.started")
         claim_started = time.monotonic()
 
@@ -81,7 +94,7 @@ class AgentRunner:
                 elapsedMs=int((time.monotonic() - claim_started) * 1000),
             )
 
-            session = self._model_gateway.new_session(self._plugins.tool_schemas)
+            session = gateway.new_session(self._plugins.tool_schemas)
             state = AgentLoopState(
                 task_id=task_id,
                 alert=alert.model_dump(mode="json", by_alias=True),
@@ -138,14 +151,21 @@ class AgentRunner:
                 elapsedMs=int((time.monotonic() - release_started) * 1000),
             )
 
+            model_usage = sum_model_usage(state.model_usages)
+            if self._model_router is not None:
+                routing["estimatedModelCostUsd"] = self._model_router.estimated_model_cost(
+                    route.effective_tier, model_usage
+                )
+                routing["routerCostUsd"] = None  # Jev 价格未配置，不能假报 0。
             trace = AgentTrace(
                 taskId=task_id,
-                mode=self._model_gateway.mode,
-                model=self._model_gateway.model_name,
-                provider=self._model_gateway.provider_name,
-                capabilities=self._model_gateway.capabilities,
+                mode=gateway.mode,
+                model=gateway.model_name,
+                provider=gateway.provider_name,
+                capabilities=gateway.capabilities,
                 plugins=self._plugins.describe_plugins(),
-                modelUsage=sum_model_usage(state.model_usages),
+                modelUsage=model_usage,
+                routing=routing,
                 sandboxId=sandbox_id,
                 alertFingerprint=alert.fingerprint,
                 injectedVia=injected_via,

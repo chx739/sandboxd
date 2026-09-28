@@ -20,6 +20,7 @@ from .models import (
 )
 from .plugins import build_builtin_registry
 from .plugins.knowledge import KnowledgePlugin
+from .router import JevChoiceSource, ModelPrice, ModelRouter
 from .store import (
     ControlKind,
     QueueFullError,
@@ -65,6 +66,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
     else:
         gateway = ReplayModelGateway(cfg.replay_file)
+    model_router = None
+    if cfg.router_mode == "jev":
+        gateways = {
+            "economy": LiveModelGateway(
+                cfg.llm_base_url, cfg.router_economy_model,
+                cfg.llm_api_key, cfg.llm_thinking,
+            ),
+            "strong": LiveModelGateway(
+                cfg.llm_base_url, cfg.router_strong_model,
+                cfg.llm_api_key, cfg.llm_thinking,
+            ),
+        }
+        model_router = ModelRouter(
+            gateways, JevChoiceSource(cfg.router_jev_api_key),
+            prices={tier: ModelPrice(
+                item["inputUsdPerMillion"], item["outputUsdPerMillion"]
+            ) for tier, item in cfg.router_prices.items()},
+        )
 
     memory_store = (
         MemoryStore(cfg.memory_root, cfg.memory_project)
@@ -85,6 +104,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         linux_hosts=linux_hosts,
         workspace_root=cfg.workspace_dir,
         memory_store=memory_store,
+        model_router=model_router,
     )
     store = TaskStore(cfg.trace_dir)
 

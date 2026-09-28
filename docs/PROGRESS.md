@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1、M2 和 M3 的本地模块实现与测评已完成，下一步 M4。
+Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1–M5 的无密钥模块实现、联合 Replay 与总回归已完成，GitHub 交付待核实。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 7 M1/M2/M3 本地完成，下一步 M4 Jev 路由；当前无外部模型调用授权
+    Phase 7 M1–M5 无密钥实现与回归完成，下一步 GitHub 交付；当前无外部模型调用授权
 
 ## Phase 7 当前恢复点
 
@@ -23,7 +23,10 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 - 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 **45/45**；Session CLI 的 tree/path、Memory CLI 的 extract/rebuild/summary/rollout/forget 均通过。`memory_eval` 两条合成会话当前事实 Recall/Precision 均 2/2，冲突 1，摘要 155/256 字符。以上不等于真实 gVisor 或 Live 模型联合 E2E，也不证明自然语言记忆提取质量。
 - M3 已交付版本化 runbook JSONL、ES BM25 与 Milvus dense 双索引、RRF/BGE 本地 CPU 推理、`check/rebuild/query/eval` CLI、官方 SciFact ZIP 转换，以及 opt-in 静态 `search_knowledge` 工具。公开 SciFact 完整 5,183 篇索引、前 30 test query 消融：BM25/dense/RRF/rerank nDCG@10 分别 0.5511/0.7445/0.7931/0.7826；rerank p50 5.76 秒。详情见 [35](35-Milvus-ES-BGE混合检索学习手册.md) 和 [phase17](evidence/phase17-hybrid-retrieval-mvp.md)。这不是官方完整 300 query 榜单，也没有 Live Agent 调用。
 - M3 后 `unittest discover` 为 **53/53**；`git diff --check` 通过。完整测试中的记忆 CLI 子进程在 WSL `/mnt/c` 启动耗时较长，测试总时长 256 秒，与检索在线延迟不同。
-- 当前分支 `codex/agent-memory-rag-plan`。下一步 M4：核对 TypeSafe Jev 官方 SDK、做 task 前模型选择、Fake/Replay、回退与费用测评；先做无密钥部分。
+- M4 已按 TypeSafe 官方 Python SDK `0.7.2` 的 `Choice` API 实现 task 前静态 economy/strong 选模，0.7 置信度门、2 秒超时和强模型回退；实际 Runner 只绑定一次 Gateway。假 Client 证实 SDK 请求形状，8 条合成 Fake/Replay 成功、假设时延/费用比较和 4 个路由测试通过。所有质量、价格和时延数字都来自夹具；Jev 与下游模型 Live 尚未调用。见 [36](36-Jev模型路由学习手册.md)、[phase18](evidence/phase18-jev-router-mvp.md)。
+- M5 四模块联合无密钥 Replay 已通过：Fake Jev 选经济 Replay Gateway，记忆摘要以数据注入，`search_knowledge` 实际连接本地 ES/Milvus/BGE，Session 保存 6 节点并支持完整叶子分支，假沙箱释放一次，外部模型调用 0。见 [phase19](evidence/phase19-phase7-integrated-replay.md)。
+- Phase 7 后完整 Python 回归 **57/57**；Router 最后小改动后定向 **4/4**。完整测试耗时 398.759 秒，主要是 `/mnt/c` 上记忆 CLI 的多个 Python 子进程启动，不是检索或模型在线延迟。
+- 当前分支 `codex/agent-memory-rag-plan`。下一步提交 M4/M5、推送 GitHub 并创建 PR；Live 需新的具体服务、样本量与费用上限授权。
 - 不读取仓库外 secrets，不调用外部 LLM/Jev；在全部无密钥部分完成后，提供明确的服务、样本量和费用预算供用户授权。
 
 ## 2026-09-28 新阶段方案审计

@@ -91,3 +91,13 @@ Live Eval 只在用户单独授权数据外发后运行，Key 仅从环境变量
 本机开发 Compose 固定 Milvus `2.5.10` 和 ES `8.19.22`，BGE-small/BGE-reranker 从本地 `safetensors` 用 CPU 推理。`agentd/retrieval/cli.py` 提供 `check/rebuild/query/eval`；完整命令、模型目录和公开 SciFact 数据集见 `../docs/35-Milvus-ES-BGE混合检索学习手册.md`。
 
 Agent 默认不注册 `search_knowledge`。设定 `AGENTD_RETRIEVAL_CORPUS` 和 `AGENTD_RETRIEVAL_QUERIES` 后才注册只读工具，首次调用加载本地模型；可用 `AGENTD_RETRIEVAL_EMBEDDING_DIR`、`AGENTD_RETRIEVAL_RERANKER_DIR` 覆盖默认模型目录。工具参数由 Policy 限定，结果以 `untrusted-retrieved-evidence` 进入模型。ES 的本地 Demo 关闭认证，只绑定 localhost，不能直接用于生产环境。
+
+四模块无密钥联合演示（本地索引需先运行 `rebuild`）：
+
+    HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+      uv run --project agentd --frozen --extra rag --extra jev \
+      python -m agentd.phase7_demo
+
+## Phase 7 Jev 路由
+
+默认 `AGENTD_ROUTER_MODE=off`。可选 `jev` 模式用官方 `typesafe-sdk==0.7.2` 的 `Choice` 在 Task 开始前选静态 `economy/strong` 等级，并映射到两个已配置的下游模型；低置信度、非法返回、超时和 SDK 报错回退到 `strong`。需同时配置 Live Gateway、两个模型名与 `TYPESAFE_API_KEY`。费用估算可选 `AGENTD_ROUTER_PRICES_JSON`；未配置价格时不假报零成本。无 Key 的 `python -m agentd.router_eval` 是纯合成 Fake/Replay，不能代表真实 Jev 或下游模型质量。见 `../docs/36-Jev模型路由学习手册.md`。

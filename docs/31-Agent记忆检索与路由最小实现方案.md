@@ -1,6 +1,6 @@
 # Agent 会话树、记忆、检索与路由：最小实现方案
 
-> 2026-09-28 环境与代码审计，现作为 Phase 7 的持续方案。M1 树形 Session、M2 分层记忆、M3 Milvus 2.5.10 + ES/BGE 已完成本地模块测评；M4 Jev 仍待实施。当前事实以代码、`PROGRESS` 和各模块 evidence 为准。概念学习见 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
+> 2026-09-28 环境与代码审计，现作为 Phase 7 的持续方案。M1–M5 的无密钥模块实现、测评与联合 Replay 已完成；GitHub 交付和外部 Live 授权状态以 `PROGRESS` 为准。当前事实以代码及各模块 evidence 为准。概念学习见 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 
 ## 1. 目标与边界
 
@@ -107,7 +107,7 @@ Milvus standalone、Elasticsearch 和 BGE 同时运行会占较多资源。先�
 
 1. 先读 `GOAL.md`、`AGENTS.md`、`docs/README.md`、`docs/24-项目全景与心智模型.md`、`docs/PROGRESS.md`，再读本文和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 2. 检查 `git status`、Python/uv、`docker version`、`docker compose version`、容器与资源；不要假定 2026-09-28 的环境仍然有效。
-3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2 见 [34 分层记忆](34-Codex风格分层记忆学习手册.md)；M3 见 [35 混合检索](35-Milvus-ES-BGE混合检索学习手册.md)；M4 Jev 待完成。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
+3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2 见 [34 分层记忆](34-Codex风格分层记忆学习手册.md)；M3 见 [35 混合检索](35-Milvus-ES-BGE混合检索学习手册.md)；M4 见 [36 Jev 路由](36-Jev模型路由学习手册.md)；M5 见 [phase19 联合 Replay](evidence/phase19-phase7-integrated-replay.md)。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
 4. Replay、集成、Live 分栏记录；没有新授权不读取 Key、不向外部模型发送项目数据或 Eval 集。
 
 ## 8. 设计参考（官方原始资料）
