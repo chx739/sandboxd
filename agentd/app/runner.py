@@ -156,7 +156,7 @@ class AgentRunner:
                 routing["estimatedModelCostUsd"] = self._model_router.estimated_model_cost(
                     route.effective_tier, model_usage
                 )
-                routing["routerCostUsd"] = None  # Jev 价格未配置，不能假报 0。
+                routing["routerCostUsd"] = self._model_router.estimated_router_cost(route)
             trace = AgentTrace(
                 taskId=task_id,
                 mode=gateway.mode,

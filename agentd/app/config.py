@@ -37,6 +37,7 @@ class Settings:
     router_strong_model: str = ""
     router_jev_api_key: str = ""
     router_prices: dict[str, dict[str, float]] = field(default_factory=dict)
+    router_jev_input_usd_per_million: float | None = None
 
 
 def _required(name: str) -> str:
@@ -138,6 +139,10 @@ def load_settings() -> Settings:
                    or not math.isfinite(value) or value < 0 for value in item.values())
         ):
             raise ValueError("路由价格表必须提供非负的每百万 token 美元单价")
+    raw_jev_price = os.getenv("AGENTD_JEV_INPUT_USD_PER_MILLION", "")
+    jev_price = float(raw_jev_price) if raw_jev_price else None
+    if jev_price is not None and (not math.isfinite(jev_price) or jev_price < 0):
+        raise ValueError("Jev 输入单价必须是非负有限数字")
 
     return Settings(
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),
@@ -175,4 +180,5 @@ def load_settings() -> Settings:
         router_strong_model=router_strong_model,
         router_jev_api_key=router_jev_api_key,
         router_prices=router_prices,
+        router_jev_input_usd_per_million=jev_price,
     )

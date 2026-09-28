@@ -28,7 +28,7 @@ uv run --project agentd --frozen --extra jev python -m agentd.router_eval
 uv run --project agentd --frozen --extra jev python -m unittest agentd.tests.test_router -v
 ```
 
-`router_eval` 不调用 Jev 或任何下游 LLM，也没有读取仓库外 Key。它的 8 条任务、成功标记、token 数、模型延迟和每百万 token 单价都是**人为固定的教学夹具**。当前输出：等级匹配 7/8、回退 2 次；固定经济 4/8 成功、假设费用 `$0.00179`；固定强 8/8、`$0.02136`；Fake 路由 8/8、`$0.01619`。这只能证明路由/回退/统计公式，**不能证明 Jev 的真实分类准确率、真实任务成功率、实际延迟或节省费用**。
+`router_eval` 不调用 Jev 或任何下游 LLM，也没有读取仓库外 Key。它的 8 条任务、成功标记、token 数、模型延迟和每百万 token 单价都是**人为固定的教学夹具**。当前输出：等级匹配 7/8、回退 2 次；固定经济 4/8 成功、假设费用 `$0.00179`；固定强 8/8、`$0.02136`；Fake 路由 8/8、总假设费用 `$0.016274`（含 8 次 Jev 请求假设 `$0.000084`），假设总平均延迟 1070 ms（下游 1010 ms + Jev 60 ms）。夹具即使报错也假设 Jev 收取一次请求费用；真实失败是否计费需以账单为准。这只能证明路由/回退/统计公式，**不能证明 Jev 的真实分类准确率、真实任务成功率、实际延迟或节省费用**。
 
 ## 4. Live 配置与待授权项
 
@@ -41,9 +41,10 @@ AGENTD_ROUTER_ECONOMY_MODEL=<已配置网关上的经济模型>
 AGENTD_ROUTER_STRONG_MODEL=<同一网关上的强模型>
 TYPESAFE_API_KEY=<从仓库外安全注入>
 AGENTD_ROUTER_PRICES_JSON={"economy":{"inputUsdPerMillion":... ,"outputUsdPerMillion":...},"strong":{...}}
+AGENTD_JEV_INPUT_USD_PER_MILLION=<核实后的 Jev 每百万输入 token 美元单价>
 ```
 
-下游模型沿用项目已有 `AGENTD_LLM_BASE_URL`、`AGENTD_LLM_API_KEY` 和 Tool Calling Gateway；这些模型名、能力、单价需要在 Live 前实测或核实。价格表可不填，此时 Trace 的 `estimatedModelCostUsd` 为 `null`，不能解释为 0。Jev 自身费用也记为 `routerCostUsd=null`，直到有可核实的报价/用量；合成夹具的 `$` 不进入真实账单口径。SDK 的 `TYPESAFE_API_KEY` 只从进程环境传入，不进入 Session、Trace 或 Git。
+下游模型沿用项目已有 `AGENTD_LLM_BASE_URL`、`AGENTD_LLM_API_KEY` 和 Tool Calling Gateway；这些模型名、能力、单价需要在 Live 前实测或核实。价格表可不填，此时 Trace 的 `estimatedModelCostUsd` 为 `null`，不能解释为 0。Jev 的 `routerCostUsd` 只在配置了核实后的输入单价、且 SDK 返回输入 token 用量时估算；其余情况为 `null`。Trace 中单列 `routerInputTokens`，路由异常且没有用量的请求无法从 Trace 推断账单；合成夹具的 `$` 不进入真实账单口径。SDK 的 `TYPESAFE_API_KEY` 只从进程环境传入，不进入 Session、Trace 或 Git。
 
 Live 测评需要用户新的明确授权，单列 TypeSafe Jev 服务、下游经济/强模型、任务样本量和费用上限。建议先在合成运维问题上做小样本，按**同一批**任务比较固定经济、固定强、Jev 路由的完成质量、token 费用、p50/p95 和错误路由；即便使用真实 Jev，也不能把 Fake 结果当成测评质量。
 

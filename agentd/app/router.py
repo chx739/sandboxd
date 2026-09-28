@@ -18,6 +18,7 @@ TIERS = ("economy", "strong")
 class ChoiceJudgement:
     tier: str
     confidence: float
+    input_tokens: int | None = None
 
 
 class ChoiceSource(Protocol):
@@ -55,7 +56,9 @@ class JevChoiceSource:
                     state={"request": summary}, questions={"model_tier": question},
                 )
         answer = response.choices["model_tier"]
-        return ChoiceJudgement(str(answer.choice), float(answer.confidence))
+        raw_tokens = response.usage.input_tokens
+        tokens = raw_tokens if isinstance(raw_tokens, int) and raw_tokens >= 0 else None
+        return ChoiceJudgement(str(answer.choice), float(answer.confidence), tokens)
 
 
 class FakeChoiceSource:
@@ -79,6 +82,7 @@ class RouteDecision:
     fallback_reason: str | None
     source: str
     elapsed_ms: int
+    router_input_tokens: int | None = None
 
     def as_trace(self) -> dict[str, Any]:
         # 不记录原始请求、Key 或 SDK response body。
@@ -89,6 +93,7 @@ class RouteDecision:
             "fallbackReason": self.fallback_reason,
             "source": self.source,
             "elapsedMs": self.elapsed_ms,
+            "routerInputTokens": self.router_input_tokens,
         }
 
 
@@ -108,6 +113,7 @@ class ModelRouter:
         threshold: float = 0.7,
         timeout_seconds: float = 2.0,
         prices: Mapping[str, ModelPrice] | None = None,
+        router_input_usd_per_million: float | None = None,
     ) -> None:
         if set(gateways) != set(TIERS) or default_tier not in TIERS:
             raise ValueError("路由只允许 economy/strong 两个静态 Gateway")
@@ -119,6 +125,12 @@ class ModelRouter:
         self._threshold = threshold
         self._timeout = timeout_seconds
         self._prices = dict(prices or {})
+        self._router_input_price = router_input_usd_per_million
+        if router_input_usd_per_million is not None and (
+            not math.isfinite(router_input_usd_per_million)
+            or router_input_usd_per_million < 0
+        ):
+            raise ValueError("Jev 输入单价不合法")
         if set(self._prices) - set(TIERS) or any(
             not math.isfinite(value)
             or value < 0
@@ -136,6 +148,11 @@ class ModelRouter:
             + usage.output_tokens * price.output_usd_per_million
         ) / 1_000_000, 8)
 
+    def estimated_router_cost(self, decision: RouteDecision) -> float | None:
+        if self._router_input_price is None or decision.router_input_tokens is None:
+            return None
+        return round(decision.router_input_tokens * self._router_input_price / 1_000_000, 8)
+
     async def choose(self, summary: str) -> tuple[ModelGateway, RouteDecision]:
         started = time.monotonic()
         if not summary.strip():
@@ -145,6 +162,7 @@ class ModelRouter:
             )
         requested: str | None = None
         confidence: float | None = None
+        router_input_tokens: int | None = None
         fallback: str | None = None
         try:
             # 类型标签是应用的静态表，Jev 只返回标签和置信度。
@@ -153,6 +171,8 @@ class ModelRouter:
             )
             requested = judgement.tier if judgement.tier in TIERS else None
             confidence = judgement.confidence
+            if isinstance(judgement.input_tokens, int) and judgement.input_tokens >= 0:
+                router_input_tokens = judgement.input_tokens
             if requested is None or not math.isfinite(confidence) or not 0 <= confidence <= 1:
                 confidence = None
                 fallback = "invalid_choice"
@@ -167,5 +187,6 @@ class ModelRouter:
         decision = RouteDecision(
             requested, effective, confidence, fallback,
             self._source.source, int((time.monotonic() - started) * 1000),
+            router_input_tokens,
         )
         return self._gateways[effective], decision

@@ -26,7 +26,7 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 - M4 已按 TypeSafe 官方 Python SDK `0.7.2` 的 `Choice` API 实现 task 前静态 economy/strong 选模，0.7 置信度门、2 秒超时和强模型回退；实际 Runner 只绑定一次 Gateway。假 Client 证实 SDK 请求形状，8 条合成 Fake/Replay 成功、假设时延/费用比较和 4 个路由测试通过。所有质量、价格和时延数字都来自夹具；Jev 与下游模型 Live 尚未调用。见 [36](36-Jev模型路由学习手册.md)、[phase18](evidence/phase18-jev-router-mvp.md)。
 - M5 四模块联合无密钥 Replay 已通过：Fake Jev 选经济 Replay Gateway，记忆摘要以数据注入，`search_knowledge` 实际连接本地 ES/Milvus/BGE，Session 保存 6 节点并支持完整叶子分支，假沙箱释放一次，外部模型调用 0。见 [phase19](evidence/phase19-phase7-integrated-replay.md)。
 - Phase 7 后完整 Python 回归 **57/57**；Router 最后小改动后定向 **4/4**。完整测试耗时 398.759 秒，主要是 `/mnt/c` 上记忆 CLI 的多个 Python 子进程启动，不是检索或模型在线延迟。
-- 当前分支 `codex/agent-memory-rag-plan`。下一步提交 M4/M5、推送 GitHub 并创建 PR；Live 需新的具体服务、样本量与费用上限授权。
+- 当前分支 `codex/agent-memory-rag-plan`，M0–M5 均已本地提交。GitHub App 可读仓库但写入返回 403，本机 HTTPS Git 无凭据；等待恢复 GitHub 写入后推送并创建 PR。Live 需新的具体服务、样本量与费用上限授权。
 - 不读取仓库外 secrets，不调用外部 LLM/Jev；在全部无密钥部分完成后，提供明确的服务、样本量和费用预算供用户授权。
 
 ## 2026-09-28 新阶段方案审计

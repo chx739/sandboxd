@@ -83,6 +83,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             prices={tier: ModelPrice(
                 item["inputUsdPerMillion"], item["outputUsdPerMillion"]
             ) for tier, item in cfg.router_prices.items()},
+            router_input_usd_per_million=cfg.router_jev_input_usd_per_million,
         )
 
     memory_store = (

@@ -14,6 +14,9 @@ _PRICES = {
     "economy": ModelPrice(0.2, 0.8),
     "strong": ModelPrice(2.0, 8.0),
 }
+_ASSUMED_JEV_INPUT_TOKENS = 250
+_ASSUMED_JEV_INPUT_USD_PER_MILLION = 0.042
+_ASSUMED_JEV_LATENCY_MS = 60
 
 
 class _NoCallGateway:
@@ -36,13 +39,14 @@ async def evaluate(path: Path = _FIXTURE) -> dict[str, Any]:
     answers = {
         case["summary"]: (
             RuntimeError("fixture router failure") if case.get("fakeError")
-            else ChoiceJudgement(case["fakeChoice"], case["confidence"])
+            else ChoiceJudgement(case["fakeChoice"], case["confidence"], _ASSUMED_JEV_INPUT_TOKENS)
         )
         for case in cases
     }
     router = ModelRouter(
         {tier: _NoCallGateway(tier) for tier in _PRICES},
         FakeChoiceSource(answers), prices=_PRICES,
+        router_input_usd_per_million=_ASSUMED_JEV_INPUT_USD_PER_MILLION,
     )
     totals = {
         mode: {"success": 0, "costUsd": 0.0, "assumedDownstreamLatencyMs": 0}
@@ -67,6 +71,16 @@ async def evaluate(path: Path = _FIXTURE) -> dict[str, Any]:
         item["successRate"] = round(item["success"] / len(cases), 4)
         item["costUsd"] = round(item["costUsd"], 8)
         item["assumedDownstreamLatencyMs"] = round(item["assumedDownstreamLatencyMs"] / len(cases), 2)
+    # 夹具假设即使分类报错也计入一次 Jev 请求；真实失败计费取决于服务端账单。
+    assumed_jev_cost = round(
+        len(cases) * _ASSUMED_JEV_INPUT_TOKENS * _ASSUMED_JEV_INPUT_USD_PER_MILLION / 1_000_000,
+        8,
+    )
+    totals["routed"]["assumedJevCostUsd"] = assumed_jev_cost
+    totals["routed"]["costUsd"] = round(totals["routed"]["costUsd"] + assumed_jev_cost, 8)
+    totals["routed"]["assumedTotalLatencyMs"] = round(
+        totals["routed"]["assumedDownstreamLatencyMs"] + _ASSUMED_JEV_LATENCY_MS, 2,
+    )
     return {
         "kind": "deterministic-fixture-not-live-quality",
         "caseCount": len(cases),
@@ -75,6 +89,12 @@ async def evaluate(path: Path = _FIXTURE) -> dict[str, Any]:
         "assumedPricesUsdPerMillionTokens": {
             tier: {"input": value.input_usd_per_million, "output": value.output_usd_per_million}
             for tier, value in _PRICES.items()
+        },
+        "assumedJevPerAttempt": {
+            "inputTokens": _ASSUMED_JEV_INPUT_TOKENS,
+            "inputUsdPerMillion": _ASSUMED_JEV_INPUT_USD_PER_MILLION,
+            "latencyMs": _ASSUMED_JEV_LATENCY_MS,
+            "chargedOnFixtureError": True,
         },
         "results": totals,
         "routes": routes,
