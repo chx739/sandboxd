@@ -8,6 +8,7 @@ from ..clients import HTTPResult
 from .base import PluginContext, PluginManifest, ToolPlugin
 from .files import FileToolsPlugin
 from .kubernetes import KubernetesPlugin
+from .knowledge import KnowledgePlugin
 from .linux_host import LinuxHostPlugin
 from .memory import MemoryPlugin
 from .prometheus import PrometheusPlugin
@@ -101,7 +102,10 @@ class PluginRegistry:
         return await registered.plugin.execute(tool_name, arguments, context)
 
 
-def build_builtin_registry(memory_store: MemoryStore | None = None) -> PluginRegistry:
+def build_builtin_registry(
+    memory_store: MemoryStore | None = None,
+    knowledge_plugin: KnowledgePlugin | None = None,
+) -> PluginRegistry:
     """显式列出可信插件；代码审查可以一眼看到 Agent 的全部扩展面。"""
 
     plugins: list[ToolPlugin] = [
@@ -112,4 +116,6 @@ def build_builtin_registry(memory_store: MemoryStore | None = None) -> PluginReg
     ]
     if memory_store is not None:
         plugins.append(MemoryPlugin(memory_store))
+    if knowledge_plugin is not None:
+        plugins.append(knowledge_plugin)
     return PluginRegistry(plugins)

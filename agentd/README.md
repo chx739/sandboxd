@@ -9,6 +9,7 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
 - Linux 诊断通过静态 Target Registry 和受限 SSH Connector；
 - 五个原生文件工具只访问当前 task 私有工作区；
 - agentd 永远不持有 Operator Token。
+- Phase 7 可选注册分层记忆读取与本地 Milvus/ES/BGE 知识检索；文本始终是低信任数据。
 
 快速建立当前心智模型请先读：
 
@@ -50,7 +51,7 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
     POST /api/v1/sessions/{sessionId}/resume
     GET  /api/v1/plugins
 
-`taskId` 代表一次运行，`sessionId` 代表可 resume 的线性事故上下文；resume 会创建新 Task 和新 Sandbox。Session 写在 `AGENTD_TRACE_DIR/sessions/*.jsonl`，正文与 Tool 参数会脱敏，不保存 Header、API Key、Provider 私有字段或隐藏思维。运行目录必须使用 WSL 原生 Linux 文件系统；未启用 metadata 的 `/mnt/c` 不能依赖 0700/0600 权限。
+`taskId` 代表一次运行，`sessionId` 代表可分支的树形事故上下文；resume 会创建新 Task 和新 Sandbox。Session 写在 `AGENTD_TRACE_DIR/sessions/*.jsonl`，正文与 Tool 参数会脱敏，不保存 Header、API Key、Provider 私有字段或隐藏思维。运行目录必须使用 WSL 原生 Linux 文件系统；未启用 metadata 的 `/mnt/c` 不能依赖 0700/0600 权限。
 
 详细学习顺序见 `../docs/18-Pi-style-Agent-Runtime学习手册.md`。
 
@@ -84,3 +85,9 @@ Live Eval 只在用户单独授权数据外发后运行，Key 仅从环境变量
       --output .cache/evals/deepseek-live-v2.json
 
 2026-09-01 的全部 v1/v2 Live 授权均已完成并消费，不得把这段命令视为后续自动调用许可。来源隔离与顶层 JSON 解析修复后的正式 v2 重跑结果为 Agent ASR 1/72、Containment 1/1、副作用 0/72；见 `../docs/evidence/phase14-source-isolated-live-eval-v2.md`。Phase 12/13 保留历史缺陷与修正过程。
+
+## Phase 7 混合检索
+
+本机开发 Compose 固定 Milvus `2.5.10` 和 ES `8.19.22`，BGE-small/BGE-reranker 从本地 `safetensors` 用 CPU 推理。`agentd/retrieval/cli.py` 提供 `check/rebuild/query/eval`；完整命令、模型目录和公开 SciFact 数据集见 `../docs/35-Milvus-ES-BGE混合检索学习手册.md`。
+
+Agent 默认不注册 `search_knowledge`。设定 `AGENTD_RETRIEVAL_CORPUS` 和 `AGENTD_RETRIEVAL_QUERIES` 后才注册只读工具，首次调用加载本地模型；可用 `AGENTD_RETRIEVAL_EMBEDDING_DIR`、`AGENTD_RETRIEVAL_RERANKER_DIR` 覆盖默认模型目录。工具参数由 Policy 限定，结果以 `untrusted-retrieved-evidence` 进入模型。ES 的本地 Demo 关闭认证，只绑定 localhost，不能直接用于生产环境。

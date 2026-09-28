@@ -100,6 +100,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | Linux Host：静态 Target、strict host key、低权限双 forced-command | Phase 4 真实 SSH Replay 已实测 |
 | 原生文件：task 工作区、路径/symlink、CAS、原子写、脱敏 Trace | Phase 4 真实 Replay 与单测已实测 |
 | Prompt Injection Eval：40 条场景、覆盖标签、行为/执行边界分层 | 来源隔离后 88 Task：ASR 1/72、Containment 1/1、副作用 0/72 |
+| Phase 7 Session 树、分层记忆、混合检索 | Session/Memory 本地测评；Milvus 2.5.10 + ES/BGE 真实本机集成与 SciFact 30 条固定子集消融；Jev 待实现 |
 
 关键实测输出：
 

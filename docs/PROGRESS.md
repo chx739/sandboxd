@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1 和 M2 的本地实现与确定性测评已完成，下一步 M3。
+Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1、M2 和 M3 的本地模块实现与测评已完成，下一步 M4。
 
 当前分支：
 
@@ -12,16 +12,18 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 7 M1/M2 本地完成，下一步 M3 混合检索；当前无外部模型调用授权
+    Phase 7 M1/M2/M3 本地完成，下一步 M4 Jev 路由；当前无外部模型调用授权
 
 ## Phase 7 当前恢复点
 
 - 目标与验收已写入 `GOAL.md`、`AGENTS.md`、`docs/31`。实施顺序：M1 Session 树 → M2 分层记忆 → M3 混合检索 → M4 Jev 路由 → M5 联合测评与文档。
-- 当前 Python 环境已核实：`uv run --project agentd --frozen -- python --version` 为 3.12.14。Docker 镜像清单有其他项目的 Milvus 2.5.10，但没有目标版本 2.6.20；不得清理或挪用其他项目资源。之前的 Milvus pull 没有完成证据。
+- 当前 Python 环境已核实：3.12.14、uv 0.12.19；`agentd/uv.lock` 含可选 rag 依赖。用户指定 Milvus 2.5.10，本项目 `sandboxd-rag` Compose 的 Milvus 2.5.10、ES 8.19.22、etcd、MinIO 四容器 healthy；不触碰其他项目资源。
 - M1 已交付 `runtime/session.py` 的消息节点/父链/活动叶子、完整 Turn 分支、旧线性快照迁移与断尾修复；`store.py` 恢复创建新 task，API 和 `session_cli.py` 可列树/读路径/分支。合成夹具在 `agentd/testdata/session-tree-demo/`，学习文档为 [33](33-树形Session与分支恢复学习手册.md)。
 - M2 已交付 `memory.py` 两阶段文件记忆、显式提取/重建/遗忘 CLI、合成 `memory_eval`、可选启动摘要与静态只读 `read_memory` 工具。只提取成功结束 Session 的活动路径，事实保留来源/时间/历史冲突。学习文档 [34](34-Codex风格分层记忆学习手册.md)，证据 [phase16](evidence/phase16-memory-mvp.md)。
 - 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 **45/45**；Session CLI 的 tree/path、Memory CLI 的 extract/rebuild/summary/rollout/forget 均通过。`memory_eval` 两条合成会话当前事实 Recall/Precision 均 2/2，冲突 1，摘要 155/256 字符。以上不等于真实 gVisor 或 Live 模型联合 E2E，也不证明自然语言记忆提取质量。
-- 当前分支 `codex/agent-memory-rag-plan`。下一步 M3：复核 Docker/镜像实际状态，建立版本化语料、ES BM25 与 Milvus dense 双索引、RRF/BGE、消融测评；先做无密钥部分。
+- M3 已交付版本化 runbook JSONL、ES BM25 与 Milvus dense 双索引、RRF/BGE 本地 CPU 推理、`check/rebuild/query/eval` CLI、官方 SciFact ZIP 转换，以及 opt-in 静态 `search_knowledge` 工具。公开 SciFact 完整 5,183 篇索引、前 30 test query 消融：BM25/dense/RRF/rerank nDCG@10 分别 0.5511/0.7445/0.7931/0.7826；rerank p50 5.76 秒。详情见 [35](35-Milvus-ES-BGE混合检索学习手册.md) 和 [phase17](evidence/phase17-hybrid-retrieval-mvp.md)。这不是官方完整 300 query 榜单，也没有 Live Agent 调用。
+- M3 后 `unittest discover` 为 **53/53**；`git diff --check` 通过。完整测试中的记忆 CLI 子进程在 WSL `/mnt/c` 启动耗时较长，测试总时长 256 秒，与检索在线延迟不同。
+- 当前分支 `codex/agent-memory-rag-plan`。下一步 M4：核对 TypeSafe Jev 官方 SDK、做 task 前模型选择、Fake/Replay、回退与费用测评；先做无密钥部分。
 - 不读取仓库外 secrets，不调用外部 LLM/Jev；在全部无密钥部分完成后，提供明确的服务、样本量和费用预算供用户授权。
 
 ## 2026-09-28 新阶段方案审计

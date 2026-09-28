@@ -170,6 +170,23 @@ def validate_tool_call(
         result["reason"] = "read_memory 只接受 detail 或合法 Session 的 rollout"
         return result
 
+    if name == "search_knowledge":
+        query = arguments.get("query")
+        top_k = arguments.get("topK", 3)
+        if (
+            not set(arguments) <= {"query", "topK"}
+            or not isinstance(query, str)
+            or not query.strip()
+            or len(query.encode("utf-8")) > 512
+            or isinstance(top_k, bool)
+            or not isinstance(top_k, int)
+            or not 1 <= top_k <= 3
+        ):
+            result["reason"] = "search_knowledge 只接受有界 query 和 topK 1..3"
+            return result
+        result["allowed"] = True
+        return result
+
     if name in FILE_KEYS:
         if not set(arguments) <= FILE_KEYS[name]:
             result["reason"] = "%s 包含未知字段" % name

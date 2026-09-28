@@ -11,5 +11,20 @@ dependencies = [
     "uvicorn==0.52.4",
 ]
 
+[project.optional-dependencies]
+rag = [
+    "pymilvus==2.5.6",
+    "sentence-transformers==5.1.2",
+    "torch==2.8.0+cpu",
+]
+
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

@@ -26,6 +26,10 @@ class Settings:
     workspace_dir: Path | None = None
     memory_root: Path | None = None
     memory_project: str = "sandboxd"
+    retrieval_corpus: Path | None = None
+    retrieval_queries: Path | None = None
+    retrieval_embedding_dir: Path | None = None
+    retrieval_reranker_dir: Path | None = None
 
 
 def _required(name: str) -> str:
@@ -102,6 +106,10 @@ def load_settings() -> Settings:
     )
     memory_root_value = os.getenv("AGENTD_MEMORY_ROOT", "")
     memory_project = os.getenv("AGENTD_MEMORY_PROJECT", "sandboxd")
+    retrieval_corpus = os.getenv("AGENTD_RETRIEVAL_CORPUS", "")
+    retrieval_queries = os.getenv("AGENTD_RETRIEVAL_QUERIES", "")
+    if bool(retrieval_corpus) != bool(retrieval_queries):
+        raise ValueError("检索工具必须同时配置 corpus 与 queries")
 
     return Settings(
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),
@@ -124,4 +132,14 @@ def load_settings() -> Settings:
         workspace_dir=Path(workspace_value),
         memory_root=Path(memory_root_value) if memory_root_value else None,
         memory_project=memory_project,
+        retrieval_corpus=Path(retrieval_corpus) if retrieval_corpus else None,
+        retrieval_queries=Path(retrieval_queries) if retrieval_queries else None,
+        retrieval_embedding_dir=Path(os.getenv(
+            "AGENTD_RETRIEVAL_EMBEDDING_DIR",
+            str(Path.home() / ".local/share/sandboxd/models/bge-small-en-v1.5-5c38ec7"),
+        )),
+        retrieval_reranker_dir=Path(os.getenv(
+            "AGENTD_RETRIEVAL_RERANKER_DIR",
+            str(Path.home() / ".local/share/sandboxd/models/bge-reranker-base-2cfc18c"),
+        )),
     )

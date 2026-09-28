@@ -1,6 +1,6 @@
 # Agent 会话树、记忆、检索与路由：最小实现方案
 
-> 2026-09-28 环境与代码审计，现作为 Phase 7 的持续方案。M1 树形 Session 和 M2 分层记忆已完成本地确定性测评；M3–M4 仍待实施。当前事实以代码、`PROGRESS` 和各模块 evidence 为准。概念学习见 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
+> 2026-09-28 环境与代码审计，现作为 Phase 7 的持续方案。M1 树形 Session、M2 分层记忆、M3 Milvus 2.5.10 + ES/BGE 已完成本地模块测评；M4 Jev 仍待实施。当前事实以代码、`PROGRESS` 和各模块 evidence 为准。概念学习见 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 
 ## 1. 目标与边界
 
@@ -38,7 +38,7 @@
 | Python | 系统 `python3` 是 3.10.12；`python3.12` 和 `uv` 当前不在 PATH | `agentd/pyproject.toml` 要求 `>=3.12,<3.13`，需用户态安装解释器与 uv，或使用合适的隔离容器 |
 | 数据目录 | 仓库位于 `/mnt/c` | Session/记忆文件的 0700/0600 权限不能依赖未启用 metadata 的 DrvFS；运行时数据放 WSL 原生文件系统，Docker 数据用命名卷或原生 Linux 路径 |
 
-后续已安装用户态 `uv 0.12.19`、Python 3.12.14，并按原 `agentd/uv.lock` 同步依赖；Docker `hello-world` 已运行。Milvus 目标版本镜像没有完成拉取证据，不能把本机已有的其他项目 Milvus 2.5.10 镜像当成本阶段集成结果。
+后续已安装用户态 `uv 0.12.19`、Python 3.12.14，并按 `agentd/uv.lock` 同步依赖；Docker `hello-world` 已运行。用户指定 Milvus **2.5.10**，本项目独立 Compose 的 2.5.10/ES 已 healthy 且实际建索引与测评；固定版本、资源和结果见 [phase17](evidence/phase17-hybrid-retrieval-mvp.md)。
 
 不需要 WSL 密码或 sudo 来完成计划与用户态 Python 安装。尚未读取任何 API Key；仓库外 `secrets/` 不进入本阶段审计。
 
@@ -107,7 +107,7 @@ Milvus standalone、Elasticsearch 和 BGE 同时运行会占较多资源。先�
 
 1. 先读 `GOAL.md`、`AGENTS.md`、`docs/README.md`、`docs/24-项目全景与心智模型.md`、`docs/PROGRESS.md`，再读本文和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 2. 检查 `git status`、Python/uv、`docker version`、`docker compose version`、容器与资源；不要假定 2026-09-28 的环境仍然有效。
-3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2 见 [34 分层记忆](34-Codex风格分层记忆学习手册.md)；M3–M4 仍未完成。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
+3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2 见 [34 分层记忆](34-Codex风格分层记忆学习手册.md)；M3 见 [35 混合检索](35-Milvus-ES-BGE混合检索学习手册.md)；M4 Jev 待完成。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
 4. Replay、集成、Live 分栏记录；没有新授权不读取 Key、不向外部模型发送项目数据或 Eval 集。
 
 ## 8. 设计参考（官方原始资料）

@@ -19,6 +19,7 @@ from .models import (
     ManualTaskRequest,
 )
 from .plugins import build_builtin_registry
+from .plugins.knowledge import KnowledgePlugin
 from .store import (
     ControlKind,
     QueueFullError,
@@ -69,7 +70,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         MemoryStore(cfg.memory_root, cfg.memory_project)
         if cfg.memory_root is not None else None
     )
-    plugins = build_builtin_registry(memory_store)
+    knowledge_plugin = (
+        KnowledgePlugin(
+            cfg.retrieval_corpus, cfg.retrieval_queries,
+            cfg.retrieval_embedding_dir, cfg.retrieval_reranker_dir,
+        ) if cfg.retrieval_corpus is not None else None
+    )
+    plugins = build_builtin_registry(memory_store, knowledge_plugin)
     runner = AgentRunner(
         prometheus,
         sandboxd,
@@ -94,6 +101,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 pass
             await prometheus.close()
             await sandboxd.close()
+            if knowledge_plugin is not None:
+                knowledge_plugin.close()
 
     app = FastAPI(
         title="sandboxd agentd",
