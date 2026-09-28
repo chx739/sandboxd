@@ -1,0 +1,4506 @@
+{
+  "kind": "real-opensearch-synthetic-logs-independent-oracle",
+  "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+  "recordCount": 720,
+  "queryCount": 40,
+  "passed": 40,
+  "p50Ms": 3.38,
+  "p95Ms": 9.21,
+  "cases": [
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "limit": 5,
+        "service": "checkout",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-01",
+      "kind": "service",
+      "question": "查询 checkout 最早5条日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 240,
+        "ids": [
+          "log-00-checkout-0",
+          "log-00-checkout-1",
+          "log-00-checkout-2",
+          "log-00-checkout-3",
+          "log-01-checkout-0"
+        ],
+        "truncated": true
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "checkout",
+          "limit": 5
+        },
+        "total": 240,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-00-checkout-0",
+            "timestamp": "2026-09-01T00:00:00Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-checkout-1",
+            "timestamp": "2026-09-01T00:00:10Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-checkout-2",
+            "timestamp": "2026-09-01T00:00:20Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-checkout-3",
+            "timestamp": "2026-09-01T00:00:30Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-01-checkout-0",
+            "timestamp": "2026-09-01T00:01:00Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-01-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": true
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 25.198
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:30:00Z",
+        "level": "ERROR",
+        "service": "checkout",
+        "start": "2026-09-01T00:15:00Z"
+      },
+      "caseId": "logs-02",
+      "kind": "errors",
+      "question": "查询 checkout 在00:15至00:30的错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-checkout-0",
+          "log-16-checkout-0",
+          "log-17-checkout-0",
+          "log-18-checkout-0",
+          "log-19-checkout-0",
+          "log-20-checkout-0",
+          "log-21-checkout-0",
+          "log-22-checkout-0",
+          "log-23-checkout-0",
+          "log-24-checkout-0",
+          "log-25-checkout-0",
+          "log-26-checkout-0",
+          "log-27-checkout-0",
+          "log-28-checkout-0",
+          "log-29-checkout-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:15:00Z",
+          "end": "2026-09-01T00:30:00Z",
+          "service": "checkout",
+          "level": "ERROR",
+          "limit": 20
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-checkout-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-15-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-checkout-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-16-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-checkout-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-17-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-checkout-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-18-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-checkout-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-19-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-checkout-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-20-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-checkout-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-21-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-checkout-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-22-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-checkout-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-23-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-checkout-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-24-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-checkout-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-25-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-checkout-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-26-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-checkout-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-27-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-checkout-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-28-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-checkout-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-29-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 9.215
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:16:00Z",
+        "service": "checkout",
+        "start": "2026-09-01T00:15:00Z"
+      },
+      "caseId": "logs-03",
+      "kind": "boundary",
+      "question": "查询 checkout 00:15至00:16的日志，右端点不包含",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 4,
+        "ids": [
+          "log-15-checkout-0",
+          "log-15-checkout-1",
+          "log-15-checkout-2",
+          "log-15-checkout-3"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:15:00Z",
+          "end": "2026-09-01T00:16:00Z",
+          "service": "checkout",
+          "limit": 20
+        },
+        "total": 4,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-checkout-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-15-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 4.15
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "level": "ERROR",
+        "service": "checkout",
+        "start": "2026-09-01T00:30:00Z"
+      },
+      "caseId": "logs-04",
+      "kind": "empty",
+      "question": "查询 checkout 00:30之后错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 0,
+        "ids": [],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:30:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "checkout",
+          "level": "ERROR",
+          "limit": 20
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.439
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "level",
+        "service": "checkout",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-05",
+      "kind": "count",
+      "question": "统计 checkout 各级别日志数",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 240,
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 15
+          },
+          {
+            "key": "INFO",
+            "count": 225
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "checkout",
+          "limit": 20,
+          "group_by": "level",
+          "metric": "count"
+        },
+        "total": 240,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 15
+          },
+          {
+            "key": "INFO",
+            "count": 225
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 4.758
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "minute",
+        "level": "ERROR",
+        "service": "checkout",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-06",
+      "kind": "timeline",
+      "question": "统计 checkout 的每分钟错误数",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 15,
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 1
+          },
+          {
+            "key": 1788221760000,
+            "count": 1
+          },
+          {
+            "key": 1788221820000,
+            "count": 1
+          },
+          {
+            "key": 1788221880000,
+            "count": 1
+          },
+          {
+            "key": 1788221940000,
+            "count": 1
+          },
+          {
+            "key": 1788222000000,
+            "count": 1
+          },
+          {
+            "key": 1788222060000,
+            "count": 1
+          },
+          {
+            "key": 1788222120000,
+            "count": 1
+          },
+          {
+            "key": 1788222180000,
+            "count": 1
+          },
+          {
+            "key": 1788222240000,
+            "count": 1
+          },
+          {
+            "key": 1788222300000,
+            "count": 1
+          },
+          {
+            "key": 1788222360000,
+            "count": 1
+          },
+          {
+            "key": 1788222420000,
+            "count": 1
+          },
+          {
+            "key": 1788222480000,
+            "count": 1
+          },
+          {
+            "key": 1788222540000,
+            "count": 1
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "checkout",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "minute",
+          "metric": "count"
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 1
+          },
+          {
+            "key": 1788221760000,
+            "count": 1
+          },
+          {
+            "key": 1788221820000,
+            "count": 1
+          },
+          {
+            "key": 1788221880000,
+            "count": 1
+          },
+          {
+            "key": 1788221940000,
+            "count": 1
+          },
+          {
+            "key": 1788222000000,
+            "count": 1
+          },
+          {
+            "key": 1788222060000,
+            "count": 1
+          },
+          {
+            "key": 1788222120000,
+            "count": 1
+          },
+          {
+            "key": 1788222180000,
+            "count": 1
+          },
+          {
+            "key": 1788222240000,
+            "count": 1
+          },
+          {
+            "key": 1788222300000,
+            "count": 1
+          },
+          {
+            "key": 1788222360000,
+            "count": 1
+          },
+          {
+            "key": 1788222420000,
+            "count": 1
+          },
+          {
+            "key": 1788222480000,
+            "count": 1
+          },
+          {
+            "key": 1788222540000,
+            "count": 1
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 12.211
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "limit": 5,
+        "service": "payments",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-07",
+      "kind": "service",
+      "question": "查询 payments 最早5条日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 240,
+        "ids": [
+          "log-00-payments-0",
+          "log-00-payments-1",
+          "log-00-payments-2",
+          "log-00-payments-3",
+          "log-01-payments-0"
+        ],
+        "truncated": true
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "payments",
+          "limit": 5
+        },
+        "total": 240,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-00-payments-0",
+            "timestamp": "2026-09-01T00:00:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-payments-1",
+            "timestamp": "2026-09-01T00:00:10Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-payments-2",
+            "timestamp": "2026-09-01T00:00:20Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-payments-3",
+            "timestamp": "2026-09-01T00:00:30Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-01-payments-0",
+            "timestamp": "2026-09-01T00:01:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-01-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": true
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 4.108
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:30:00Z",
+        "level": "ERROR",
+        "service": "payments",
+        "start": "2026-09-01T00:15:00Z"
+      },
+      "caseId": "logs-08",
+      "kind": "errors",
+      "question": "查询 payments 在00:15至00:30的错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-payments-0",
+          "log-16-payments-0",
+          "log-17-payments-0",
+          "log-18-payments-0",
+          "log-19-payments-0",
+          "log-20-payments-0",
+          "log-21-payments-0",
+          "log-22-payments-0",
+          "log-23-payments-0",
+          "log-24-payments-0",
+          "log-25-payments-0",
+          "log-26-payments-0",
+          "log-27-payments-0",
+          "log-28-payments-0",
+          "log-29-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:15:00Z",
+          "end": "2026-09-01T00:30:00Z",
+          "service": "payments",
+          "level": "ERROR",
+          "limit": 20
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-16-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-payments-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-17-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-payments-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-18-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-payments-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-19-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-payments-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-20-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-payments-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-21-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-payments-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-22-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-payments-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-23-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-payments-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-24-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-payments-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-25-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-payments-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-26-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-payments-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-27-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-payments-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-28-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-payments-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-29-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 7.211
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:16:00Z",
+        "service": "payments",
+        "start": "2026-09-01T00:15:00Z"
+      },
+      "caseId": "logs-09",
+      "kind": "boundary",
+      "question": "查询 payments 00:15至00:16的日志，右端点不包含",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 4,
+        "ids": [
+          "log-15-payments-0",
+          "log-15-payments-1",
+          "log-15-payments-2",
+          "log-15-payments-3"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:15:00Z",
+          "end": "2026-09-01T00:16:00Z",
+          "service": "payments",
+          "limit": 20
+        },
+        "total": 4,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.508
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "level": "ERROR",
+        "service": "payments",
+        "start": "2026-09-01T00:30:00Z"
+      },
+      "caseId": "logs-10",
+      "kind": "empty",
+      "question": "查询 payments 00:30之后错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 0,
+        "ids": [],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:30:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "payments",
+          "level": "ERROR",
+          "limit": 20
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.151
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "level",
+        "service": "payments",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-11",
+      "kind": "count",
+      "question": "统计 payments 各级别日志数",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 240,
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 15
+          },
+          {
+            "key": "INFO",
+            "count": 225
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "payments",
+          "limit": 20,
+          "group_by": "level",
+          "metric": "count"
+        },
+        "total": 240,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 15
+          },
+          {
+            "key": "INFO",
+            "count": 225
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 3.644
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "minute",
+        "level": "ERROR",
+        "service": "payments",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-12",
+      "kind": "timeline",
+      "question": "统计 payments 的每分钟错误数",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 15,
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 1
+          },
+          {
+            "key": 1788221760000,
+            "count": 1
+          },
+          {
+            "key": 1788221820000,
+            "count": 1
+          },
+          {
+            "key": 1788221880000,
+            "count": 1
+          },
+          {
+            "key": 1788221940000,
+            "count": 1
+          },
+          {
+            "key": 1788222000000,
+            "count": 1
+          },
+          {
+            "key": 1788222060000,
+            "count": 1
+          },
+          {
+            "key": 1788222120000,
+            "count": 1
+          },
+          {
+            "key": 1788222180000,
+            "count": 1
+          },
+          {
+            "key": 1788222240000,
+            "count": 1
+          },
+          {
+            "key": 1788222300000,
+            "count": 1
+          },
+          {
+            "key": 1788222360000,
+            "count": 1
+          },
+          {
+            "key": 1788222420000,
+            "count": 1
+          },
+          {
+            "key": 1788222480000,
+            "count": 1
+          },
+          {
+            "key": 1788222540000,
+            "count": 1
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "payments",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "minute",
+          "metric": "count"
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 1
+          },
+          {
+            "key": 1788221760000,
+            "count": 1
+          },
+          {
+            "key": 1788221820000,
+            "count": 1
+          },
+          {
+            "key": 1788221880000,
+            "count": 1
+          },
+          {
+            "key": 1788221940000,
+            "count": 1
+          },
+          {
+            "key": 1788222000000,
+            "count": 1
+          },
+          {
+            "key": 1788222060000,
+            "count": 1
+          },
+          {
+            "key": 1788222120000,
+            "count": 1
+          },
+          {
+            "key": 1788222180000,
+            "count": 1
+          },
+          {
+            "key": 1788222240000,
+            "count": 1
+          },
+          {
+            "key": 1788222300000,
+            "count": 1
+          },
+          {
+            "key": 1788222360000,
+            "count": 1
+          },
+          {
+            "key": 1788222420000,
+            "count": 1
+          },
+          {
+            "key": 1788222480000,
+            "count": 1
+          },
+          {
+            "key": 1788222540000,
+            "count": 1
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 3.023
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "limit": 5,
+        "service": "catalog",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-13",
+      "kind": "service",
+      "question": "查询 catalog 最早5条日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 240,
+        "ids": [
+          "log-00-catalog-0",
+          "log-00-catalog-1",
+          "log-00-catalog-2",
+          "log-00-catalog-3",
+          "log-01-catalog-0"
+        ],
+        "truncated": true
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "catalog",
+          "limit": 5
+        },
+        "total": 240,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-00-catalog-0",
+            "timestamp": "2026-09-01T00:00:00Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-catalog-1",
+            "timestamp": "2026-09-01T00:00:10Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-catalog-2",
+            "timestamp": "2026-09-01T00:00:20Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-catalog-3",
+            "timestamp": "2026-09-01T00:00:30Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-01-catalog-0",
+            "timestamp": "2026-09-01T00:01:00Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-01-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": true
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.494
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:30:00Z",
+        "level": "ERROR",
+        "service": "catalog",
+        "start": "2026-09-01T00:15:00Z"
+      },
+      "caseId": "logs-14",
+      "kind": "errors",
+      "question": "查询 catalog 在00:15至00:30的错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-catalog-0",
+          "log-16-catalog-0",
+          "log-17-catalog-0",
+          "log-18-catalog-0",
+          "log-19-catalog-0",
+          "log-20-catalog-0",
+          "log-21-catalog-0",
+          "log-22-catalog-0",
+          "log-23-catalog-0",
+          "log-24-catalog-0",
+          "log-25-catalog-0",
+          "log-26-catalog-0",
+          "log-27-catalog-0",
+          "log-28-catalog-0",
+          "log-29-catalog-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:15:00Z",
+          "end": "2026-09-01T00:30:00Z",
+          "service": "catalog",
+          "level": "ERROR",
+          "limit": 20
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-catalog-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-15-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-catalog-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-16-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-catalog-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-17-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-catalog-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-18-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-catalog-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-19-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-catalog-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-20-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-catalog-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-21-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-catalog-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-22-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-catalog-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-23-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-catalog-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-24-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-catalog-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-25-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-catalog-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-26-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-catalog-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-27-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-catalog-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-28-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-catalog-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-29-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.503
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:16:00Z",
+        "service": "catalog",
+        "start": "2026-09-01T00:15:00Z"
+      },
+      "caseId": "logs-15",
+      "kind": "boundary",
+      "question": "查询 catalog 00:15至00:16的日志，右端点不包含",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 4,
+        "ids": [
+          "log-15-catalog-0",
+          "log-15-catalog-1",
+          "log-15-catalog-2",
+          "log-15-catalog-3"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:15:00Z",
+          "end": "2026-09-01T00:16:00Z",
+          "service": "catalog",
+          "limit": 20
+        },
+        "total": 4,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-catalog-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-15-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-catalog-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-catalog-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-catalog-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.978
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "level": "ERROR",
+        "service": "catalog",
+        "start": "2026-09-01T00:30:00Z"
+      },
+      "caseId": "logs-16",
+      "kind": "empty",
+      "question": "查询 catalog 00:30之后错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 0,
+        "ids": [],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:30:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "catalog",
+          "level": "ERROR",
+          "limit": 20
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.734
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "level",
+        "service": "catalog",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-17",
+      "kind": "count",
+      "question": "统计 catalog 各级别日志数",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 240,
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 15
+          },
+          {
+            "key": "INFO",
+            "count": 225
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "catalog",
+          "limit": 20,
+          "group_by": "level",
+          "metric": "count"
+        },
+        "total": 240,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 15
+          },
+          {
+            "key": "INFO",
+            "count": 225
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 3.448
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "minute",
+        "level": "ERROR",
+        "service": "catalog",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-18",
+      "kind": "timeline",
+      "question": "统计 catalog 的每分钟错误数",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 15,
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 1
+          },
+          {
+            "key": 1788221760000,
+            "count": 1
+          },
+          {
+            "key": 1788221820000,
+            "count": 1
+          },
+          {
+            "key": 1788221880000,
+            "count": 1
+          },
+          {
+            "key": 1788221940000,
+            "count": 1
+          },
+          {
+            "key": 1788222000000,
+            "count": 1
+          },
+          {
+            "key": 1788222060000,
+            "count": 1
+          },
+          {
+            "key": 1788222120000,
+            "count": 1
+          },
+          {
+            "key": 1788222180000,
+            "count": 1
+          },
+          {
+            "key": 1788222240000,
+            "count": 1
+          },
+          {
+            "key": 1788222300000,
+            "count": 1
+          },
+          {
+            "key": 1788222360000,
+            "count": 1
+          },
+          {
+            "key": 1788222420000,
+            "count": 1
+          },
+          {
+            "key": 1788222480000,
+            "count": 1
+          },
+          {
+            "key": 1788222540000,
+            "count": 1
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "catalog",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "minute",
+          "metric": "count"
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 1
+          },
+          {
+            "key": 1788221760000,
+            "count": 1
+          },
+          {
+            "key": 1788221820000,
+            "count": 1
+          },
+          {
+            "key": 1788221880000,
+            "count": 1
+          },
+          {
+            "key": 1788221940000,
+            "count": 1
+          },
+          {
+            "key": 1788222000000,
+            "count": 1
+          },
+          {
+            "key": 1788222060000,
+            "count": 1
+          },
+          {
+            "key": 1788222120000,
+            "count": 1
+          },
+          {
+            "key": 1788222180000,
+            "count": 1
+          },
+          {
+            "key": 1788222240000,
+            "count": 1
+          },
+          {
+            "key": 1788222300000,
+            "count": 1
+          },
+          {
+            "key": 1788222360000,
+            "count": 1
+          },
+          {
+            "key": 1788222420000,
+            "count": 1
+          },
+          {
+            "key": 1788222480000,
+            "count": 1
+          },
+          {
+            "key": 1788222540000,
+            "count": 1
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 3.225
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "start": "2026-09-01T00:00:00Z",
+        "trace_id": "trace-00-0"
+      },
+      "caseId": "logs-19",
+      "kind": "trace",
+      "question": "查询 trace-00-0 关联日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 3,
+        "ids": [
+          "log-00-catalog-0",
+          "log-00-checkout-0",
+          "log-00-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "trace_id": "trace-00-0",
+          "limit": 20
+        },
+        "total": 3,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-00-catalog-0",
+            "timestamp": "2026-09-01T00:00:00Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-checkout-0",
+            "timestamp": "2026-09-01T00:00:00Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-00-payments-0",
+            "timestamp": "2026-09-01T00:00:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-00-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.809
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "start": "2026-09-01T00:00:00Z",
+        "trace_id": "trace-14-0"
+      },
+      "caseId": "logs-20",
+      "kind": "trace",
+      "question": "查询 trace-14-0 关联日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 3,
+        "ids": [
+          "log-14-catalog-0",
+          "log-14-checkout-0",
+          "log-14-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "trace_id": "trace-14-0",
+          "limit": 20
+        },
+        "total": 3,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-14-catalog-0",
+            "timestamp": "2026-09-01T00:14:00Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-14-checkout-0",
+            "timestamp": "2026-09-01T00:14:00Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-14-payments-0",
+            "timestamp": "2026-09-01T00:14:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.654
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "start": "2026-09-01T00:00:00Z",
+        "trace_id": "trace-15-0"
+      },
+      "caseId": "logs-21",
+      "kind": "trace",
+      "question": "查询 trace-15-0 关联日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 3,
+        "ids": [
+          "log-15-catalog-0",
+          "log-15-checkout-0",
+          "log-15-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "trace_id": "trace-15-0",
+          "limit": 20
+        },
+        "total": 3,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-catalog-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-15-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-15-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.772
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "start": "2026-09-01T00:00:00Z",
+        "trace_id": "trace-29-0"
+      },
+      "caseId": "logs-22",
+      "kind": "trace",
+      "question": "查询 trace-29-0 关联日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 3,
+        "ids": [
+          "log-29-catalog-0",
+          "log-29-checkout-0",
+          "log-29-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "trace_id": "trace-29-0",
+          "limit": 20
+        },
+        "total": 3,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-29-catalog-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-29-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-checkout-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-29-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-payments-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-29-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.712
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "start": "2026-09-01T00:00:00Z",
+        "trace_id": "trace-30-0"
+      },
+      "caseId": "logs-23",
+      "kind": "trace",
+      "question": "查询 trace-30-0 关联日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 3,
+        "ids": [
+          "log-30-catalog-0",
+          "log-30-checkout-0",
+          "log-30-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "trace_id": "trace-30-0",
+          "limit": 20
+        },
+        "total": 3,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-30-catalog-0",
+            "timestamp": "2026-09-01T00:30:00Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-30-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-30-checkout-0",
+            "timestamp": "2026-09-01T00:30:00Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-30-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-30-payments-0",
+            "timestamp": "2026-09-01T00:30:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-30-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.129
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "start": "2026-09-01T00:00:00Z",
+        "trace_id": "trace-59-0"
+      },
+      "caseId": "logs-24",
+      "kind": "trace",
+      "question": "查询 trace-59-0 关联日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 3,
+        "ids": [
+          "log-59-catalog-0",
+          "log-59-checkout-0",
+          "log-59-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "trace_id": "trace-59-0",
+          "limit": 20
+        },
+        "total": 3,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-59-catalog-0",
+            "timestamp": "2026-09-01T00:59:00Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-59-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-59-checkout-0",
+            "timestamp": "2026-09-01T00:59:00Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-59-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-59-payments-0",
+            "timestamp": "2026-09-01T00:59:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-59-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.841
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "error_code": "CONNECTION_REFUSED",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-25",
+      "kind": "error_code",
+      "question": "查询 CONNECTION_REFUSED 日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-checkout-0",
+          "log-16-checkout-0",
+          "log-17-checkout-0",
+          "log-18-checkout-0",
+          "log-19-checkout-0",
+          "log-20-checkout-0",
+          "log-21-checkout-0",
+          "log-22-checkout-0",
+          "log-23-checkout-0",
+          "log-24-checkout-0",
+          "log-25-checkout-0",
+          "log-26-checkout-0",
+          "log-27-checkout-0",
+          "log-28-checkout-0",
+          "log-29-checkout-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "error_code": "CONNECTION_REFUSED",
+          "limit": 20
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-checkout-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-15-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-checkout-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-16-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-checkout-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-17-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-checkout-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-18-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-checkout-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-19-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-checkout-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-20-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-checkout-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-21-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-checkout-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-22-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-checkout-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-23-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-checkout-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-24-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-checkout-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-25-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-checkout-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-26-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-checkout-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-27-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-checkout-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-28-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-checkout-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-29-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.57
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "error_code": "OOM_KILLED",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-26",
+      "kind": "error_code",
+      "question": "查询 OOM_KILLED 日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-payments-0",
+          "log-16-payments-0",
+          "log-17-payments-0",
+          "log-18-payments-0",
+          "log-19-payments-0",
+          "log-20-payments-0",
+          "log-21-payments-0",
+          "log-22-payments-0",
+          "log-23-payments-0",
+          "log-24-payments-0",
+          "log-25-payments-0",
+          "log-26-payments-0",
+          "log-27-payments-0",
+          "log-28-payments-0",
+          "log-29-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "error_code": "OOM_KILLED",
+          "limit": 20
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-16-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-payments-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-17-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-payments-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-18-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-payments-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-19-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-payments-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-20-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-payments-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-21-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-payments-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-22-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-payments-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-23-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-payments-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-24-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-payments-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-25-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-payments-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-26-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-payments-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-27-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-payments-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-28-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-payments-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-29-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.626
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "error_code": "READINESS_FAILED",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-27",
+      "kind": "error_code",
+      "question": "查询 READINESS_FAILED 日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-catalog-0",
+          "log-16-catalog-0",
+          "log-17-catalog-0",
+          "log-18-catalog-0",
+          "log-19-catalog-0",
+          "log-20-catalog-0",
+          "log-21-catalog-0",
+          "log-22-catalog-0",
+          "log-23-catalog-0",
+          "log-24-catalog-0",
+          "log-25-catalog-0",
+          "log-26-catalog-0",
+          "log-27-catalog-0",
+          "log-28-catalog-0",
+          "log-29-catalog-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "error_code": "READINESS_FAILED",
+          "limit": 20
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-catalog-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-15-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-catalog-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-16-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-catalog-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-17-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-catalog-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-18-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-catalog-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-19-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-catalog-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-20-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-catalog-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-21-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-catalog-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-22-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-catalog-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-23-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-catalog-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-24-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-catalog-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-25-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-catalog-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-26-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-catalog-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-27-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-catalog-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-28-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-catalog-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-29-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.484
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "error_code": "NOT_FOUND",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-28",
+      "kind": "error_code",
+      "question": "查询 NOT_FOUND 日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 0,
+        "ids": [],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "error_code": "NOT_FOUND",
+          "limit": 20
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.668
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "keyword": "memory limit",
+        "limit": 100,
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-29",
+      "kind": "phrase",
+      "question": "查询短语 memory limit",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-payments-0",
+          "log-16-payments-0",
+          "log-17-payments-0",
+          "log-18-payments-0",
+          "log-19-payments-0",
+          "log-20-payments-0",
+          "log-21-payments-0",
+          "log-22-payments-0",
+          "log-23-payments-0",
+          "log-24-payments-0",
+          "log-25-payments-0",
+          "log-26-payments-0",
+          "log-27-payments-0",
+          "log-28-payments-0",
+          "log-29-payments-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "keyword": "memory limit",
+          "limit": 100
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-16-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-payments-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-17-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-payments-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-18-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-payments-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-19-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-payments-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-20-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-payments-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-21-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-payments-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-22-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-payments-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-23-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-payments-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-24-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-payments-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-25-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-payments-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-26-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-payments-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-27-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-payments-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-28-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-payments-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-29-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 8.539
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "keyword": "READINESS PROBE",
+        "limit": 100,
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-30",
+      "kind": "phrase",
+      "question": "查询短语 READINESS PROBE",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-catalog-0",
+          "log-16-catalog-0",
+          "log-17-catalog-0",
+          "log-18-catalog-0",
+          "log-19-catalog-0",
+          "log-20-catalog-0",
+          "log-21-catalog-0",
+          "log-22-catalog-0",
+          "log-23-catalog-0",
+          "log-24-catalog-0",
+          "log-25-catalog-0",
+          "log-26-catalog-0",
+          "log-27-catalog-0",
+          "log-28-catalog-0",
+          "log-29-catalog-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "keyword": "READINESS PROBE",
+          "limit": 100
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-catalog-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-15-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-catalog-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-16-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-catalog-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-17-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-catalog-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-18-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-catalog-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-19-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-catalog-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-20-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-catalog-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-21-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-catalog-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-22-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-catalog-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-23-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-catalog-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-24-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-catalog-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-25-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-catalog-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-26-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-catalog-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-27-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-catalog-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-28-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-catalog-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-29-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 4.303
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "keyword": "connection refused",
+        "limit": 100,
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-31",
+      "kind": "phrase",
+      "question": "查询短语 connection refused",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 15,
+        "ids": [
+          "log-15-checkout-0",
+          "log-16-checkout-0",
+          "log-17-checkout-0",
+          "log-18-checkout-0",
+          "log-19-checkout-0",
+          "log-20-checkout-0",
+          "log-21-checkout-0",
+          "log-22-checkout-0",
+          "log-23-checkout-0",
+          "log-24-checkout-0",
+          "log-25-checkout-0",
+          "log-26-checkout-0",
+          "log-27-checkout-0",
+          "log-28-checkout-0",
+          "log-29-checkout-0"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "keyword": "connection refused",
+          "limit": 100
+        },
+        "total": 15,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-checkout-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-15-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-checkout-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-16-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-17-checkout-0",
+            "timestamp": "2026-09-01T00:17:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-17-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-18-checkout-0",
+            "timestamp": "2026-09-01T00:18:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-18-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-19-checkout-0",
+            "timestamp": "2026-09-01T00:19:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-19-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-20-checkout-0",
+            "timestamp": "2026-09-01T00:20:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-20-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-21-checkout-0",
+            "timestamp": "2026-09-01T00:21:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-21-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-22-checkout-0",
+            "timestamp": "2026-09-01T00:22:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-22-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-23-checkout-0",
+            "timestamp": "2026-09-01T00:23:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-23-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-24-checkout-0",
+            "timestamp": "2026-09-01T00:24:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-24-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-25-checkout-0",
+            "timestamp": "2026-09-01T00:25:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-25-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-26-checkout-0",
+            "timestamp": "2026-09-01T00:26:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-26-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-27-checkout-0",
+            "timestamp": "2026-09-01T00:27:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-27-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-28-checkout-0",
+            "timestamp": "2026-09-01T00:28:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-28-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-29-checkout-0",
+            "timestamp": "2026-09-01T00:29:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-29-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.47
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "keyword": "no such evidence",
+        "limit": 100,
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-32",
+      "kind": "phrase",
+      "question": "查询短语 no such evidence",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 0,
+        "ids": [],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "keyword": "no such evidence",
+          "limit": 100
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.56
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "service",
+        "level": "ERROR",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-33",
+      "kind": "aggregate",
+      "question": "统计错误日志按 service 分组",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 45,
+        "buckets": [
+          {
+            "key": "catalog",
+            "count": 15
+          },
+          {
+            "key": "checkout",
+            "count": 15
+          },
+          {
+            "key": "payments",
+            "count": 15
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "service",
+          "metric": "count"
+        },
+        "total": 45,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": "catalog",
+            "count": 15
+          },
+          {
+            "key": "checkout",
+            "count": 15
+          },
+          {
+            "key": "payments",
+            "count": 15
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 3.15
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "level",
+        "level": "ERROR",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-34",
+      "kind": "aggregate",
+      "question": "统计错误日志按 level 分组",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 45,
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 45
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "level",
+          "metric": "count"
+        },
+        "total": 45,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": "ERROR",
+            "count": 45
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 2.986
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "error_code",
+        "level": "ERROR",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-35",
+      "kind": "aggregate",
+      "question": "统计错误日志按 error_code 分组",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 45,
+        "buckets": [
+          {
+            "key": "CONNECTION_REFUSED",
+            "count": 15
+          },
+          {
+            "key": "OOM_KILLED",
+            "count": 15
+          },
+          {
+            "key": "READINESS_FAILED",
+            "count": 15
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "error_code",
+          "metric": "count"
+        },
+        "total": 45,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": "CONNECTION_REFUSED",
+            "count": 15
+          },
+          {
+            "key": "OOM_KILLED",
+            "count": 15
+          },
+          {
+            "key": "READINESS_FAILED",
+            "count": 15
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 2.708
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "minute",
+        "level": "ERROR",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-36",
+      "kind": "aggregate",
+      "question": "统计错误日志按 minute 分组",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 45,
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 3
+          },
+          {
+            "key": 1788221760000,
+            "count": 3
+          },
+          {
+            "key": 1788221820000,
+            "count": 3
+          },
+          {
+            "key": 1788221880000,
+            "count": 3
+          },
+          {
+            "key": 1788221940000,
+            "count": 3
+          },
+          {
+            "key": 1788222000000,
+            "count": 3
+          },
+          {
+            "key": 1788222060000,
+            "count": 3
+          },
+          {
+            "key": 1788222120000,
+            "count": 3
+          },
+          {
+            "key": 1788222180000,
+            "count": 3
+          },
+          {
+            "key": 1788222240000,
+            "count": 3
+          },
+          {
+            "key": 1788222300000,
+            "count": 3
+          },
+          {
+            "key": 1788222360000,
+            "count": 3
+          },
+          {
+            "key": 1788222420000,
+            "count": 3
+          },
+          {
+            "key": 1788222480000,
+            "count": 3
+          },
+          {
+            "key": 1788222540000,
+            "count": 3
+          }
+        ]
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "level": "ERROR",
+          "limit": 20,
+          "group_by": "minute",
+          "metric": "count"
+        },
+        "total": 45,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": [
+          {
+            "key": 1788221700000,
+            "count": 3
+          },
+          {
+            "key": 1788221760000,
+            "count": 3
+          },
+          {
+            "key": 1788221820000,
+            "count": 3
+          },
+          {
+            "key": 1788221880000,
+            "count": 3
+          },
+          {
+            "key": 1788221940000,
+            "count": 3
+          },
+          {
+            "key": 1788222000000,
+            "count": 3
+          },
+          {
+            "key": 1788222060000,
+            "count": 3
+          },
+          {
+            "key": 1788222120000,
+            "count": 3
+          },
+          {
+            "key": 1788222180000,
+            "count": 3
+          },
+          {
+            "key": 1788222240000,
+            "count": 3
+          },
+          {
+            "key": 1788222300000,
+            "count": 3
+          },
+          {
+            "key": 1788222360000,
+            "count": 3
+          },
+          {
+            "key": 1788222420000,
+            "count": 3
+          },
+          {
+            "key": 1788222480000,
+            "count": 3
+          },
+          {
+            "key": 1788222540000,
+            "count": 3
+          }
+        ]
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 3.379
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "service": "missing",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-37",
+      "kind": "empty",
+      "question": "查询不存在的服务",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 0,
+        "ids": [],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "missing",
+          "limit": 20
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 2.918
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T08:16:00+08:00",
+        "start": "2026-09-01T08:15:00+08:00"
+      },
+      "caseId": "logs-38",
+      "kind": "timezone",
+      "question": "查询北京时间08:15至08:16的日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 12,
+        "ids": [
+          "log-15-catalog-0",
+          "log-15-checkout-0",
+          "log-15-payments-0",
+          "log-15-catalog-1",
+          "log-15-checkout-1",
+          "log-15-payments-1",
+          "log-15-catalog-2",
+          "log-15-checkout-2",
+          "log-15-payments-2",
+          "log-15-catalog-3",
+          "log-15-checkout-3",
+          "log-15-payments-3"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T08:15:00+08:00",
+          "end": "2026-09-01T08:16:00+08:00",
+          "limit": 20
+        },
+        "total": 12,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-15-catalog-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "catalog",
+            "level": "ERROR",
+            "error_code": "READINESS_FAILED",
+            "trace_id": "trace-15-0",
+            "message": "readiness probe failed connection timeout",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "checkout",
+            "level": "ERROR",
+            "error_code": "CONNECTION_REFUSED",
+            "trace_id": "trace-15-0",
+            "message": "upstream connection refused service endpoint unavailable",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-catalog-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-catalog-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-catalog-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "catalog",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-checkout-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "checkout",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.024
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T01:00:00Z",
+        "group_by": "level",
+        "service": "missing",
+        "start": "2026-09-01T00:00:00Z"
+      },
+      "caseId": "logs-39",
+      "kind": "empty_aggregate",
+      "question": "统计不存在服务的错误",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "aggregate_logs",
+      "expected": {
+        "total": 0,
+        "buckets": []
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:00:00Z",
+          "end": "2026-09-01T01:00:00Z",
+          "service": "missing",
+          "limit": 20,
+          "group_by": "level",
+          "metric": "count"
+        },
+        "total": 0,
+        "trustLevel": "untrusted-log-evidence",
+        "buckets": []
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "aggregationCorrect": true
+      },
+      "latencyMs": 2.39
+    },
+    {
+      "arguments": {
+        "end": "2026-09-01T00:17:00Z",
+        "service": "payments",
+        "start": "2026-09-01T00:14:00Z"
+      },
+      "caseId": "logs-40",
+      "kind": "context",
+      "question": "查询payments在故障出现前后的日志",
+      "referenceSource": "independent-python-oracle",
+      "reviewStatus": "deterministic-fixture",
+      "tool": "search_logs",
+      "expected": {
+        "total": 12,
+        "ids": [
+          "log-14-payments-0",
+          "log-14-payments-1",
+          "log-14-payments-2",
+          "log-14-payments-3",
+          "log-15-payments-0",
+          "log-15-payments-1",
+          "log-15-payments-2",
+          "log-15-payments-3",
+          "log-16-payments-0",
+          "log-16-payments-1",
+          "log-16-payments-2",
+          "log-16-payments-3"
+        ],
+        "truncated": false
+      },
+      "actual": {
+        "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+        "query": {
+          "start": "2026-09-01T00:14:00Z",
+          "end": "2026-09-01T00:17:00Z",
+          "service": "payments",
+          "limit": 20
+        },
+        "total": 12,
+        "trustLevel": "untrusted-log-evidence",
+        "logs": [
+          {
+            "log_id": "log-14-payments-0",
+            "timestamp": "2026-09-01T00:14:00Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-0",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-14-payments-1",
+            "timestamp": "2026-09-01T00:14:10Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-14-payments-2",
+            "timestamp": "2026-09-01T00:14:20Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-14-payments-3",
+            "timestamp": "2026-09-01T00:14:30Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-14-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-0",
+            "timestamp": "2026-09-01T00:15:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-15-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-1",
+            "timestamp": "2026-09-01T00:15:10Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-2",
+            "timestamp": "2026-09-01T00:15:20Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-15-payments-3",
+            "timestamp": "2026-09-01T00:15:30Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-15-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-0",
+            "timestamp": "2026-09-01T00:16:00Z",
+            "service": "payments",
+            "level": "ERROR",
+            "error_code": "OOM_KILLED",
+            "trace_id": "trace-16-0",
+            "message": "container terminated memory limit exceeded restart observed",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-1",
+            "timestamp": "2026-09-01T00:16:10Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-16-1",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-2",
+            "timestamp": "2026-09-01T00:16:20Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-16-2",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          },
+          {
+            "log_id": "log-16-payments-3",
+            "timestamp": "2026-09-01T00:16:30Z",
+            "service": "payments",
+            "level": "INFO",
+            "error_code": "",
+            "trace_id": "trace-16-3",
+            "message": "request completed healthy response",
+            "provenance": "synthetic"
+          }
+        ],
+        "truncated": false
+      },
+      "scores": {
+        "passed": true,
+        "totalCorrect": true,
+        "orderedIdsCorrect": true,
+        "truncationCorrect": true,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "latencyMs": 3.724
+    }
+  ]
+}

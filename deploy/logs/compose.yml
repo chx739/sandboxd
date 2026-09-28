@@ -1,0 +1,25 @@
+# 本项目离线演示日志；9201 避开保留的 ES 9200。
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.19.6
+    environment:
+      discovery.type: single-node
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+      bootstrap.memory_lock: "false"
+    mem_limit: 2g
+    cpus: 2
+    ports:
+      - "127.0.0.1:9201:9200"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health >/dev/null"]
+      interval: 15s
+      timeout: 5s
+      start_period: 90s
+      retries: 8
+
+volumes:
+  opensearch_data:

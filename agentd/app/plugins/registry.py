@@ -11,6 +11,7 @@ from .kubernetes import KubernetesPlugin
 from .knowledge import KnowledgePlugin
 from .linux_host import LinuxHostPlugin
 from .memory import MemoryPlugin
+from .logs import LogsPlugin
 from .prometheus import PrometheusPlugin
 
 if TYPE_CHECKING:
@@ -105,6 +106,7 @@ class PluginRegistry:
 def build_builtin_registry(
     memory_store: MemoryStore | None = None,
     knowledge_plugin: KnowledgePlugin | None = None,
+    logs_plugin: LogsPlugin | None = None,
 ) -> PluginRegistry:
     """显式列出可信插件；代码审查可以一眼看到 Agent 的全部扩展面。"""
 
@@ -118,4 +120,6 @@ def build_builtin_registry(
         plugins.append(MemoryPlugin(memory_store))
     if knowledge_plugin is not None:
         plugins.append(knowledge_plugin)
+    if logs_plugin is not None:
+        plugins.append(logs_plugin)
     return PluginRegistry(plugins)

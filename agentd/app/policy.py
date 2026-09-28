@@ -170,11 +170,21 @@ def validate_tool_call(
         result["reason"] = "read_memory 只接受 detail 或合法 Session 的 rollout"
         return result
 
+    if name in {"search_logs", "aggregate_logs"}:
+        from ..logs.core import LogAggregation, LogQuery
+        try:
+            (LogAggregation if name == "aggregate_logs" else LogQuery).model_validate(arguments)
+        except ValueError:
+            result["reason"] = "日志工具仅接受有界时间窗口和固定字段参数"
+            return result
+        result["allowed"] = True
+        return result
+
     if name == "search_knowledge":
         query = arguments.get("query")
         top_k = arguments.get("topK", 3)
         if (
-            not set(arguments) <= {"query", "topK"}
+            not set(arguments) <= {"query", "topK", "filters"}
             or not isinstance(query, str)
             or not query.strip()
             or len(query.encode("utf-8")) > 512
@@ -183,6 +193,12 @@ def validate_tool_call(
             or not 1 <= top_k <= 3
         ):
             result["reason"] = "search_knowledge 只接受有界 query 和 topK 1..3"
+            return result
+        filters = arguments.get("filters", {})
+        if (not isinstance(filters, dict)
+                or not set(filters) <= {"component", "source", "source_revision", "doc_id"}
+                or any(not isinstance(v, str) or not v or len(v) > 1000 for v in filters.values())):
+            result["reason"] = "知识检索过滤字段或值不合法"
             return result
         result["allowed"] = True
         return result

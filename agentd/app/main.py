@@ -20,6 +20,7 @@ from .models import (
 )
 from .plugins import build_builtin_registry
 from .plugins.knowledge import KnowledgePlugin
+from .plugins.logs import LogsPlugin
 from .router import JevChoiceSource, ModelPrice, ModelRouter
 from .store import (
     ControlKind,
@@ -96,7 +97,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             cfg.retrieval_embedding_dir, cfg.retrieval_reranker_dir,
         ) if cfg.retrieval_corpus is not None else None
     )
-    plugins = build_builtin_registry(memory_store, knowledge_plugin)
+    logs_plugin = LogsPlugin(cfg.logs_file) if cfg.logs_file is not None else None
+    plugins = build_builtin_registry(memory_store, knowledge_plugin, logs_plugin)
     runner = AgentRunner(
         prometheus,
         sandboxd,
@@ -124,6 +126,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             await sandboxd.close()
             if knowledge_plugin is not None:
                 knowledge_plugin.close()
+            if logs_plugin is not None:
+                logs_plugin.close()
 
     app = FastAPI(
         title="sandboxd agentd",

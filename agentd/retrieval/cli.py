@@ -1,4 +1,4 @@
-"""重建、查询与消融测评 ES BM25 + Milvus dense + RRF + BGE。"""
+"""重建、查询与消融测评 Milvus BM25 + Dense + RRF + BGE，保留 ES 历史后端。"""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from .bge_local import LocalBGE
 from .core import evaluate_rankings, load_dataset
 from .elasticsearch_bm25 import ElasticsearchBM25
 from .milvus_dense import MilvusDense
+from .milvus_hybrid import MilvusHybrid
 from .pipeline import HybridRetriever
 
 _ROOT = Path(__file__).resolve().parent
@@ -33,15 +34,19 @@ def _run(args: argparse.Namespace) -> dict:
 
     model = LocalBGE(args.embedding_dir, args.reranker_dir)
     with ExitStack() as stack:
-        es = stack.enter_context(ElasticsearchBM25(version, digest))
-        milvus = stack.enter_context(MilvusDense(version, digest))
+        if args.backend == "milvus":
+            milvus = stack.enter_context(MilvusHybrid(version, digest, embedding_id=args.embedding_dir.name))
+            es = milvus.bm25
+        else:
+            es = stack.enter_context(ElasticsearchBM25(version, digest))
+            milvus = stack.enter_context(MilvusDense(version, digest))
         if args.command == "rebuild":
             started = time.monotonic()
             vectors = model.encode_passages([
                 chunk.title + "\n" + chunk.text for chunk in chunks
             ])
             embedded = time.monotonic()
-            es_report = es.rebuild(chunks)
+            es_report = es.rebuild(chunks) if args.backend == "es" else {"backend": "milvus-native-bm25"}
             es_done = time.monotonic()
             milvus_report = milvus.rebuild(chunks, vectors)
             finished = time.monotonic()
@@ -51,9 +56,11 @@ def _run(args: argparse.Namespace) -> dict:
                 "embeddingMs": round((embedded - started) * 1000, 2),
                 "esBuildMs": round((es_done - embedded) * 1000, 2),
                 "milvusBuildMs": round((finished - es_done) * 1000, 2),
-                "kind": "docker-integration-local-model",
+                "kind": "docker-integration-local-model", "backend": args.backend,
             }
-        if es.count() != len(chunks) or milvus.count() != len(chunks):
+        if args.backend == "milvus":
+            milvus.validate(chunks)
+        elif es.count() != len(chunks) or milvus.count() != len(chunks):
             raise RuntimeError("双索引数量不一致；先执行 rebuild")
         retriever = HybridRetriever(chunks, es, milvus, model)
         if args.command == "query":
@@ -66,7 +73,7 @@ def _run(args: argparse.Namespace) -> dict:
                 "query": args.text, "evidence": result.evidence,
                 "rankings": result.rankings,
                 "latenciesMs": {key: round(value, 2) for key, value in result.latencies_ms.items()},
-                "kind": "docker-integration-local-model",
+                "kind": "docker-integration-local-model", "backend": args.backend,
             }
         if args.command == "eval":
             selected = cases[:args.max_queries] if args.max_queries else cases
@@ -85,7 +92,7 @@ def _run(args: argparse.Namespace) -> dict:
                     rankings[group][case.query_id] = result.rankings[group]
                     latencies[group][case.query_id] = result.latencies_ms[group]
             return {
-                "kind": "docker-integration-local-model",
+                "kind": "docker-integration-local-model", "backend": args.backend,
                 "corpusVersion": version, "corpusHash": digest,
                 "chunkCount": len(chunks), "queryCount": len(selected),
                 "models": {
@@ -107,9 +114,10 @@ def main() -> None:
     parser.add_argument("--queries", type=Path, default=_ROOT / "data/runbook-v1.queries.jsonl")
     parser.add_argument("--embedding-dir", type=Path, default=_MODELS / "bge-small-en-v1.5-5c38ec7")
     parser.add_argument("--reranker-dir", type=Path, default=_MODELS / "bge-reranker-base-2cfc18c")
+    parser.add_argument("--backend", choices=["milvus", "es"], default="milvus")
     actions = parser.add_subparsers(dest="command", required=True)
     actions.add_parser("check", help="不启动模型/服务，验证语料与标签")
-    actions.add_parser("rebuild", help="重建本项目精确命名的两个索引")
+    actions.add_parser("rebuild", help="创建或补全内容快照（milvus 不删除旧索引）")
     query = actions.add_parser("query", help="运行带来源的混合检索")
     query.add_argument("text")
     query.add_argument("--top-k", type=int, default=5)

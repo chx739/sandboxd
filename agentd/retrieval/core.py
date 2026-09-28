@@ -21,6 +21,9 @@ class Chunk:
     text: str
     source: str
     corpus_version: str
+    section_id: str = ""
+    component: str = ""
+    source_revision: str = ""
 
     @classmethod
     def from_dict(cls, item: Mapping[str, Any]) -> "Chunk":
@@ -31,6 +34,9 @@ class Chunk:
             text=str(item["text"]),
             source=str(item["source"]),
             corpus_version=str(item["corpusVersion"]),
+            section_id=str(item.get("sectionId", "")),
+            component=str(item.get("component", "")),
+            source_revision=str(item.get("sourceRevision", "")),
         )
         if not _ID.fullmatch(chunk.chunk_id) or not _ID.fullmatch(chunk.doc_id):
             raise ValueError("chunkId/docId 格式不合法")
@@ -40,10 +46,13 @@ class Chunk:
             raise ValueError("chunk 文本为空或超过 16384 字符")
         if len(chunk.title) > 300 or len(chunk.source) > 1000 or not chunk.source:
             raise ValueError("chunk 标题或来源不合法")
+        if (len(chunk.section_id) > 256 or len(chunk.component.encode()) > 128
+                or len(chunk.source_revision.encode()) > 256):
+            raise ValueError("chunk 元数据过长")
         return chunk
 
     def to_dict(self) -> dict[str, str]:
-        return {
+        result = {
             "chunkId": self.chunk_id,
             "docId": self.doc_id,
             "title": self.title,
@@ -51,6 +60,12 @@ class Chunk:
             "source": self.source,
             "corpusVersion": self.corpus_version,
         }
+        # 旧语料的 hash 不因新增可选元数据而变化。
+        result.update({key: value for key, value in {
+            "sectionId": self.section_id, "component": self.component,
+            "sourceRevision": self.source_revision,
+        }.items() if value})
+        return result
 
 
 @dataclass(frozen=True)
@@ -126,7 +141,7 @@ def rrf_fuse(
     constant: int = 60,
     limit: int | None = None,
 ) -> list[SearchHit]:
-    """只融合排名，不混用 ES BM25 与 Milvus 内积的原始分数。"""
+    """只融合排名，不混用 BM25 与向量相似度的原始分数。"""
 
     if constant <= 0 or (limit is not None and limit <= 0):
         raise ValueError("RRF 参数必须为正数")

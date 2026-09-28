@@ -27,6 +27,10 @@ class KnowledgePlugin:
                 "properties": {
                     "query": {"type": "string"},
                     "topK": {"type": "integer", "minimum": 1, "maximum": 3},
+                    "filters": {"type": "object", "properties": {
+                        key: {"type": "string", "maxLength": 1000}
+                        for key in ("component", "source", "source_revision", "doc_id")
+                    }, "additionalProperties": False},
                 },
                 "required": ["query"],
                 "additionalProperties": False,
@@ -61,26 +65,19 @@ class KnowledgePlugin:
             return self._retriever
         from ...retrieval.bge_local import LocalBGE
         from ...retrieval.core import load_dataset
-        from ...retrieval.elasticsearch_bm25 import ElasticsearchBM25
-        from ...retrieval.milvus_dense import MilvusDense
+        from ...retrieval.milvus_hybrid import MilvusHybrid
         from ...retrieval.pipeline import HybridRetriever
 
         chunks, _, digest = load_dataset(self._corpus, self._queries)
         version = chunks[0].corpus_version
-        es = ElasticsearchBM25(version, digest)
+        milvus = MilvusHybrid(version, digest, embedding_id=self._embedding_dir.name)
         try:
-            milvus = MilvusDense(version, digest)
-            try:
-                if es.count() != len(chunks) or milvus.count() != len(chunks):
-                    raise RuntimeError("知识索引数量与固定语料不一致；先运行 rebuild")
-                bge = LocalBGE(self._embedding_dir, self._reranker_dir)
-                self._retriever = HybridRetriever(chunks, es, milvus, bge)
-                self._es, self._milvus = es, milvus
-            except BaseException:
-                milvus.close()
-                raise
+            milvus.validate(chunks)
+            bge = LocalBGE(self._embedding_dir, self._reranker_dir)
+            self._retriever = HybridRetriever(chunks, milvus.bm25, milvus, bge)
+            self._milvus = milvus
         except BaseException:
-            es.close()
+            milvus.close()
             raise
         return self._retriever
 
@@ -93,7 +90,8 @@ class KnowledgePlugin:
         async with self._lock:
             retriever = await asyncio.to_thread(self._load)
             result = await asyncio.to_thread(
-                retriever.query, arguments["query"], output_limit=arguments.get("topK", 3)
+                retriever.query, arguments["query"], output_limit=arguments.get("topK", 3),
+                filters=arguments.get("filters"),
             )
         evidence = [
             {**item, "snippet": item["snippet"][:500]}

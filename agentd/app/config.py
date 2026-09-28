@@ -39,6 +39,7 @@ class Settings:
     router_prices: dict[str, dict[str, float]] = field(default_factory=dict)
     router_jev_input_usd_per_million: float | None = None
     router_jev_ipv4_only: bool = False
+    logs_file: Path | None = None
 
 
 def _required(name: str) -> str:
@@ -183,4 +184,5 @@ def load_settings() -> Settings:
         router_prices=router_prices,
         router_jev_input_usd_per_million=jev_price,
         router_jev_ipv4_only=os.getenv("AGENTD_JEV_IPV4_ONLY", "0") == "1",
+        logs_file=Path(os.environ["AGENTD_LOGS_FILE"]) if os.getenv("AGENTD_LOGS_FILE") else None,
     )

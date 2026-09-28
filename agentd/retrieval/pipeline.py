@@ -1,4 +1,4 @@
-"""ES BM25 + Milvus dense → RRF → BGE Reranker 的实际主链路。"""
+"""BM25 + dense → RRF → BGE；默认同一 Milvus 快照，保留旧后端对照。"""
 
 from __future__ import annotations
 
@@ -26,14 +26,16 @@ class HybridRetriever:
         self._milvus = milvus
         self._bge = bge
 
-    def query(self, text: str, *, recall_limit: int = 20, rerank_limit: int = 20, output_limit: int = 10) -> QueryRun:
+    def query(self, text: str, *, recall_limit: int = 20, rerank_limit: int = 20, output_limit: int = 10,
+              filters: dict[str, str] | None = None) -> QueryRun:
         if not text.strip() or not 1 <= output_limit <= rerank_limit <= 100 or not 1 <= recall_limit <= 100:
             raise ValueError("检索参数不合法")
         started = time.monotonic()
-        bm25 = self._es.search(text, recall_limit)
+        kwargs = {"filters": filters} if filters else {}
+        bm25 = self._es.search(text, recall_limit, **kwargs)
         after_bm25 = time.monotonic()
         vector = self._bge.encode_query(text)
-        dense = self._milvus.search(vector, recall_limit)
+        dense = self._milvus.search(vector, recall_limit, **kwargs)
         after_dense = time.monotonic()
         fused = rrf_fuse(bm25, dense, limit=rerank_limit)
         after_rrf = time.monotonic()
@@ -61,6 +63,9 @@ class HybridRetriever:
                 "snippet": public_error(chunk.text, limit=1200),
                 "source": chunk.source,
                 "corpusVersion": chunk.corpus_version,
+                "sectionId": chunk.section_id,
+                "component": chunk.component,
+                "sourceRevision": chunk.source_revision,
                 "rerankerScore": round(float(score), 5),
                 "trustLevel": "untrusted-retrieved-evidence",
             })

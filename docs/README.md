@@ -2,7 +2,7 @@
 
 > 这里是项目学习的唯一入口。文档按“当前真相 → 代码与模块 → 面试表达 → 历史与证据”分层，而不是按开发时间顺序通读。
 
-> **当前 Phase 8 开发范围**：[Kubernetes 运维 Agent 完整目标与验收](37-Kubernetes运维Agent目标与验收.md)。Phase 7 的 Jev 路由与 ES/Milvus 双索引文档是历史实现资料；当前状态看 [PROGRESS](PROGRESS.md)。
+> **当前 Phase 8 开发范围**：[Kubernetes 运维 Agent 完整目标与验收](37-Kubernetes运维Agent目标与验收.md)。Phase 7 的路由和检索文档是复用基线；Phase 8 已重新纳入 Jev 最小路由；当前状态看 [PROGRESS](PROGRESS.md)。
 
 ## 20 分钟快速了解
 
@@ -63,7 +63,7 @@
 | [33 树形 Session 与分支恢复](33-树形Session与分支恢复学习手册.md) | M1 源码、接口、确定性测评与面试讲法 | 已实现，证据见 PROGRESS |
 | [34 Codex 风格分层记忆](34-Codex风格分层记忆学习手册.md) | M2 提取、整理、读取、遗忘、测评与面试讲法 | 本地确定性实现，证据见 PROGRESS |
 | [35 Milvus/ES/BGE 混合检索](35-Milvus-ES-BGE混合检索学习手册.md) | M3 双索引、RRF、BGE、公开集消融与 Agent 只读接线 | Docker + 本地模型集成，证据见 phase17 |
-| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | Phase 7 官方 SDK Choice、任务前选模、回退、成本夹具 | 历史资料；Phase 8 不继续，旧首题见 [phase21](evidence/phase21-jev-live-first-case.md) |
+| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | Phase 7 官方 SDK Choice、任务前选模、回退、成本夹具 | Phase 8 复用并最小验证，旧首题见 [phase21](evidence/phase21-jev-live-first-case.md) |
 
 实施状态只看 [PROGRESS](PROGRESS.md) 和独立证据，不把后续模块方案当成当前代码能力。
 
