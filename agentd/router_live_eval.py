@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import json
 import math
 import os
@@ -79,6 +80,7 @@ def _maximum_reservation(
 
 def plan(cases: list[dict[str, Any]], prices: Mapping[str, ModelPrice], jev_price: float) -> dict[str, Any]:
     reserved = _maximum_reservation(cases, prices, jev_price)
+    case_bytes = json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return {
         "kind": "reviewable-live-eval-plan-no-network",
         "services": ["TypeSafe Jev", "DeepSeek API"],
@@ -91,6 +93,7 @@ def plan(cases: list[dict[str, Any]], prices: Mapping[str, ModelPrice], jev_pric
         "worstCaseReservationUsd": round(reserved, 6),
         "data": "repository synthetic fixture only; no live cluster, logs, secrets or user content",
         "caseIds": [case["id"] for case in cases],
+        "caseSetSha256": hashlib.sha256(case_bytes).hexdigest(),
     }
 
 
@@ -279,13 +282,17 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=MAX_CASES)
     parser.add_argument("--execute", action="store_true", help="明确启用外部请求；需要新的用户授权")
     parser.add_argument("--max-usd", type=float, help="--execute 必填的本轮预算门")
+    parser.add_argument("--expected-case-sha256", help="--execute 必填；固定已审核的合成案例")
     args = parser.parse_args()
     cases = load_cases(limit=args.limit)
+    preview = plan(cases, SAMPLE_PRICES, SAMPLE_JEV_INPUT_PRICE)
     if not args.execute:
-        print(json.dumps(plan(cases, SAMPLE_PRICES, SAMPLE_JEV_INPUT_PRICE), ensure_ascii=False, indent=2))
+        print(json.dumps(preview, ensure_ascii=False, indent=2))
         return
     if args.max_usd is None:
         parser.error("--execute 必须同时给出 --max-usd")
+    if args.expected_case_sha256 != preview["caseSetSha256"]:
+        parser.error("--execute 必须提供与预览一致的 --expected-case-sha256")
     print(json.dumps(asyncio.run(_execute(cases, args.max_usd)), ensure_ascii=False, indent=2))
 
 

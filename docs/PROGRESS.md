@@ -25,8 +25,8 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 - M3 后 `unittest discover` 为 **53/53**；`git diff --check` 通过。完整测试中的记忆 CLI 子进程在 WSL `/mnt/c` 启动耗时较长，测试总时长 256 秒，与检索在线延迟不同。
 - M4 已按 TypeSafe 官方 Python SDK `0.7.2` 的 `Choice` API 实现 task 前静态 economy/strong 选模，0.7 置信度门、2 秒超时和强模型回退；实际 Runner 只绑定一次 Gateway。假 Client 证实 SDK 请求形状，8 条合成 Fake/Replay 成功、假设时延/费用比较和 4 个路由测试通过。所有质量、价格和时延数字都来自夹具；Jev 与下游模型 Live 尚未调用。见 [36](36-Jev模型路由学习手册.md)、[phase18](evidence/phase18-jev-router-mvp.md)。
 - M5 四模块联合无密钥 Replay 已通过：Fake Jev 选经济 Replay Gateway，记忆摘要以数据注入，`search_knowledge` 实际连接本地 ES/Milvus/BGE，Session 保存 6 节点并支持完整叶子分支，假沙箱释放一次，外部模型调用 0。见 [phase19](evidence/phase19-phase7-integrated-replay.md)。
-- Phase 7 最新完整 Python 回归 **61/61**，Live 无网络预检加入后重新验证耗时 **275.780 秒**；最后预算校验调整后 Live 预检定向 **4/4**。耗时主要在 `/mnt/c` 上记忆 CLI 的多个 Python 子进程启动，不是检索或模型在线延迟。四模块联合无密钥 Replay 在允许连接本机 Docker 服务的执行环境中重跑成功。
-- M4 Live 横评的**无网络预检**已新增 `router_live_eval.py` 与 8 条独立合成题：同题固定 Flash、固定 V4 Pro、Jev 路由，最多 8 次 Jev + 24 次下游请求；默认 CLI 只打印计划，事前预留 `$0.107053`，真实模式需显式 `--execute --max-usd` 和 Key。当前仅 Fake 测试，真实请求仍未授权/执行；详见 [phase20](evidence/phase20-jev-live-preflight.md)。
+- Phase 7 完整 Python 回归 **61/61**，Live 无网络预检加入后验证耗时 **275.780 秒**；随后样本 SHA256 审批门加入，Live 预检定向 **5/5**、默认预览与 `compileall` 通过。耗时主要在 `/mnt/c` 上记忆 CLI 的多个 Python 子进程启动，不是检索或模型在线延迟。四模块联合无密钥 Replay 在允许连接本机 Docker 服务的执行环境中重跑成功。
+- M4 Live 横评的**无网络预检**已新增 `router_live_eval.py` 与 8 条独立合成题：同题固定 Flash、固定 V4 Pro、Jev 路由，最多 8 次 Jev + 24 次下游请求；默认 CLI 只打印计划，事前预留 `$0.107053`，真实模式需显式 `--execute --max-usd`、匹配的案例 SHA256 与 Key。当前仅 Fake 测试，真实请求仍未授权/执行；详见 [phase20](evidence/phase20-jev-live-preflight.md)。
 - 当前分支 `codex/agent-memory-rag-plan`，M0–M5 均已本地提交。GitHub App 可读仓库但写入返回 403，本机 HTTPS Git 无凭据；等待恢复 GitHub 写入后推送并创建 PR。Live 需新的具体服务、样本量与费用上限授权。
 - 尚未读取仓库外 secrets，也未调用外部 LLM/Jev；已在 phase20 给出 TypeSafe Jev 8 次、DeepSeek 24 次、8 条合成题和建议总费用上限 `$1` 的具体授权范围。未获明确授权前只运行无网络预览。
 

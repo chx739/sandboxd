@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import json
+import io
 import unittest
+from contextlib import redirect_stderr
+from unittest.mock import patch
 
 from langchain_core.messages import AIMessage
 
 from agentd.app.model_gateway import LiveModelSession, ModelInvocation
 from agentd.app.models import ModelUsage
 from agentd.app.router import ChoiceJudgement, FakeChoiceSource, ModelPrice
-from agentd.router_live_eval import evaluate_live, load_cases, plan
+from agentd.router_live_eval import evaluate_live, load_cases, main, plan
 
 
 class _Gateway:
@@ -38,6 +41,16 @@ class _Gateway:
 
 
 class RouterLiveEvalTest(unittest.IsolatedAsyncioTestCase):
+    async def test_execute_requires_reviewed_case_digest_before_client(self) -> None:
+        with (
+            patch("sys.argv", ["router_live_eval", "--execute", "--max-usd", "1"]),
+            patch("agentd.router_live_eval.asyncio.run", side_effect=AssertionError("must not run")),
+            redirect_stderr(io.StringIO()),
+        ):
+            with self.assertRaises(SystemExit) as caught:
+                main()
+        self.assertEqual(caught.exception.code, 2)
+
     async def test_gateway_without_tools_keeps_plain_model(self) -> None:
         class _PlainModel:
             def bind_tools(self, _schemas):
@@ -55,6 +68,7 @@ class RouterLiveEvalTest(unittest.IsolatedAsyncioTestCase):
         preview = plan(cases, prices, 0.042)
         self.assertEqual(preview["maximumJevRequests"], 8)
         self.assertEqual(preview["maximumDownstreamRequests"], 24)
+        self.assertEqual(len(preview["caseSetSha256"]), 64)
         self.assertLess(preview["worstCaseReservationUsd"], 1)
 
         gold = {case["summary"]: case["goldCode"] for case in cases}
