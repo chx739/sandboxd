@@ -118,8 +118,6 @@ def load_settings() -> Settings:
     memory_project = os.getenv("AGENTD_MEMORY_PROJECT", "sandboxd")
     retrieval_corpus = os.getenv("AGENTD_RETRIEVAL_CORPUS", "")
     retrieval_queries = os.getenv("AGENTD_RETRIEVAL_QUERIES", "")
-    if bool(retrieval_corpus) != bool(retrieval_queries):
-        raise ValueError("检索工具必须同时配置 corpus 与 queries")
     router_mode = os.getenv("AGENTD_ROUTER_MODE", "off")
     if router_mode not in {"off", "jev"}:
         raise ValueError("AGENTD_ROUTER_MODE 只能是 off 或 jev")
@@ -171,7 +169,7 @@ def load_settings() -> Settings:
         retrieval_queries=Path(retrieval_queries) if retrieval_queries else None,
         retrieval_embedding_dir=Path(os.getenv(
             "AGENTD_RETRIEVAL_EMBEDDING_DIR",
-            str(Path.home() / ".local/share/sandboxd/models/bge-small-en-v1.5-5c38ec7"),
+            str(Path.home() / ".local/share/sandboxd/models/multilingual-e5-small-614241f"),
         )),
         retrieval_reranker_dir=Path(os.getenv(
             "AGENTD_RETRIEVAL_RERANKER_DIR",

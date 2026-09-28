@@ -81,6 +81,7 @@ class HybridRetriever:
                 "dense": (after_dense - after_bm25) * 1000,
                 "rrf": (after_rrf - started) * 1000,
                 "rerank": (after_rerank - started) * 1000,
+                "rerankerOnly": (after_rerank - after_rrf) * 1000,
             },
             evidence=evidence,
         )

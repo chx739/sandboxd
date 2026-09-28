@@ -41,7 +41,7 @@ class KnowledgePlugin:
     def __init__(
         self,
         corpus: Path,
-        queries: Path,
+        queries: Path | None,
         embedding_dir: Path,
         reranker_dir: Path,
         *,
@@ -52,7 +52,6 @@ class KnowledgePlugin:
         self._embedding_dir = embedding_dir
         self._reranker_dir = reranker_dir
         self._retriever = retriever
-        self._es: Any | None = None
         self._milvus: Any | None = None
         self._lock = asyncio.Lock()
 
@@ -64,11 +63,11 @@ class KnowledgePlugin:
         if self._retriever is not None:
             return self._retriever
         from ...retrieval.bge_local import LocalBGE
-        from ...retrieval.core import load_dataset
+        from ...retrieval.core import load_corpus
         from ...retrieval.milvus_hybrid import MilvusHybrid
         from ...retrieval.pipeline import HybridRetriever
 
-        chunks, _, digest = load_dataset(self._corpus, self._queries)
+        chunks, digest = load_corpus(self._corpus)
         version = chunks[0].corpus_version
         milvus = MilvusHybrid(version, digest, embedding_id=self._embedding_dir.name)
         try:
@@ -106,7 +105,4 @@ class KnowledgePlugin:
         if self._milvus is not None:
             self._milvus.close()
             self._milvus = None
-        if self._es is not None:
-            self._es.close()
-            self._es = None
         self._retriever = None

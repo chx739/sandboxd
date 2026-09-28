@@ -73,16 +73,24 @@ class QueryCase:
     query_id: str
     query: str
     relevance: dict[str, int]
+    answerable: bool = True
+    split: str = "unspecified"
+    category: str = "unspecified"
 
     @classmethod
     def from_dict(cls, item: Mapping[str, Any]) -> "QueryCase":
         relevance = item.get("relevance")
-        if not isinstance(relevance, dict) or not relevance:
+        answerable = item.get("answerable", True)
+        if type(answerable) is not bool or not isinstance(relevance, dict) or (answerable and not relevance):
             raise ValueError("query 缺少相关标签")
+        if not answerable and relevance:
+            raise ValueError("无答案题不应有答案相关标签；拒答依据放 evidenceRefs")
         case = cls(
             query_id=str(item["queryId"]),
             query=str(item["query"]),
             relevance={str(key): int(value) for key, value in relevance.items()},
+            answerable=answerable, split=str(item.get("split", "unspecified")),
+            category=str(item.get("category", "unspecified")),
         )
         if not _ID.fullmatch(case.query_id) or not case.query.strip():
             raise ValueError("queryId/query 不合法")
@@ -109,29 +117,29 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return items
 
 
-def load_dataset(corpus_path: Path, queries_path: Path) -> tuple[list[Chunk], list[QueryCase], str]:
+def load_corpus(corpus_path: Path) -> tuple[list[Chunk], str]:
     chunks = [Chunk.from_dict(item) for item in load_jsonl(corpus_path)]
-    cases = [QueryCase.from_dict(item) for item in load_jsonl(queries_path)]
-    if not chunks or not cases:
-        raise ValueError("语料和查询不能为空")
-    versions = {chunk.corpus_version for chunk in chunks}
-    if len(versions) != 1:
-        raise ValueError("语料混入多个版本")
-    chunk_ids = [chunk.chunk_id for chunk in chunks]
-    if len(set(chunk_ids)) != len(chunk_ids):
+    if not chunks or len({chunk.corpus_version for chunk in chunks}) != 1:
+        raise ValueError("语料为空或混入多个版本")
+    if len({chunk.chunk_id for chunk in chunks}) != len(chunks):
         raise ValueError("语料有重复 chunkId")
-    if len({case.query_id for case in cases}) != len(cases):
-        raise ValueError("queryId 重复")
-    known = set(chunk_ids)
-    for case in cases:
-        if not set(case.relevance) <= known:
-            raise ValueError(f"{case.query_id} 引用了未知 chunkId")
     canonical = json.dumps(
         [chunk.to_dict() for chunk in sorted(chunks, key=lambda item: item.chunk_id)],
         ensure_ascii=False, sort_keys=True, separators=(",", ":"),
     )
-    corpus_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    return chunks, cases, corpus_hash
+    return chunks, hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def load_dataset(corpus_path: Path, queries_path: Path) -> tuple[list[Chunk], list[QueryCase], str]:
+    chunks, digest = load_corpus(corpus_path)
+    cases = [QueryCase.from_dict(item) for item in load_jsonl(queries_path)]
+    if not cases or len({case.query_id for case in cases}) != len(cases):
+        raise ValueError("查询为空或 queryId 重复")
+    known = {chunk.chunk_id for chunk in chunks}
+    for case in cases:
+        if not set(case.relevance) <= known:
+            raise ValueError(f"{case.query_id} 引用了未知 chunkId")
+    return chunks, cases, digest
 
 
 def rrf_fuse(
@@ -172,7 +180,7 @@ def evaluate_rankings(
     cases: Sequence[QueryCase],
     rankings: Mapping[str, Sequence[str]],
     latencies_ms: Mapping[str, float] | None = None,
-) -> dict[str, float | int]:
+) -> dict[str, float | int | None]:
     """对同一批 query 计算 Recall、MRR、nDCG@10 与 p50/p95。"""
 
     if not cases or set(rankings) != {case.query_id for case in cases}:
@@ -182,6 +190,8 @@ def evaluate_rankings(
         ranking = list(rankings[case.query_id])
         if len(ranking) != len(set(ranking)):
             raise ValueError("同一 query 的排名含重复 chunkId")
+        if not case.answerable:
+            continue
         relevant = set(case.relevance)
         recall_1 += len(relevant.intersection(ranking[:1])) / len(relevant)
         recall_5 += len(relevant.intersection(ranking[:5])) / len(relevant)
@@ -199,17 +209,18 @@ def evaluate_rankings(
             for index, grade in enumerate(sorted(case.relevance.values(), reverse=True)[:10], 1)
         )
         ndcg_10 += dcg / ideal
-    count = len(cases)
+    count = sum(case.answerable for case in cases)
     latencies = list((latencies_ms or {}).values())
     if latencies_ms is not None and set(latencies_ms) != set(rankings):
         raise ValueError("latency 必须恰好覆盖全部 query")
     return {
-        "queryCount": count,
-        "recall@1": round(recall_1 / count, 4),
-        "recall@5": round(recall_5 / count, 4),
-        "recall@10": round(recall_10 / count, 4),
-        "mrr": round(mrr / count, 4),
-        "ndcg@10": round(ndcg_10 / count, 4),
+        "queryCount": len(cases), "answerableCount": count,
+        "unanswerableCount": len(cases) - count,
+        "recall@1": round(recall_1 / count, 4) if count else None,
+        "recall@5": round(recall_5 / count, 4) if count else None,
+        "recall@10": round(recall_10 / count, 4) if count else None,
+        "mrr": round(mrr / count, 4) if count else None,
+        "ndcg@10": round(ndcg_10 / count, 4) if count else None,
         "p50Ms": _percentile(latencies, 0.50),
         "p95Ms": _percentile(latencies, 0.95),
     }

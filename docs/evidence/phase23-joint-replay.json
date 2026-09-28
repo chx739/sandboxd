@@ -1,0 +1,2056 @@
+{
+  "kind": "deterministic-agent-replay-real-local-stores",
+  "logSnapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+  "modelCalls": "scripted",
+  "jev": "fake",
+  "sandbox": "fake-lifecycle-only",
+  "externalModelCalls": 0,
+  "scope": "No live cluster or repair; natural-language decisions and semantic citation entailment not evaluated",
+  "passed": 3,
+  "count": 3,
+  "cases": [
+    {
+      "id": "payments-memory",
+      "scores": {
+        "toolOrderCorrect": true,
+        "toolParametersCorrect": true,
+        "toolsSucceeded": true,
+        "necessaryLogsObtained": true,
+        "aggregateCorrect": true,
+        "applicableDocumentRetrieved": true,
+        "citationIdsResolve": true,
+        "factHypothesisVerificationSeparated": true,
+        "statusSucceeded": true,
+        "branchRecoverable": true,
+        "sandboxReleased": true,
+        "routedOnce": true
+      },
+      "passed": true,
+      "diagnosis": {
+        "summary": "[确定性回放] 观察事实：payments 在指定窗口有 15 条 ERROR 日志。引用：log:log-15-payments-0@2026-09-01T00:15:00Z; log:log-16-payments-0@2026-09-01T00:16:00Z; log:log-17-payments-0@2026-09-01T00:17:00Z; chunk:k8s-manage-resources-containers:s029:p02; chunk:k8s-manage-resources-containers:s002:p01; chunk:k8s-manage-resources-containers:s029:p01",
+        "rootCause": "待验证假设：可能与容器内存限制或内存压力有关；日志标签不能证明实际 OOM 或泄漏。",
+        "severity": "warning",
+        "evidence": [
+          {
+            "source": "search_logs",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-payments-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-15-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-payments-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-16-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-payments-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-17-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"}],\"truncated\":true}}"
+          },
+          {
+            "source": "aggregate_logs",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"OOM_KILLED\",\"count\":15}]}}"
+          },
+          {
+            "source": "search_knowledge",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"k8s-manage-resources-containers:s029:p02\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / My container is terminated\",\"snippet\":\"In the preceding example, the `Restart Count:  5` indicates that the `simmemleak`\\ncontainer in the Pod was terminated and restarted five times (so far).\\nThe `OOMKilled` reason shows that the container tried to use more memory than its limit.\\n\\nYour next step might be to check the application code for a memory leak. If you\\nfind that the application is behaving how you expect, consider setting a higher\\nmemory limit (and possibly request) for that container.\\n\\n## \\n\\n* Get hands-on experience [assignin\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s029\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.98415,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-manage-resources-containers:s002:p01\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / Requests and limits\",\"snippet\":\"If the node where a Pod is running has enough of a resource available, it's possible (and\\nallowed) for a container to use more resource than its `request` for that resource specifies.\\n\\nFor example, if you set a `memory` request of 256 MiB for a container, and that container is in\\na Pod scheduled to a Node with 8GiB of memory and no other Pods, then the container can try to use\\nmore RAM.\\n\\nLimits are a different story. Both `cpu` and `memory` limits are applied by the kubelet (and\\n),\\nand are ultim\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s002\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.98029,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-manage-resources-containers:s029:p01\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / My container is terminated\",\"snippet\":\"Your container might get terminated because it is resource-starved. To check\\nwhether a container is being killed because it is hitting a resource limit, call\\n`kubectl describe pod` on the Pod of interest:\\n\\n```shell\\nkubectl describe pod simmemleak-hra99\\n```\\n\\nThe output is similar to:\\n```\\nName:                           simmemleak-hra99\\nNamespace:                      default\\nImage(s):                       saadali/simmemleak\\nNode:                           kubernetes-node-tf0f/10.240.216.66\\nLabel\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s029\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.88861,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}"
+          }
+        ],
+        "injectionDetected": false,
+        "deniedActions": [],
+        "recommendation": "验证步骤与缺失信息：核对容器 last termination reason、memory limit 与同期内存峰值；缺少实际 Pod 状态和内存指标。 本演示未执行修复。",
+        "planId": null
+      },
+      "trace": {
+        "taskId": "task-ops-payments-memory",
+        "mode": "replay",
+        "model": "ops-scripted-replay",
+        "provider": "deterministic-replay",
+        "capabilities": {
+          "toolCalling": true,
+          "deterministic": true
+        },
+        "plugins": [
+          {
+            "id": "prometheus",
+            "version": "1.0.0",
+            "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+            "capabilities": [
+              "network:prometheus",
+              "metrics:read"
+            ],
+            "tools": [
+              "query_prometheus"
+            ]
+          },
+          {
+            "id": "kubernetes",
+            "version": "1.0.0",
+            "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+            "capabilities": [
+              "sandbox:claim",
+              "kubernetes:read",
+              "deployment-scale:propose"
+            ],
+            "tools": [
+              "kubernetes_read",
+              "propose_plan"
+            ]
+          },
+          {
+            "id": "linux-host",
+            "version": "1.0.0",
+            "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+            "capabilities": [
+              "network:ssh",
+              "linux:read"
+            ],
+            "tools": [
+              "linux_read"
+            ]
+          },
+          {
+            "id": "files",
+            "version": "1.0.0",
+            "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+            "capabilities": [
+              "task-workspace:read",
+              "task-workspace:write"
+            ],
+            "tools": [
+              "list_files",
+              "read_file",
+              "search_files",
+              "write_file",
+              "edit_file"
+            ]
+          },
+          {
+            "id": "memory",
+            "version": "0.1.0",
+            "description": "按需读取有界的历史项目记忆；内容仅供参考，不授予权限",
+            "capabilities": [
+              "project-memory:read"
+            ],
+            "tools": [
+              "read_memory"
+            ]
+          },
+          {
+            "id": "knowledge",
+            "version": "0.1.0",
+            "description": "从固定版本语料读取带来源片段；不授予任何执行权限",
+            "capabilities": [
+              "project-knowledge:read"
+            ],
+            "tools": [
+              "search_knowledge"
+            ]
+          },
+          {
+            "id": "logs",
+            "version": "0.1.0",
+            "description": "查询固定日志快照及精确聚合",
+            "capabilities": [
+              "logs:read"
+            ],
+            "tools": [
+              "search_logs",
+              "aggregate_logs"
+            ]
+          }
+        ],
+        "modelUsage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "routing": {
+          "requestedTier": "strong",
+          "effectiveTier": "strong",
+          "confidence": 0.95,
+          "fallbackReason": null,
+          "source": "deterministic-fake",
+          "elapsedMs": 0,
+          "routerInputTokens": null,
+          "estimatedModelCostUsd": null,
+          "routerCostUsd": null
+        },
+        "sandboxId": "phase7-fake-sandbox",
+        "alertFingerprint": "",
+        "injectedVia": [],
+        "steps": [
+          {
+            "index": 1,
+            "node": "execute_tool",
+            "tool": "search_logs",
+            "arguments": {
+              "start": "2026-09-01T00:15:00Z",
+              "end": "2026-09-01T00:30:00Z",
+              "service": "payments",
+              "level": "ERROR",
+              "limit": 3
+            },
+            "pluginId": "logs",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-payments-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-15-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-payments-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-16-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-payments-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-17-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"}],\"truncated\":true}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+                "query": {
+                  "start": "2026-09-01T00:15:00Z",
+                  "end": "2026-09-01T00:30:00Z",
+                  "service": "payments",
+                  "level": "ERROR",
+                  "limit": 3
+                },
+                "total": 15,
+                "trustLevel": "untrusted-log-evidence",
+                "logs": [
+                  {
+                    "log_id": "log-15-payments-0",
+                    "timestamp": "2026-09-01T00:15:00Z",
+                    "service": "payments",
+                    "level": "ERROR",
+                    "error_code": "OOM_KILLED",
+                    "trace_id": "trace-15-0",
+                    "message": "container terminated memory limit exceeded restart observed",
+                    "provenance": "synthetic"
+                  },
+                  {
+                    "log_id": "log-16-payments-0",
+                    "timestamp": "2026-09-01T00:16:00Z",
+                    "service": "payments",
+                    "level": "ERROR",
+                    "error_code": "OOM_KILLED",
+                    "trace_id": "trace-16-0",
+                    "message": "container terminated memory limit exceeded restart observed",
+                    "provenance": "synthetic"
+                  },
+                  {
+                    "log_id": "log-17-payments-0",
+                    "timestamp": "2026-09-01T00:17:00Z",
+                    "service": "payments",
+                    "level": "ERROR",
+                    "error_code": "OOM_KILLED",
+                    "trace_id": "trace-17-0",
+                    "message": "container terminated memory limit exceeded restart observed",
+                    "provenance": "synthetic"
+                  }
+                ],
+                "truncated": true
+              }
+            },
+            "elapsedMs": 337
+          },
+          {
+            "index": 2,
+            "node": "execute_tool",
+            "tool": "aggregate_logs",
+            "arguments": {
+              "start": "2026-09-01T00:15:00Z",
+              "end": "2026-09-01T00:30:00Z",
+              "service": "payments",
+              "level": "ERROR",
+              "limit": 3,
+              "group_by": "error_code"
+            },
+            "pluginId": "logs",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"OOM_KILLED\",\"count\":15}]}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+                "query": {
+                  "start": "2026-09-01T00:15:00Z",
+                  "end": "2026-09-01T00:30:00Z",
+                  "service": "payments",
+                  "level": "ERROR",
+                  "limit": 3,
+                  "group_by": "error_code",
+                  "metric": "count"
+                },
+                "total": 15,
+                "trustLevel": "untrusted-log-evidence",
+                "buckets": [
+                  {
+                    "key": "OOM_KILLED",
+                    "count": 15
+                  }
+                ]
+              }
+            },
+            "elapsedMs": 8
+          },
+          {
+            "index": 3,
+            "node": "execute_tool",
+            "tool": "search_knowledge",
+            "arguments": {
+              "query": "OOM_KILLED container memory termination reason memory limits diagnosis",
+              "topK": 3
+            },
+            "pluginId": "knowledge",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"k8s-manage-resources-containers:s029:p02\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / My container is terminated\",\"snippet\":\"In the preceding example, the `Restart Count:  5` indicates that the `simmemleak`\\ncontainer in the Pod was terminated and restarted five times (so far).\\nThe `OOMKilled` reason shows that the container tried to use more memory than its limit.\\n\\nYour next step might be to check the application code for a memory leak. If you\\nfind that the application is behaving how you expect, consider setting a higher\\nmemory limit (and possibly request) for that container.\\n\\n## \\n\\n* Get hands-on experience [assignin\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s029\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.98415,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-manage-resources-containers:s002:p01\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / Requests and limits\",\"snippet\":\"If the node where a Pod is running has enough of a resource available, it's possible (and\\nallowed) for a container to use more resource than its `request` for that resource specifies.\\n\\nFor example, if you set a `memory` request of 256 MiB for a container, and that container is in\\na Pod scheduled to a Node with 8GiB of memory and no other Pods, then the container can try to use\\nmore RAM.\\n\\nLimits are a different story. Both `cpu` and `memory` limits are applied by the kubelet (and\\n),\\nand are ultim\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s002\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.98029,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-manage-resources-containers:s029:p01\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / My container is terminated\",\"snippet\":\"Your container might get terminated because it is resource-starved. To check\\nwhether a container is being killed because it is hitting a resource limit, call\\n`kubectl describe pod` on the Pod of interest:\\n\\n```shell\\nkubectl describe pod simmemleak-hra99\\n```\\n\\nThe output is similar to:\\n```\\nName:                           simmemleak-hra99\\nNamespace:                      default\\nImage(s):                       saadali/simmemleak\\nNode:                           kubernetes-node-tf0f/10.240.216.66\\nLabel\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s029\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.88861,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "evidence": [
+                  {
+                    "chunkId": "k8s-manage-resources-containers:s029:p02",
+                    "docId": "k8s-manage-resources-containers",
+                    "title": "manage resources containers / My container is terminated",
+                    "snippet": "In the preceding example, the `Restart Count:  5` indicates that the `simmemleak`\ncontainer in the Pod was terminated and restarted five times (so far).\nThe `OOMKilled` reason shows that the container tried to use more memory than its limit.\n\nYour next step might be to check the application code for a memory leak. If you\nfind that the application is behaving how you expect, consider setting a higher\nmemory limit (and possibly request) for that container.\n\n## \n\n* Get hands-on experience [assignin",
+                    "source": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "k8s-manage-resources-containers:s029",
+                    "component": "kubernetes",
+                    "sourceRevision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+                    "rerankerScore": 0.98415,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  },
+                  {
+                    "chunkId": "k8s-manage-resources-containers:s002:p01",
+                    "docId": "k8s-manage-resources-containers",
+                    "title": "manage resources containers / Requests and limits",
+                    "snippet": "If the node where a Pod is running has enough of a resource available, it's possible (and\nallowed) for a container to use more resource than its `request` for that resource specifies.\n\nFor example, if you set a `memory` request of 256 MiB for a container, and that container is in\na Pod scheduled to a Node with 8GiB of memory and no other Pods, then the container can try to use\nmore RAM.\n\nLimits are a different story. Both `cpu` and `memory` limits are applied by the kubelet (and\n),\nand are ultim",
+                    "source": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "k8s-manage-resources-containers:s002",
+                    "component": "kubernetes",
+                    "sourceRevision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+                    "rerankerScore": 0.98029,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  },
+                  {
+                    "chunkId": "k8s-manage-resources-containers:s029:p01",
+                    "docId": "k8s-manage-resources-containers",
+                    "title": "manage resources containers / My container is terminated",
+                    "snippet": "Your container might get terminated because it is resource-starved. To check\nwhether a container is being killed because it is hitting a resource limit, call\n`kubectl describe pod` on the Pod of interest:\n\n```shell\nkubectl describe pod simmemleak-hra99\n```\n\nThe output is similar to:\n```\nName:                           simmemleak-hra99\nNamespace:                      default\nImage(s):                       saadali/simmemleak\nNode:                           kubernetes-node-tf0f/10.240.216.66\nLabel",
+                    "source": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "k8s-manage-resources-containers:s029",
+                    "component": "kubernetes",
+                    "sourceRevision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+                    "rerankerScore": 0.88861,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  }
+                ],
+                "trustLevel": "untrusted-retrieved-evidence"
+              }
+            },
+            "elapsedMs": 7490
+          }
+        ],
+        "events": [
+          {
+            "index": 1,
+            "type": "agent.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 2,
+            "type": "model.route.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "requestedTier": "strong",
+              "effectiveTier": "strong",
+              "confidence": 0.95,
+              "fallbackReason": null,
+              "source": "deterministic-fake",
+              "elapsedMs": 0,
+              "routerInputTokens": null
+            }
+          },
+          {
+            "index": 3,
+            "type": "sandbox.claim.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 4,
+            "type": "sandbox.claim.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 5,
+            "type": "context.transformed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 3,
+              "afterMessages": 3,
+              "beforeChars": 981,
+              "afterChars": 981,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 6,
+            "type": "turn.started",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 7,
+            "type": "model.completed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 8,
+            "type": "tool.started",
+            "iteration": 1,
+            "tool": "search_logs",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 9,
+            "type": "tool.completed",
+            "iteration": 1,
+            "tool": "search_logs",
+            "elapsedMs": 337,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 10,
+            "type": "turn.completed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 11,
+            "type": "context.transformed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 5,
+              "afterMessages": 5,
+              "beforeChars": 2235,
+              "afterChars": 2235,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 12,
+            "type": "turn.started",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 13,
+            "type": "model.completed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 14,
+            "type": "tool.started",
+            "iteration": 2,
+            "tool": "aggregate_logs",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 15,
+            "type": "tool.completed",
+            "iteration": 2,
+            "tool": "aggregate_logs",
+            "elapsedMs": 8,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 16,
+            "type": "turn.completed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 17,
+            "type": "context.transformed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 7,
+              "afterMessages": 7,
+              "beforeChars": 2827,
+              "afterChars": 2827,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 18,
+            "type": "turn.started",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 19,
+            "type": "model.completed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 20,
+            "type": "tool.started",
+            "iteration": 3,
+            "tool": "search_knowledge",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "knowledge",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 21,
+            "type": "tool.completed",
+            "iteration": 3,
+            "tool": "search_knowledge",
+            "elapsedMs": 7490,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "knowledge",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 22,
+            "type": "turn.completed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 23,
+            "type": "context.transformed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 9,
+              "afterMessages": 9,
+              "beforeChars": 6335,
+              "afterChars": 6335,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 24,
+            "type": "turn.started",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 25,
+            "type": "model.completed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "stop",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 26,
+            "type": "turn.completed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 27,
+            "type": "agent.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 28,
+            "type": "sandbox.release.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 29,
+            "type": "sandbox.release.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          }
+        ],
+        "verdict": "completed",
+        "final": {
+          "summary": "[确定性回放] 观察事实：payments 在指定窗口有 15 条 ERROR 日志。引用：log:log-15-payments-0@2026-09-01T00:15:00Z; log:log-16-payments-0@2026-09-01T00:16:00Z; log:log-17-payments-0@2026-09-01T00:17:00Z; chunk:k8s-manage-resources-containers:s029:p02; chunk:k8s-manage-resources-containers:s002:p01; chunk:k8s-manage-resources-containers:s029:p01",
+          "rootCause": "待验证假设：可能与容器内存限制或内存压力有关；日志标签不能证明实际 OOM 或泄漏。",
+          "severity": "warning",
+          "evidence": [
+            {
+              "source": "search_logs",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-payments-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-15-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-payments-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-16-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-payments-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"error_code\":\"OOM_KILLED\",\"trace_id\":\"trace-17-0\",\"message\":\"container terminated memory limit exceeded restart observed\",\"provenance\":\"synthetic\"}],\"truncated\":true}}"
+            },
+            {
+              "source": "aggregate_logs",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"payments\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"OOM_KILLED\",\"count\":15}]}}"
+            },
+            {
+              "source": "search_knowledge",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"k8s-manage-resources-containers:s029:p02\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / My container is terminated\",\"snippet\":\"In the preceding example, the `Restart Count:  5` indicates that the `simmemleak`\\ncontainer in the Pod was terminated and restarted five times (so far).\\nThe `OOMKilled` reason shows that the container tried to use more memory than its limit.\\n\\nYour next step might be to check the application code for a memory leak. If you\\nfind that the application is behaving how you expect, consider setting a higher\\nmemory limit (and possibly request) for that container.\\n\\n## \\n\\n* Get hands-on experience [assignin\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s029\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.98415,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-manage-resources-containers:s002:p01\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / Requests and limits\",\"snippet\":\"If the node where a Pod is running has enough of a resource available, it's possible (and\\nallowed) for a container to use more resource than its `request` for that resource specifies.\\n\\nFor example, if you set a `memory` request of 256 MiB for a container, and that container is in\\na Pod scheduled to a Node with 8GiB of memory and no other Pods, then the container can try to use\\nmore RAM.\\n\\nLimits are a different story. Both `cpu` and `memory` limits are applied by the kubelet (and\\n),\\nand are ultim\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s002\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.98029,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-manage-resources-containers:s029:p01\",\"docId\":\"k8s-manage-resources-containers\",\"title\":\"manage resources containers / My container is terminated\",\"snippet\":\"Your container might get terminated because it is resource-starved. To check\\nwhether a container is being killed because it is hitting a resource limit, call\\n`kubectl describe pod` on the Pod of interest:\\n\\n```shell\\nkubectl describe pod simmemleak-hra99\\n```\\n\\nThe output is similar to:\\n```\\nName:                           simmemleak-hra99\\nNamespace:                      default\\nImage(s):                       saadali/simmemleak\\nNode:                           kubernetes-node-tf0f/10.240.216.66\\nLabel\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-manage-resources-containers:s029\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.88861,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}"
+            }
+          ],
+          "injectionDetected": false,
+          "deniedActions": [],
+          "recommendation": "验证步骤与缺失信息：核对容器 last termination reason、memory limit 与同期内存峰值；缺少实际 Pod 状态和内存指标。 本演示未执行修复。",
+          "planId": null
+        },
+        "elapsedMs": 7847
+      }
+    },
+    {
+      "id": "checkout-service",
+      "scores": {
+        "toolOrderCorrect": true,
+        "toolParametersCorrect": true,
+        "toolsSucceeded": true,
+        "necessaryLogsObtained": true,
+        "aggregateCorrect": true,
+        "applicableDocumentRetrieved": true,
+        "citationIdsResolve": true,
+        "factHypothesisVerificationSeparated": true,
+        "statusSucceeded": true,
+        "branchRecoverable": true,
+        "sandboxReleased": true,
+        "routedOnce": true
+      },
+      "passed": true,
+      "diagnosis": {
+        "summary": "[确定性回放] 观察事实：checkout 在指定窗口有 15 条 ERROR 日志。引用：log:log-15-checkout-0@2026-09-01T00:15:00Z; log:log-16-checkout-0@2026-09-01T00:16:00Z; log:log-17-checkout-0@2026-09-01T00:17:00Z; chunk:fixture-checkout-service:s002:p01; chunk:k8s-debug-service:s010:p02; chunk:k8s-debug-service:s010:p01",
+        "rootCause": "待验证假设：可能是目标端口、后端监听或服务端点异常，需要现场验证。",
+        "severity": "warning",
+        "evidence": [
+          {
+            "source": "search_logs",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-checkout-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-15-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-checkout-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-16-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-checkout-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-17-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"}],\"truncated\":true}}"
+          },
+          {
+            "source": "aggregate_logs",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"CONNECTION_REFUSED\",\"count\":15}]}}"
+          },
+          {
+            "source": "search_knowledge",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"fixture-checkout-service:s002:p01\",\"docId\":\"fixture-checkout-service\",\"title\":\"fixture-checkout-service / Diagnosis\",\"snippet\":\"Check the destination Service, selectors and EndpointSlices. Compare the Service targetPort with the application's listening port and validate backend Pod readiness. Inspect logs and events from the relevant backend before testing connectivity. Check DNS only if name resolution is implicated by the evidence.\",\"source\":\"synthetic://sandboxd/fixture-checkout-service\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"fixture-checkout-service:s002\",\"component\":\"project-fixture\",\"sourceRevision\":\"fixture-v1\",\"rerankerScore\":0.96649,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-debug-service:s010:p02\",\"docId\":\"k8s-debug-service\",\"title\":\"debug service / Does the Service have any EndpointSlices?\",\"snippet\":\"This confirms that the EndpointSlice controller has found the correct Pods for\\nyour Service.  If the `ENDPOINTS` column is `<none>`, you should check that\\nthe `spec.selector` field of your Service actually selects for\\n`metadata.labels` values on your Pods.  A common mistake is to have a typo or\\nother error, such as the Service selecting for `app=hostnames`, but the\\nDeployment specifying `run=hostnames`, as in versions previous to 1.18, where\\nthe `kubectl run` command could have been also used to\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-debug-service:s010\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.76072,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-debug-service:s010:p01\",\"docId\":\"k8s-debug-service\",\"title\":\"debug service / Does the Service have any EndpointSlices?\",\"snippet\":\"If you got this far, you have confirmed that your Service is correctly\\ndefined and is resolved by DNS.  Now let's check that the Pods you ran are\\nactually being selected by the Service.\\n\\nEarlier you saw that the Pods were running.  You can re-check that:\\n\\n```shell\\nkubectl get pods -l app=hostnames\\n```\\n```none\\nNAME                        READY     STATUS    RESTARTS   AGE\\nhostnames-632524106-bbpiw   1/1       Running   0          1h\\nhostnames-632524106-ly40y   1/1       Running   0          1h\\nho\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-debug-service:s010\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.66805,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}"
+          }
+        ],
+        "injectionDetected": false,
+        "deniedActions": [],
+        "recommendation": "验证步骤与缺失信息：核对 Service selector、targetPort、EndpointSlices 和后端就绪；缺少实际 Service 配置和 Pod 状态。 本演示未执行修复。",
+        "planId": null
+      },
+      "trace": {
+        "taskId": "task-ops-checkout-service",
+        "mode": "replay",
+        "model": "ops-scripted-replay",
+        "provider": "deterministic-replay",
+        "capabilities": {
+          "toolCalling": true,
+          "deterministic": true
+        },
+        "plugins": [
+          {
+            "id": "prometheus",
+            "version": "1.0.0",
+            "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+            "capabilities": [
+              "network:prometheus",
+              "metrics:read"
+            ],
+            "tools": [
+              "query_prometheus"
+            ]
+          },
+          {
+            "id": "kubernetes",
+            "version": "1.0.0",
+            "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+            "capabilities": [
+              "sandbox:claim",
+              "kubernetes:read",
+              "deployment-scale:propose"
+            ],
+            "tools": [
+              "kubernetes_read",
+              "propose_plan"
+            ]
+          },
+          {
+            "id": "linux-host",
+            "version": "1.0.0",
+            "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+            "capabilities": [
+              "network:ssh",
+              "linux:read"
+            ],
+            "tools": [
+              "linux_read"
+            ]
+          },
+          {
+            "id": "files",
+            "version": "1.0.0",
+            "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+            "capabilities": [
+              "task-workspace:read",
+              "task-workspace:write"
+            ],
+            "tools": [
+              "list_files",
+              "read_file",
+              "search_files",
+              "write_file",
+              "edit_file"
+            ]
+          },
+          {
+            "id": "memory",
+            "version": "0.1.0",
+            "description": "按需读取有界的历史项目记忆；内容仅供参考，不授予权限",
+            "capabilities": [
+              "project-memory:read"
+            ],
+            "tools": [
+              "read_memory"
+            ]
+          },
+          {
+            "id": "knowledge",
+            "version": "0.1.0",
+            "description": "从固定版本语料读取带来源片段；不授予任何执行权限",
+            "capabilities": [
+              "project-knowledge:read"
+            ],
+            "tools": [
+              "search_knowledge"
+            ]
+          },
+          {
+            "id": "logs",
+            "version": "0.1.0",
+            "description": "查询固定日志快照及精确聚合",
+            "capabilities": [
+              "logs:read"
+            ],
+            "tools": [
+              "search_logs",
+              "aggregate_logs"
+            ]
+          }
+        ],
+        "modelUsage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "routing": {
+          "requestedTier": "strong",
+          "effectiveTier": "strong",
+          "confidence": 0.95,
+          "fallbackReason": null,
+          "source": "deterministic-fake",
+          "elapsedMs": 0,
+          "routerInputTokens": null,
+          "estimatedModelCostUsd": null,
+          "routerCostUsd": null
+        },
+        "sandboxId": "phase7-fake-sandbox",
+        "alertFingerprint": "",
+        "injectedVia": [],
+        "steps": [
+          {
+            "index": 1,
+            "node": "execute_tool",
+            "tool": "search_logs",
+            "arguments": {
+              "start": "2026-09-01T00:15:00Z",
+              "end": "2026-09-01T00:30:00Z",
+              "service": "checkout",
+              "level": "ERROR",
+              "limit": 3
+            },
+            "pluginId": "logs",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-checkout-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-15-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-checkout-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-16-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-checkout-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-17-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"}],\"truncated\":true}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+                "query": {
+                  "start": "2026-09-01T00:15:00Z",
+                  "end": "2026-09-01T00:30:00Z",
+                  "service": "checkout",
+                  "level": "ERROR",
+                  "limit": 3
+                },
+                "total": 15,
+                "trustLevel": "untrusted-log-evidence",
+                "logs": [
+                  {
+                    "log_id": "log-15-checkout-0",
+                    "timestamp": "2026-09-01T00:15:00Z",
+                    "service": "checkout",
+                    "level": "ERROR",
+                    "error_code": "CONNECTION_REFUSED",
+                    "trace_id": "trace-15-0",
+                    "message": "upstream connection refused service endpoint unavailable",
+                    "provenance": "synthetic"
+                  },
+                  {
+                    "log_id": "log-16-checkout-0",
+                    "timestamp": "2026-09-01T00:16:00Z",
+                    "service": "checkout",
+                    "level": "ERROR",
+                    "error_code": "CONNECTION_REFUSED",
+                    "trace_id": "trace-16-0",
+                    "message": "upstream connection refused service endpoint unavailable",
+                    "provenance": "synthetic"
+                  },
+                  {
+                    "log_id": "log-17-checkout-0",
+                    "timestamp": "2026-09-01T00:17:00Z",
+                    "service": "checkout",
+                    "level": "ERROR",
+                    "error_code": "CONNECTION_REFUSED",
+                    "trace_id": "trace-17-0",
+                    "message": "upstream connection refused service endpoint unavailable",
+                    "provenance": "synthetic"
+                  }
+                ],
+                "truncated": true
+              }
+            },
+            "elapsedMs": 7
+          },
+          {
+            "index": 2,
+            "node": "execute_tool",
+            "tool": "aggregate_logs",
+            "arguments": {
+              "start": "2026-09-01T00:15:00Z",
+              "end": "2026-09-01T00:30:00Z",
+              "service": "checkout",
+              "level": "ERROR",
+              "limit": 3,
+              "group_by": "error_code"
+            },
+            "pluginId": "logs",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"CONNECTION_REFUSED\",\"count\":15}]}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+                "query": {
+                  "start": "2026-09-01T00:15:00Z",
+                  "end": "2026-09-01T00:30:00Z",
+                  "service": "checkout",
+                  "level": "ERROR",
+                  "limit": 3,
+                  "group_by": "error_code",
+                  "metric": "count"
+                },
+                "total": 15,
+                "trustLevel": "untrusted-log-evidence",
+                "buckets": [
+                  {
+                    "key": "CONNECTION_REFUSED",
+                    "count": 15
+                  }
+                ]
+              }
+            },
+            "elapsedMs": 5
+          },
+          {
+            "index": 3,
+            "node": "execute_tool",
+            "tool": "search_knowledge",
+            "arguments": {
+              "query": "Service connection refused selector targetPort EndpointSlices backend Pods diagnosis",
+              "topK": 3
+            },
+            "pluginId": "knowledge",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"fixture-checkout-service:s002:p01\",\"docId\":\"fixture-checkout-service\",\"title\":\"fixture-checkout-service / Diagnosis\",\"snippet\":\"Check the destination Service, selectors and EndpointSlices. Compare the Service targetPort with the application's listening port and validate backend Pod readiness. Inspect logs and events from the relevant backend before testing connectivity. Check DNS only if name resolution is implicated by the evidence.\",\"source\":\"synthetic://sandboxd/fixture-checkout-service\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"fixture-checkout-service:s002\",\"component\":\"project-fixture\",\"sourceRevision\":\"fixture-v1\",\"rerankerScore\":0.96649,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-debug-service:s010:p02\",\"docId\":\"k8s-debug-service\",\"title\":\"debug service / Does the Service have any EndpointSlices?\",\"snippet\":\"This confirms that the EndpointSlice controller has found the correct Pods for\\nyour Service.  If the `ENDPOINTS` column is `<none>`, you should check that\\nthe `spec.selector` field of your Service actually selects for\\n`metadata.labels` values on your Pods.  A common mistake is to have a typo or\\nother error, such as the Service selecting for `app=hostnames`, but the\\nDeployment specifying `run=hostnames`, as in versions previous to 1.18, where\\nthe `kubectl run` command could have been also used to\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-debug-service:s010\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.76072,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-debug-service:s010:p01\",\"docId\":\"k8s-debug-service\",\"title\":\"debug service / Does the Service have any EndpointSlices?\",\"snippet\":\"If you got this far, you have confirmed that your Service is correctly\\ndefined and is resolved by DNS.  Now let's check that the Pods you ran are\\nactually being selected by the Service.\\n\\nEarlier you saw that the Pods were running.  You can re-check that:\\n\\n```shell\\nkubectl get pods -l app=hostnames\\n```\\n```none\\nNAME                        READY     STATUS    RESTARTS   AGE\\nhostnames-632524106-bbpiw   1/1       Running   0          1h\\nhostnames-632524106-ly40y   1/1       Running   0          1h\\nho\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-debug-service:s010\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.66805,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "evidence": [
+                  {
+                    "chunkId": "fixture-checkout-service:s002:p01",
+                    "docId": "fixture-checkout-service",
+                    "title": "fixture-checkout-service / Diagnosis",
+                    "snippet": "Check the destination Service, selectors and EndpointSlices. Compare the Service targetPort with the application's listening port and validate backend Pod readiness. Inspect logs and events from the relevant backend before testing connectivity. Check DNS only if name resolution is implicated by the evidence.",
+                    "source": "synthetic://sandboxd/fixture-checkout-service",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "fixture-checkout-service:s002",
+                    "component": "project-fixture",
+                    "sourceRevision": "fixture-v1",
+                    "rerankerScore": 0.96649,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  },
+                  {
+                    "chunkId": "k8s-debug-service:s010:p02",
+                    "docId": "k8s-debug-service",
+                    "title": "debug service / Does the Service have any EndpointSlices?",
+                    "snippet": "This confirms that the EndpointSlice controller has found the correct Pods for\nyour Service.  If the `ENDPOINTS` column is `<none>`, you should check that\nthe `spec.selector` field of your Service actually selects for\n`metadata.labels` values on your Pods.  A common mistake is to have a typo or\nother error, such as the Service selecting for `app=hostnames`, but the\nDeployment specifying `run=hostnames`, as in versions previous to 1.18, where\nthe `kubectl run` command could have been also used to",
+                    "source": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "k8s-debug-service:s010",
+                    "component": "kubernetes",
+                    "sourceRevision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+                    "rerankerScore": 0.76072,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  },
+                  {
+                    "chunkId": "k8s-debug-service:s010:p01",
+                    "docId": "k8s-debug-service",
+                    "title": "debug service / Does the Service have any EndpointSlices?",
+                    "snippet": "If you got this far, you have confirmed that your Service is correctly\ndefined and is resolved by DNS.  Now let's check that the Pods you ran are\nactually being selected by the Service.\n\nEarlier you saw that the Pods were running.  You can re-check that:\n\n```shell\nkubectl get pods -l app=hostnames\n```\n```none\nNAME                        READY     STATUS    RESTARTS   AGE\nhostnames-632524106-bbpiw   1/1       Running   0          1h\nhostnames-632524106-ly40y   1/1       Running   0          1h\nho",
+                    "source": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "k8s-debug-service:s010",
+                    "component": "kubernetes",
+                    "sourceRevision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+                    "rerankerScore": 0.66805,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  }
+                ],
+                "trustLevel": "untrusted-retrieved-evidence"
+              }
+            },
+            "elapsedMs": 6776
+          }
+        ],
+        "events": [
+          {
+            "index": 1,
+            "type": "agent.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 2,
+            "type": "model.route.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "requestedTier": "strong",
+              "effectiveTier": "strong",
+              "confidence": 0.95,
+              "fallbackReason": null,
+              "source": "deterministic-fake",
+              "elapsedMs": 0,
+              "routerInputTokens": null
+            }
+          },
+          {
+            "index": 3,
+            "type": "sandbox.claim.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 4,
+            "type": "sandbox.claim.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 5,
+            "type": "context.transformed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 3,
+              "afterMessages": 3,
+              "beforeChars": 983,
+              "afterChars": 983,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 6,
+            "type": "turn.started",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 7,
+            "type": "model.completed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 8,
+            "type": "tool.started",
+            "iteration": 1,
+            "tool": "search_logs",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 9,
+            "type": "tool.completed",
+            "iteration": 1,
+            "tool": "search_logs",
+            "elapsedMs": 7,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 10,
+            "type": "turn.completed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 11,
+            "type": "context.transformed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 5,
+              "afterMessages": 5,
+              "beforeChars": 2252,
+              "afterChars": 2252,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 12,
+            "type": "turn.started",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 13,
+            "type": "model.completed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 14,
+            "type": "tool.started",
+            "iteration": 2,
+            "tool": "aggregate_logs",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 15,
+            "type": "tool.completed",
+            "iteration": 2,
+            "tool": "aggregate_logs",
+            "elapsedMs": 5,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 16,
+            "type": "turn.completed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 17,
+            "type": "context.transformed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 7,
+              "afterMessages": 7,
+              "beforeChars": 2852,
+              "afterChars": 2852,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 18,
+            "type": "turn.started",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 19,
+            "type": "model.completed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 20,
+            "type": "tool.started",
+            "iteration": 3,
+            "tool": "search_knowledge",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "knowledge",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 21,
+            "type": "tool.completed",
+            "iteration": 3,
+            "tool": "search_knowledge",
+            "elapsedMs": 6776,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "knowledge",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 22,
+            "type": "turn.completed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 23,
+            "type": "context.transformed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 9,
+              "afterMessages": 9,
+              "beforeChars": 5906,
+              "afterChars": 5906,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 24,
+            "type": "turn.started",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 25,
+            "type": "model.completed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "stop",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 26,
+            "type": "turn.completed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 27,
+            "type": "agent.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 28,
+            "type": "sandbox.release.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 29,
+            "type": "sandbox.release.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          }
+        ],
+        "verdict": "completed",
+        "final": {
+          "summary": "[确定性回放] 观察事实：checkout 在指定窗口有 15 条 ERROR 日志。引用：log:log-15-checkout-0@2026-09-01T00:15:00Z; log:log-16-checkout-0@2026-09-01T00:16:00Z; log:log-17-checkout-0@2026-09-01T00:17:00Z; chunk:fixture-checkout-service:s002:p01; chunk:k8s-debug-service:s010:p02; chunk:k8s-debug-service:s010:p01",
+          "rootCause": "待验证假设：可能是目标端口、后端监听或服务端点异常，需要现场验证。",
+          "severity": "warning",
+          "evidence": [
+            {
+              "source": "search_logs",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-checkout-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-15-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-checkout-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-16-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-checkout-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"error_code\":\"CONNECTION_REFUSED\",\"trace_id\":\"trace-17-0\",\"message\":\"upstream connection refused service endpoint unavailable\",\"provenance\":\"synthetic\"}],\"truncated\":true}}"
+            },
+            {
+              "source": "aggregate_logs",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"checkout\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"CONNECTION_REFUSED\",\"count\":15}]}}"
+            },
+            {
+              "source": "search_knowledge",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"fixture-checkout-service:s002:p01\",\"docId\":\"fixture-checkout-service\",\"title\":\"fixture-checkout-service / Diagnosis\",\"snippet\":\"Check the destination Service, selectors and EndpointSlices. Compare the Service targetPort with the application's listening port and validate backend Pod readiness. Inspect logs and events from the relevant backend before testing connectivity. Check DNS only if name resolution is implicated by the evidence.\",\"source\":\"synthetic://sandboxd/fixture-checkout-service\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"fixture-checkout-service:s002\",\"component\":\"project-fixture\",\"sourceRevision\":\"fixture-v1\",\"rerankerScore\":0.96649,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-debug-service:s010:p02\",\"docId\":\"k8s-debug-service\",\"title\":\"debug service / Does the Service have any EndpointSlices?\",\"snippet\":\"This confirms that the EndpointSlice controller has found the correct Pods for\\nyour Service.  If the `ENDPOINTS` column is `<none>`, you should check that\\nthe `spec.selector` field of your Service actually selects for\\n`metadata.labels` values on your Pods.  A common mistake is to have a typo or\\nother error, such as the Service selecting for `app=hostnames`, but the\\nDeployment specifying `run=hostnames`, as in versions previous to 1.18, where\\nthe `kubectl run` command could have been also used to\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-debug-service:s010\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.76072,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"k8s-debug-service:s010:p01\",\"docId\":\"k8s-debug-service\",\"title\":\"debug service / Does the Service have any EndpointSlices?\",\"snippet\":\"If you got this far, you have confirmed that your Service is correctly\\ndefined and is resolved by DNS.  Now let's check that the Pods you ran are\\nactually being selected by the Service.\\n\\nEarlier you saw that the Pods were running.  You can re-check that:\\n\\n```shell\\nkubectl get pods -l app=hostnames\\n```\\n```none\\nNAME                        READY     STATUS    RESTARTS   AGE\\nhostnames-632524106-bbpiw   1/1       Running   0          1h\\nhostnames-632524106-ly40y   1/1       Running   0          1h\\nho\",\"source\":\"https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"k8s-debug-service:s010\",\"component\":\"kubernetes\",\"sourceRevision\":\"4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1\",\"rerankerScore\":0.66805,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}"
+            }
+          ],
+          "injectionDetected": false,
+          "deniedActions": [],
+          "recommendation": "验证步骤与缺失信息：核对 Service selector、targetPort、EndpointSlices 和后端就绪；缺少实际 Service 配置和 Pod 状态。 本演示未执行修复。",
+          "planId": null
+        },
+        "elapsedMs": 6800
+      }
+    },
+    {
+      "id": "catalog-readiness",
+      "scores": {
+        "toolOrderCorrect": true,
+        "toolParametersCorrect": true,
+        "toolsSucceeded": true,
+        "necessaryLogsObtained": true,
+        "aggregateCorrect": true,
+        "applicableDocumentRetrieved": true,
+        "citationIdsResolve": true,
+        "factHypothesisVerificationSeparated": true,
+        "statusSucceeded": true,
+        "branchRecoverable": true,
+        "sandboxReleased": true,
+        "routedOnce": true
+      },
+      "passed": true,
+      "diagnosis": {
+        "summary": "[确定性回放] 观察事实：catalog 在指定窗口有 15 条 ERROR 日志。引用：log:log-15-catalog-0@2026-09-01T00:15:00Z; log:log-16-catalog-0@2026-09-01T00:16:00Z; log:log-17-catalog-0@2026-09-01T00:17:00Z; chunk:runbook-KubePodNotReady:s003:p01; chunk:runbook-KubePodCrashLooping:s003:p01; chunk:runbook-KubePodNotReady:s001:p01",
+        "rootCause": "待验证假设：可能未满足 readiness 条件；这不等于已经证明进程死亡或需要重启。",
+        "severity": "warning",
+        "evidence": [
+          {
+            "source": "search_logs",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-catalog-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-15-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-catalog-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-16-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-catalog-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-17-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"}],\"truncated\":true}}"
+          },
+          {
+            "source": "aggregate_logs",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"READINESS_FAILED\",\"count\":15}]}}"
+          },
+          {
+            "source": "search_knowledge",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"runbook-KubePodNotReady:s003:p01\",\"docId\":\"runbook-KubePodNotReady\",\"title\":\"KubePodNotReady / Diagnosis\",\"snippet\":\"- Check template via `kubectl -n $NAMESPACE get pod $POD`.\\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\\n- Check pod template parameters such as:\\n  - pod priority\\n  - resources - maybe it tries to use unavailable resource, such as GPU but\\n    there is limited number of nodes with GPU\\n  - readiness and liveness probes may be incorrect - wrong port or command,\\n    check is failing too fast due to short timeout\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodNotReady:s003\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.99606,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"runbook-KubePodCrashLooping:s003:p01\",\"docId\":\"runbook-KubePodCrashLooping\",\"title\":\"KubePodCrashLooping / Diagnosis\",\"snippet\":\"- Check template via `kubectl -n $NAMESPACE get pod $POD`.\\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\\n- Check pod template parameters such as:\\n  - pod priority\\n  - resources - maybe it tries to use unavailable resource, such as GPU but\\n    there is limited number of nodes with GPU\\n  - readiness and liveness probes may be incorrect - wrong port or command,\\n    check is failing too fast due to short timeout\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodCrashLooping.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodCrashLooping:s003\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.99022,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"runbook-KubePodNotReady:s001:p01\",\"docId\":\"runbook-KubePodNotReady\",\"title\":\"KubePodNotReady / Meaning\",\"snippet\":\"Pod has been in a non-ready state for more than 15 minutes.\\n\\nState Running but not ready means readiness probe fails.\\nState Pending means pod can not be created for specific namespace and node.\\n\\n<details>\\n<summary>Full context</summary>\\n\\nPod failed to reach ready state, depending on the readiness/liveness probes.\\nSee [pod-lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)\\n\\n</details>\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodNotReady:s001\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.98301,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}"
+          }
+        ],
+        "injectionDetected": false,
+        "deniedActions": [],
+        "recommendation": "验证步骤与缺失信息：核对 readiness probe、Pod conditions、events 和应用响应；缺少实际探针配置与 Pod 事件。 本演示未执行修复。",
+        "planId": null
+      },
+      "trace": {
+        "taskId": "task-ops-catalog-readiness",
+        "mode": "replay",
+        "model": "ops-scripted-replay",
+        "provider": "deterministic-replay",
+        "capabilities": {
+          "toolCalling": true,
+          "deterministic": true
+        },
+        "plugins": [
+          {
+            "id": "prometheus",
+            "version": "1.0.0",
+            "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+            "capabilities": [
+              "network:prometheus",
+              "metrics:read"
+            ],
+            "tools": [
+              "query_prometheus"
+            ]
+          },
+          {
+            "id": "kubernetes",
+            "version": "1.0.0",
+            "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+            "capabilities": [
+              "sandbox:claim",
+              "kubernetes:read",
+              "deployment-scale:propose"
+            ],
+            "tools": [
+              "kubernetes_read",
+              "propose_plan"
+            ]
+          },
+          {
+            "id": "linux-host",
+            "version": "1.0.0",
+            "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+            "capabilities": [
+              "network:ssh",
+              "linux:read"
+            ],
+            "tools": [
+              "linux_read"
+            ]
+          },
+          {
+            "id": "files",
+            "version": "1.0.0",
+            "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+            "capabilities": [
+              "task-workspace:read",
+              "task-workspace:write"
+            ],
+            "tools": [
+              "list_files",
+              "read_file",
+              "search_files",
+              "write_file",
+              "edit_file"
+            ]
+          },
+          {
+            "id": "memory",
+            "version": "0.1.0",
+            "description": "按需读取有界的历史项目记忆；内容仅供参考，不授予权限",
+            "capabilities": [
+              "project-memory:read"
+            ],
+            "tools": [
+              "read_memory"
+            ]
+          },
+          {
+            "id": "knowledge",
+            "version": "0.1.0",
+            "description": "从固定版本语料读取带来源片段；不授予任何执行权限",
+            "capabilities": [
+              "project-knowledge:read"
+            ],
+            "tools": [
+              "search_knowledge"
+            ]
+          },
+          {
+            "id": "logs",
+            "version": "0.1.0",
+            "description": "查询固定日志快照及精确聚合",
+            "capabilities": [
+              "logs:read"
+            ],
+            "tools": [
+              "search_logs",
+              "aggregate_logs"
+            ]
+          }
+        ],
+        "modelUsage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "routing": {
+          "requestedTier": "strong",
+          "effectiveTier": "strong",
+          "confidence": 0.95,
+          "fallbackReason": null,
+          "source": "deterministic-fake",
+          "elapsedMs": 0,
+          "routerInputTokens": null,
+          "estimatedModelCostUsd": null,
+          "routerCostUsd": null
+        },
+        "sandboxId": "phase7-fake-sandbox",
+        "alertFingerprint": "",
+        "injectedVia": [],
+        "steps": [
+          {
+            "index": 1,
+            "node": "execute_tool",
+            "tool": "search_logs",
+            "arguments": {
+              "start": "2026-09-01T00:15:00Z",
+              "end": "2026-09-01T00:30:00Z",
+              "service": "catalog",
+              "level": "ERROR",
+              "limit": 3
+            },
+            "pluginId": "logs",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-catalog-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-15-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-catalog-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-16-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-catalog-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-17-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"}],\"truncated\":true}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+                "query": {
+                  "start": "2026-09-01T00:15:00Z",
+                  "end": "2026-09-01T00:30:00Z",
+                  "service": "catalog",
+                  "level": "ERROR",
+                  "limit": 3
+                },
+                "total": 15,
+                "trustLevel": "untrusted-log-evidence",
+                "logs": [
+                  {
+                    "log_id": "log-15-catalog-0",
+                    "timestamp": "2026-09-01T00:15:00Z",
+                    "service": "catalog",
+                    "level": "ERROR",
+                    "error_code": "READINESS_FAILED",
+                    "trace_id": "trace-15-0",
+                    "message": "readiness probe failed connection timeout",
+                    "provenance": "synthetic"
+                  },
+                  {
+                    "log_id": "log-16-catalog-0",
+                    "timestamp": "2026-09-01T00:16:00Z",
+                    "service": "catalog",
+                    "level": "ERROR",
+                    "error_code": "READINESS_FAILED",
+                    "trace_id": "trace-16-0",
+                    "message": "readiness probe failed connection timeout",
+                    "provenance": "synthetic"
+                  },
+                  {
+                    "log_id": "log-17-catalog-0",
+                    "timestamp": "2026-09-01T00:17:00Z",
+                    "service": "catalog",
+                    "level": "ERROR",
+                    "error_code": "READINESS_FAILED",
+                    "trace_id": "trace-17-0",
+                    "message": "readiness probe failed connection timeout",
+                    "provenance": "synthetic"
+                  }
+                ],
+                "truncated": true
+              }
+            },
+            "elapsedMs": 6
+          },
+          {
+            "index": 2,
+            "node": "execute_tool",
+            "tool": "aggregate_logs",
+            "arguments": {
+              "start": "2026-09-01T00:15:00Z",
+              "end": "2026-09-01T00:30:00Z",
+              "service": "catalog",
+              "level": "ERROR",
+              "limit": 3,
+              "group_by": "error_code"
+            },
+            "pluginId": "logs",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"READINESS_FAILED\",\"count\":15}]}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "snapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+                "query": {
+                  "start": "2026-09-01T00:15:00Z",
+                  "end": "2026-09-01T00:30:00Z",
+                  "service": "catalog",
+                  "level": "ERROR",
+                  "limit": 3,
+                  "group_by": "error_code",
+                  "metric": "count"
+                },
+                "total": 15,
+                "trustLevel": "untrusted-log-evidence",
+                "buckets": [
+                  {
+                    "key": "READINESS_FAILED",
+                    "count": 15
+                  }
+                ]
+              }
+            },
+            "elapsedMs": 4
+          },
+          {
+            "index": 3,
+            "node": "execute_tool",
+            "tool": "search_knowledge",
+            "arguments": {
+              "query": "KubePodNotReady readiness probe failed running pod diagnosis",
+              "topK": 3
+            },
+            "pluginId": "knowledge",
+            "pluginVersion": "0.1.0",
+            "denied": false,
+            "denyLayer": "",
+            "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"runbook-KubePodNotReady:s003:p01\",\"docId\":\"runbook-KubePodNotReady\",\"title\":\"KubePodNotReady / Diagnosis\",\"snippet\":\"- Check template via `kubectl -n $NAMESPACE get pod $POD`.\\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\\n- Check pod template parameters such as:\\n  - pod priority\\n  - resources - maybe it tries to use unavailable resource, such as GPU but\\n    there is limited number of nodes with GPU\\n  - readiness and liveness probes may be incorrect - wrong port or command,\\n    check is failing too fast due to short timeout\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodNotReady:s003\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.99606,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"runbook-KubePodCrashLooping:s003:p01\",\"docId\":\"runbook-KubePodCrashLooping\",\"title\":\"KubePodCrashLooping / Diagnosis\",\"snippet\":\"- Check template via `kubectl -n $NAMESPACE get pod $POD`.\\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\\n- Check pod template parameters such as:\\n  - pod priority\\n  - resources - maybe it tries to use unavailable resource, such as GPU but\\n    there is limited number of nodes with GPU\\n  - readiness and liveness probes may be incorrect - wrong port or command,\\n    check is failing too fast due to short timeout\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodCrashLooping.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodCrashLooping:s003\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.99022,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"runbook-KubePodNotReady:s001:p01\",\"docId\":\"runbook-KubePodNotReady\",\"title\":\"KubePodNotReady / Meaning\",\"snippet\":\"Pod has been in a non-ready state for more than 15 minutes.\\n\\nState Running but not ready means readiness probe fails.\\nState Pending means pod can not be created for specific namespace and node.\\n\\n<details>\\n<summary>Full context</summary>\\n\\nPod failed to reach ready state, depending on the readiness/liveness probes.\\nSee [pod-lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)\\n\\n</details>\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodNotReady:s001\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.98301,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}",
+            "auditDetails": {
+              "ok": true,
+              "statusCode": 200,
+              "body": {
+                "evidence": [
+                  {
+                    "chunkId": "runbook-KubePodNotReady:s003:p01",
+                    "docId": "runbook-KubePodNotReady",
+                    "title": "KubePodNotReady / Diagnosis",
+                    "snippet": "- Check template via `kubectl -n $NAMESPACE get pod $POD`.\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\n- Check pod template parameters such as:\n  - pod priority\n  - resources - maybe it tries to use unavailable resource, such as GPU but\n    there is limited number of nodes with GPU\n  - readiness and liveness probes may be incorrect - wrong port or command,\n    check is failing too fast due to short timeout",
+                    "source": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "runbook-KubePodNotReady:s003",
+                    "component": "kubernetes",
+                    "sourceRevision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+                    "rerankerScore": 0.99606,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  },
+                  {
+                    "chunkId": "runbook-KubePodCrashLooping:s003:p01",
+                    "docId": "runbook-KubePodCrashLooping",
+                    "title": "KubePodCrashLooping / Diagnosis",
+                    "snippet": "- Check template via `kubectl -n $NAMESPACE get pod $POD`.\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\n- Check pod template parameters such as:\n  - pod priority\n  - resources - maybe it tries to use unavailable resource, such as GPU but\n    there is limited number of nodes with GPU\n  - readiness and liveness probes may be incorrect - wrong port or command,\n    check is failing too fast due to short timeout",
+                    "source": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodCrashLooping.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "runbook-KubePodCrashLooping:s003",
+                    "component": "kubernetes",
+                    "sourceRevision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+                    "rerankerScore": 0.99022,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  },
+                  {
+                    "chunkId": "runbook-KubePodNotReady:s001:p01",
+                    "docId": "runbook-KubePodNotReady",
+                    "title": "KubePodNotReady / Meaning",
+                    "snippet": "Pod has been in a non-ready state for more than 15 minutes.\n\nState Running but not ready means readiness probe fails.\nState Pending means pod can not be created for specific namespace and node.\n\n<details>\n<summary>Full context</summary>\n\nPod failed to reach ready state, depending on the readiness/liveness probes.\nSee [pod-lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)\n\n</details>",
+                    "source": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md",
+                    "corpusVersion": "ops-v1",
+                    "sectionId": "runbook-KubePodNotReady:s001",
+                    "component": "kubernetes",
+                    "sourceRevision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+                    "rerankerScore": 0.98301,
+                    "trustLevel": "untrusted-retrieved-evidence"
+                  }
+                ],
+                "trustLevel": "untrusted-retrieved-evidence"
+              }
+            },
+            "elapsedMs": 5497
+          }
+        ],
+        "events": [
+          {
+            "index": 1,
+            "type": "agent.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 2,
+            "type": "model.route.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "requestedTier": "strong",
+              "effectiveTier": "strong",
+              "confidence": 0.95,
+              "fallbackReason": null,
+              "source": "deterministic-fake",
+              "elapsedMs": 0,
+              "routerInputTokens": null
+            }
+          },
+          {
+            "index": 3,
+            "type": "sandbox.claim.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 4,
+            "type": "sandbox.claim.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 5,
+            "type": "context.transformed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 3,
+              "afterMessages": 3,
+              "beforeChars": 982,
+              "afterChars": 982,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 6,
+            "type": "turn.started",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 7,
+            "type": "model.completed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 8,
+            "type": "tool.started",
+            "iteration": 1,
+            "tool": "search_logs",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 9,
+            "type": "tool.completed",
+            "iteration": 1,
+            "tool": "search_logs",
+            "elapsedMs": 6,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 10,
+            "type": "turn.completed",
+            "iteration": 1,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 11,
+            "type": "context.transformed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 5,
+              "afterMessages": 5,
+              "beforeChars": 2192,
+              "afterChars": 2192,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 12,
+            "type": "turn.started",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 13,
+            "type": "model.completed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 14,
+            "type": "tool.started",
+            "iteration": 2,
+            "tool": "aggregate_logs",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 15,
+            "type": "tool.completed",
+            "iteration": 2,
+            "tool": "aggregate_logs",
+            "elapsedMs": 4,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "logs",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 16,
+            "type": "turn.completed",
+            "iteration": 2,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 17,
+            "type": "context.transformed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 7,
+              "afterMessages": 7,
+              "beforeChars": 2788,
+              "afterChars": 2788,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 18,
+            "type": "turn.started",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 19,
+            "type": "model.completed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "tool_calls",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 20,
+            "type": "tool.started",
+            "iteration": 3,
+            "tool": "search_knowledge",
+            "elapsedMs": 0,
+            "details": {
+              "pluginId": "knowledge",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 21,
+            "type": "tool.completed",
+            "iteration": 3,
+            "tool": "search_knowledge",
+            "elapsedMs": 5497,
+            "details": {
+              "denied": false,
+              "denyLayer": "",
+              "statusCode": 200,
+              "pluginId": "knowledge",
+              "pluginVersion": "0.1.0"
+            }
+          },
+          {
+            "index": 22,
+            "type": "turn.completed",
+            "iteration": 3,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 23,
+            "type": "context.transformed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "beforeMessages": 9,
+              "afterMessages": 9,
+              "beforeChars": 6020,
+              "afterChars": 6020,
+              "trimmed": false
+            }
+          },
+          {
+            "index": 24,
+            "type": "turn.started",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 25,
+            "type": "model.completed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {
+              "finishReason": "stop",
+              "usage": {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "totalTokens": 0
+              }
+            }
+          },
+          {
+            "index": 26,
+            "type": "turn.completed",
+            "iteration": 4,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 27,
+            "type": "agent.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 28,
+            "type": "sandbox.release.started",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          },
+          {
+            "index": 29,
+            "type": "sandbox.release.completed",
+            "iteration": null,
+            "tool": "",
+            "elapsedMs": 0,
+            "details": {}
+          }
+        ],
+        "verdict": "completed",
+        "final": {
+          "summary": "[确定性回放] 观察事实：catalog 在指定窗口有 15 条 ERROR 日志。引用：log:log-15-catalog-0@2026-09-01T00:15:00Z; log:log-16-catalog-0@2026-09-01T00:16:00Z; log:log-17-catalog-0@2026-09-01T00:17:00Z; chunk:runbook-KubePodNotReady:s003:p01; chunk:runbook-KubePodCrashLooping:s003:p01; chunk:runbook-KubePodNotReady:s001:p01",
+          "rootCause": "待验证假设：可能未满足 readiness 条件；这不等于已经证明进程死亡或需要重启。",
+          "severity": "warning",
+          "evidence": [
+            {
+              "source": "search_logs",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"limit\":3},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"logs\":[{\"log_id\":\"log-15-catalog-0\",\"timestamp\":\"2026-09-01T00:15:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-15-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-16-catalog-0\",\"timestamp\":\"2026-09-01T00:16:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-16-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"},{\"log_id\":\"log-17-catalog-0\",\"timestamp\":\"2026-09-01T00:17:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"error_code\":\"READINESS_FAILED\",\"trace_id\":\"trace-17-0\",\"message\":\"readiness probe failed connection timeout\",\"provenance\":\"synthetic\"}],\"truncated\":true}}"
+            },
+            {
+              "source": "aggregate_logs",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"snapshotHash\":\"e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea\",\"query\":{\"start\":\"2026-09-01T00:15:00Z\",\"end\":\"2026-09-01T00:30:00Z\",\"service\":\"catalog\",\"level\":\"ERROR\",\"limit\":3,\"group_by\":\"error_code\",\"metric\":\"count\"},\"total\":15,\"trustLevel\":\"untrusted-log-evidence\",\"buckets\":[{\"key\":\"READINESS_FAILED\",\"count\":15}]}}"
+            },
+            {
+              "source": "search_knowledge",
+              "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"evidence\":[{\"chunkId\":\"runbook-KubePodNotReady:s003:p01\",\"docId\":\"runbook-KubePodNotReady\",\"title\":\"KubePodNotReady / Diagnosis\",\"snippet\":\"- Check template via `kubectl -n $NAMESPACE get pod $POD`.\\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\\n- Check pod template parameters such as:\\n  - pod priority\\n  - resources - maybe it tries to use unavailable resource, such as GPU but\\n    there is limited number of nodes with GPU\\n  - readiness and liveness probes may be incorrect - wrong port or command,\\n    check is failing too fast due to short timeout\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodNotReady:s003\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.99606,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"runbook-KubePodCrashLooping:s003:p01\",\"docId\":\"runbook-KubePodCrashLooping\",\"title\":\"KubePodCrashLooping / Diagnosis\",\"snippet\":\"- Check template via `kubectl -n $NAMESPACE get pod $POD`.\\n- Check pod events via `kubectl -n $NAMESPACE describe pod $POD`.\\n- Check pod logs via `kubectl -n $NAMESPACE logs $POD -c $CONTAINER`\\n- Check pod template parameters such as:\\n  - pod priority\\n  - resources - maybe it tries to use unavailable resource, such as GPU but\\n    there is limited number of nodes with GPU\\n  - readiness and liveness probes may be incorrect - wrong port or command,\\n    check is failing too fast due to short timeout\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodCrashLooping.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodCrashLooping:s003\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.99022,\"trustLevel\":\"untrusted-retrieved-evidence\"},{\"chunkId\":\"runbook-KubePodNotReady:s001:p01\",\"docId\":\"runbook-KubePodNotReady\",\"title\":\"KubePodNotReady / Meaning\",\"snippet\":\"Pod has been in a non-ready state for more than 15 minutes.\\n\\nState Running but not ready means readiness probe fails.\\nState Pending means pod can not be created for specific namespace and node.\\n\\n<details>\\n<summary>Full context</summary>\\n\\nPod failed to reach ready state, depending on the readiness/liveness probes.\\nSee [pod-lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)\\n\\n</details>\",\"source\":\"https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md\",\"corpusVersion\":\"ops-v1\",\"sectionId\":\"runbook-KubePodNotReady:s001\",\"component\":\"kubernetes\",\"sourceRevision\":\"a685d14cf5128bb30e2bf935c3983decd772d885\",\"rerankerScore\":0.98301,\"trustLevel\":\"untrusted-retrieved-evidence\"}],\"trustLevel\":\"untrusted-retrieved-evidence\"}}"
+            }
+          ],
+          "injectionDetected": false,
+          "deniedActions": [],
+          "recommendation": "验证步骤与缺失信息：核对 readiness probe、Pod conditions、events 和应用响应；缺少实际探针配置与 Pod 事件。 本演示未执行修复。",
+          "planId": null
+        },
+        "elapsedMs": 5518
+      }
+    }
+  ]
+}

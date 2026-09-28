@@ -5,12 +5,14 @@ from __future__ import annotations
 import argparse
 import json
 import resource
+import hashlib
+import platform
 import time
 from contextlib import ExitStack
 from pathlib import Path
 
 from .bge_local import LocalBGE
-from .core import evaluate_rankings, load_dataset
+from .core import evaluate_rankings, load_dataset, load_corpus
 from .elasticsearch_bm25 import ElasticsearchBM25
 from .milvus_dense import MilvusDense
 from .milvus_hybrid import MilvusHybrid
@@ -21,7 +23,11 @@ _MODELS = Path.home() / ".local/share/sandboxd/models"
 
 
 def _run(args: argparse.Namespace) -> dict:
-    chunks, cases, digest = load_dataset(args.corpus, args.queries)
+    if args.command in {"eval", "check"}:
+        chunks, cases, digest = load_dataset(args.corpus, args.queries)
+    else:
+        chunks, digest = load_corpus(args.corpus)
+        cases = []
     version = chunks[0].corpus_version
     if args.command == "check":
         return {
@@ -52,9 +58,9 @@ def _run(args: argparse.Namespace) -> dict:
             finished = time.monotonic()
             return {
                 "corpusVersion": version, "corpusHash": digest,
-                "es": es_report, "milvus": milvus_report,
+                "lexical": es_report, "milvus": milvus_report,
                 "embeddingMs": round((embedded - started) * 1000, 2),
-                "esBuildMs": round((es_done - embedded) * 1000, 2),
+                "lexicalBuildMs": round((es_done - embedded) * 1000, 2),
                 "milvusBuildMs": round((finished - es_done) * 1000, 2),
                 "kind": "docker-integration-local-model", "backend": args.backend,
             }
@@ -76,7 +82,11 @@ def _run(args: argparse.Namespace) -> dict:
                 "kind": "docker-integration-local-model", "backend": args.backend,
             }
         if args.command == "eval":
-            selected = cases[:args.max_queries] if args.max_queries else cases
+            selected = [case for case in cases if args.split == "all" or case.split == args.split]
+            selected = selected[:args.max_queries] if args.max_queries else selected
+            if not selected:
+                raise ValueError("没有选中评测问题")
+            rows = []
             rankings: dict[str, dict[str, list[str]]] = {
                 group: {} for group in ("bm25", "dense", "rrf", "rerank")
             }
@@ -88,6 +98,10 @@ def _run(args: argparse.Namespace) -> dict:
                     case.query, recall_limit=args.recall_limit,
                     rerank_limit=args.rerank_limit, output_limit=10,
                 )
+                rows.append({"queryId": case.query_id, "query": case.query, "split": case.split,
+                             "category": case.category, "answerable": case.answerable,
+                             "relevance": case.relevance, "rankings": result.rankings,
+                             "latenciesMs": result.latencies_ms, "evidence": result.evidence})
                 for group in rankings:
                     rankings[group][case.query_id] = result.rankings[group]
                     latencies[group][case.query_id] = result.latencies_ms[group]
@@ -103,6 +117,22 @@ def _run(args: argparse.Namespace) -> dict:
                     group: evaluate_rankings(selected, rankings[group], latencies[group])
                     for group in rankings
                 },
+                "perQuery": rows,
+                "queryFileSha256": hashlib.sha256(args.queries.read_bytes()).hexdigest(),
+                "configuration": {"recallLimit": args.recall_limit, "rerankLimit": args.rerank_limit,
+                                  "split": args.split, "seed": 0, "rrfConstant": 60,
+                                  "latency": "bm25/dense independent stages; rrf/rerank cumulative serial; first query cold"},
+                "reviewStatus": "see query records; candidate labels are not human gold",
+                "externalModelCalls": 0, "modelAPICostUSD": 0,
+                "hardware": {"platform": platform.platform(), "device": "cpu", "torchThreads": 4},
+                "bySplit": {
+                    split: {group: evaluate_rankings(
+                        [c for c in selected if c.split == split],
+                        {c.query_id: rankings[group][c.query_id] for c in selected if c.split == split},
+                        {c.query_id: latencies[group][c.query_id] for c in selected if c.split == split})
+                        for group in rankings}
+                    for split in sorted({c.split for c in selected})
+                },
                 "processMaxRssMB": round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024, 2),
             }
     raise ValueError("未知命令")
@@ -110,9 +140,9 @@ def _run(args: argparse.Namespace) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="sandboxd 混合检索 MVP")
-    parser.add_argument("--corpus", type=Path, default=_ROOT / "data/runbook-v1.corpus.jsonl")
-    parser.add_argument("--queries", type=Path, default=_ROOT / "data/runbook-v1.queries.jsonl")
-    parser.add_argument("--embedding-dir", type=Path, default=_MODELS / "bge-small-en-v1.5-5c38ec7")
+    parser.add_argument("--corpus", type=Path, default=_ROOT / "data/ops-v1/corpus.jsonl")
+    parser.add_argument("--queries", type=Path, default=_ROOT / "data/ops-v1/queries.jsonl")
+    parser.add_argument("--embedding-dir", type=Path, default=_MODELS / "multilingual-e5-small-614241f")
     parser.add_argument("--reranker-dir", type=Path, default=_MODELS / "bge-reranker-base-2cfc18c")
     parser.add_argument("--backend", choices=["milvus", "es"], default="milvus")
     actions = parser.add_subparsers(dest="command", required=True)
@@ -124,12 +154,19 @@ def main() -> None:
     query.add_argument("--recall-limit", type=int, default=20)
     query.add_argument("--rerank-limit", type=int, default=20)
     evaluate = actions.add_parser("eval", help="同一标签集上做四组消融")
+    evaluate.add_argument("--split", choices=["all", "dev", "test"], default="all")
+    evaluate.add_argument("--output", type=Path)
     evaluate.add_argument("--max-queries", type=int, default=0)
     evaluate.add_argument("--recall-limit", type=int, default=20)
     evaluate.add_argument("--rerank-limit", type=int, default=20)
     args = parser.parse_args()
     try:
-        print(json.dumps(_run(args), ensure_ascii=False, indent=2))
+        report = _run(args)
+        if getattr(args, "output", None):
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+            report = {key: value for key, value in report.items() if key != "perQuery"}
+        print(json.dumps(report, ensure_ascii=False, indent=2))
     except (ValueError, FileNotFoundError, RuntimeError) as exc:
         parser.error(str(exc))
 

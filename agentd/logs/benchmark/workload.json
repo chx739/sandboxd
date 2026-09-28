@@ -1,0 +1,162 @@
+{
+  "version": 2,
+  "description": "sandboxd 720 synthetic logs, existing immutable index; query-only small local benchmark",
+  "meta": {
+    "logSnapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+    "documentCount": 720,
+    "clients": 1,
+    "targetOpsPerSecond": 20,
+    "warmupIterationsPerOperation": 20,
+    "measuredIterationsPerOperation": 100
+  },
+  "schedule": [
+    {
+      "operation": {
+        "name": "service-errors",
+        "operation-type": "search",
+        "index": "sandboxd_logs_v1_e9f570530b333f10",
+        "body": {
+          "timeout": "5s",
+          "track_total_hits": true,
+          "query": {
+            "bool": {
+              "filter": [
+                {
+                  "term": {
+                    "snapshot_hash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea"
+                  }
+                },
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": "2026-09-01T00:00:00Z",
+                      "lt": "2026-09-01T01:00:00Z"
+                    }
+                  }
+                },
+                {
+                  "term": {
+                    "service": "payments"
+                  }
+                },
+                {
+                  "term": {
+                    "level": "ERROR"
+                  }
+                }
+              ]
+            }
+          },
+          "size": 20,
+          "sort": [
+            {
+              "timestamp": "asc"
+            },
+            {
+              "log_id": "asc"
+            }
+          ]
+        }
+      },
+      "clients": 1,
+      "warmup-iterations": 20,
+      "iterations": 100,
+      "target-throughput": 20
+    },
+    {
+      "operation": {
+        "name": "all-service-counts",
+        "operation-type": "search",
+        "index": "sandboxd_logs_v1_e9f570530b333f10",
+        "body": {
+          "timeout": "5s",
+          "track_total_hits": true,
+          "query": {
+            "bool": {
+              "filter": [
+                {
+                  "term": {
+                    "snapshot_hash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea"
+                  }
+                },
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": "2026-09-01T00:00:00Z",
+                      "lt": "2026-09-01T01:00:00Z"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "size": 0,
+          "aggs": {
+            "groups": {
+              "terms": {
+                "field": "service",
+                "size": 1000,
+                "order": {
+                  "_key": "asc"
+                }
+              }
+            }
+          }
+        }
+      },
+      "clients": 1,
+      "warmup-iterations": 20,
+      "iterations": 100,
+      "target-throughput": 20
+    },
+    {
+      "operation": {
+        "name": "error-timeline",
+        "operation-type": "search",
+        "index": "sandboxd_logs_v1_e9f570530b333f10",
+        "body": {
+          "timeout": "5s",
+          "track_total_hits": true,
+          "query": {
+            "bool": {
+              "filter": [
+                {
+                  "term": {
+                    "snapshot_hash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea"
+                  }
+                },
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": "2026-09-01T00:00:00Z",
+                      "lt": "2026-09-01T01:00:00Z"
+                    }
+                  }
+                },
+                {
+                  "term": {
+                    "level": "ERROR"
+                  }
+                }
+              ]
+            }
+          },
+          "size": 0,
+          "aggs": {
+            "groups": {
+              "date_histogram": {
+                "field": "timestamp",
+                "fixed_interval": "1m",
+                "min_doc_count": 1
+              }
+            }
+          }
+        }
+      },
+      "clients": 1,
+      "warmup-iterations": 20,
+      "iterations": 100,
+      "target-throughput": 20
+    }
+  ]
+}
