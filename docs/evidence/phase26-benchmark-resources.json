@@ -1,0 +1,415 @@
+{
+  "kind": "real-local-query-benchmark-with-resource-samples",
+  "command": [
+    "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/.cache/ops-benchmark-venv/bin/opensearch-benchmark",
+    "run",
+    "--pipeline=benchmark-only",
+    "--workload-path=/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/logs/benchmark/workload.json",
+    "--target-hosts=127.0.0.1:9201",
+    "--distribution-version=2.19.6",
+    "--offline",
+    "--results-format=csv",
+    "--results-file=/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/docs/evidence/phase26-benchmark-resources.csv",
+    "--client-options=timeout:10",
+    "--on-error=abort"
+  ],
+  "workloadSha256": "ad37134e194028c7f6234d27efd8b497c71544030e0c111c679e370076bf57c2",
+  "sampleIntervalSeconds": 1,
+  "deadlineSeconds": 180,
+  "samples": [
+    {
+      "elapsedSeconds": 0.01,
+      "timestamp": 1790617897015,
+      "cpuPercent": 0,
+      "heapUsedBytes": 251090136,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203628432
+    },
+    {
+      "elapsedSeconds": 1.027,
+      "timestamp": 1790617898021,
+      "cpuPercent": 0,
+      "heapUsedBytes": 252138712,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203633872
+    },
+    {
+      "elapsedSeconds": 2.032,
+      "timestamp": 1790617899027,
+      "cpuPercent": 0,
+      "heapUsedBytes": 252138712,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203637072
+    },
+    {
+      "elapsedSeconds": 3.037,
+      "timestamp": 1790617900031,
+      "cpuPercent": 1,
+      "heapUsedBytes": 252138712,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203648648
+    },
+    {
+      "elapsedSeconds": 4.042,
+      "timestamp": 1790617901036,
+      "cpuPercent": 0,
+      "heapUsedBytes": 253187288,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203663880
+    },
+    {
+      "elapsedSeconds": 5.047,
+      "timestamp": 1790617902041,
+      "cpuPercent": 0,
+      "heapUsedBytes": 254235864,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203663880
+    },
+    {
+      "elapsedSeconds": 6.052,
+      "timestamp": 1790617903046,
+      "cpuPercent": 0,
+      "heapUsedBytes": 255284440,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203663880
+    },
+    {
+      "elapsedSeconds": 7.056,
+      "timestamp": 1790617904050,
+      "cpuPercent": 0,
+      "heapUsedBytes": 255284440,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203663880
+    },
+    {
+      "elapsedSeconds": 8.061,
+      "timestamp": 1790617905055,
+      "cpuPercent": 0,
+      "heapUsedBytes": 256333016,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203663880
+    },
+    {
+      "elapsedSeconds": 9.066,
+      "timestamp": 1790617906060,
+      "cpuPercent": 0,
+      "heapUsedBytes": 256333016,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203663880
+    },
+    {
+      "elapsedSeconds": 10.071,
+      "timestamp": 1790617907065,
+      "cpuPercent": 2,
+      "heapUsedBytes": 258430168,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203670920
+    },
+    {
+      "elapsedSeconds": 11.079,
+      "timestamp": 1790617908073,
+      "cpuPercent": 0,
+      "heapUsedBytes": 259478744,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 203753472
+    },
+    {
+      "elapsedSeconds": 12.084,
+      "timestamp": 1790617909078,
+      "cpuPercent": 3,
+      "heapUsedBytes": 266818776,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 204172208
+    },
+    {
+      "elapsedSeconds": 13.088,
+      "timestamp": 1790617910082,
+      "cpuPercent": 5,
+      "heapUsedBytes": 273110232,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 204849944
+    },
+    {
+      "elapsedSeconds": 14.093,
+      "timestamp": 1790617911087,
+      "cpuPercent": 5,
+      "heapUsedBytes": 280450264,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205076144
+    },
+    {
+      "elapsedSeconds": 15.098,
+      "timestamp": 1790617912091,
+      "cpuPercent": 2,
+      "heapUsedBytes": 288838872,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205297376
+    },
+    {
+      "elapsedSeconds": 16.103,
+      "timestamp": 1790617913096,
+      "cpuPercent": 2,
+      "heapUsedBytes": 296178904,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205430272
+    },
+    {
+      "elapsedSeconds": 17.108,
+      "timestamp": 1790617914101,
+      "cpuPercent": 2,
+      "heapUsedBytes": 302470360,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205474120
+    },
+    {
+      "elapsedSeconds": 18.113,
+      "timestamp": 1790617915106,
+      "cpuPercent": 1,
+      "heapUsedBytes": 304567512,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205475016
+    },
+    {
+      "elapsedSeconds": 19.118,
+      "timestamp": 1790617916111,
+      "cpuPercent": 0,
+      "heapUsedBytes": 305616088,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205476040
+    },
+    {
+      "elapsedSeconds": 20.123,
+      "timestamp": 1790617917116,
+      "cpuPercent": 0,
+      "heapUsedBytes": 305616088,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205476040
+    },
+    {
+      "elapsedSeconds": 21.128,
+      "timestamp": 1790617918121,
+      "cpuPercent": 0,
+      "heapUsedBytes": 306664664,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205497216
+    },
+    {
+      "elapsedSeconds": 22.134,
+      "timestamp": 1790617919126,
+      "cpuPercent": 0,
+      "heapUsedBytes": 307713240,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205498368
+    },
+    {
+      "elapsedSeconds": 23.139,
+      "timestamp": 1790617920131,
+      "cpuPercent": 2,
+      "heapUsedBytes": 310858968,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 205544416
+    },
+    {
+      "elapsedSeconds": 24.143,
+      "timestamp": 1790617921135,
+      "cpuPercent": 7,
+      "heapUsedBytes": 315053272,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206069288
+    },
+    {
+      "elapsedSeconds": 25.148,
+      "timestamp": 1790617922140,
+      "cpuPercent": 3,
+      "heapUsedBytes": 319247576,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206187776
+    },
+    {
+      "elapsedSeconds": 26.153,
+      "timestamp": 1790617923145,
+      "cpuPercent": 5,
+      "heapUsedBytes": 323441880,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206371616
+    },
+    {
+      "elapsedSeconds": 27.157,
+      "timestamp": 1790617924150,
+      "cpuPercent": 3,
+      "heapUsedBytes": 327636184,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206499136
+    },
+    {
+      "elapsedSeconds": 28.162,
+      "timestamp": 1790617925154,
+      "cpuPercent": 2,
+      "heapUsedBytes": 331830488,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206643736
+    },
+    {
+      "elapsedSeconds": 29.166,
+      "timestamp": 1790617926159,
+      "cpuPercent": 0,
+      "heapUsedBytes": 332879064,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206646936
+    },
+    {
+      "elapsedSeconds": 30.171,
+      "timestamp": 1790617927164,
+      "cpuPercent": 0,
+      "heapUsedBytes": 332879064,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206648088
+    },
+    {
+      "elapsedSeconds": 31.177,
+      "timestamp": 1790617928170,
+      "cpuPercent": 0,
+      "heapUsedBytes": 334976216,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206658672
+    },
+    {
+      "elapsedSeconds": 32.182,
+      "timestamp": 1790617929175,
+      "cpuPercent": 0,
+      "heapUsedBytes": 334976216,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206684224
+    },
+    {
+      "elapsedSeconds": 33.187,
+      "timestamp": 1790617930180,
+      "cpuPercent": 0,
+      "heapUsedBytes": 334976216,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206684224
+    },
+    {
+      "elapsedSeconds": 34.192,
+      "timestamp": 1790617931184,
+      "cpuPercent": 3,
+      "heapUsedBytes": 339170520,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 206803992
+    },
+    {
+      "elapsedSeconds": 35.196,
+      "timestamp": 1790617932189,
+      "cpuPercent": 6,
+      "heapUsedBytes": 343364824,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207193664
+    },
+    {
+      "elapsedSeconds": 36.201,
+      "timestamp": 1790617933193,
+      "cpuPercent": 2,
+      "heapUsedBytes": 347559128,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207247416
+    },
+    {
+      "elapsedSeconds": 37.206,
+      "timestamp": 1790617934198,
+      "cpuPercent": 3,
+      "heapUsedBytes": 352802008,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207279304
+    },
+    {
+      "elapsedSeconds": 38.211,
+      "timestamp": 1790617935203,
+      "cpuPercent": 3,
+      "heapUsedBytes": 356996312,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207323864
+    },
+    {
+      "elapsedSeconds": 39.215,
+      "timestamp": 1790617936208,
+      "cpuPercent": 3,
+      "heapUsedBytes": 361190616,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207455600
+    },
+    {
+      "elapsedSeconds": 40.22,
+      "timestamp": 1790617937213,
+      "cpuPercent": 0,
+      "heapUsedBytes": 362239192,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207455600
+    },
+    {
+      "elapsedSeconds": 41.225,
+      "timestamp": 1790617938218,
+      "cpuPercent": 0,
+      "heapUsedBytes": 363287768,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207455600
+    },
+    {
+      "elapsedSeconds": 42.23,
+      "timestamp": 1790617939223,
+      "cpuPercent": 0,
+      "heapUsedBytes": 363287768,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207456368
+    },
+    {
+      "elapsedSeconds": 43.236,
+      "timestamp": 1790617940228,
+      "cpuPercent": 0,
+      "heapUsedBytes": 364336344,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207461616
+    },
+    {
+      "elapsedSeconds": 44.241,
+      "timestamp": 1790617941311,
+      "cpuPercent": 0,
+      "heapUsedBytes": 367482072,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207539936
+    },
+    {
+      "elapsedSeconds": 45.245,
+      "timestamp": 1790617942316,
+      "cpuPercent": 0,
+      "heapUsedBytes": 367482072,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207539936
+    },
+    {
+      "elapsedSeconds": 46.25,
+      "timestamp": 1790617943321,
+      "cpuPercent": 0,
+      "heapUsedBytes": 367482072,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207539936
+    },
+    {
+      "elapsedSeconds": 47.256,
+      "timestamp": 1790617944326,
+      "cpuPercent": 0,
+      "heapUsedBytes": 369579224,
+      "heapMaxBytes": 536870912,
+      "nonHeapUsedBytes": 207543136
+    }
+  ],
+  "status": "completed",
+  "scope": "OpenSearch node process CPU percent and JVM heap/nonheap bytes; not container RSS or host-wide CPU. Sampling adds monitoring overhead. Tiny warmed synthetic workload, not production capacity.",
+  "exitCode": 0,
+  "wallSeconds": 48.26,
+  "summary": {
+    "sampleCount": 48,
+    "maxCpuPercent": 7,
+    "maxHeapUsedBytes": 369579224,
+    "maxNonHeapUsedBytes": 207543136
+  }
+}
