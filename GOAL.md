@@ -2,7 +2,7 @@
 
 > 本文件是本仓库后续持续开发的“目标锚点”。无论聊天上下文是否完整、是否更换会话或执行者，开始工作前都必须先完整阅读本文件，再阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。若聊天记忆、临时建议或局部实现与本文件冲突，以本文件为准；不得在没有得到用户明确同意的情况下改变目标。
 
-> 当前维护状态：Phase 1–6 已完成。2026-09-28 用户授权 Phase 7：树形 Session、分层记忆、混合检索和 Jev 路由的可运行可测评 MVP。旧外部模型授权均已消费；Phase 7 的离线工作先行，任何新 Live 调用需单独明确授权。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/31-Agent记忆检索与路由最小实现方案.md` 为准。
+> 当前维护状态：Phase 1–6 已完成；Phase 7 会话、记忆、ES/Milvus 检索和 Jev 的实现及历史证据保留。2026-09-29 用户批准新的 Phase 8 运维 Agent MVP，完整范围和逐项验收见 `docs/37-Kubernetes运维Agent目标与验收.md`。Jev 已移出当前实施和验收，禁止继续调用。当前任务优先于 Phase 7 中的旧“下一步”；历史外部模型授权不自动延伸至新测评。
 
 ## 一句话目标
 
@@ -65,7 +65,7 @@ Phase 3 的权威范围、文件结构、里程碑和验收标准以 `docs/17-Pi
 
 Phase 4 的文件结构、接口、里程碑、E2E 前后证据与完成判据以 `docs/20-Linux主机与原生文件工具实现计划.md` 为准。仍不实现任意 Bash、任意 SSH、远端文件写入、sudo、动态插件、多租户、生产级凭据系统或大规模并发。
 
-## 当前目标：Phase 5 Prompt Injection Eval v2
+## 历史目标：Phase 5 Prompt Injection Eval v2
 
 > 用户于 2026-09-01 明确授权进入目标模式实现第一版测评集。权威文件结构、指标语义和验收顺序以 `docs/28-Prompt-Injection-Eval-v1实现计划.md` 为准。
 
@@ -103,7 +103,7 @@ Phase 5 明确不做：引入 AgentDojo/ASB 运行时依赖、上百样本、大
 
 Phase 6 不做：新功能、架构重写、agent-sandbox CRD 对接、exec 端点收紧、RBAC 收敛、Plan 审计持久化（这些是评审建议的后续路线，须另行逐项授权）。
 
-## 当前目标：Phase 7 Agent 会话、记忆、检索与路由 MVP
+## 历史目标：Phase 7 Agent 会话、记忆、检索与路由 MVP
 
 用户已明确要求在现有 Python agentd 上依次交付四个独立可运行、可测评的最小模块：
 
@@ -115,6 +115,14 @@ Phase 6 不做：新功能、架构重写、agent-sandbox CRD 对接、exec 端�
 2026-09-28 Live 更新：用户已批准 Phase 20 的固定 8 题、最多 8 次 Jev + 24 次 DeepSeek、总预算 $1。联网执行首题后因 Jev 错误停止，已记录 1 次 Jev 尝试和 3 次 DeepSeek；只读 IPv4 鉴权返回 HTTP 401，完整横评未完成。恢复边界与首次无报告超时见 `docs/evidence/phase21-jev-live-first-case.md`。代码分支已推送并创建 PR #1，未合并 main。
 
 权威模块范围、资源边界、依赖与验收顺序见 `docs/31-Agent记忆检索与路由最小实现方案.md`。每项必须有运行命令、最小测评、中文学习文档和诚实的 Replay/集成/Live 证据。现有手写 Agent Loop 和可信执行边界保持；不因本阶段引入 LangGraph、任意 Shell、动态插件、自动审批或生产级多租户。先完成无密钥工作；历史 DeepSeek Eval 授权不延伸到本阶段。
+
+## 当前目标：Phase 8 Kubernetes 运维 Agent MVP
+
+用户于 2026-09-29 确认实施。**完整的实施范围、测评设计、资源和费用边界、文档要求、完成判据以 [`docs/37-Kubernetes运维Agent目标与验收.md`](docs/37-Kubernetes运维Agent目标与验收.md) 为准；本段只是入口，不得代替该文件验收。**
+
+目标是在现有 Python agentd 上复用并完善 Pi 风格树形会话、Codex 风格分层记忆；将知识库检索改为 Milvus **2.5.10** 内置 BM25 + Dense + RRF + BGE Reranker；使用 OpenSearch 查询和聚合现场日志；实现至少三类故障的联合排障演示，并分别测评会话记忆、运维 RAG、日志查询、Agent 决策和系统性能。知识库、日志和记忆各有明确来源及证据边界。交付可复现命令、固定数据和模型版本、原始结果、中文学习文档、阶段证据和可审查 PR。
+
+Phase 8 不实施、不调试、不调用 Jev，也不以 Jev Live 横评为验收条件；原代码和证据作为历史保留。旧 ES 知识索引及报告保留作迁移对照，默认知识库路径改用 Milvus BM25。旧 ES 服务/卷不得因为迁移而直接删除。OpenSearch 仅承担本轮新日志能力。真实模型、自动评分和人工审核必须标注来源；没有确切授权的付费调用先完成独立工作并列出待办。不得自动合并 PR。
 
 ## 不可偏移的约束
 

@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 的历史外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1–M5 无密钥实现、联合 Replay 与总回归已完成，分支已推送并创建 [PR #1](https://github.com/chx739/sandboxd/pull/1)。新授权的 Live 横评完成首题后停止，TypeSafe IPv4 鉴权返回 401，完整横评未完成。
+Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索和 Jev 代码及证据保留在 [PR #1](https://github.com/chx739/sandboxd/pull/1)。**当前为用户 2026-09-29 批准的 Phase 8 Kubernetes 运维 Agent MVP**；完整目标和验收见 [37](37-Kubernetes运维Agent目标与验收.md)。Jev 已移出本轮，不调用、不等 Key。历史 Jev 首题与 TypeSafe 401 只作旧证据。Phase 8 尚未完成。
 
 当前分支：
 
@@ -12,9 +12,17 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 7 M1–M5 实现已推送；Live 首题已记录，等待有效 TypeSafe Key 并核算剩余调用范围
+    Phase 8 M0：目标已更新；下一步复用既有会话/记忆，迁移知识库 Milvus BM25，后续接 OpenSearch 日志及测评
 
-## Phase 7 当前恢复点
+## Phase 8 当前恢复点与待办
+
+- **权威范围**：[GOAL](../GOAL.md) 与 [37 完整目标](37-Kubernetes运维Agent目标与验收.md)。Goal 工具短摘要不代替详细验收。
+- **已具备**：Phase 7 树形 Session、分层记忆、本地 BGE 推理、ES BM25 + Milvus dense + RRF/BGE 四组公开 SciFact 子集消融，均需按 Phase 8 逐项复核。当前开发分支已有 PR #1；旧结果不能冒充新运维数据集成绩。
+- **待实现**：Milvus 2.5.10 内置 BM25 知识库迁移与索引更新/删除/过滤；固定 30–50 篇运维文档；60 题带证据与审核状态的 RAG 数据集、消融及生成评价；OpenSearch 日志工具、固定日志和 30–50 题独立结果校验；有界性能测评；至少三类联合排障回放及真实模型授权范围内的测评；学习文档和新证据。
+- **第一项未完成工作**：审计并更新检索数据契约及 Milvus BM25 实现，保留旧 ES 索引和报告。资源检查已见约 20 GiB 可用内存、Milvus 2.5.10 与 ES 8.19.22 容器健康，模型权重已缓存；默认 Docker 命令在受限沙箱无权限，允许联网/宿主环境只读检查可用。本项尚未声称完成集成测评。
+- **费用和证据**：本轮没有新外部模型调用。Jev 暂停；历史 Phase 7 Live 额度不用于新 RAG/日志测评。新阶段逐步记录真实结果，区分确定性、回放、集成、Live、模型裁判和人工审核。
+
+## Phase 7 历史恢复点（以下“下一步”已由 Phase 8 取代）
 
 - 目标与验收已写入 `GOAL.md`、`AGENTS.md`、`docs/31`。实施顺序：M1 Session 树 → M2 分层记忆 → M3 混合检索 → M4 Jev 路由 → M5 联合测评与文档。
 - 当前 Python 环境已核实：3.12.14、uv 0.12.19；`agentd/uv.lock` 含可选 rag 依赖。用户指定 Milvus 2.5.10，本项目 `sandboxd-rag` Compose 的 Milvus 2.5.10、ES 8.19.22、etcd、MinIO 四容器 healthy；不触碰其他项目资源。
@@ -31,7 +39,8 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 - 已补每次推理调用前的脱敏进度标记和 `AGENTD_JEV_IPV4_ONLY=1`，Agent 与 Eval 共用 2 秒超时、零重试 Jev Client；官方 SDK 的本地 HTTP MockTransport 测试覆盖真实请求序列化与响应解析。
 - 本次网络配置/进度记录修改后的 Router、Live Eval 与 API 定向回归 **10/10**，`compileall` 和 `git diff --check` 通过；未把历史完整 61/61 冒充为本次完整重跑。
 - GitHub 已解决：用户完成 WSL `gh` 登录，允许联网环境推送成功，已创建 [PR #1](https://github.com/chx739/sandboxd/pull/1)，不合并 main。插件连接的写权限不是当前交付阻塞。
-- 下一步：用户更新仓库外 Jev Key；确认最初无报告尝试的用量后，在原授权剩余次数内继续未完成题目。不得直接重跑整轮，也不能把首题回退宣传成 Jev 分类质量。Key 不进入 Git、日志或文档；本轮已检查跟踪文件，无两个 Key 原文。
+- 历史旧下一步（已作废，不执行）：当时等待仓库外 Jev Key、核算用量后继续横评。用户现已将 Jev 移出当前目标；不得据此恢复调用。Key 不进入 Git、日志或文档。
+- 2026-09-29 验收复核：PR #1 的 HEAD 与本地 `5f7a910` 一致，工作区干净；Jev Key 文件修改时间仍早于 HTTP 401 检查，未新增 API 调用。docs31 第 9 节补齐原目标逐项证据与四模块演示入口，并将旧环境缺口标成历史快照。完整目标仍未完成。
 
 ## 2026-09-28 新阶段方案审计
 

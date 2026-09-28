@@ -13,7 +13,9 @@
 
 不新增任意 Shell、动态插件、自动审批或生产级分布式存储。检索结果和记忆均视为不可信输入；现有 Python Policy、Go sandboxd、gVisor、RBAC 与审批门仍负责授权。先做单进程、单用户、单项目 Demo；不声称多租户隔离或生产可用性。
 
-## 2. 已有代码与实际缺口
+## 2. 实施前的代码基线与缺口
+
+下表是本阶段开始时的基线；当前实现与验收见第 9 节，不作为待办重复实施。
 
 | 能力 | 现状 | 最小改造位置 |
 |---|---|---|
@@ -40,7 +42,7 @@
 
 后续已安装用户态 `uv 0.12.19`、Python 3.12.14，并按 `agentd/uv.lock` 同步依赖；Docker `hello-world` 已运行。用户指定 Milvus **2.5.10**，本项目独立 Compose 的 2.5.10/ES 已 healthy 且实际建索引与测评；固定版本、资源和结果见 [phase17](evidence/phase17-hybrid-retrieval-mvp.md)。
 
-不需要 WSL 密码或 sudo 来完成计划与用户态 Python 安装。尚未读取任何 API Key；仓库外 `secrets/` 不进入本阶段审计。
+计划与用户态 Python 安装不需要 WSL 密码或 sudo。启动审计没有读取 API Key；后续已按用户明确授权执行 Live 首题，当前凭据与测评状态见 [phase21](evidence/phase21-jev-live-first-case.md)。
 
 ## 4. 四个最小闭环
 
@@ -75,7 +77,9 @@
 - Eval 至少比较固定便宜模型、固定强模型、Jev 路由三组在**同一批**任务上的质量、延迟、总费用与错误路由率。仅测分类准确率不能证明路由省钱且保质。
 - Live Jev 需要 TypeSafe API Key；真实模型横评还需要两个可用的下游模型、各自价格与一次明确的外部调用预算。以前 DeepSeek Live Eval 的授权已消费，不可复用。
 
-## 5. 依赖、授权与资源
+## 5. 启动阶段的依赖清单（历史快照）
+
+Python、Docker 镜像、本地模型和 SDK 均已备齐；以下保留最初依赖判断。当前唯一的服务凭据阻塞是 TypeSafe HTTP 401，不能据下表重新安装环境或重复申请已有授权。
 
 | 项目 | 何时需要 | 当前结论 |
 |---|---|---|
@@ -117,3 +121,46 @@ Milvus standalone、Elasticsearch 和 BGE 同时运行会占较多资源。先�
 - [Milvus 全文 BM25](https://milvus.io/docs/full-text-search.md)、[Milvus Docker Compose](https://milvus.io/docs/install_standalone-docker-compose.md)、[Elasticsearch Docker](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/install-elasticsearch-docker-basic)、[Elasticsearch 混合检索](https://www.elastic.co/docs/solutions/search/hybrid-search)。
 - [TypeSafe Jev 意图路由](https://docs.typesafe.ai/patterns/intent-routing)、[Python SDK](https://github.com/typesafe-ai/typesafe-sdk-python)。
 - [BEIR 数据集](https://github.com/beir-cellar/beir)、[Ragas 指标](https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/)；Ragas 是测评库，不是一个固定公开数据集。
+
+## 9. Phase 7 历史验收对照（2026-09-29）
+
+核对了当时的代码、测试断言、phase15–21 的实际记录和 GitHub PR。以下是 Phase 7 的历史状态，不是现行 Phase 8 待办；当前目标见 [37](37-Kubernetes运维Agent目标与验收.md)。Jev Live 横评当时未完成，用户随后明确将 Jev 移出新目标。
+
+| 要求 | 当前实现与权威证据 | 验收状态 |
+|---|---|---|
+| Session 节点、父链、活动叶子、完整 Turn 分支、旧格式与断尾 | `runtime/session.py`、`test_session.py`；[phase15](evidence/phase15-session-tree-mvp.md) | 本地确定性验证完成 |
+| 恢复新 task/sandbox，不重放历史副作用 | `store.py::resume` 创建新 task；`runner.py::run` 每次 claim；历史 ToolMessage 只作为上下文；身份与分支测试 | 代码路径与 Replay 验证完成；本阶段未重跑真实 gVisor 分支 E2E |
+| 记忆提取、整理、渐进读取、来源/时间/冲突、重建/遗忘 | `memory.py`、`memory_cli.py`、`test_memory.py`；[phase16](evidence/phase16-memory-mvp.md) | 显式格式 MVP 完成；当前事实 P/R 均 2/2，冲突 1，摘要 155/256 字符 |
+| 记忆产物与低信任边界 | raw memories、会话摘要、`MEMORY.md`、`memory_summary.md`；来源校验与恶意工具日志测试 | 本地完成；自然语言 LLM 提取质量未测，不属于此次 Jev 调用授权 |
+| 同一语料/ID 的 ES BM25 + Milvus dense、RRF、BGE 重排 | `retrieval/`、Compose 与 [phase17](evidence/phase17-hybrid-retrieval-mvp.md) | 真实 Docker/CPU 集成完成；Milvus 2.5.10 |
+| 公开集与合成 runbook，质量/延迟/资源消融 | SciFact 5,183 文档、固定 30 query；runbook 9 chunks/7 query；phase17 完整表 | 完成固定子集测评；Milvus 原生 BM25 为可选项，未实现 |
+| Jev 每 task 一次选模、回退、成本计入、不改变权限 | `router.py`、`runner.py`、真实 SDK MockTransport 与 Fake/Replay；[phase18](evidence/phase18-jev-router-mvp.md) | 本地验证完成 |
+| 固定便宜/强模型/Jev 的真实同题质量、费用与延迟 | [phase21](evidence/phase21-jev-live-first-case.md) 仅首题；Jev 失败回退、IPv4 鉴权 401 | Phase 7 未完成；Phase 8 不继续 |
+| 四模块接入、手写 Loop、LangChain/LangGraph 取舍 | [phase19](evidence/phase19-phase7-integrated-replay.md)、本文第 2 节和 [32](32-Agent记忆检索与路由学习手册.md) | 联合 Replay 完成；真实检索、假 Sandbox/Jev、Replay LLM |
+| 中文学习文档、命令、限制、版本、脱敏证据与 GitHub | docs33–36、phase15–21、`PROGRESS`；[PR #1](https://github.com/chx739/sandboxd/pull/1) | 已交付，未合并 main；Live 结果仍待补齐 |
+
+### 最小演示入口
+
+在仓库根目录运行。下列命令不消耗外部模型 API；检索需先按 [35 的服务与索引命令](35-Milvus-ES-BGE混合检索学习手册.md) 准备 Docker 和固定版本 BGE 模型。Session 和记忆的可写数据使用 WSL 原生目录，示例 Session 仅用于读取。
+
+```bash
+# A：显示公开夹具的树；分支和恢复接口见 docs/33。
+uv run --project agentd --frozen --extra rag --extra jev python -m agentd.session_cli \
+  --session-dir agentd/testdata/session-tree-demo tree session-0123456789abcdef
+
+# B：合成跨会话提取、更新、冲突和恶意日志测评。
+uv run --project agentd --frozen --extra rag --extra jev python -m agentd.memory_eval
+
+# C：已有 runbook 索引上的真实混合查询与四组消融。
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  uv run --project agentd --frozen --extra rag --extra jev python -m agentd.retrieval.cli \
+  query 'How do I investigate a CrashLoopBackOff pod?' --top-k 3
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  uv run --project agentd --frozen --extra rag --extra jev python -m agentd.retrieval.cli eval
+
+# D：Phase 7 历史 Fake/Replay 路由测评；Phase 8 不运行此组命令。
+uv run --project agentd --frozen --extra rag --extra jev python -m agentd.router_eval
+uv run --project agentd --frozen --extra rag --extra jev python -m agentd.router_live_eval
+```
+
+SciFact 的 nDCG@10：BM25 **0.5511**、dense **0.7445**、RRF **0.7931**、rerank **0.7826**；完整 Recall/MRR、延迟、资源口径以 phase17 为准。Jev Fake 数字是教学夹具，首题 Live 回退也不能替代完整横评。

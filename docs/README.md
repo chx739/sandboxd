@@ -2,6 +2,8 @@
 
 > 这里是项目学习的唯一入口。文档按“当前真相 → 代码与模块 → 面试表达 → 历史与证据”分层，而不是按开发时间顺序通读。
 
+> **当前 Phase 8 开发范围**：[Kubernetes 运维 Agent 完整目标与验收](37-Kubernetes运维Agent目标与验收.md)。Phase 7 的 Jev 路由与 ES/Milvus 双索引文档是历史实现资料；当前状态看 [PROGRESS](PROGRESS.md)。
+
 ## 20 分钟快速了解
 
 这个入口只用于“先判断项目在做什么”，不是完整学习计划：
@@ -51,16 +53,17 @@
 
 当前代码已经不依赖 LangGraph。`14` 只用于理解 Phase 2 的架构演进和真实 Live/Replay 证据，不能作为当前代码说明。
 
-### C. Phase 7：会话树、记忆、检索与路由
+### C. Phase 8 当前目标与 Phase 7 已有模块
 
 | 文档 | 用途 | 状态 |
 |---|---|---|
-| [31 Agent 记忆检索与路由最小实现方案](31-Agent记忆检索与路由最小实现方案.md) | 阶段范围、环境、实施顺序与测评 | 持续更新 |
+| [37 Kubernetes 运维 Agent 完整目标与验收](37-Kubernetes运维Agent目标与验收.md) | 当前详细范围、五部分功能、四层测评、费用与交付标准 | **当前权威目标** |
+| [31 Agent 记忆检索与路由最小实现方案](31-Agent记忆检索与路由最小实现方案.md) | Phase 7 旧范围、环境、实施顺序与测评 | 历史资料 |
 | [32 Agent 记忆检索与路由学习手册](32-Agent记忆检索与路由学习手册.md) | 四层概念、取舍与自测题 | 概念学习 |
 | [33 树形 Session 与分支恢复](33-树形Session与分支恢复学习手册.md) | M1 源码、接口、确定性测评与面试讲法 | 已实现，证据见 PROGRESS |
 | [34 Codex 风格分层记忆](34-Codex风格分层记忆学习手册.md) | M2 提取、整理、读取、遗忘、测评与面试讲法 | 本地确定性实现，证据见 PROGRESS |
 | [35 Milvus/ES/BGE 混合检索](35-Milvus-ES-BGE混合检索学习手册.md) | M3 双索引、RRF、BGE、公开集消融与 Agent 只读接线 | Docker + 本地模型集成，证据见 phase17 |
-| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | M4 官方 SDK Choice、任务前选模、回退、成本夹具 | Fake/Replay 已验证；Live 首题后受 TypeSafe 401 阻塞，见 [phase21](evidence/phase21-jev-live-first-case.md) |
+| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | Phase 7 官方 SDK Choice、任务前选模、回退、成本夹具 | 历史资料；Phase 8 不继续，旧首题见 [phase21](evidence/phase21-jev-live-first-case.md) |
 
 实施状态只看 [PROGRESS](PROGRESS.md) 和独立证据，不把后续模块方案当成当前代码能力。
 
