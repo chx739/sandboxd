@@ -78,7 +78,8 @@ class RouterLiveEvalTest(unittest.IsolatedAsyncioTestCase):
             case["summary"]: ChoiceJudgement(case["goldTier"], 0.95, 200)
             for case in cases
         })
-        report = await evaluate_live(cases, gateways, source, prices, 0.042, 1.0)
+        progress = []
+        report = await evaluate_live(cases, gateways, source, prices, 0.042, 1.0, progress.append)
         self.assertEqual(report["kind"], "live-synthetic-operations-model-choice-eval")
         self.assertEqual(report["results"]["fixedEconomy"]["correct"], 4)
         self.assertEqual(report["results"]["fixedStrong"]["correct"], 8)
@@ -88,6 +89,11 @@ class RouterLiveEvalTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(report["downstreamAttempts"], 24)
         self.assertGreater(report["results"]["routed"]["routerAccountedCostUsd"], 0)
         self.assertEqual(gateways["economy"].calls + gateways["strong"].calls, 24)
+        self.assertEqual(sum(event["service"] == "jev" for event in progress), 8)
+        self.assertEqual(sum(event["service"] == "deepseek" for event in progress), 24)
+        self.assertEqual(progress[0], {
+            "event": "attempt", "caseId": "l01", "service": "deepseek", "mode": "fixedEconomy",
+        })
         self.assertLess(report["accountedCostUsd"], 1)
 
     async def test_budget_rejects_before_any_external_call(self) -> None:

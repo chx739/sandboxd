@@ -79,7 +79,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             ),
         }
         model_router = ModelRouter(
-            gateways, JevChoiceSource(cfg.router_jev_api_key),
+            gateways, JevChoiceSource(cfg.router_jev_api_key, ipv4_only=cfg.router_jev_ipv4_only),
             prices={tier: ModelPrice(
                 item["inputUsdPerMillion"], item["outputUsdPerMillion"]
             ) for tier, item in cfg.router_prices.items()},

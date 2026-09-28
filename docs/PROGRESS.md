@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1–M5 的无密钥模块实现、联合 Replay 与总回归已完成，GitHub 交付待核实。
+Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 的历史外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1–M5 无密钥实现、联合 Replay 与总回归已完成，分支已推送并创建 [PR #1](https://github.com/chx739/sandboxd/pull/1)。新授权的 Live 横评完成首题后停止，TypeSafe IPv4 鉴权返回 401，完整横评未完成。
 
 当前分支：
 
@@ -12,7 +12,7 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 7 M1–M5 无密钥实现与回归完成，Live 横评协议已预检；下一步 GitHub 交付和具体 Live 授权
+    Phase 7 M1–M5 实现已推送；Live 首题已记录，等待有效 TypeSafe Key 并核算剩余调用范围
 
 ## Phase 7 当前恢复点
 
@@ -23,12 +23,15 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 - 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 **45/45**；Session CLI 的 tree/path、Memory CLI 的 extract/rebuild/summary/rollout/forget 均通过。`memory_eval` 两条合成会话当前事实 Recall/Precision 均 2/2，冲突 1，摘要 155/256 字符。以上不等于真实 gVisor 或 Live 模型联合 E2E，也不证明自然语言记忆提取质量。
 - M3 已交付版本化 runbook JSONL、ES BM25 与 Milvus dense 双索引、RRF/BGE 本地 CPU 推理、`check/rebuild/query/eval` CLI、官方 SciFact ZIP 转换，以及 opt-in 静态 `search_knowledge` 工具。公开 SciFact 完整 5,183 篇索引、前 30 test query 消融：BM25/dense/RRF/rerank nDCG@10 分别 0.5511/0.7445/0.7931/0.7826；rerank p50 5.76 秒。详情见 [35](35-Milvus-ES-BGE混合检索学习手册.md) 和 [phase17](evidence/phase17-hybrid-retrieval-mvp.md)。这不是官方完整 300 query 榜单，也没有 Live Agent 调用。
 - M3 后 `unittest discover` 为 **53/53**；`git diff --check` 通过。完整测试中的记忆 CLI 子进程在 WSL `/mnt/c` 启动耗时较长，测试总时长 256 秒，与检索在线延迟不同。
-- M4 已按 TypeSafe 官方 Python SDK `0.7.2` 的 `Choice` API 实现 task 前静态 economy/strong 选模，0.7 置信度门、2 秒超时和强模型回退；实际 Runner 只绑定一次 Gateway。假 Client 证实 SDK 请求形状，8 条合成 Fake/Replay 成功、假设时延/费用比较和 4 个路由测试通过。所有质量、价格和时延数字都来自夹具；Jev 与下游模型 Live 尚未调用。见 [36](36-Jev模型路由学习手册.md)、[phase18](evidence/phase18-jev-router-mvp.md)。
+- M4 已按 TypeSafe 官方 Python SDK `0.7.2` 的 `Choice` API 实现 task 前静态 economy/strong 选模，0.7 置信度门、2 秒超时和强模型回退；实际 Runner 只绑定一次 Gateway。最初的 [phase18](evidence/phase18-jev-router-mvp.md) 记录 8 条合成 Fake/Replay、假设时延/费用和 4 个路由测试，该历史证据没有 Live 调用；后续真实执行状态见下方 phase21。学习文档为 [36](36-Jev模型路由学习手册.md)。
 - M5 四模块联合无密钥 Replay 已通过：Fake Jev 选经济 Replay Gateway，记忆摘要以数据注入，`search_knowledge` 实际连接本地 ES/Milvus/BGE，Session 保存 6 节点并支持完整叶子分支，假沙箱释放一次，外部模型调用 0。见 [phase19](evidence/phase19-phase7-integrated-replay.md)。
 - Phase 7 完整 Python 回归 **61/61**，Live 无网络预检加入后验证耗时 **275.780 秒**；随后样本 SHA256 审批门加入，Live 预检定向 **5/5**、默认预览与 `compileall` 通过。耗时主要在 `/mnt/c` 上记忆 CLI 的多个 Python 子进程启动，不是检索或模型在线延迟。四模块联合无密钥 Replay 在允许连接本机 Docker 服务的执行环境中重跑成功。
-- M4 Live 横评的**无网络预检**已新增 `router_live_eval.py` 与 8 条独立合成题：同题固定 Flash、固定 V4 Pro、Jev 路由，最多 8 次 Jev + 24 次下游请求；默认 CLI 只打印计划，事前预留 `$0.107053`，真实模式需显式 `--execute --max-usd`、匹配的案例 SHA256 与 Key。当前仅 Fake 测试，真实请求仍未授权/执行；详见 [phase20](evidence/phase20-jev-live-preflight.md)。
-- 当前分支 `codex/agent-memory-rag-plan`，M0–M5 均已本地提交。GitHub App 可读仓库但写入返回 403，本机 HTTPS Git 无凭据；等待恢复 GitHub 写入后推送并创建 PR。Live 需新的具体服务、样本量与费用上限授权。
-- 尚未读取仓库外 secrets，也未调用外部 LLM/Jev；已在 phase20 给出 TypeSafe Jev 8 次、DeepSeek 24 次、8 条合成题和建议总费用上限 `$1` 的具体授权范围。未获明确授权前只运行无网络预览。
+- M4 Live 协议见 [phase20](evidence/phase20-jev-live-preflight.md)：8 条固定合成题、最多 8 次 Jev + 24 次下游请求、128 输出 token、零重试、SHA256 审核门和 `$1` 预算。用户已明确批准该范围；无需重复询问同一授权。
+- 首次执行在无 DNS 的受限沙箱内超时，未得到逐请求报告；不能仅凭超时断言用量为零。允许联网的执行完成 l01：1 次 Jev 尝试、3 次 DeepSeek 尝试，三组下游答案均正确，Jev `router_error` 回退到 strong 后按协议停止，估算费用 `$0.00046489`（含失败 Jev 的保守预留）。后续只读 IPv4 鉴权检查返回 HTTP 401；完整 Live 横评未完成，见 [phase21](evidence/phase21-jev-live-first-case.md) 与脱敏 JSON。
+- 已补每次推理调用前的脱敏进度标记和 `AGENTD_JEV_IPV4_ONLY=1`，Agent 与 Eval 共用 2 秒超时、零重试 Jev Client；官方 SDK 的本地 HTTP MockTransport 测试覆盖真实请求序列化与响应解析。
+- 本次网络配置/进度记录修改后的 Router、Live Eval 与 API 定向回归 **10/10**，`compileall` 和 `git diff --check` 通过；未把历史完整 61/61 冒充为本次完整重跑。
+- GitHub 已解决：用户完成 WSL `gh` 登录，允许联网环境推送成功，已创建 [PR #1](https://github.com/chx739/sandboxd/pull/1)，不合并 main。插件连接的写权限不是当前交付阻塞。
+- 下一步：用户更新仓库外 Jev Key；确认最初无报告尝试的用量后，在原授权剩余次数内继续未完成题目。不得直接重跑整轮，也不能把首题回退宣传成 Jev 分类质量。Key 不进入 Git、日志或文档；本轮已检查跟踪文件，无两个 Key 原文。
 
 ## 2026-09-28 新阶段方案审计
 

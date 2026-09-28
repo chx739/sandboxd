@@ -38,6 +38,7 @@ class Settings:
     router_jev_api_key: str = ""
     router_prices: dict[str, dict[str, float]] = field(default_factory=dict)
     router_jev_input_usd_per_million: float | None = None
+    router_jev_ipv4_only: bool = False
 
 
 def _required(name: str) -> str:
@@ -181,4 +182,5 @@ def load_settings() -> Settings:
         router_jev_api_key=router_jev_api_key,
         router_prices=router_prices,
         router_jev_input_usd_per_million=jev_price,
+        router_jev_ipv4_only=os.getenv("AGENTD_JEV_IPV4_ONLY", "0") == "1",
     )

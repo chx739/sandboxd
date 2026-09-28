@@ -112,6 +112,8 @@ Phase 6 不做：新功能、架构重写、agent-sandbox CRD 对接、exec 端�
 3. 同一语料写入 Milvus dense 与 Elasticsearch BM25 倒排索引，经 RRF 和 BGE Reranker 检索；提供消融、带标签数据与质量/延迟/资源报告。
 4. 按 TypeSafe Jev 官方 SDK 实现任务开始前的模型路由、确定性回退与费用记录；保留 Fake/Replay，Live 对比在新授权后执行。
 
+2026-09-28 Live 更新：用户已批准 Phase 20 的固定 8 题、最多 8 次 Jev + 24 次 DeepSeek、总预算 $1。联网执行首题后因 Jev 错误停止，已记录 1 次 Jev 尝试和 3 次 DeepSeek；只读 IPv4 鉴权返回 HTTP 401，完整横评未完成。恢复边界与首次无报告超时见 `docs/evidence/phase21-jev-live-first-case.md`。代码分支已推送并创建 PR #1，未合并 main。
+
 权威模块范围、资源边界、依赖与验收顺序见 `docs/31-Agent记忆检索与路由最小实现方案.md`。每项必须有运行命令、最小测评、中文学习文档和诚实的 Replay/集成/Live 证据。现有手写 Agent Loop 和可信执行边界保持；不因本阶段引入 LangGraph、任意 Shell、动态插件、自动审批或生产级多租户。先完成无密钥工作；历史 DeepSeek Eval 授权不延伸到本阶段。
 
 ## 不可偏移的约束

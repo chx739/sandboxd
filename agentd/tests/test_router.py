@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from types import SimpleNamespace
 
 from langchain_core.messages import AIMessage
 
@@ -49,25 +49,37 @@ class _Sandbox:
         self.released.append(sandbox_id)
 
 
-class _SdkClient:
-    def __init__(self) -> None:
-        self.calls = []
-
-    async def system_one(self, **kwargs):
-        self.calls.append(kwargs)
-        return SimpleNamespace(choices={
-            "model_tier": SimpleNamespace(choice="economy", confidence=0.92),
-        }, usage=SimpleNamespace(input_tokens=250))
-
-
 class RouterTest(unittest.IsolatedAsyncioTestCase):
     async def test_sdk_choice_shape_without_network(self) -> None:
-        client = _SdkClient()
-        judgement = await JevChoiceSource("unused", client).classify("list pods")
+        import httpx2
+        from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy
+
+        requests = []
+
+        def respond(request):
+            requests.append(request)
+            return httpx2.Response(200, json={
+                "model": "jev-fixture",
+                "answers": {"model_tier": {
+                    "type": "choice", "choice": "economy", "confidence": 0.92,
+                    "probabilities": {"economy": 0.95, "strong": 0.05},
+                }},
+                "usage": {"input_tokens": 250, "output_tokens": 20},
+            })
+
+        async with AsyncTypeSafeClient(
+            api_key="fixture-only", base_url="https://api.typesafe.ai", model="jev-latest",
+            transport=httpx2.MockTransport(respond), retry=RetryPolicy(max_retries=0),
+        ) as client:
+            judgement = await JevChoiceSource("unused", client).classify("list pods")
         self.assertEqual(judgement, ChoiceJudgement("economy", 0.92, 250))
-        self.assertEqual(client.calls[0]["state"], {"request": "list pods"})
-        choice = client.calls[0]["questions"]["model_tier"]
-        self.assertEqual(set(choice.criteria), {"economy", "strong"})
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(requests[0].method, "POST")
+        self.assertEqual(requests[0].url.path, "/v1/systemone")
+        body = json.loads(requests[0].content)
+        self.assertEqual(body["state"], {"request": "list pods"})
+        self.assertEqual(body["model"], "jev-latest")
+        self.assertEqual(set(body["questions"]["model_tier"]["criteria"]), {"economy", "strong"})
 
     async def test_fallbacks_and_cost(self) -> None:
         cheap, strong = _Gateway("cheap"), _Gateway("strong")

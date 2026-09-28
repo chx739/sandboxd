@@ -60,7 +60,7 @@
 | [33 树形 Session 与分支恢复](33-树形Session与分支恢复学习手册.md) | M1 源码、接口、确定性测评与面试讲法 | 已实现，证据见 PROGRESS |
 | [34 Codex 风格分层记忆](34-Codex风格分层记忆学习手册.md) | M2 提取、整理、读取、遗忘、测评与面试讲法 | 本地确定性实现，证据见 PROGRESS |
 | [35 Milvus/ES/BGE 混合检索](35-Milvus-ES-BGE混合检索学习手册.md) | M3 双索引、RRF、BGE、公开集消融与 Agent 只读接线 | Docker + 本地模型集成，证据见 phase17 |
-| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | M4 官方 SDK Choice、任务前选模、回退、成本夹具 | 无密钥 Fake/Replay，Live 待新授权 |
+| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | M4 官方 SDK Choice、任务前选模、回退、成本夹具 | Fake/Replay 已验证；Live 首题后受 TypeSafe 401 阻塞，见 [phase21](evidence/phase21-jev-live-first-case.md) |
 
 实施状态只看 [PROGRESS](PROGRESS.md) 和独立证据，不把后续模块方案当成当前代码能力。
 

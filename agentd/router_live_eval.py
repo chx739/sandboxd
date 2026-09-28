@@ -9,14 +9,15 @@ import json
 import math
 import os
 import statistics
+import sys
 import time
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from .app.model_gateway import LiveModelGateway, ModelGateway
-from .app.router import ChoiceSource, JevChoiceSource, ModelPrice, ModelRouter
+from .app.router import ChoiceSource, JevChoiceSource, ModelPrice, ModelRouter, create_jev_client
 
 FIXTURE = Path(__file__).resolve().parent / "testdata/router-live-v1.jsonl"
 MODEL_NAMES = {"economy": "deepseek-flash", "strong": "deepseek-v4-pro"}
@@ -140,6 +141,7 @@ async def evaluate_live(
     prices: Mapping[str, ModelPrice],
     jev_input_price: float,
     max_usd: float,
+    progress: Callable[[dict[str, str]], None] | None = None,
 ) -> dict[str, Any]:
     if set(gateways) != set(MODEL_NAMES) or set(prices) != set(MODEL_NAMES):
         raise ValueError("必须配置两个固定模型等级与单价")
@@ -162,6 +164,8 @@ async def evaluate_live(
                 jev_reserve = RESERVED_INPUT_TOKENS * jev_input_price / 1_000_000
                 if budget_used + jev_reserve > max_usd:
                     raise RuntimeError("Jev 请求前预算门拒绝；前序用量超出预留")
+                if progress is not None:
+                    progress({"event": "attempt", "caseId": case["id"], "service": "jev"})
                 _, decision = await router.choose(case["summary"])
                 tier = decision.effective_tier
                 route_ms = decision.elapsed_ms
@@ -179,6 +183,8 @@ async def evaluate_live(
             code: str | None = None
             error: str | None = None
             model_cost = reserve
+            if progress is not None:
+                progress({"event": "attempt", "caseId": case["id"], "service": "deepseek", "mode": mode})
             try:
                 result = await gateway.new_session([]).invoke(_messages(case))
                 code = _parse_code(result.message.content, case["choices"])
@@ -254,8 +260,6 @@ def _prices_from_env() -> tuple[dict[str, ModelPrice], float]:
 
 
 async def _execute(cases: list[dict[str, Any]], max_usd: float) -> dict[str, Any]:
-    from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy
-
     prices, jev_price = _prices_from_env()
     if not math.isfinite(max_usd) or max_usd <= 0 or _maximum_reservation(cases, prices, jev_price) > max_usd:
         raise ValueError("授权预算不足或不合法，拒绝创建 Provider Client")
@@ -269,11 +273,14 @@ async def _execute(cases: list[dict[str, Any]], max_usd: float) -> dict[str, Any
             max_tokens=MAX_OUTPUT_TOKENS, max_retries=0,
         ) for tier, name in MODEL_NAMES.items()
     }
-    async with AsyncTypeSafeClient(
-        api_key=jev_key, retry=RetryPolicy(max_retries=0), timeout=2.0,
+    async with create_jev_client(
+        jev_key, ipv4_only=os.getenv("AGENTD_JEV_IPV4_ONLY", "0") == "1",
     ) as client:
+        def progress(event: dict[str, str]) -> None:
+            print("AGENTD_LIVE_PROGRESS " + json.dumps(event, separators=(",", ":")), file=sys.stderr, flush=True)
+
         return await evaluate_live(
-            cases, gateways, JevChoiceSource(jev_key, client), prices, jev_price, max_usd,
+            cases, gateways, JevChoiceSource(jev_key, client), prices, jev_price, max_usd, progress,
         )
 
 

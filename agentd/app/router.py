@@ -14,6 +14,21 @@ from .models import ModelUsage
 TIERS = ("economy", "strong")
 
 
+def create_jev_client(api_key: str, *, ipv4_only: bool = False) -> Any:
+    from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy
+
+    transport = None
+    if ipv4_only:
+        import httpx2
+
+        # WSL 的 IPv6 路径不可用时，只为这个客户端选择 IPv4。
+        transport = httpx2.AsyncHTTPTransport(local_address="0.0.0.0")
+    return AsyncTypeSafeClient(
+        api_key=api_key, transport=transport, timeout=2.0,
+        retry=RetryPolicy(max_retries=0),
+    )
+
+
 @dataclass(frozen=True)
 class ChoiceJudgement:
     tier: str
@@ -32,12 +47,13 @@ class JevChoiceSource:
 
     source = "jev"
 
-    def __init__(self, api_key: str, client: Any | None = None) -> None:
+    def __init__(self, api_key: str, client: Any | None = None, *, ipv4_only: bool = False) -> None:
         self._api_key = api_key
         self._client = client
+        self._ipv4_only = ipv4_only
 
     async def classify(self, summary: str) -> ChoiceJudgement:
-        from typesafe_sdk import AsyncTypeSafeClient, Choice
+        from typesafe_sdk import Choice
 
         question = Choice(
             instructions="Which model tier should handle this operations diagnosis request?",
@@ -51,7 +67,7 @@ class JevChoiceSource:
                 state={"request": summary}, questions={"model_tier": question},
             )
         else:
-            async with AsyncTypeSafeClient(api_key=self._api_key) as client:
+            async with create_jev_client(self._api_key, ipv4_only=self._ipv4_only) as client:
                 response = await client.system_one(
                     state={"request": summary}, questions={"model_tier": question},
                 )
