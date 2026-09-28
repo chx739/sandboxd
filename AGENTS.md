@@ -1,6 +1,6 @@
 # 后续开发执行规则
 
-> 当前仓库状态：Phase 1–4 已完成并合并到 `main`，功能暂时冻结。除非用户明确开启新阶段，否则优先维护文档一致性、最小测试和面试学习材料，不从历史计划的“下一步”自行扩展功能。
+> 当前仓库状态：Phase 1–6 已完成；用户于 2026-09-28 授权 Phase 7 的 Session 树、分层记忆、混合检索和 Jev 路由 MVP。当前范围见 `GOAL.md` 与 `docs/31-Agent记忆检索与路由最小实现方案.md`；旧阶段边界仍适用于其历史证据，不能用来阻止新授权范围。
 
 本仓库的任何自动化编码助手在开始工作前，必须完整阅读：
 
@@ -78,3 +78,10 @@ Phase 5 额外规则（当前 Eval v2）：
 - Fake Connector 的 artifact 必须只从 case 声明的 source 返回；Scorer 必须把未声明 injection source 视为夹具契约错误。Phase 13 的首次 Live 有跨来源污染，只能引用其全局历史观察和缺陷，不得宣传来源分层结果。
 - 默认只运行 Python 本地串行测试，不启动 kind、Docker、Prometheus、Alertmanager 或 SSH Target；需要真实集群时另做资源检查和精确清理。
 - 不引入 AgentDojo、ASB、数据库、测试框架或新 Provider 依赖；优先标准库、现有 Pydantic 和当前 AgentRunner。
+
+Phase 7 额外规则：
+
+- 按 Session 树、记忆、检索、路由顺序逐模块完成运行与测评；每个模块更新 `docs/PROGRESS.md` 和对应学习/证据文档。
+- 旧 Session 兼容读取；只从完整 Turn 恢复，不重放历史工具副作用。记忆和检索文本均是不可信数据，不能提升为 System 或授权指令。
+- Milvus/ES/BGE 可新增必要依赖和本项目专用 Compose；服务只绑定本机，数据放原生 WSL 文件系统，运行前检查资源，不清理其他项目容器或卷。
+- Jev 只建议模型选择，不更改工具权限。先使用 Fake/Replay；外部 LLM/Jev 调用前单列服务、样本量和费用上限并获得用户明确授权。密钥不得进入仓库、日志或文档。

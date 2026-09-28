@@ -1,6 +1,6 @@
 # Agent 会话树、记忆、检索与路由：最小实现方案
 
-> 2026-09-28 环境与代码审计。本文是待实施方案，不代表模块已经运行或通过测评。当前实现事实仍以代码、`24` 和 `PROGRESS` 为准。本文供后续编码助手恢复上下文；概念学习见 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
+> 2026-09-28 环境与代码审计，现作为 Phase 7 的持续方案。M1 树形 Session 已实现并完成本地确定性测评；M2–M4 仍待实施。当前事实以代码、`PROGRESS` 和各模块 evidence 为准。概念学习见 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 
 ## 1. 目标与边界
 
@@ -28,7 +28,7 @@
 
 ## 3. 当前环境审计
 
-2026-09-28 在当前 WSL Ubuntu-22.04 和 Docker Desktop 中只做了只读检查：
+下表保留启动阶段的环境快照；开始实施后以 `PROGRESS` 的最新核对为准：
 
 | 项目 | 结果 | 对实施的影响 |
 |---|---|---|
@@ -37,6 +37,8 @@
 | GPU | RTX 5060，8 GiB 显存 | BGE 模型需先核对权重和显存；预留 CPU 路径 |
 | Python | 系统 `python3` 是 3.10.12；`python3.12` 和 `uv` 当前不在 PATH | `agentd/pyproject.toml` 要求 `>=3.12,<3.13`，需用户态安装解释器与 uv，或使用合适的隔离容器 |
 | 数据目录 | 仓库位于 `/mnt/c` | Session/记忆文件的 0700/0600 权限不能依赖未启用 metadata 的 DrvFS；运行时数据放 WSL 原生文件系统，Docker 数据用命名卷或原生 Linux 路径 |
+
+后续已安装用户态 `uv 0.12.19`、Python 3.12.14，并按原 `agentd/uv.lock` 同步依赖；Docker `hello-world` 已运行。Milvus 目标版本镜像没有完成拉取证据，不能把本机已有的其他项目 Milvus 2.5.10 镜像当成本阶段集成结果。
 
 不需要 WSL 密码或 sudo 来完成计划与用户态 Python 安装。尚未读取任何 API Key；仓库外 `secrets/` 不进入本阶段审计。
 
@@ -105,7 +107,7 @@ Milvus standalone、Elasticsearch 和 BGE 同时运行会占较多资源。先�
 
 1. 先读 `GOAL.md`、`AGENTS.md`、`docs/README.md`、`docs/24-项目全景与心智模型.md`、`docs/PROGRESS.md`，再读本文和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 2. 检查 `git status`、Python/uv、`docker version`、`docker compose version`、容器与资源；不要假定 2026-09-28 的环境仍然有效。
-3. 本文所有四项均为计划，尚无实现或测评证据。先做 M0；每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
+3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2–M4 仍未完成。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
 4. Replay、集成、Live 分栏记录；没有新授权不读取 Key、不向外部模型发送项目数据或 Eval 集。
 
 ## 8. 设计参考（官方原始资料）

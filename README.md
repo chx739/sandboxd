@@ -242,7 +242,7 @@ Agentd 在 Phase 2.1 新增 ToolResult 模型/审计双通道、生命周期事�
 
 ## Phase 3 Pi-style Runtime
 
-当前 agentd 不再依赖 LangGraph：`runtime/loop.py` 用内层 Tool/steer、外层 follow-up 的双层循环显式表达控制流；静态受信任 Plugin Registry 暴露 Prometheus 与 Kubernetes/Plan；线性 Session-lite 用 append-only JSONL 支持最小 resume。每次 resume 都创建新 Task 和新 gVisor Sandbox，不恢复旧进程。
+当前 agentd 不再依赖 LangGraph：`runtime/loop.py` 用内层 Tool/steer、外层 follow-up 的双层循环显式表达控制流；静态受信任 Plugin Registry 暴露 Prometheus 与 Kubernetes/Plan。Phase 3 的线性 Session-lite 后来在 Phase 7 扩展为 append-only JSONL 树；每次 resume/branch 都创建新 Task 和新 gVisor Sandbox，不恢复旧进程。
 
 控制接口只接受 API Token，Alert Token 仍只能提交告警：
 
@@ -252,10 +252,17 @@ POST /api/v1/tasks/{taskId}/follow-up
 POST /api/v1/tasks/{taskId}/cancel
 GET  /api/v1/sessions/{sessionId}
 POST /api/v1/sessions/{sessionId}/resume
+GET  /api/v1/sessions/{sessionId}/tree
+GET  /api/v1/sessions/{sessionId}/path/{nodeId}
+POST /api/v1/sessions/{sessionId}/branch/{nodeId}
 GET  /api/v1/plugins
 ```
 
-插件只扩展模型可见的结构化工具，不扩展 sandboxd/RBAC 允许的能力。当前不做动态插件、任意 Shell、Session 树、多进程 Worker 或生产级多租户身份。
+插件只扩展模型可见的结构化工具，不扩展 sandboxd/RBAC 允许的能力。当前不做动态插件、任意 Shell、多进程 Worker 或生产级多租户身份。
+
+## Phase 7 会话树、记忆、检索与路由
+
+树形 Session 的 `nodeId/parentId`、完整 Turn 分支、旧线性文件迁移和语义恢复已落地；运行与本地确定性证据见 [33 树形 Session 学习手册](docs/33-树形Session与分支恢复学习手册.md)。分层记忆、Milvus+ES+BGE 检索和 Jev 路由仍在实施，不将其方案写成已验证能力。
 
 ## Phase 4 Linux Host 与原生文件工具
 

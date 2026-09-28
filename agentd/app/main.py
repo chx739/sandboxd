@@ -283,11 +283,30 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except (TaskNotFoundError, ValueError) as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    @app.post("/api/v1/sessions/{session_id}/resume", status_code=202)
-    async def resume_session(session_id: str, request: Request) -> JSONResponse:
+    @app.get("/api/v1/sessions/{session_id}/tree")
+    async def get_session_tree(session_id: str, request: Request) -> JSONResponse:
         _authorized(request, cfg.api_token)
         try:
-            task = await store.resume(session_id)
+            return JSONResponse(await store.get_session_tree(session_id))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.get("/api/v1/sessions/{session_id}/path/{node_id}")
+    async def get_session_path(session_id: str, node_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(await store.get_session_path(session_id, node_id))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    async def start_session_branch(
+        session_id: str,
+        node_id: str | None,
+        request: Request,
+    ) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            task = await store.resume(session_id, node_id)
         except TaskNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
         except ValueError as exc:
@@ -300,7 +319,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "taskId": task.task_id,
                 "sessionId": task.session_id,
                 "status": task.status,
+                "branchedFrom": node_id,
             },
         )
+
+    @app.post("/api/v1/sessions/{session_id}/resume", status_code=202)
+    async def resume_session(session_id: str, request: Request) -> JSONResponse:
+        return await start_session_branch(session_id, None, request)
+
+    @app.post("/api/v1/sessions/{session_id}/branch/{node_id}", status_code=202)
+    async def branch_session(session_id: str, node_id: str, request: Request) -> JSONResponse:
+        return await start_session_branch(session_id, node_id, request)
 
     return app

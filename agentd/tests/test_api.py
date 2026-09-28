@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+from shutil import copyfile
 from tempfile import TemporaryDirectory
 
 from fastapi.testclient import TestClient
@@ -14,6 +15,13 @@ class AgentAPIAuthTest(unittest.TestCase):
     def test_alert_webhook_requires_its_own_token(self) -> None:
         project = Path(__file__).resolve().parents[1]
         with TemporaryDirectory() as trace_dir:
+            session_dir = Path(trace_dir) / "sessions"
+            session_dir.mkdir()
+            demo_id = "session-0123456789abcdef"
+            copyfile(
+                project / "testdata" / "session-tree-demo" / (demo_id + ".jsonl"),
+                session_dir / (demo_id + ".jsonl"),
+            )
             settings = Settings(
                 listen_host="127.0.0.1",
                 listen_port=8090,
@@ -105,10 +113,34 @@ class AgentAPIAuthTest(unittest.TestCase):
                 self.assertEqual(response.status_code, 404)
 
                 response = client.get(
-                    "/api/v1/sessions/session-0123456789abcdef",
+                    "/api/v1/sessions/session-ffffffffffffffff",
                     headers={"Authorization": "Bearer api-token"},
                 )
                 self.assertEqual(response.status_code, 404)
+
+                response = client.get(
+                    f"/api/v1/sessions/{demo_id}/tree",
+                    headers={"Authorization": "Bearer alert-token"},
+                )
+                self.assertEqual(response.status_code, 401)
+                response = client.get(
+                    f"/api/v1/sessions/{demo_id}/tree",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(len(response.json()["nodes"]), 7)
+                response = client.get(
+                    f"/api/v1/sessions/{demo_id}/path/node-0000000000000005",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json()["messages"][-1]["content"], "Old ending")
+                response = client.post(
+                    f"/api/v1/sessions/{demo_id}/branch/node-0000000000000003",
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 202)
+                self.assertEqual(response.json()["branchedFrom"], "node-0000000000000003")
 
 
 if __name__ == "__main__":

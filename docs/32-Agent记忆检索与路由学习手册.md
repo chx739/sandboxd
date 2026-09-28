@@ -1,6 +1,6 @@
 # 树形 Session、Codex 风格记忆、混合检索与 Jev 路由学习手册
 
-> 当前是设计学习文档，不是已实现功能说明。实施状态与环境以 [31 方案](31-Agent记忆检索与路由最小实现方案.md) 和 [PROGRESS](PROGRESS.md) 为准。
+> 这是四层概念学习文档。Session 树的已实现代码与证据见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；其余模块的真实进度以 [PROGRESS](PROGRESS.md) 为准。
 
 ## 一张图记住四层
 

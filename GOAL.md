@@ -2,7 +2,7 @@
 
 > 本文件是本仓库后续持续开发的“目标锚点”。无论聊天上下文是否完整、是否更换会话或执行者，开始工作前都必须先完整阅读本文件，再阅读 `docs/00-实现计划.md` 和 `docs/PROGRESS.md`。若聊天记忆、临时建议或局部实现与本文件冲突，以本文件为准；不得在没有得到用户明确同意的情况下改变目标。
 
-> 当前维护状态：Phase 1–5 已完成并合并到 `main`。2026-09-18 用户明确授权 Phase 6 加固（评审路线 A 的 bug 修复 + Eval harness 自检）并已实现。外部模型授权均已消费。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/25-代码导读与模块地图.md` 为准。
+> 当前维护状态：Phase 1–6 已完成。2026-09-28 用户授权 Phase 7：树形 Session、分层记忆、混合检索和 Jev 路由的可运行可测评 MVP。旧外部模型授权均已消费；Phase 7 的离线工作先行，任何新 Live 调用需单独明确授权。当前学习入口以 `docs/README.md`、`docs/24-项目全景与心智模型.md` 和 `docs/31-Agent记忆检索与路由最小实现方案.md` 为准。
 
 ## 一句话目标
 
@@ -102,6 +102,17 @@ Phase 5 明确不做：引入 AgentDojo/ASB 运行时依赖、上百样本、大
 - 验证只用本地手段：`go build/vet/test`、Python 串行 unittest（34 个）、evals `lint`/`replay` CLI 门禁；未启动 kind、Docker、Prometheus、Alertmanager、SSH Target，未调用外部 LLM。
 
 Phase 6 不做：新功能、架构重写、agent-sandbox CRD 对接、exec 端点收紧、RBAC 收敛、Plan 审计持久化（这些是评审建议的后续路线，须另行逐项授权）。
+
+## 当前目标：Phase 7 Agent 会话、记忆、检索与路由 MVP
+
+用户已明确要求在现有 Python agentd 上依次交付四个独立可运行、可测评的最小模块：
+
+1. 参考 Pi 源码，在现有 JSONL 上增加 `nodeId/parentId` 树、活动叶子、完整 Turn 分支与语义恢复；旧线性会话保持可读，恢复不重放历史工具副作用，并新建 task/sandbox。
+2. 参考 Codex memories 源码，实现已结束会话提取、跨会话整理、按需分层读取；保留来源、时间、冲突与有界摘要，提供重建和遗忘入口。
+3. 同一语料写入 Milvus dense 与 Elasticsearch BM25 倒排索引，经 RRF 和 BGE Reranker 检索；提供消融、带标签数据与质量/延迟/资源报告。
+4. 按 TypeSafe Jev 官方 SDK 实现任务开始前的模型路由、确定性回退与费用记录；保留 Fake/Replay，Live 对比在新授权后执行。
+
+权威模块范围、资源边界、依赖与验收顺序见 `docs/31-Agent记忆检索与路由最小实现方案.md`。每项必须有运行命令、最小测评、中文学习文档和诚实的 Replay/集成/Live 证据。现有手写 Agent Loop 和可信执行边界保持；不因本阶段引入 LangGraph、任意 Shell、动态插件、自动审批或生产级多租户。先完成无密钥工作；历史 DeepSeek Eval 授权不延伸到本阶段。
 
 ## 不可偏移的约束
 

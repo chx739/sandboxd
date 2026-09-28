@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户提出会话树、Codex 风格记忆、混合检索与 Jev 路由的下一阶段目标；目前只完成代码/环境审计与方案，功能尚未实施。
+Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1 的本地实现与测评已完成，下一步 M2。
 
 当前分支：
 
@@ -12,7 +12,16 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    下一阶段方案与环境审计；当前无外部模型调用授权
+    Phase 7 M1 本地完成，下一步 M2 分层记忆；当前无外部模型调用授权
+
+## Phase 7 当前恢复点
+
+- 目标与验收已写入 `GOAL.md`、`AGENTS.md`、`docs/31`。实施顺序：M1 Session 树 → M2 分层记忆 → M3 混合检索 → M4 Jev 路由 → M5 联合测评与文档。
+- 当前 Python 环境已核实：`uv run --project agentd --frozen -- python --version` 为 3.12.14。Docker 镜像清单有其他项目的 Milvus 2.5.10，但没有目标版本 2.6.20；不得清理或挪用其他项目资源。之前的 Milvus pull 没有完成证据。
+- M1 已交付 `runtime/session.py` 的消息节点/父链/活动叶子、完整 Turn 分支、旧线性快照迁移与断尾修复；`store.py` 恢复创建新 task，API 和 `session_cli.py` 可列树/读路径/分支。合成夹具在 `agentd/testdata/session-tree-demo/`，学习文档为 [33](33-树形Session与分支恢复学习手册.md)。
+- 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 40/40；Session CLI 的 tree/path 两条命令通过。以上不等于真实 gVisor 或 Live 模型联合 E2E。
+- 当前分支 `codex/agent-memory-rag-plan`。M2 从会话提取、跨会话整理和有界读取开始，不改旧 Session 安全语义。
+- 不读取仓库外 secrets，不调用外部 LLM/Jev；在全部无密钥部分完成后，提供明确的服务、样本量和费用预算供用户授权。
 
 ## 2026-09-28 新阶段方案审计
 
