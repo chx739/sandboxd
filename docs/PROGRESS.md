@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1 的本地实现与测评已完成，下一步 M2。
+Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费。2026-09-28 用户已在 Goal 模式授权 Phase 7：会话树、Codex 风格记忆、混合检索与 Jev 路由 MVP；M1 和 M2 的本地实现与确定性测评已完成，下一步 M3。
 
 当前分支：
 
@@ -12,21 +12,22 @@ Phase 1–6 已完成并保留，稳定实现已合并并推送 GitHub main。Ph
 
 当前里程碑：
 
-    Phase 7 M1 本地完成，下一步 M2 分层记忆；当前无外部模型调用授权
+    Phase 7 M1/M2 本地完成，下一步 M3 混合检索；当前无外部模型调用授权
 
 ## Phase 7 当前恢复点
 
 - 目标与验收已写入 `GOAL.md`、`AGENTS.md`、`docs/31`。实施顺序：M1 Session 树 → M2 分层记忆 → M3 混合检索 → M4 Jev 路由 → M5 联合测评与文档。
 - 当前 Python 环境已核实：`uv run --project agentd --frozen -- python --version` 为 3.12.14。Docker 镜像清单有其他项目的 Milvus 2.5.10，但没有目标版本 2.6.20；不得清理或挪用其他项目资源。之前的 Milvus pull 没有完成证据。
 - M1 已交付 `runtime/session.py` 的消息节点/父链/活动叶子、完整 Turn 分支、旧线性快照迁移与断尾修复；`store.py` 恢复创建新 task，API 和 `session_cli.py` 可列树/读路径/分支。合成夹具在 `agentd/testdata/session-tree-demo/`，学习文档为 [33](33-树形Session与分支恢复学习手册.md)。
-- 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 40/40；Session CLI 的 tree/path 两条命令通过。以上不等于真实 gVisor 或 Live 模型联合 E2E。
-- 当前分支 `codex/agent-memory-rag-plan`。M2 从会话提取、跨会话整理和有界读取开始，不改旧 Session 安全语义。
+- M2 已交付 `memory.py` 两阶段文件记忆、显式提取/重建/遗忘 CLI、合成 `memory_eval`、可选启动摘要与静态只读 `read_memory` 工具。只提取成功结束 Session 的活动路径，事实保留来源/时间/历史冲突。学习文档 [34](34-Codex风格分层记忆学习手册.md)，证据 [phase16](evidence/phase16-memory-mvp.md)。
+- 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 **45/45**；Session CLI 的 tree/path、Memory CLI 的 extract/rebuild/summary/rollout/forget 均通过。`memory_eval` 两条合成会话当前事实 Recall/Precision 均 2/2，冲突 1，摘要 155/256 字符。以上不等于真实 gVisor 或 Live 模型联合 E2E，也不证明自然语言记忆提取质量。
+- 当前分支 `codex/agent-memory-rag-plan`。下一步 M3：复核 Docker/镜像实际状态，建立版本化语料、ES BM25 与 Milvus dense 双索引、RRF/BGE、消融测评；先做无密钥部分。
 - 不读取仓库外 secrets，不调用外部 LLM/Jev；在全部无密钥部分完成后，提供明确的服务、样本量和费用预算供用户授权。
 
 ## 2026-09-28 新阶段方案审计
 
 - 用户目标：Pi 风格 Session 树与分支恢复、Codex 风格分层记忆、Milvus dense + ES BM25 + RRF + BGE Reranker、TypeSafe Jev 模型路由；每项均要求最小可运行、可测评，并有持续记录与学习文档。
-- 已建立 [31 方案](31-Agent记忆检索与路由最小实现方案.md) 和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。四项均**未实现、未测评**。
+- 当日启动时已建立 [31 方案](31-Agent记忆检索与路由最小实现方案.md) 和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)；本节以下环境信息是当时的历史快照，当前进度以上面的恢复点为准。
 - 只读环境核对：Docker 客户端/服务端 29.2.1，Compose v5.1.0，daemon 约 23 GiB/12 CPU，当前无运行容器；WSL Python 为 3.10.12，`python3.12` 与 `uv` 不在 PATH；RTX 5060 8 GiB。没有拉镜像、下载模型、读取 Key 或调用外部 LLM。
 - 下一步：从方案 M0 开始，先备齐 Python 3.12/uv 与离线夹具；各模块依次独立实现、测评并记录证据。任何 Live 模型/Jev 调用需新的明确授权和预算；历史 DeepSeek Eval 授权已消费。
 

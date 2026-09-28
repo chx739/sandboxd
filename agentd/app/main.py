@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from .clients import LinuxHostClient, PrometheusClient, SandboxdClient
 from .config import Settings, load_settings
 from .graph import AgentRunner
+from .memory import MemoryStore
 from .model_gateway import LiveModelGateway, ReplayModelGateway
 from .models import (
     AlertEvent,
@@ -64,7 +65,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     else:
         gateway = ReplayModelGateway(cfg.replay_file)
 
-    plugins = build_builtin_registry()
+    memory_store = (
+        MemoryStore(cfg.memory_root, cfg.memory_project)
+        if cfg.memory_root is not None else None
+    )
+    plugins = build_builtin_registry(memory_store)
     runner = AgentRunner(
         prometheus,
         sandboxd,
@@ -72,6 +77,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         plugins,
         linux_hosts=linux_hosts,
         workspace_root=cfg.workspace_dir,
+        memory_store=memory_store,
     )
     store = TaskStore(cfg.trace_dir)
 

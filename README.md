@@ -262,7 +262,7 @@ GET  /api/v1/plugins
 
 ## Phase 7 会话树、记忆、检索与路由
 
-树形 Session 的 `nodeId/parentId`、完整 Turn 分支、旧线性文件迁移和语义恢复已落地；运行与本地确定性证据见 [33 树形 Session 学习手册](docs/33-树形Session与分支恢复学习手册.md)。分层记忆、Milvus+ES+BGE 检索和 Jev 路由仍在实施，不将其方案写成已验证能力。
+树形 Session 的 `nodeId/parentId`、完整 Turn 分支、旧线性文件迁移和语义恢复已落地；运行与本地确定性证据见 [33 树形 Session 学习手册](docs/33-树形Session与分支恢复学习手册.md)。分层记忆的显式提取、跨会话整理、有界读取与遗忘已完成本地合成 Replay，见 [34 分层记忆学习手册](docs/34-Codex风格分层记忆学习手册.md)。Milvus+ES+BGE 检索和 Jev 路由仍在实施，不将其方案写成已验证能力。
 
 ## Phase 4 Linux Host 与原生文件工具
 

@@ -8,6 +8,7 @@ from typing import Sequence
 from langchain_core.messages import BaseMessage
 
 from .clients import LinuxHostClient, PrometheusClient, SandboxdClient
+from .memory import MemoryStore
 from .model_gateway import ModelGateway
 from .models import AgentTrace, AlertEvent, Diagnosis, sum_model_usage
 from .plugins.base import PluginContext
@@ -34,14 +35,16 @@ class AgentRunner:
         plugins: PluginRegistry | None = None,
         linux_hosts: LinuxHostClient | None = None,
         workspace_root: Path | None = None,
+        memory_store: MemoryStore | None = None,
     ) -> None:
         self._prometheus = prometheus
         self._sandboxd = sandboxd
         self._model_gateway = model_gateway
-        self._plugins = plugins or build_builtin_registry()
+        self._plugins = plugins or build_builtin_registry(memory_store)
         self._linux_hosts = linux_hosts or LinuxHostClient({})
         # WSL 的 TMPDIR 可能指向 /mnt/c；DrvFS 未启用 metadata 时不能依赖 0700/0600。
         self._workspace_root = workspace_root or Path("/tmp/sandboxd-agent-workspaces")
+        self._memory_store = memory_store
 
     async def run(
         self,
@@ -99,6 +102,9 @@ class AgentRunner:
                 ),
                 control=control or AgentControl(),
                 state=state,
+                memory_summary=(
+                    self._memory_store.read_summary() if self._memory_store else ""
+                ),
             )
             state = await asyncio.wait_for(
                 loop.run(),

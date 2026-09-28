@@ -2,14 +2,18 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, Iterable
+from typing import TYPE_CHECKING, Any, Iterable
 
 from ..clients import HTTPResult
 from .base import PluginContext, PluginManifest, ToolPlugin
 from .files import FileToolsPlugin
 from .kubernetes import KubernetesPlugin
 from .linux_host import LinuxHostPlugin
+from .memory import MemoryPlugin
 from .prometheus import PrometheusPlugin
+
+if TYPE_CHECKING:
+    from ..memory import MemoryStore
 
 
 @dataclass(frozen=True)
@@ -97,14 +101,15 @@ class PluginRegistry:
         return await registered.plugin.execute(tool_name, arguments, context)
 
 
-def build_builtin_registry() -> PluginRegistry:
+def build_builtin_registry(memory_store: MemoryStore | None = None) -> PluginRegistry:
     """显式列出可信插件；代码审查可以一眼看到 Agent 的全部扩展面。"""
 
-    return PluginRegistry(
-        [
-            PrometheusPlugin(),
-            KubernetesPlugin(),
-            LinuxHostPlugin(),
-            FileToolsPlugin(),
-        ]
-    )
+    plugins: list[ToolPlugin] = [
+        PrometheusPlugin(),
+        KubernetesPlugin(),
+        LinuxHostPlugin(),
+        FileToolsPlugin(),
+    ]
+    if memory_store is not None:
+        plugins.append(MemoryPlugin(memory_store))
+    return PluginRegistry(plugins)

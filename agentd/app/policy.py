@@ -153,6 +153,23 @@ def validate_tool_call(
         result["allowed"] = True
         return result
 
+    if name == "read_memory":
+        level = arguments.get("level")
+        if level == "detail" and set(arguments) == {"level"}:
+            result["allowed"] = True
+            return result
+        session_id = arguments.get("sessionId")
+        if (
+            level == "rollout"
+            and set(arguments) == {"level", "sessionId"}
+            and isinstance(session_id, str)
+            and re.fullmatch(r"session-[a-f0-9]{16}", session_id)
+        ):
+            result["allowed"] = True
+            return result
+        result["reason"] = "read_memory 只接受 detail 或合法 Session 的 rollout"
+        return result
+
     if name in FILE_KEYS:
         if not set(arguments) <= FILE_KEYS[name]:
             result["reason"] = "%s 包含未知字段" % name

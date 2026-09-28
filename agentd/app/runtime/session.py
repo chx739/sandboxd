@@ -392,6 +392,17 @@ class SessionJournal:
             "messages": [node["message"] for node in _path_nodes(nodes, node_id)],
         }
 
+    async def active_path(self) -> list[dict[str, Any]]:
+        """供记忆提取使用；返回带来源节点 ID 的当前完整路径。"""
+
+        await self._ensure_tree()
+        entries = await self._read_entries()
+        nodes = self._nodes(entries)
+        head_id = self._head_id(entries, nodes)
+        if head_id is None:
+            raise ValueError("Session 尚无完整 Turn")
+        return _path_nodes(nodes, head_id)
+
     @staticmethod
     def _nodes(entries: Sequence[dict[str, Any]]) -> dict[str, dict[str, Any]]:
         return {

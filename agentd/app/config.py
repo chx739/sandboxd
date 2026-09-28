@@ -24,6 +24,8 @@ class Settings:
     trace_dir: Path
     linux_targets_file: Path | None = None
     workspace_dir: Path | None = None
+    memory_root: Path | None = None
+    memory_project: str = "sandboxd"
 
 
 def _required(name: str) -> str:
@@ -98,6 +100,8 @@ def load_settings() -> Settings:
         "AGENTD_WORKSPACE_DIR",
         "/tmp/sandboxd-agent-workspaces",
     )
+    memory_root_value = os.getenv("AGENTD_MEMORY_ROOT", "")
+    memory_project = os.getenv("AGENTD_MEMORY_PROJECT", "sandboxd")
 
     return Settings(
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),
@@ -118,4 +122,6 @@ def load_settings() -> Settings:
             Path(linux_targets_value) if linux_targets_value else None
         ),
         workspace_dir=Path(workspace_value),
+        memory_root=Path(memory_root_value) if memory_root_value else None,
+        memory_project=memory_project,
     )

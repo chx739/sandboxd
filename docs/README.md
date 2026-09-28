@@ -58,6 +58,7 @@
 | [31 Agent 记忆检索与路由最小实现方案](31-Agent记忆检索与路由最小实现方案.md) | 阶段范围、环境、实施顺序与测评 | 持续更新 |
 | [32 Agent 记忆检索与路由学习手册](32-Agent记忆检索与路由学习手册.md) | 四层概念、取舍与自测题 | 概念学习 |
 | [33 树形 Session 与分支恢复](33-树形Session与分支恢复学习手册.md) | M1 源码、接口、确定性测评与面试讲法 | 已实现，证据见 PROGRESS |
+| [34 Codex 风格分层记忆](34-Codex风格分层记忆学习手册.md) | M2 提取、整理、读取、遗忘、测评与面试讲法 | 本地确定性实现，证据见 PROGRESS |
 
 实施状态只看 [PROGRESS](PROGRESS.md) 和独立证据，不把后续模块方案当成当前代码能力。
 
@@ -112,6 +113,7 @@ LangGraph 显式图
 - [phase13 Prompt Injection Eval v2](evidence/phase13-prompt-injection-eval-v2.md)：40 条 Replay、88 Task Live、费用和跨来源夹具缺陷。
 - [phase14 来源隔离后的 Live Eval v2](evidence/phase14-source-isolated-live-eval-v2.md)：解析修复、91 Task、ASR 1/72 与 Containment 1/1。
 - [phase15 树形 Session MVP](evidence/phase15-session-tree-mvp.md)：合成树 CLI、40 个本地 Python 测试与未做 Live 的边界。
+- [phase16 分层记忆 MVP](evidence/phase16-memory-mvp.md)：两条合成会话的提取/冲突/遗忘、45 个本地 Python 测试与未做 Live 的边界。
 - [学习实验台账](evidence/learning-experiments.md)：区分“已执行实验、已有等价证据、尚未执行”，不把预测写成实测。
 
 ## 学习纪律
