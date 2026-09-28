@@ -12,7 +12,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 8 M1：Milvus 原生混合索引与 OpenSearch 日志已完成初次真实集成；正在建设运维语料和测评
+    Phase 8 M2/M3：60题检索消融、40题日志、Benchmark、3类联合回放完成；Live 与人工审核待办
 
 ## Phase 8 当前恢复点与待办
 
@@ -22,8 +22,17 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - **已具备**：Phase 7 树形 Session、分层记忆、本地 BGE 推理、ES BM25 + Milvus dense + RRF/BGE 四组公开 SciFact 子集消融，均需按 Phase 8 逐项复核。当前开发分支已有 PR #1；旧结果不能冒充新运维数据集成绩。
 - **本轮已完成**：Milvus 原生 BM25/Dense 新快照索引、组件/来源/版本过滤；OpenSearch 2.19.6 独立 localhost:9201、结构化 search_logs/aggregate_logs；720 条合成日志、40 个查询独立 Python oracle；40 篇固定运维文档、298 chunks、许可与来源 commit。
 - **真实集成证据**：`evidence/phase22-milvus-smoke.json` 为 9 chunk/7 题迁移夹具，四组指标 1.0，仅证明小样本链路；`evidence/phase22-logs-results.json` 为实际 OpenSearch 查询 40/40，p50 3.38ms/p95 9.21ms。12 个检索/日志定向测试与 8 个 API/插件/路由测试通过。
-- **第一项未完成工作**：构建 60 题运维候选评测集（明确未经人工审核），选择中文查询适用的固定 embedding，保存四组逐题原始结果；随后补索引更新/删除 CLI、Benchmark、三类联合回放、Ragas/Live 预检、学习文档和全量回归。
-- **费用和证据**：本轮没有新付费推理调用。更新的 Jev Key 在只读 models.list 上 2 秒超时，10 秒检查鉴权成功；运行时超时仍为 2 秒。只读成功不等于路由效果验收。历史有无报告尝试，不能假定零消费；新阶段 Live 评测需独立授权计划。
+- **2026-09-29 新结果**：40 篇/298 chunks + 60 候选问题（50可回答/10无答案，13 dev/47 test），多语言 E5 + BGE 四组消融已真实执行。Hybrid+rerank Recall@10=0.8500、nDCG@10=0.6372、路径 P50=4958ms；不是人工金标。逐题证据 `phase23-ops-rag-results.json`。
+- **联合演示**：`python -m agentd.ops_demo` 三类均通过，使用实际 Milvus/OpenSearch，脚本模型/Fake 路由/Fake Sandbox，真实集群调用0。报告 `phase23-joint-replay.json`。
+- **性能**：OpenSearch Benchmark 2.4.0 查询只读自定义 workload 已成功，720条、1 client、20 ops/s、每操作20预热/100测量；三操作 p50=4.76/3.75/3.34ms、0错误。CSV 的748为集群含系统索引计数，目标索引独立核对720；原始报告和环境另存。
+- **源码对照**：Pi commit `11894012dd461232eb075bc890538b6866860a10`；Codex commit `46fdd5ef39735f4159cdcf0ec5e85c10521494e5`。Codex README 旧 core 路径已失效，实际 write 管线在 memories/write/src；见 docs39。
+- **生成评测**：Ragas 0.4.3 在独立 WSL venv 安装，依赖已冻结；官方 Faithfulness/FactualCorrectness 及完整生成/rubric 流程共3个无网络协议测试通过。`agentd.ops_eval.generation` 默认离线预览，支持无检索/RAG、逐步模型裁判依据、运维 rubric、预算与持久账本。真实模型分数尚未执行。
+- **回归**：完整 Python **72/72**、250.490秒（大部分为 Windows 挂载盘上记忆 CLI 子进程）；后续 Live JSON action/预算定向4/4（51.168秒）通过；不是将旧完整通过冒称覆盖后续全部变更。
+- **日志预算修复**：默认返回3条，插件拒绝超过3500字节结果，避免 Runtime 截断 JSON；随后日志/数据/检索定向12/12通过（0.321秒）。实际 OpenSearch 最新40/40、集合P/R与聚合正确率1.0、P50=2.16ms/P95=3.02ms，另存 `phase25-logs-bounded-results.json`；现有联合回放日志响应最大1040字节，未超过新预算。
+- **索引生命周期**：真实小快照验收更新/删除/四类过滤通过，旧2条索引保留、新索引1条；`phase24-index-lifecycle.json`。临时本地夹具执行后清理，正式 ops-v1 未修改。日志新增分项汇总后再次真实40/40，集合P/R、聚合均1.0，p50 2.18ms/p95 3.23ms；与此前报告并存。
+- **第一项未完成工作**：检查用户是否已答复付费计划，按精确授权范围执行并保留逐调用报告；若未答复，不发请求、不重复读取 Key，也不自行勾选60题 REVIEW.md。代码、无费用验收与文档已具备，当前在推送 PR 收尾。
+- **待用户预算**：Jev 两题计划已保存 `phase23-jev-plan.json`，2 Jev+6 DeepSeek、拟上限$0.10；异步问题已发，尚无答复。生成6题计划 `phase24-generation-plan.json` 最多96调用、保守预留$4.671406；联合Live三场景 `phase24-live-agent-plan.json` 最多18调用、预留$0.875889，已另发合计$6的异步授权问题，尚未答复，不执行。DeepSeek单价按2026-09-29官方峰时cache-miss费率核对。
+- **费用和证据**：本轮无新付费推理调用。Jev Key 只读 models.list 在2秒超时后10秒鉴权成功，运行时仍2秒。旧无报告尝试不当作零消费。学习文档 docs38/39、固定语料 README/REVIEW 与原始结果已新增。
 
 ## Phase 7 历史恢复点（以下“下一步”已由 Phase 8 取代）
 

@@ -1,5 +1,7 @@
 # Milvus 2.5.10 + ES BM25 + BGE：混合检索 MVP
 
+> 本页为 Phase 7 的 ES/BGE 英文检索历史基线。Phase 8 默认 Milvus 原生 BM25 + E5 多语言检索见 [38](38-运维Agent与测评学习手册.md)；复现本页旧结果需显式 `--backend es`、旧 corpus/queries 和英文模型目录。
+
 ## 1. 一分钟讲法
 
 同一份带版本和 SHA256 的语料分别进入 Elasticsearch 倒排索引和 Milvus dense 向量索引。查询时，ES BM25 找精确术语，BGE-small 向量找语义相近内容；RRF 只融合排名，不混用不可比较的原始分数；BGE-reranker-base 对候选逐对重排。结果带 `chunkId`、`source` 和 `trustLevel`，Agent 的静态 `search_knowledge` 工具只能读，检索文本不能改变工具权限。

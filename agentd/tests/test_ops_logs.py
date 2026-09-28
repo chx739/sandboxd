@@ -14,6 +14,15 @@ from agentd.retrieval.milvus_hybrid import MilvusHybrid
 
 
 class OpsLogsTest(unittest.TestCase):
+    def test_plugin_rejects_oversized_payload_before_runtime_truncates_json(self):
+        from agentd.app.plugins.logs import LogsPlugin
+        class TooLarge:
+            def search(self, arguments, aggregate=False):
+                return {"logs": [{"message": "x" * 4000}]}
+        plugin = LogsPlugin(Path("unused"), client=TooLarge())
+        with self.assertRaises(ValueError):
+            plugin._execute("search_logs", {})
+
     def test_independent_oracle_boundary_timezone_and_incorrect_result(self):
         with TemporaryDirectory(dir="/tmp") as directory:
             root = Path(directory)

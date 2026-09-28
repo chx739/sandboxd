@@ -1,0 +1,12 @@
+{
+  "kind": "real-milvus-local-model-synthetic-lifecycle",
+  "baseCollection": "sandboxd_rag_ops_lifecycle_v1_b025b1b342da_h1_e2528b7f",
+  "newCollection": "sandboxd_rag_ops_lifecycle_v1_65de195b0550_h1_e2528b7f",
+  "baseCount": 2,
+  "newCount": 1,
+  "sourceSnapshotRetained": true,
+  "oldIndexRetained": true,
+  "updateDeleteFilterPassed": true,
+  "externalModelCalls": 0,
+  "sourceSnapshotRetentionScope": "Temporary fixture existed when checked; TemporaryDirectory cleans it after return. Existing ops-v1 corpus and all old Milvus indexes remain unchanged."
+}

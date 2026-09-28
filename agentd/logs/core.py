@@ -45,7 +45,7 @@ class LogQuery(BaseModel):
     error_code: str | None = Field(default=None, min_length=1, max_length=64)
     trace_id: str | None = Field(default=None, min_length=1, max_length=80)
     keyword: str | None = Field(default=None, min_length=1, max_length=128)
-    limit: int = Field(default=20, ge=1, le=100)
+    limit: int = Field(default=3, ge=1, le=100)
 
     @model_validator(mode="after")
     def bounded_window(self) -> "LogQuery":

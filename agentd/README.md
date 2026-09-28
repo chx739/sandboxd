@@ -1,3 +1,5 @@
+> Phase 8 当前入口：[运维 Agent 与测评学习手册](../docs/38-运维Agent与测评学习手册.md)。默认检索已迁移到 Milvus 原生 BM25 + E5；只需 corpus 即可启用知识工具，queries 仅用于评测。OpenSearch 日志由 `AGENTD_LOGS_FILE` 显式启用。下面 Phase 7 章节保留历史背景。
+
 # agentd
 
 agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：

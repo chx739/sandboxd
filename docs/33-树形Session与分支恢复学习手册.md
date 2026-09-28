@@ -86,3 +86,5 @@ uv run --project agentd --frozen -- python -m unittest \
 ## 6. 面试一分钟讲法
 
 “原项目的 Session 只保存线性 transcript。我参考 Pi 的追加式 `id/parentId` 树，在同一 JSONL 中记录消息节点和活动叶子。分支沿父链重建模型上下文，旧支线保留；只允许完整 Turn 做分支点，避免半个 Tool Call 和历史副作用被重新执行。恢复创建新 task，Runner 重新申请 sandbox；旧线性文件自动迁移。用固定夹具验证了分支隔离、重启恢复、截断尾行、脱敏和 API 权限。这仍是单进程 Demo，不是数据库式会话服务。”
+
+固定 commit 与当前源码路径复核见 [39-Pi与Codex源码对照](39-Pi与Codex源码对照.md)。

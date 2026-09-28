@@ -40,10 +40,18 @@ def run(args: argparse.Namespace) -> dict:
             reports.append({**case, "expected": reference, "actual": actual,
                             "scores": score(reference, actual), "latencyMs": round(elapsed, 3)})
     latency = [r["latencyMs"] for r in reports]
+    searches = [r["scores"] for r in reports if "precision" in r["scores"]]
+    aggregations = [r["scores"] for r in reports if "aggregationCorrect" in r["scores"]]
     return {"kind": "real-opensearch-synthetic-logs-independent-oracle", "snapshotHash": digest,
             "recordCount": len(rows), "queryCount": len(reports),
             "passed": sum(r["scores"]["passed"] for r in reports), "p50Ms": _percentile(latency, .5),
-            "p95Ms": _percentile(latency, .95), "cases": reports}
+            "p95Ms": _percentile(latency, .95),
+            "searchPrecisionMacro": sum(r["precision"] for r in searches) / len(searches) if searches else None,
+            "searchRecallMacro": sum(r["recall"] for r in searches) / len(searches) if searches else None,
+            "aggregationCorrectRate": sum(r["aggregationCorrect"] for r in aggregations) / len(aggregations) if aggregations else None,
+            "parameterSchemaAcceptanceRate": 1.0,
+            "parameterMetricScope": "fixed valid structured inputs; not natural-language parameter generation",
+            "cases": reports}
 
 
 def main() -> None:

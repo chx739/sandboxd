@@ -6,6 +6,17 @@ Go sandboxd 保留通用 Exec API 用于沙箱机制验证，但当前 Python ag
 
 核心命题：**不能用 prompt 防御 prompt injection，只能用执行层边界。** 所以本项目的重点不在 Agent 的能力，而在它的执行边界——即使模型被诱导生成了破坏性命令，那条命令在权限、网络和运行时三层都执行不了。
 
+## 当前运维 MVP（Phase 8）
+
+- 会话树与分层记忆：分支/恢复、完整工具组、来源/冲突/遗忘；参考固定 Pi/Codex 源码，未完整复刻。
+- 知识：Milvus **2.5.10 原生 BM25 + E5 Dense + RRF + BGE Reranker**，40 篇固定运维文档，默认不依赖 ES。
+- 日志：OpenSearch 2.19.6，720 条合成日志/40 个独立 oracle 用例通过，另有小规模 Benchmark。
+- 联合回放：内存、Service、readiness 三类，真实本地存储、脚本模型、Fake Sandbox，未连接真实生产集群。
+- 60 题候选 RAG 集与四组原始消融已保存；题目待人工审核，Live/Ragas 分数尚未验收。
+- Jev 最小路由已加入当前目标；新 Key 只读鉴权通过，付费最小验证等待独立预算确认。
+
+开始学习与运行见 [运维 Agent 学习手册](docs/38-运维Agent与测评学习手册.md)、[源码对照](docs/39-Pi与Codex源码对照.md)、[当前进度与缺口](docs/PROGRESS.md)。
+
 ```mermaid
 graph LR
     AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>Pi-style 双层 Loop<br/>Session + Plugins"]

@@ -89,3 +89,5 @@ uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests 
 “我参考 Codex 的两阶段记忆，把成功会话的活动分支先提取成带节点来源和时间的事实，再跨会话整理为完整记忆与有界摘要。Agent 默认只读短摘要，需要时通过受 Policy 校验的只读工具取详情。显式离线模式在两条合成会话上可复现更新、冲突和遗忘，并证明工具日志不会直接成为记忆；真实自然语言提取与 Live 效果仍需单独授权和测评。”
 
 测评输出和环境边界见 [Phase 16 evidence](evidence/phase16-memory-mvp.md)。
+
+固定 commit 与当前源码路径复核见 [39-Pi与Codex源码对照](39-Pi与Codex源码对照.md)。
