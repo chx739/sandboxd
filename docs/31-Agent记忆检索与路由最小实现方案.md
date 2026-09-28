@@ -107,7 +107,7 @@ Milvus standalone、Elasticsearch 和 BGE 同时运行会占较多资源。先�
 
 1. 先读 `GOAL.md`、`AGENTS.md`、`docs/README.md`、`docs/24-项目全景与心智模型.md`、`docs/PROGRESS.md`，再读本文和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)。
 2. 检查 `git status`、Python/uv、`docker version`、`docker compose version`、容器与资源；不要假定 2026-09-28 的环境仍然有效。
-3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2 见 [34 分层记忆](34-Codex风格分层记忆学习手册.md)；M3 见 [35 混合检索](35-Milvus-ES-BGE混合检索学习手册.md)；M4 见 [36 Jev 路由](36-Jev模型路由学习手册.md)；M5 见 [phase19 联合 Replay](evidence/phase19-phase7-integrated-replay.md)。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
+3. M1 的实现与本地测评见 [33 树形 Session](33-树形Session与分支恢复学习手册.md)；M2 见 [34 分层记忆](34-Codex风格分层记忆学习手册.md)；M3 见 [35 混合检索](35-Milvus-ES-BGE混合检索学习手册.md)；M4 见 [36 Jev 路由](36-Jev模型路由学习手册.md) 与 [phase20 Live 无网络预检](evidence/phase20-jev-live-preflight.md)；M5 见 [phase19 联合 Replay](evidence/phase19-phase7-integrated-replay.md)。每做完一项更新 `PROGRESS`、模块学习文档和独立 evidence。
 4. Replay、集成、Live 分栏记录；没有新授权不读取 Key、不向外部模型发送项目数据或 Eval 集。
 
 ## 8. 设计参考（官方原始资料）

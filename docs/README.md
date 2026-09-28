@@ -119,6 +119,7 @@ LangGraph 显式图
 - [phase17 混合检索 MVP](evidence/phase17-hybrid-retrieval-mvp.md)：Milvus 2.5.10、ES/BGE 与公开 SciFact 30 条固定子集消融；无外部模型调用。
 - [phase18 Jev 路由 MVP](evidence/phase18-jev-router-mvp.md)：官方 SDK 本地请求形状、Fake/Replay、单 Task 选模与回退；无外部模型调用。
 - [phase19 四模块联合 Replay](evidence/phase19-phase7-integrated-replay.md)：真实本地 RAG + Session/Memory + Fake Jev/Replay LLM/假沙箱；外部模型调用 0。
+- [phase20 Jev Live 无网络预检](evidence/phase20-jev-live-preflight.md)：8 条合成题的同题三组横评协议、预算预留与 Fake 门禁；Live 待授权。
 - [学习实验台账](evidence/learning-experiments.md)：区分“已执行实验、已有等价证据、尚未执行”，不把预测写成实测。
 
 ## 学习纪律

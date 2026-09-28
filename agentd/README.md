@@ -100,4 +100,4 @@ Agent 默认不注册 `search_knowledge`。设定 `AGENTD_RETRIEVAL_CORPUS` 和 
 
 ## Phase 7 Jev 路由
 
-默认 `AGENTD_ROUTER_MODE=off`。可选 `jev` 模式用官方 `typesafe-sdk==0.7.2` 的 `Choice` 在 Task 开始前选静态 `economy/strong` 等级，并映射到两个已配置的下游模型；低置信度、非法返回、超时和 SDK 报错回退到 `strong`。需同时配置 Live Gateway、两个模型名与 `TYPESAFE_API_KEY`。费用估算可选 `AGENTD_ROUTER_PRICES_JSON`；未配置价格时不假报零成本。无 Key 的 `python -m agentd.router_eval` 是纯合成 Fake/Replay，不能代表真实 Jev 或下游模型质量。见 `../docs/36-Jev模型路由学习手册.md`。
+默认 `AGENTD_ROUTER_MODE=off`。可选 `jev` 模式用官方 `typesafe-sdk==0.7.2` 的 `Choice` 在 Task 开始前选静态 `economy/strong` 等级，并映射到两个已配置的下游模型；低置信度、非法返回、超时和 SDK 报错回退到 `strong`。需同时配置 Live Gateway、两个模型名与 `TYPESAFE_API_KEY`。费用估算可选 `AGENTD_ROUTER_PRICES_JSON` 与 `AGENTD_JEV_INPUT_USD_PER_MILLION`；未配置价格或用量时不假报零成本。无 Key 的 `python -m agentd.router_eval` 是纯合成 Fake/Replay，不能代表真实 Jev 或下游模型质量。`python -m agentd.router_live_eval` 默认只输出 8 题真实横评计划，不发送请求；其 `--execute` 模式需要新的明确授权。见 `../docs/36-Jev模型路由学习手册.md` 和 `../docs/evidence/phase20-jev-live-preflight.md`。

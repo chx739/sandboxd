@@ -48,6 +48,8 @@ AGENTD_JEV_INPUT_USD_PER_MILLION=<核实后的 Jev 每百万输入 token 美元�
 
 Live 测评需要用户新的明确授权，单列 TypeSafe Jev 服务、下游经济/强模型、任务样本量和费用上限。建议先在合成运维问题上做小样本，按**同一批**任务比较固定经济、固定强、Jev 路由的完成质量、token 费用、p50/p95 和错误路由；即便使用真实 Jev，也不能把 Fake 结果当成测评质量。
 
+当前已有默认不联网的 [Live 横评预检协议](evidence/phase20-jev-live-preflight.md)：8 条合成题、8 次 Jev 与 24 次 DeepSeek 调用上限、预算门和首题错误停止。`python -m agentd.router_live_eval` 只打印计划；`--execute` 必须在用户批准具体服务、次数和美元上限后使用。
+
 ## 5. 常见追问
 
 - **为什么不直接让 LLM 自报模型？** 模型选择由 Jev 输出固定等级，应用白名单验证并映射到部署者配置的 Gateway；不能从自然语言拼接 URL/模型名。

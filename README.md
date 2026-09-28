@@ -263,7 +263,7 @@ GET  /api/v1/plugins
 
 ## Phase 7 会话树、记忆、检索与路由
 
-树形 Session 的 `nodeId/parentId`、完整 Turn 分支、旧线性文件迁移和语义恢复已落地；运行与本地确定性证据见 [33 树形 Session 学习手册](docs/33-树形Session与分支恢复学习手册.md)。分层记忆的显式提取、跨会话整理、有界读取与遗忘已完成本地合成 Replay，见 [34 分层记忆学习手册](docs/34-Codex风格分层记忆学习手册.md)。Milvus+ES+BGE 检索和 Jev 路由仍在实施，不将其方案写成已验证能力。
+树形 Session 的 `nodeId/parentId`、完整 Turn 分支、旧线性文件迁移和语义恢复已落地；运行与本地确定性证据见 [33 树形 Session 学习手册](docs/33-树形Session与分支恢复学习手册.md)。分层记忆的显式提取、跨会话整理、有界读取与遗忘已完成本地合成 Replay，见 [34 分层记忆学习手册](docs/34-Codex风格分层记忆学习手册.md)。[35 混合检索](docs/35-Milvus-ES-BGE混合检索学习手册.md)已在本机 Milvus 2.5.10 + ES/BGE 上对公开 SciFact 固定 30 条子集消融；[36 Jev 路由](docs/36-Jev模型路由学习手册.md)已完成 SDK 形状与 Fake/Replay 测评。四模块联合 Replay 已通过；真实 Jev/双模型横评仍待新的服务、样本与费用授权，见 [无网络预检协议](docs/evidence/phase20-jev-live-preflight.md)。
 
 ## Phase 4 Linux Host 与原生文件工具
 
