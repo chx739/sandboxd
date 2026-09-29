@@ -16,6 +16,7 @@ from .redaction import public_error
 from .runner import AgentRunner
 from .runtime.control import AgentControl
 from .runtime.session import SessionJournal
+from .working_memory import project_working_memory
 
 _TERMINAL_STATUSES = {
     "succeeded",
@@ -42,7 +43,7 @@ class TaskStore:
     """单 Worker 的任务、Session 和运行控制身份表。
 
     这不是生产级调度器。内存表刻意保持简单，让面试时能清楚解释：
-    taskId 标识一次运行，sessionId 标识线性事故会话，sandboxId 只存在于一次
+    taskId 标识一次运行，sessionId 标识事故会话树，sandboxId 只存在于一次
     Runner 生命周期；steer/follow-up 通过 taskId 找到对应 AgentControl。
     """
 
@@ -53,6 +54,7 @@ class TaskStore:
         self._dedupe: dict[str, tuple[str, datetime]] = {}
         self._controls: dict[str, AgentControl] = {}
         self._journals: dict[str, SessionJournal] = {}
+        self._session_journals: dict[str, SessionJournal] = {}
         self._resume_messages: dict[str, list[BaseMessage]] = {}
         self._running: dict[str, asyncio.Task] = {}
         self._cancel_requested: set[str] = set()
@@ -65,6 +67,7 @@ class TaskStore:
         *,
         session_id: str | None = None,
         resume_messages: list[BaseMessage] | None = None,
+        parent_node_id: str | None = None,
         dedupe: bool = True,
     ) -> AgentTask:
         async with self._lock:
@@ -85,9 +88,9 @@ class TaskStore:
 
             task_id = "task-" + secrets.token_hex(8)
             actual_session_id = session_id or "session-" + secrets.token_hex(8)
-            journal = SessionJournal(self._session_dir, actual_session_id)
+            journal = self._journal(actual_session_id)
             # Header 必须先落盘再入队，避免 Worker 抢先写 Transcript。
-            await journal.initialize(task_id, alert)
+            await journal.initialize(task_id, alert, parent_node_id)
 
             task = AgentTask(
                 taskId=task_id,
@@ -105,10 +108,10 @@ class TaskStore:
             self._queue.put_nowait(task_id)
             return task.model_copy(deep=True)
 
-    async def resume(self, session_id: str) -> AgentTask:
-        journal = SessionJournal(self._session_dir, session_id)
+    async def resume(self, session_id: str, node_id: str | None = None) -> AgentTask:
+        journal = self._journal(session_id)
         try:
-            alert, messages = await journal.load_for_resume()
+            alert, messages, selected_node_id = await journal.load_branch(node_id)
         except FileNotFoundError as exc:
             raise TaskNotFoundError("session not found") from exc
 
@@ -123,6 +126,7 @@ class TaskStore:
             alert,
             session_id=session_id,
             resume_messages=messages,
+            parent_node_id=selected_node_id,
             dedupe=False,
         )
 
@@ -178,11 +182,46 @@ class TaskStore:
             return task.model_copy(deep=True) if task else None
 
     async def get_session(self, session_id: str) -> dict:
-        journal = SessionJournal(self._session_dir, session_id)
+        journal = self._journal(session_id)
         try:
             return await journal.summary()
         except FileNotFoundError as exc:
             raise TaskNotFoundError("session not found") from exc
+
+    async def get_session_tree(self, session_id: str) -> dict:
+        try:
+            return await self._journal(session_id).tree()
+        except FileNotFoundError as exc:
+            raise TaskNotFoundError("session not found") from exc
+
+    async def get_session_path(self, session_id: str, node_id: str) -> dict:
+        try:
+            return await self._journal(session_id).path_messages(node_id)
+        except FileNotFoundError as exc:
+            raise TaskNotFoundError("session not found") from exc
+
+    async def get_session_working_memory(
+        self, session_id: str, node_id: str | None = None,
+    ) -> dict:
+        try:
+            alert, messages, selected = await self._journal(session_id).load_branch(node_id)
+        except FileNotFoundError as exc:
+            raise TaskNotFoundError("session not found") from exc
+        return {
+            "sessionId": session_id,
+            "nodeId": selected,
+            "workingMemory": project_working_memory(
+                alert.model_dump(mode="json", by_alias=True), messages,
+            ),
+        }
+
+    def _journal(self, session_id: str) -> SessionJournal:
+        # 同一个进程内的多个 task 共用锁，避免分支写入互相穿插。
+        journal = self._session_journals.get(session_id)
+        if journal is None:
+            journal = SessionJournal(self._session_dir, session_id)
+            self._session_journals[session_id] = journal
+        return journal
 
     async def list_recent(self) -> list[AgentTask]:
         async with self._lock:

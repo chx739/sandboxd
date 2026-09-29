@@ -38,6 +38,23 @@ def safe_tool_arguments(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     """Trace/Session 只保存文件正文的长度和摘要，不复制潜在秘密。"""
 
     safe = dict(arguments)
+    if name == "update_working_memory":
+        hypotheses = safe.get("hypotheses", [])
+        safe["hypotheses"] = [
+            {
+                "text": public_error(item.get("text", ""), limit=300),
+                "status": public_error(item.get("status", ""), limit=20),
+                "evidenceIds": [public_error(ref, limit=40) for ref in
+                                item.get("evidenceIds", [])[:5]],
+            }
+            for item in hypotheses[:8]
+            if isinstance(item, dict) and isinstance(item.get("evidenceIds", []), list)
+        ] if isinstance(hypotheses, list) else []
+        checks = safe.get("pendingChecks", [])
+        safe["pendingChecks"] = [public_error(item, limit=200) for item in checks[:12]] \
+            if isinstance(checks, list) else []
+        return {key: safe[key] for key in ("hypotheses", "pendingChecks")
+                if key in arguments}
     sensitive_keys = {
         "write_file": ("content",),
         "edit_file": ("oldText", "newText"),

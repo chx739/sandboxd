@@ -1,0 +1,14 @@
+{
+  "kind": "synthetic-deterministic-replay",
+  "caseCount": 2,
+  "expectedFactCount": 2,
+  "predictedFactCount": 2,
+  "factRecall": 1.0,
+  "factPrecision": 1.0,
+  "updateCorrect": true,
+  "conflictCount": 1,
+  "toolInjectionAbsent": true,
+  "summaryChars": 176,
+  "summaryLimit": 256,
+  "elapsedMs": 27.7
+}

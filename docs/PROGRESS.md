@@ -4,15 +4,67 @@
 
 ## 当前状态
 
-Phase 1–4 已完成并保留，稳定实现已合并并推送 GitHub main。Phase 5 Eval v2 的解析修复、canary 诊断指标和来源隔离后 91 Task 重跑均已完成；全部外部模型授权已消费，功能继续冻结。
+Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索和 Jev 代码及证据保留在 [PR #1](https://github.com/chx739/sandboxd/pull/1)。**当前为用户 2026-09-29 批准的 Phase 8 Kubernetes 运维 Agent MVP**；完整目标和验收见 [37](37-Kubernetes运维Agent目标与验收.md)。用户最新已更新 Key 并重新授权 Jev 最小路由，覆盖此前暂停。历史 Jev 首题与 TypeSafe 401 只作旧证据。Phase 8 尚未完成。
 
 当前分支：
 
-    main
+    codex/agent-memory-rag-plan（本轮方案分支；实施前重新检查 git status）
 
 当前里程碑：
 
-    Phase 5 Eval v2：V5.0–V5.4 已完成，当前无外部模型调用授权
+    Phase 8 M2/M3：60题检索消融、40题日志、Benchmark、3类联合回放完成；Live 与人工审核待办
+
+## Phase 8 当前恢复点与待办
+
+- **工作记忆 P0/P1 优化（本地验收）**：已补按分支工作记忆、60 秒状态时效、完整工具轮次 checkpoint、调用时上下文压缩与长期记忆作用域。完整 Python 回归 90/90、最终边界回归 15/15、合成记忆事实 2/2、三类本地联合回放 3/3；长对话估算 32,231/32,768 token，保留早期证据指针和最近拒绝。详细边界、复现命令和原始结果见 [42](42-运维Agent工作记忆与上下文压缩.md) 与 [Phase 8 验收记录](evidence/phase8-memory-optimization.md)。本轮外部模型调用为 0；旧付费计划未因这次变更获得授权，真实模型质量和实时集群身份仍待单独验证。
+
+- **2026-09-29 续跑审计**：上一轮为实际进展（提交/推送与验证），本轮继续完成无费用缺口。新增 docs41 逐项验收表；全60题生成计划 `phase26-generation-full-plan.json` 最多960请求、保守预留$46.714061，未授权未执行，不纳入此前$6问题。新增 `agentd.logs.benchmark.run` 可复现只读负载+资源采样；两轮实际运行保留，最终显式P50/P95/P99一轮48.239秒、48个采样、无采样错误，三查询P95=4.723/4.389/4.458ms、查询错误率0；采样最大节点进程CPU15%、JVM heap423056600字节。报告为 phase26-benchmark-p95-resources 系列，不能以容器上限代替实测资源。
+
+- 2026-09-29 用户最新：加入 Jev 最小模型路由并开始实施。详细范围已补入 docs37 §2.6；Goal 卡片现为 active；旧摘要无法通过现有工具重写，仓库规格与用户本次指令为执行依据。
+
+- **权威范围**：[GOAL](../GOAL.md) 与 [37 完整目标](37-Kubernetes运维Agent目标与验收.md)。Goal 工具短摘要不代替详细验收。
+- **已具备**：Phase 7 树形 Session、分层记忆、本地 BGE 推理、ES BM25 + Milvus dense + RRF/BGE 四组公开 SciFact 子集消融，均需按 Phase 8 逐项复核。当前开发分支已有 PR #1；旧结果不能冒充新运维数据集成绩。
+- **本轮已完成**：Milvus 原生 BM25/Dense 新快照索引、组件/来源/版本过滤；OpenSearch 2.19.6 独立 localhost:9201、结构化 search_logs/aggregate_logs；720 条合成日志、40 个查询独立 Python oracle；40 篇固定运维文档、298 chunks、许可与来源 commit。
+- **真实集成证据**：`evidence/phase22-milvus-smoke.json` 为 9 chunk/7 题迁移夹具，四组指标 1.0，仅证明小样本链路；`evidence/phase22-logs-results.json` 为实际 OpenSearch 查询 40/40，p50 3.38ms/p95 9.21ms。12 个检索/日志定向测试与 8 个 API/插件/路由测试通过。
+- **2026-09-29 新结果**：40 篇/298 chunks + 60 候选问题（50可回答/10无答案，13 dev/47 test），多语言 E5 + BGE 四组消融已真实执行。Hybrid+rerank Recall@10=0.8500、nDCG@10=0.6372、路径 P50=4958ms；不是人工金标。逐题证据 `phase23-ops-rag-results.json`。
+- **联合演示**：`python -m agentd.ops_demo` 三类均通过，使用实际 Milvus/OpenSearch，脚本模型/Fake 路由/Fake Sandbox，真实集群调用0。报告 `phase23-joint-replay.json`。
+- **性能**：OpenSearch Benchmark 2.4.0 查询只读自定义 workload 已成功，720条、1 client、20 ops/s、每操作20预热/100测量；三操作 p50=4.76/3.75/3.34ms、0错误。CSV 的748为集群含系统索引计数，目标索引独立核对720；原始报告和环境另存。
+- **源码对照**：Pi commit `11894012dd461232eb075bc890538b6866860a10`；Codex commit `46fdd5ef39735f4159cdcf0ec5e85c10521494e5`。Codex README 旧 core 路径已失效，实际 write 管线在 memories/write/src；见 docs39。
+- **生成评测**：Ragas 0.4.3 在独立 WSL venv 安装，依赖已冻结；官方 Faithfulness/FactualCorrectness 及完整生成/rubric 流程共3个无网络协议测试通过。`agentd.ops_eval.generation` 默认离线预览，支持无检索/RAG、逐步模型裁判依据、运维 rubric、预算与持久账本。真实模型分数尚未执行。
+- **回归**：完整 Python **72/72**、250.490秒（大部分为 Windows 挂载盘上记忆 CLI 子进程）；后续 Live JSON action/预算定向4/4（51.168秒）通过；不是将旧完整通过冒称覆盖后续全部变更。
+- **日志预算修复**：默认返回3条，插件拒绝超过3500字节结果，避免 Runtime 截断 JSON；随后日志/数据/检索定向12/12通过（0.321秒）。实际 OpenSearch 最新40/40、集合P/R与聚合正确率1.0、P50=2.16ms/P95=3.02ms，另存 `phase25-logs-bounded-results.json`；现有联合回放日志响应最大1040字节，未超过新预算。
+- **索引生命周期**：真实小快照验收更新/删除/四类过滤通过，旧2条索引保留、新索引1条；`phase24-index-lifecycle.json`。临时本地夹具执行后清理，正式 ops-v1 未修改。日志新增分项汇总后再次真实40/40，集合P/R、聚合均1.0，p50 2.18ms/p95 3.23ms；与此前报告并存。
+- **交付状态**：实现与测评代码已推送至 PR #1，主要实现提交为 `8b4d0a5`、`db5bd01`、`7e35d15`；PR 标题与正文已更新，未合并。2026-09-29 检查本地工作区干净，远端 PR HEAD 与 `7e35d15` 一致；本条恢复说明随后单独提交。
+- **第一项未完成工作**：检查用户是否已答复付费计划，按精确授权范围执行并保留逐调用报告；若未答复，不发请求、不重复读取 Key，也不自行勾选60题 REVIEW.md。代码、无费用验收与文档已具备。6题生成计划仅为冒烟验收，完整60题生成对比仍需另列计划并按预算授权执行；目标尚未完成。
+- **待用户预算**：Jev 两题计划已保存 `phase23-jev-plan.json`，2 Jev+6 DeepSeek、拟上限$0.10；异步问题已发，尚无答复。生成6题计划 `phase24-generation-plan.json` 最多96调用、保守预留$4.671406；联合Live三场景 `phase24-live-agent-plan.json` 最多18调用、预留$0.875889，已另发合计$6的异步授权问题，尚未答复，不执行。DeepSeek单价按2026-09-29官方峰时cache-miss费率核对。
+- **费用和证据**：本轮无新付费推理调用。Jev Key 只读 models.list 在2秒超时后10秒鉴权成功，运行时仍2秒。旧无报告尝试不当作零消费。学习文档 docs38/39、固定语料 README/REVIEW 与原始结果已新增。
+
+## Phase 7 历史恢复点（以下“下一步”已由 Phase 8 取代）
+
+- 目标与验收已写入 `GOAL.md`、`AGENTS.md`、`docs/31`。实施顺序：M1 Session 树 → M2 分层记忆 → M3 混合检索 → M4 Jev 路由 → M5 联合测评与文档。
+- 当前 Python 环境已核实：3.12.14、uv 0.12.19；`agentd/uv.lock` 含可选 rag 依赖。用户指定 Milvus 2.5.10，本项目 `sandboxd-rag` Compose 的 Milvus 2.5.10、ES 8.19.22、etcd、MinIO 四容器 healthy；不触碰其他项目资源。
+- M1 已交付 `runtime/session.py` 的消息节点/父链/活动叶子、完整 Turn 分支、旧线性快照迁移与断尾修复；`store.py` 恢复创建新 task，API 和 `session_cli.py` 可列树/读路径/分支。合成夹具在 `agentd/testdata/session-tree-demo/`，学习文档为 [33](33-树形Session与分支恢复学习手册.md)。
+- M2 已交付 `memory.py` 两阶段文件记忆、显式提取/重建/遗忘 CLI、合成 `memory_eval`、可选启动摘要与静态只读 `read_memory` 工具。只提取成功结束 Session 的活动路径，事实保留来源/时间/历史冲突。学习文档 [34](34-Codex风格分层记忆学习手册.md)，证据 [phase16](evidence/phase16-memory-mvp.md)。
+- 本地验证：`uv run --project agentd --frozen -- python -m unittest discover -s agentd/tests -v` 为 **45/45**；Session CLI 的 tree/path、Memory CLI 的 extract/rebuild/summary/rollout/forget 均通过。`memory_eval` 两条合成会话当前事实 Recall/Precision 均 2/2，冲突 1，摘要 155/256 字符。以上不等于真实 gVisor 或 Live 模型联合 E2E，也不证明自然语言记忆提取质量。
+- M3 已交付版本化 runbook JSONL、ES BM25 与 Milvus dense 双索引、RRF/BGE 本地 CPU 推理、`check/rebuild/query/eval` CLI、官方 SciFact ZIP 转换，以及 opt-in 静态 `search_knowledge` 工具。公开 SciFact 完整 5,183 篇索引、前 30 test query 消融：BM25/dense/RRF/rerank nDCG@10 分别 0.5511/0.7445/0.7931/0.7826；rerank p50 5.76 秒。详情见 [35](35-Milvus-ES-BGE混合检索学习手册.md) 和 [phase17](evidence/phase17-hybrid-retrieval-mvp.md)。这不是官方完整 300 query 榜单，也没有 Live Agent 调用。
+- M3 后 `unittest discover` 为 **53/53**；`git diff --check` 通过。完整测试中的记忆 CLI 子进程在 WSL `/mnt/c` 启动耗时较长，测试总时长 256 秒，与检索在线延迟不同。
+- M4 已按 TypeSafe 官方 Python SDK `0.7.2` 的 `Choice` API 实现 task 前静态 economy/strong 选模，0.7 置信度门、2 秒超时和强模型回退；实际 Runner 只绑定一次 Gateway。最初的 [phase18](evidence/phase18-jev-router-mvp.md) 记录 8 条合成 Fake/Replay、假设时延/费用和 4 个路由测试，该历史证据没有 Live 调用；后续真实执行状态见下方 phase21。学习文档为 [36](36-Jev模型路由学习手册.md)。
+- M5 四模块联合无密钥 Replay 已通过：Fake Jev 选经济 Replay Gateway，记忆摘要以数据注入，`search_knowledge` 实际连接本地 ES/Milvus/BGE，Session 保存 6 节点并支持完整叶子分支，假沙箱释放一次，外部模型调用 0。见 [phase19](evidence/phase19-phase7-integrated-replay.md)。
+- Phase 7 完整 Python 回归 **61/61**，Live 无网络预检加入后验证耗时 **275.780 秒**；随后样本 SHA256 审批门加入，Live 预检定向 **5/5**、默认预览与 `compileall` 通过。耗时主要在 `/mnt/c` 上记忆 CLI 的多个 Python 子进程启动，不是检索或模型在线延迟。四模块联合无密钥 Replay 在允许连接本机 Docker 服务的执行环境中重跑成功。
+- M4 Live 协议见 [phase20](evidence/phase20-jev-live-preflight.md)：8 条固定合成题、最多 8 次 Jev + 24 次下游请求、128 输出 token、零重试、SHA256 审核门和 `$1` 预算。用户已明确批准该范围；无需重复询问同一授权。
+- 首次执行在无 DNS 的受限沙箱内超时，未得到逐请求报告；不能仅凭超时断言用量为零。允许联网的执行完成 l01：1 次 Jev 尝试、3 次 DeepSeek 尝试，三组下游答案均正确，Jev `router_error` 回退到 strong 后按协议停止，估算费用 `$0.00046489`（含失败 Jev 的保守预留）。后续只读 IPv4 鉴权检查返回 HTTP 401；完整 Live 横评未完成，见 [phase21](evidence/phase21-jev-live-first-case.md) 与脱敏 JSON。
+- 已补每次推理调用前的脱敏进度标记和 `AGENTD_JEV_IPV4_ONLY=1`，Agent 与 Eval 共用 2 秒超时、零重试 Jev Client；官方 SDK 的本地 HTTP MockTransport 测试覆盖真实请求序列化与响应解析。
+- 本次网络配置/进度记录修改后的 Router、Live Eval 与 API 定向回归 **10/10**，`compileall` 和 `git diff --check` 通过；未把历史完整 61/61 冒充为本次完整重跑。
+- GitHub 已解决：用户完成 WSL `gh` 登录，允许联网环境推送成功，已创建 [PR #1](https://github.com/chx739/sandboxd/pull/1)，不合并 main。插件连接的写权限不是当前交付阻塞。
+- 历史旧下一步（已作废，不执行）：当时等待仓库外 Jev Key、核算用量后继续横评。该暂停后来已被用户 2026-09-29 最新指令覆盖；当前范围见 Phase 8。Key 不进入 Git、日志或文档。
+- 2026-09-29 验收复核：PR #1 的 HEAD 与本地 `5f7a910` 一致，工作区干净；Jev Key 文件修改时间仍早于 HTTP 401 检查，未新增 API 调用。docs31 第 9 节补齐原目标逐项证据与四模块演示入口，并将旧环境缺口标成历史快照。完整目标仍未完成。
+
+## 2026-09-28 新阶段方案审计
+
+- 用户目标：Pi 风格 Session 树与分支恢复、Codex 风格分层记忆、Milvus dense + ES BM25 + RRF + BGE Reranker、TypeSafe Jev 模型路由；每项均要求最小可运行、可测评，并有持续记录与学习文档。
+- 当日启动时已建立 [31 方案](31-Agent记忆检索与路由最小实现方案.md) 和 [32 学习手册](32-Agent记忆检索与路由学习手册.md)；本节以下环境信息是当时的历史快照，当前进度以上面的恢复点为准。
+- 只读环境核对：Docker 客户端/服务端 29.2.1，Compose v5.1.0，daemon 约 23 GiB/12 CPU，当前无运行容器；WSL Python 为 3.10.12，`python3.12` 与 `uv` 不在 PATH；RTX 5060 8 GiB。没有拉镜像、下载模型、读取 Key 或调用外部 LLM。
+- 下一步：从方案 M0 开始，先备齐 Python 3.12/uv 与离线夹具；各模块依次独立实现、测评并记录证据。任何 Live 模型/Jev 调用需新的明确授权和预算；历史 DeepSeek Eval 授权已消费。
 
 ## Phase 5 Eval v2 修复重跑
 

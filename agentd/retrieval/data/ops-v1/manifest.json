@@ -1,0 +1,408 @@
+{
+  "version": "ops-v1",
+  "documentCount": 40,
+  "chunkCount": 298,
+  "processing": "raw snapshot retained; front matter/shortcodes stripped and heading/paragraph chunked v1",
+  "documents": [
+    {
+      "docId": "runbook-KubePodCrashLooping",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodCrashLooping.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubePodCrashLooping",
+      "sha256": "ab82b5ca6c75becc78c9e91078a9d0b40e9de8ee7f590dbeff8052d5841bd747",
+      "file": "sources/runbook-KubePodCrashLooping.md"
+    },
+    {
+      "docId": "runbook-KubePodNotReady",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePodNotReady.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubePodNotReady",
+      "sha256": "73af1e5b48b844cc2307e6a3ecafafcd964e210cd8be2298e4a37d605966fbdb",
+      "file": "sources/runbook-KubePodNotReady.md"
+    },
+    {
+      "docId": "runbook-KubeContainerWaiting",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeContainerWaiting.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeContainerWaiting",
+      "sha256": "bd132a64bfcc6af5e81f944ca8f9bab13ce2cff5b712f946d265b9ee81a6097d",
+      "file": "sources/runbook-KubeContainerWaiting.md"
+    },
+    {
+      "docId": "runbook-KubeNodeNotReady",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeNodeNotReady.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeNodeNotReady",
+      "sha256": "7f8347621b2dba5c38bcccd32e8fbd1fd7508bd99e278dee090535a3305df041",
+      "file": "sources/runbook-KubeNodeNotReady.md"
+    },
+    {
+      "docId": "runbook-KubeNodeReadinessFlapping",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeNodeReadinessFlapping.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeNodeReadinessFlapping",
+      "sha256": "0592c17a714cdf9f904cab0444a40c141c794c884a53c158e6b23e541df04006",
+      "file": "sources/runbook-KubeNodeReadinessFlapping.md"
+    },
+    {
+      "docId": "runbook-KubeNodeUnreachable",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeNodeUnreachable.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeNodeUnreachable",
+      "sha256": "db0ab0d0557e951c7e04d8095b2d7d8f6f6b9370e5631d0c178541faa2cc3180",
+      "file": "sources/runbook-KubeNodeUnreachable.md"
+    },
+    {
+      "docId": "runbook-KubeDeploymentReplicasMismatch",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeDeploymentReplicasMismatch.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeDeploymentReplicasMismatch",
+      "sha256": "637f49b98626d846ad76271574cfecb0bb6d752136b152c75aec01744747df5a",
+      "file": "sources/runbook-KubeDeploymentReplicasMismatch.md"
+    },
+    {
+      "docId": "runbook-KubeDeploymentGenerationMismatch",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeDeploymentGenerationMismatch.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeDeploymentGenerationMismatch",
+      "sha256": "68c5b9616d6162d05ed73cfc6e34849d380d636affca3a6f18667d129588f1f8",
+      "file": "sources/runbook-KubeDeploymentGenerationMismatch.md"
+    },
+    {
+      "docId": "runbook-KubeStatefulSetReplicasMismatch",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeStatefulSetReplicasMismatch.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeStatefulSetReplicasMismatch",
+      "sha256": "83638a850ec38d7a9cd1b337937b3c54fab6fe0d2ea1abbc39ccad38664afe80",
+      "file": "sources/runbook-KubeStatefulSetReplicasMismatch.md"
+    },
+    {
+      "docId": "runbook-KubeJobFailed",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeJobFailed.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeJobFailed",
+      "sha256": "34c2e81734bd3633bc5bc966d24d8ffe08e4a32aa454fd0f8376fdc33a839e8a",
+      "file": "sources/runbook-KubeJobFailed.md"
+    },
+    {
+      "docId": "runbook-KubeJobCompletion",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeJobCompletion.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeJobCompletion",
+      "sha256": "055fe8ea66c3815d8542146598eba506c704a4f393decc0fa508e5a472d2a27f",
+      "file": "sources/runbook-KubeJobCompletion.md"
+    },
+    {
+      "docId": "runbook-KubeHpaMaxedOut",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeHpaMaxedOut.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeHpaMaxedOut",
+      "sha256": "a0ce6286dc53213679ed431d890d4ab52cdb726bfd89453aacb910d3889fd403",
+      "file": "sources/runbook-KubeHpaMaxedOut.md"
+    },
+    {
+      "docId": "runbook-KubeHpaReplicasMismatch",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeHpaReplicasMismatch.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeHpaReplicasMismatch",
+      "sha256": "f3d980632c9d47965ceac322dcd2d0e3d4ea207d412708068c0d5c5a0b6952a3",
+      "file": "sources/runbook-KubeHpaReplicasMismatch.md"
+    },
+    {
+      "docId": "runbook-CPUThrottlingHigh",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/CPUThrottlingHigh.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "CPUThrottlingHigh",
+      "sha256": "cdfb846e71a3c5edb19d73a56b1137158d1ee2b406a9db174f6605e1ffd4c30b",
+      "file": "sources/runbook-CPUThrottlingHigh.md"
+    },
+    {
+      "docId": "runbook-KubePersistentVolumeFillingUp",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePersistentVolumeFillingUp.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubePersistentVolumeFillingUp",
+      "sha256": "63a559f73de27ded319053f88cd54a6644b6bf1cd165534c6859e7f945db724d",
+      "file": "sources/runbook-KubePersistentVolumeFillingUp.md"
+    },
+    {
+      "docId": "runbook-KubePersistentVolumeErrors",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubePersistentVolumeErrors.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubePersistentVolumeErrors",
+      "sha256": "0ecd416dfadeeef3600bf4a548d92a1ed14dd3400e86bdde5080686c6c6ca5d5",
+      "file": "sources/runbook-KubePersistentVolumeErrors.md"
+    },
+    {
+      "docId": "runbook-KubeMemoryOvercommit",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeMemoryOvercommit.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeMemoryOvercommit",
+      "sha256": "d441f56b3548f015ebd9e2ad4483cd714322e67f25aee58a036159d8a6bc2ed1",
+      "file": "sources/runbook-KubeMemoryOvercommit.md"
+    },
+    {
+      "docId": "runbook-KubeCPUOvercommit",
+      "component": "kubernetes",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/kubernetes/KubeCPUOvercommit.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "KubeCPUOvercommit",
+      "sha256": "72303893785cfe5b0ce083f44da1bb97a626cf2dfdda2b5b3436ab7a29938097",
+      "file": "sources/runbook-KubeCPUOvercommit.md"
+    },
+    {
+      "docId": "runbook-NodeFilesystemSpaceFillingUp",
+      "component": "node",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/node/NodeFilesystemSpaceFillingUp.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "NodeFilesystemSpaceFillingUp",
+      "sha256": "4308c3a95316b047bf586fb6b4d58a9a40d2714d2de839e8bbddb13e2c8dc8c0",
+      "file": "sources/runbook-NodeFilesystemSpaceFillingUp.md"
+    },
+    {
+      "docId": "runbook-NodeFilesystemAlmostOutOfSpace",
+      "component": "node",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/node/NodeFilesystemAlmostOutOfSpace.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "NodeFilesystemAlmostOutOfSpace",
+      "sha256": "96a120d81d219c1ae359bb9878013ec83a1214e06d6fcea56e2c66d76555d533",
+      "file": "sources/runbook-NodeFilesystemAlmostOutOfSpace.md"
+    },
+    {
+      "docId": "runbook-NodeFilesystemFilesFillingUp",
+      "component": "node",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/node/NodeFilesystemFilesFillingUp.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "NodeFilesystemFilesFillingUp",
+      "sha256": "62feb1bdf362e2764a440e293d8c0403b0e7c87818ae3f974cbd7034cad23b16",
+      "file": "sources/runbook-NodeFilesystemFilesFillingUp.md"
+    },
+    {
+      "docId": "runbook-NodeFilesystemAlmostOutOfFiles",
+      "component": "node",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/node/NodeFilesystemAlmostOutOfFiles.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "NodeFilesystemAlmostOutOfFiles",
+      "sha256": "3031457aedf3c0b1e5ed383d77f012beafa7b624c10b00c53de3256430aec5e2",
+      "file": "sources/runbook-NodeFilesystemAlmostOutOfFiles.md"
+    },
+    {
+      "docId": "runbook-NodeFileDescriptorLimit",
+      "component": "node",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/node/NodeFileDescriptorLimit.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "NodeFileDescriptorLimit",
+      "sha256": "bf189ac7253633e76c02629bed3e6ac30a01cda13cad0091150dbf441246e67f",
+      "file": "sources/runbook-NodeFileDescriptorLimit.md"
+    },
+    {
+      "docId": "runbook-NodeHighNumberConntrackEntriesUsed",
+      "component": "node",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/node/NodeHighNumberConntrackEntriesUsed.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "NodeHighNumberConntrackEntriesUsed",
+      "sha256": "6d496c8f8d823dc8650240d028a88a91ba7b21d4b7a16619b7071d8e3223d13b",
+      "file": "sources/runbook-NodeHighNumberConntrackEntriesUsed.md"
+    },
+    {
+      "docId": "runbook-PrometheusBadConfig",
+      "component": "prometheus",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/prometheus/PrometheusBadConfig.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "PrometheusBadConfig",
+      "sha256": "b03527dfbd53160346735ad9d9a9bf1b4adb16e19e7b22f9e42736cfcf5bd840",
+      "file": "sources/runbook-PrometheusBadConfig.md"
+    },
+    {
+      "docId": "runbook-PrometheusNotIngestingSamples",
+      "component": "prometheus",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/prometheus/PrometheusNotIngestingSamples.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "PrometheusNotIngestingSamples",
+      "sha256": "8563f4a270c283e7bb1b2c2425a56ffe9289c6f7268eb8754b80d9d5968b7170",
+      "file": "sources/runbook-PrometheusNotIngestingSamples.md"
+    },
+    {
+      "docId": "runbook-PrometheusRuleFailures",
+      "component": "prometheus",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/prometheus/PrometheusRuleFailures.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "PrometheusRuleFailures",
+      "sha256": "2f143bb704e869a24279bda7d5212a1a4ff985b2c2416c94e3f16880ef5b6fda",
+      "file": "sources/runbook-PrometheusRuleFailures.md"
+    },
+    {
+      "docId": "runbook-PrometheusRemoteWriteBehind",
+      "component": "prometheus",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/prometheus/PrometheusRemoteWriteBehind.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "PrometheusRemoteWriteBehind",
+      "sha256": "efeecf29c07f3a8306c7a595370effdfdf741fd655d82d0cb5781ffa43f06af4",
+      "file": "sources/runbook-PrometheusRemoteWriteBehind.md"
+    },
+    {
+      "docId": "runbook-etcdNoLeader",
+      "component": "etcd",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/etcd/etcdNoLeader.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "etcdNoLeader",
+      "sha256": "d6b18239b967fa88799804d98ca42b844068e2cf1c20037bacd1ce35492343f5",
+      "file": "sources/runbook-etcdNoLeader.md"
+    },
+    {
+      "docId": "runbook-etcdInsufficientMembers",
+      "component": "etcd",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/etcd/etcdInsufficientMembers.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "etcdInsufficientMembers",
+      "sha256": "19b59bed5e63c6fb96a24b9320b46bf90ced0eccad692d61de9669e0d4ec9d2c",
+      "file": "sources/runbook-etcdInsufficientMembers.md"
+    },
+    {
+      "docId": "runbook-etcdHighFsyncDurations",
+      "component": "etcd",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/etcd/etcdHighFsyncDurations.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "etcdHighFsyncDurations",
+      "sha256": "5d1c32abb78bc8ab29b452327fc97489e65fa19c05fbdb5b1eb705d1d3d44346",
+      "file": "sources/runbook-etcdHighFsyncDurations.md"
+    },
+    {
+      "docId": "runbook-etcdBackendQuotaLowSpace",
+      "component": "etcd",
+      "url": "https://github.com/prometheus-operator/runbooks/blob/a685d14cf5128bb30e2bf935c3983decd772d885/content/runbooks/etcd/etcdBackendQuotaLowSpace.md",
+      "revision": "a685d14cf5128bb30e2bf935c3983decd772d885",
+      "license": "Apache-2.0",
+      "title": "etcdBackendQuotaLowSpace",
+      "sha256": "cd1d7ac8dcd1f671383ff4c83115538c7c0dba1b25135028f5b4488b6cf41e14",
+      "file": "sources/runbook-etcdBackendQuotaLowSpace.md"
+    },
+    {
+      "docId": "k8s-debug-pods",
+      "component": "kubernetes",
+      "url": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-pods.md",
+      "revision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+      "license": "CC-BY-4.0",
+      "title": "debug pods",
+      "sha256": "387851f607319187a0c82c93518a54840b899d24b387da5f26f7ad0233b4fb3a",
+      "file": "sources/k8s-debug-pods.md"
+    },
+    {
+      "docId": "k8s-debug-running-pod",
+      "component": "kubernetes",
+      "url": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-running-pod.md",
+      "revision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+      "license": "CC-BY-4.0",
+      "title": "debug running pod",
+      "sha256": "ec96ce1a6c370020a9162cae98aba5b1a04113365815613ecdb1f658cfa2e08f",
+      "file": "sources/k8s-debug-running-pod.md"
+    },
+    {
+      "docId": "k8s-debug-service",
+      "component": "kubernetes",
+      "url": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-service.md",
+      "revision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+      "license": "CC-BY-4.0",
+      "title": "debug service",
+      "sha256": "76915e474e88fbedecbfe205fb45a85867ea4612453358eda73a330ec991262d",
+      "file": "sources/k8s-debug-service.md"
+    },
+    {
+      "docId": "k8s-debug-init-containers",
+      "component": "kubernetes",
+      "url": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/tasks/debug/debug-application/debug-init-containers.md",
+      "revision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+      "license": "CC-BY-4.0",
+      "title": "debug init containers",
+      "sha256": "9ba39ad75be1775d25a5f9432cbb93702cb19fb63636ecaa9ed3253240a53249",
+      "file": "sources/k8s-debug-init-containers.md"
+    },
+    {
+      "docId": "k8s-pod-lifecycle",
+      "component": "kubernetes",
+      "url": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/workloads/pods/pod-lifecycle.md",
+      "revision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+      "license": "CC-BY-4.0",
+      "title": "pod lifecycle",
+      "sha256": "1d81a56b63aa75e10d3cea41978420da7c046027a143c56852f6698ff5e6623c",
+      "file": "sources/k8s-pod-lifecycle.md"
+    },
+    {
+      "docId": "k8s-manage-resources-containers",
+      "component": "kubernetes",
+      "url": "https://github.com/kubernetes/website/blob/4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1/content/en/docs/concepts/configuration/manage-resources-containers.md",
+      "revision": "4d668b948124af2f4d3d6c2c01ea3c67dd0f0bf1",
+      "license": "CC-BY-4.0",
+      "title": "manage resources containers",
+      "sha256": "cbb176ded47da163df33bcf0e643dc38361b19f6dc77a98302320704e20c95ac",
+      "file": "sources/k8s-manage-resources-containers.md"
+    },
+    {
+      "docId": "fixture-payments-memory",
+      "component": "project-fixture",
+      "url": "synthetic://sandboxd/fixture-payments-memory",
+      "revision": "fixture-v1",
+      "license": "project",
+      "title": "fixture-payments-memory",
+      "sha256": "81dc21c46619c96eeb2d9e69fbac2c03609a5ee716f02b415dcbd4f2b198573e",
+      "file": "sources/fixture-payments-memory.md"
+    },
+    {
+      "docId": "fixture-checkout-service",
+      "component": "project-fixture",
+      "url": "synthetic://sandboxd/fixture-checkout-service",
+      "revision": "fixture-v1",
+      "license": "project",
+      "title": "fixture-checkout-service",
+      "sha256": "d4f984b455b498008762fb93f5c33826d9921422ba2c461c29a9b3537f922a4f",
+      "file": "sources/fixture-checkout-service.md"
+    }
+  ]
+}

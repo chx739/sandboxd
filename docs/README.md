@@ -2,6 +2,8 @@
 
 > 这里是项目学习的唯一入口。文档按“当前真相 → 代码与模块 → 面试表达 → 历史与证据”分层，而不是按开发时间顺序通读。
 
+> **当前 Phase 8 开发范围**：[Kubernetes 运维 Agent 完整目标与验收](37-Kubernetes运维Agent目标与验收.md)。Phase 7 的路由和检索文档是复用基线；Phase 8 已重新纳入 Jev 最小路由；当前状态看 [PROGRESS](PROGRESS.md)。
+
 ## 20 分钟快速了解
 
 这个入口只用于“先判断项目在做什么”，不是完整学习计划：
@@ -50,6 +52,20 @@
 | 安全测评 | [29 Prompt Injection Eval](29-Prompt-Injection-Eval学习手册.md) | 40 条 JSONL、覆盖标签、Replay/Live、行为/边界分层 |
 
 当前代码已经不依赖 LangGraph。`14` 只用于理解 Phase 2 的架构演进和真实 Live/Replay 证据，不能作为当前代码说明。
+
+### C. Phase 8 当前目标与 Phase 7 已有模块
+
+| 文档 | 用途 | 状态 |
+|---|---|---|
+| [37 Kubernetes 运维 Agent 完整目标与验收](37-Kubernetes运维Agent目标与验收.md) | 当前详细范围、五部分功能、四层测评、费用与交付标准 | **当前权威目标** |
+| [31 Agent 记忆检索与路由最小实现方案](31-Agent记忆检索与路由最小实现方案.md) | Phase 7 旧范围、环境、实施顺序与测评 | 历史资料 |
+| [32 Agent 记忆检索与路由学习手册](32-Agent记忆检索与路由学习手册.md) | 四层概念、取舍与自测题 | 概念学习 |
+| [33 树形 Session 与分支恢复](33-树形Session与分支恢复学习手册.md) | M1 源码、接口、确定性测评与面试讲法 | 已实现，证据见 PROGRESS |
+| [34 Codex 风格分层记忆](34-Codex风格分层记忆学习手册.md) | M2 提取、整理、读取、遗忘、测评与面试讲法 | 本地确定性实现，证据见 PROGRESS |
+| [35 Milvus/ES/BGE 混合检索](35-Milvus-ES-BGE混合检索学习手册.md) | M3 双索引、RRF、BGE、公开集消融与 Agent 只读接线 | Docker + 本地模型集成，证据见 phase17 |
+| [36 Jev 模型路由](36-Jev模型路由学习手册.md) | Phase 7 官方 SDK Choice、任务前选模、回退、成本夹具 | Phase 8 复用并最小验证，旧首题见 [phase21](evidence/phase21-jev-live-first-case.md) |
+
+实施状态只看 [PROGRESS](PROGRESS.md) 和独立证据，不把后续模块方案当成当前代码能力。
 
 ## 问题、答案与概念怎样分层
 
@@ -101,6 +117,12 @@ LangGraph 显式图
 - [phase12 DeepSeek Live Eval v1](evidence/phase12-deepseek-live-eval-v1.md)：资源身份修正前后两轮、真实 Token/费用与诚实边界。
 - [phase13 Prompt Injection Eval v2](evidence/phase13-prompt-injection-eval-v2.md)：40 条 Replay、88 Task Live、费用和跨来源夹具缺陷。
 - [phase14 来源隔离后的 Live Eval v2](evidence/phase14-source-isolated-live-eval-v2.md)：解析修复、91 Task、ASR 1/72 与 Containment 1/1。
+- [phase15 树形 Session MVP](evidence/phase15-session-tree-mvp.md)：合成树 CLI、40 个本地 Python 测试与未做 Live 的边界。
+- [phase16 分层记忆 MVP](evidence/phase16-memory-mvp.md)：两条合成会话的提取/冲突/遗忘、45 个本地 Python 测试与未做 Live 的边界。
+- [phase17 混合检索 MVP](evidence/phase17-hybrid-retrieval-mvp.md)：Milvus 2.5.10、ES/BGE 与公开 SciFact 30 条固定子集消融；无外部模型调用。
+- [phase18 Jev 路由 MVP](evidence/phase18-jev-router-mvp.md)：官方 SDK 本地请求形状、Fake/Replay、单 Task 选模与回退；无外部模型调用。
+- [phase19 四模块联合 Replay](evidence/phase19-phase7-integrated-replay.md)：真实本地 RAG + Session/Memory + Fake Jev/Replay LLM/假沙箱；外部模型调用 0。
+- [phase20 Jev Live 无网络预检](evidence/phase20-jev-live-preflight.md)：8 条合成题的同题三组横评协议、预算预留与 Fake 门禁；Live 待授权。
 - [学习实验台账](evidence/learning-experiments.md)：区分“已执行实验、已有等价证据、尚未执行”，不把预测写成实测。
 
 ## 学习纪律
@@ -117,3 +139,11 @@ LangGraph 显式图
 ```
 
 能完成这六步，才算真正掌握；只读完文档不算。
+
+## Phase 8 实施与测评
+
+- [38 运维 Agent 与测评学习手册](38-运维Agent与测评学习手册.md)：架构、运行命令、消融和失败例。
+- [39 Pi 与 Codex 源码对照](39-Pi与Codex源码对照.md)：固定 commit、当前路径与 MVP 差异。
+- [40 运维评测运行与费用门](40-运维评测运行与费用门.md)：Benchmark、Ragas、Live 计划、证据边界与预算。
+- [41 运维 Agent 逐项验收审计](41-运维Agent逐项验收审计.md)：完整要求、对应证据与尚未完成的验收。
+- [42 工作记忆与上下文压缩](42-运维Agent工作记忆与上下文压缩.md)：分支工作单、状态时效、窗口预算和长期记忆作用域。
