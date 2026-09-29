@@ -20,6 +20,7 @@ from .runtime.control import AgentControl
 from .runtime.loop import AgentLoopState, PiStyleAgentLoop, append_event
 from .runtime.session import SessionJournal
 from .tools.files import FileWorkspace
+from .working_memory import WORKING_MEMORY_TOOL_SCHEMA, scope_from_alert
 
 
 class AgentRunner:
@@ -94,7 +95,8 @@ class AgentRunner:
                 elapsedMs=int((time.monotonic() - claim_started) * 1000),
             )
 
-            session = gateway.new_session(self._plugins.tool_schemas)
+            tool_schemas = [*self._plugins.tool_schemas, WORKING_MEMORY_TOOL_SCHEMA]
+            session = gateway.new_session(tool_schemas)
             state = AgentLoopState(
                 task_id=task_id,
                 alert=alert.model_dump(mode="json", by_alias=True),
@@ -112,11 +114,15 @@ class AgentRunner:
                     linux_hosts=self._linux_hosts,
                     # resume 会创建新 taskId，因此不会静默复用上一次运行的文件。
                     workspace=FileWorkspace(self._workspace_root, task_id),
+                    memory_scope=scope_from_alert(state.alert),
                 ),
                 control=control or AgentControl(),
                 state=state,
+                journal=journal,
+                tool_schemas=tool_schemas,
                 memory_summary=(
-                    self._memory_store.read_summary() if self._memory_store else ""
+                    self._memory_store.read_summary_for_scope(scope_from_alert(state.alert))
+                    if self._memory_store else ""
                 ),
             )
             state = await asyncio.wait_for(

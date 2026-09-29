@@ -155,7 +155,7 @@ def validate_tool_call(
 
     if name == "read_memory":
         level = arguments.get("level")
-        if level == "detail" and set(arguments) == {"level"}:
+        if level in {"detail", "legacy"} and set(arguments) == {"level"}:
             result["allowed"] = True
             return result
         session_id = arguments.get("sessionId")
@@ -167,7 +167,22 @@ def validate_tool_call(
         ):
             result["allowed"] = True
             return result
-        result["reason"] = "read_memory 只接受 detail 或合法 Session 的 rollout"
+        result["reason"] = "read_memory 只接受 detail、legacy 或合法 Session 的 rollout"
+        return result
+
+    if name == "update_working_memory":
+        from .working_memory import validate_update
+        refs = {
+            ref for item in arguments.get("hypotheses", [])
+            if isinstance(item, dict) and isinstance(item.get("evidenceIds"), list)
+            for ref in item["evidenceIds"] if isinstance(ref, str)
+        } if isinstance(arguments.get("hypotheses", []), list) else set()
+        try:
+            validate_update(arguments, refs)
+        except ValueError:
+            result["reason"] = "工作记忆更新格式或长度不合法"
+            return result
+        result["allowed"] = True
         return result
 
     if name in {"search_logs", "aggregate_logs"}:

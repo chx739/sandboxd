@@ -61,7 +61,7 @@ async def evaluate() -> dict[str, object]:
             if line.startswith("- [") and "` = " in line:
                 kind = line.split("[", 1)[1].split("]", 1)[0]
                 key = line.split("`", 2)[1]
-                value = line.split("` = ", 1)[1].split(" (来源 ", 1)[0]
+                value = line.split("` = ", 1)[1].split(" (作用域 ", 1)[0]
                 predicted.add((kind, key, value))
         correct = len(expected & predicted)
         return {
@@ -81,7 +81,12 @@ async def evaluate() -> dict[str, object]:
 
 
 def main() -> None:
-    print(json.dumps(asyncio.run(evaluate()), ensure_ascii=False, indent=2))
+    report = asyncio.run(evaluate())
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    if (report["factRecall"], report["factPrecision"]) != (1.0, 1.0) or not (
+        report["updateCorrect"] and report["toolInjectionAbsent"]
+    ):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ class MemoryPlugin:
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "level": {"type": "string", "enum": ["detail", "rollout"]},
+                    "level": {"type": "string", "enum": ["detail", "legacy", "rollout"]},
                     "sessionId": {"type": "string"},
                 },
                 "required": ["level"],
@@ -53,10 +53,19 @@ class MemoryPlugin:
             raise ValueError("未知记忆工具")
         level = arguments["level"]
         if level == "detail":
-            content = self._store.read_detail(limit=4096)
+            content = (
+                self._store.read_detail_for_scope(context.memory_scope, limit=4096)
+                if context.memory_scope is not None
+                else self._store.read_detail(limit=4096)
+            )
+        elif level == "legacy":
+            content = self._store.read_legacy(limit=4096)
         elif level == "rollout":
-            content = self._store.read_rollout_summary(
-                arguments["sessionId"], limit=2048
+            content = (
+                self._store.read_rollout_summary_for_scope(
+                    arguments["sessionId"], context.memory_scope, limit=2048,
+                ) if context.memory_scope is not None else
+                self._store.read_rollout_summary(arguments["sessionId"], limit=2048)
             )
         else:
             raise ValueError("未知记忆层级")

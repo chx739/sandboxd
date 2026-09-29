@@ -124,7 +124,7 @@ class SessionJournalTest(unittest.IsolatedAsyncioTestCase):
                 ],
             )
             tree = await journal.tree()
-            self.assertIsNone(tree["activeLeafId"])
+            self.assertEqual(tree["activeLeafId"], tree["nodes"][1]["nodeId"])
             self.assertFalse(tree["nodes"][-1]["branchable"])
             with self.assertRaises(ValueError):
                 await journal.load_branch(tree["nodes"][-1]["nodeId"])

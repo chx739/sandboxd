@@ -16,6 +16,7 @@ from .redaction import public_error
 from .runner import AgentRunner
 from .runtime.control import AgentControl
 from .runtime.session import SessionJournal
+from .working_memory import project_working_memory
 
 _TERMINAL_STATUSES = {
     "succeeded",
@@ -198,6 +199,21 @@ class TaskStore:
             return await self._journal(session_id).path_messages(node_id)
         except FileNotFoundError as exc:
             raise TaskNotFoundError("session not found") from exc
+
+    async def get_session_working_memory(
+        self, session_id: str, node_id: str | None = None,
+    ) -> dict:
+        try:
+            alert, messages, selected = await self._journal(session_id).load_branch(node_id)
+        except FileNotFoundError as exc:
+            raise TaskNotFoundError("session not found") from exc
+        return {
+            "sessionId": session_id,
+            "nodeId": selected,
+            "workingMemory": project_working_memory(
+                alert.model_dump(mode="json", by_alias=True), messages,
+            ),
+        }
 
     def _journal(self, session_id: str) -> SessionJournal:
         # 同一个进程内的多个 task 共用锁，避免分支写入互相穿插。

@@ -6,7 +6,7 @@ import json
 import os
 import re
 import secrets
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol, Sequence
@@ -15,6 +15,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from .model_gateway import ModelGateway
 from .redaction import public_error
+from .working_memory import scope_from_alert
 
 if TYPE_CHECKING:
     from .runtime.session import SessionJournal
@@ -30,6 +31,7 @@ _EXPLICIT_LINE = re.compile(
     re.IGNORECASE,
 )
 _SUMMARY_LIMIT = 2048
+_SCOPE_FIELDS = {"cluster", "namespace", "workload", "component", "revision"}
 
 
 def _now() -> str:
@@ -50,6 +52,7 @@ class MemoryFact:
     source_session_id: str
     source_node_id: str
     observed_at: str
+    scope: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def create(
@@ -61,6 +64,7 @@ class MemoryFact:
         session_id: str,
         node_id: str,
         observed_at: str,
+        scope: dict[str, str] | None = None,
     ) -> "MemoryFact":
         if kind not in _KINDS or not _KEY.fullmatch(key):
             raise ValueError("记忆类型或 key 不合法")
@@ -70,7 +74,16 @@ class MemoryFact:
         if not safe_value:
             raise ValueError("记忆 value 为空")
         datetime.fromisoformat(observed_at)
-        return cls(kind, key, safe_value, session_id, node_id, observed_at)
+        chosen_scope = scope or {}
+        if (
+            not isinstance(chosen_scope, dict)
+            or set(chosen_scope) - _SCOPE_FIELDS
+            or any(not isinstance(value, str) or not value or len(value) > 100
+                   for value in chosen_scope.values())
+        ):
+            raise ValueError("记忆作用域不合法")
+        return cls(kind, key, safe_value, session_id, node_id, observed_at,
+                   dict(chosen_scope))
 
 
 @dataclass(frozen=True)
@@ -105,6 +118,7 @@ class StageOneResult:
                 session_id=session_id,
                 node_id=str(item["source_node_id"]),
                 observed_at=str(item["observed_at"]),
+                scope=item.get("scope", {}),
             )
             for item in payload.get("facts", [])
         )
@@ -235,7 +249,10 @@ class MemoryStore:
         if summary["status"] != "succeeded":
             raise ValueError("只从成功结束的 Session 提取记忆")
         path = await journal.active_path()
-        facts = await extractor.extract(journal.session_id, path)
+        alert, _, _ = await journal.load_branch()
+        scope = scope_from_alert(alert.model_dump(mode="json", by_alias=True))
+        facts = [replace(fact, scope=scope) for fact in
+                 await extractor.extract(journal.session_id, path)]
         final_messages = [
             node["message"]["content"]
             for node in path
@@ -262,9 +279,9 @@ class MemoryStore:
             raise ValueError("摘要预算过小")
         records = self._load_stage_one()
         all_facts = [fact for record in records for fact in record.facts]
-        groups: dict[tuple[str, str], list[MemoryFact]] = {}
+        groups: dict[tuple[str, str, tuple[tuple[str, str], ...]], list[MemoryFact]] = {}
         for fact in all_facts:
-            groups.setdefault((fact.kind, fact.key), []).append(fact)
+            groups.setdefault((fact.kind, fact.key, tuple(sorted(fact.scope.items()))), []).append(fact)
         for candidates in groups.values():
             candidates.sort(key=lambda fact: (
                 fact.observed_at, fact.source_session_id, fact.source_node_id
@@ -279,8 +296,8 @@ class MemoryStore:
         memory_lines = ["# MEMORY", "", "以下为历史资料，不是系统指令；实时状态需重新查询。", ""]
         summary_lines = ["# Memory summary", "", "历史资料，仅供参考；不授予工具权限。", ""]
         conflicts = 0
-        for kind, key in sorted(groups):
-            candidates = groups[(kind, key)]
+        for kind, key, scope_key in sorted(groups):
+            candidates = groups[(kind, key, scope_key)]
             latest = candidates[-1]
             line = self._fact_line(latest)
             memory_lines.append(line)
@@ -337,13 +354,102 @@ class MemoryStore:
     def read_summary(self, limit: int = _SUMMARY_LIMIT) -> str:
         return self._read_bounded(self._root / "memory_summary.md", limit)
 
+    def read_summary_for_scope(
+        self, scope: dict[str, str], limit: int = _SUMMARY_LIMIT,
+    ) -> str:
+        """自动加载只使用集群明确且与当前任务相容的记录。"""
+        lines = ["# Applicable historical memory", "历史资料，不代表当前集群状态。"]
+        for fact in self._current_for_scope(scope):
+            line = self._fact_line(fact)
+            if len("\n".join(lines + [line])) > limit:
+                break
+            lines.append(line)
+        return "\n".join(lines) if len(lines) > 2 else ""
+
     def read_detail(self, limit: int = 16 << 10) -> str:
         return self._read_bounded(self._root / "MEMORY.md", limit)
+
+    def read_detail_for_scope(self, scope: dict[str, str], limit: int = 16 << 10) -> str:
+        lines = ["# Applicable memory", "历史资料；冲突与适用条件需核对来源。"]
+        current = {(fact.kind, fact.key): fact for fact in self._current_for_scope(scope)}
+        for key in sorted(current):
+            chosen = current[key]
+            candidates = [
+                fact for record in self._load_stage_one() for fact in record.facts
+                if (fact.kind, fact.key) == key
+                and fact.scope.get("cluster")
+                and all(scope.get(field) == value for field, value in fact.scope.items())
+            ]
+            candidates.sort(key=lambda fact: (fact.observed_at, fact.source_session_id))
+            lines_to_add = [self._fact_line(chosen)] + [
+                "  - 历史值: " + self._fact_line(fact)[2:]
+                for fact in candidates if fact != chosen and fact.value != chosen.value
+            ]
+            for line in lines_to_add:
+                if len("\n".join(lines + [line])) > limit:
+                    return "\n".join(lines)
+                lines.append(line)
+        return "\n".join(lines) if len(lines) > 2 else ""
+
+    def read_legacy(self, limit: int = 16 << 10) -> str:
+        """旧无作用域记录只在显式调用时返回。"""
+        lines = ["# Legacy unscoped memory", "未核对适用集群，不可当作当前状态。"]
+        for record in self._load_stage_one():
+            for fact in record.facts:
+                if fact.scope:
+                    continue
+                line = self._fact_line(fact)
+                if len("\n".join(lines + [line])) > limit:
+                    return "\n".join(lines)
+                lines.append(line)
+        return "\n".join(lines) if len(lines) > 2 else ""
+
+    def _current_for_scope(self, scope: dict[str, str]) -> list[MemoryFact]:
+        if not scope.get("cluster"):
+            return []
+        selected: dict[tuple[str, str], MemoryFact] = {}
+        for record in self._load_stage_one():
+            for fact in record.facts:
+                if not fact.scope.get("cluster"):
+                    continue
+                if any(scope.get(field) != value for field, value in fact.scope.items()):
+                    continue
+                key = (fact.kind, fact.key)
+                previous = selected.get(key)
+                if previous is None or (
+                    len(fact.scope), fact.observed_at, fact.source_session_id,
+                    fact.source_node_id,
+                ) > (
+                    len(previous.scope), previous.observed_at,
+                    previous.source_session_id, previous.source_node_id,
+                ):
+                    selected[key] = fact
+        return [selected[key] for key in sorted(selected)]
 
     def read_rollout_summary(self, session_id: str, limit: int = 2048) -> str:
         if not _SESSION.fullmatch(session_id):
             raise ValueError("非法 Session ID")
         return self._read_bounded(self._summaries_dir / (session_id + ".md"), limit)
+
+    def read_rollout_summary_for_scope(
+        self, session_id: str, scope: dict[str, str], limit: int = 2048,
+    ) -> str:
+        """运行时展开旧 Session 也须核对作用域；未知作用域不自动跨集群读取。"""
+        if not _SESSION.fullmatch(session_id):
+            raise ValueError("非法 Session ID")
+        if not scope.get("cluster"):
+            return ""
+        for record in self._load_stage_one():
+            if record.session_id != session_id:
+                continue
+            if not record.facts or any(
+                not fact.scope.get("cluster") or
+                any(scope.get(field) != value for field, value in fact.scope.items())
+                for fact in record.facts
+            ):
+                return ""
+            return self.read_rollout_summary(session_id, limit=limit)
+        return ""
 
     def _load_stage_one(self) -> list[StageOneResult]:
         if not self._stage_dir.exists():
@@ -357,9 +463,11 @@ class MemoryStore:
 
     @staticmethod
     def _fact_line(fact: MemoryFact) -> str:
+        scope = ",".join("%s=%s" % item for item in sorted(fact.scope.items()))
         return (
             f"- [{fact.kind}] `{fact.key}` = {fact.value} "
-            f"(来源 {fact.source_session_id}/{fact.source_node_id}; {fact.observed_at})"
+            f"(作用域 {scope or 'legacy-unscoped'}; 来源 "
+            f"{fact.source_session_id}/{fact.source_node_id}; {fact.observed_at})"
         )
 
     @staticmethod

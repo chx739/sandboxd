@@ -138,6 +138,19 @@ class AgentAPIAuthTest(unittest.IsolatedAsyncioTestCase):
                 )
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json()["messages"][-1]["content"], "Old ending")
+                response = await client.get(
+                    f"/api/v1/sessions/{demo_id}/working-memory",
+                    headers={"Authorization": "Bearer alert-token"},
+                )
+                self.assertEqual(response.status_code, 401)
+                response = await client.get(
+                    f"/api/v1/sessions/{demo_id}/working-memory",
+                    params={"nodeId": "node-0000000000000005"},
+                    headers={"Authorization": "Bearer api-token"},
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json()["nodeId"], "node-0000000000000005")
+                self.assertIn("workingMemory", response.json())
                 response = await client.post(
                     f"/api/v1/sessions/{demo_id}/branch/node-0000000000000003",
                     headers={"Authorization": "Bearer api-token"},

@@ -1,0 +1,20 @@
+test_first_incomplete_turn_recovers_initial_alert (agentd.tests.test_memory_boundaries.MemoryBoundaryTest.test_first_incomplete_turn_recovers_initial_alert) ... ok
+test_omitted_pending_checks_are_preserved_and_oversized_update_rejected (agentd.tests.test_memory_boundaries.MemoryBoundaryTest.test_omitted_pending_checks_are_preserved_and_oversized_update_rejected) ... ok
+test_prometheus_old_sample_cannot_become_current_fact (agentd.tests.test_memory_boundaries.MemoryBoundaryTest.test_prometheus_old_sample_cannot_become_current_fact) ... ok
+test_real_stdout_uid_survives_runtime_truncation (agentd.tests.test_memory_boundaries.MemoryBoundaryTest.test_real_stdout_uid_survives_runtime_truncation) ... ok
+test_resumed_branch_preserves_denial (agentd.tests.test_memory_boundaries.MemoryBoundaryTest.test_resumed_branch_preserves_denial) ... ok
+test_branch_projection_and_incremental_restart (agentd.tests.test_working_memory.WorkingMemoryTest.test_branch_projection_and_incremental_restart) ... ok
+test_context_keeps_note_and_tool_protocol_with_budget (agentd.tests.test_working_memory.WorkingMemoryTest.test_context_keeps_note_and_tool_protocol_with_budget) ... ok
+test_current_state_requires_matching_resource_identity (agentd.tests.test_working_memory.WorkingMemoryTest.test_current_state_requires_matching_resource_identity) ... ok
+test_expired_state_and_invalid_evidence (agentd.tests.test_working_memory.WorkingMemoryTest.test_expired_state_and_invalid_evidence) ... ok
+test_fenced_final_answer_can_propose_pending_check (agentd.tests.test_working_memory.WorkingMemoryTest.test_fenced_final_answer_can_propose_pending_check) ... ok
+test_long_dialogue_keeps_early_pointer_and_latest_denial (agentd.tests.test_working_memory.WorkingMemoryTest.test_long_dialogue_keeps_early_pointer_and_latest_denial) ... ok
+test_loop_accepts_same_round_model_proposal_without_summary_call (agentd.tests.test_working_memory.WorkingMemoryTest.test_loop_accepts_same_round_model_proposal_without_summary_call) ... ok
+test_loop_rejects_unreturned_evidence_id (agentd.tests.test_working_memory.WorkingMemoryTest.test_loop_rejects_unreturned_evidence_id) ... ok
+test_old_branch_evidence_can_still_be_referenced (agentd.tests.test_working_memory.WorkingMemoryTest.test_old_branch_evidence_can_still_be_referenced) ... ok
+test_old_denial_cannot_evict_latest_user_input (agentd.tests.test_working_memory.WorkingMemoryTest.test_old_denial_cannot_evict_latest_user_input) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.085s
+
+OK

@@ -34,7 +34,18 @@ def _safe_content(value: object) -> str:
         text = value
     else:
         text = json.dumps(value, ensure_ascii=False, default=str)
-    return public_error(text, limit=_MAX_MESSAGE_CHARS)
+    redacted = public_error(text, limit=_MAX_MESSAGE_CHARS)
+    if redacted == text:
+        return text
+    # 工具 JSON 必须逐叶脱敏，不能让正则吃掉 JSON 引号而破坏恢复。
+    try:
+        parsed = json.loads(text)
+    except ValueError:
+        return redacted
+    safe = json.dumps(_safe_json_value(parsed), ensure_ascii=False)
+    if len(safe) <= _MAX_MESSAGE_CHARS:
+        return safe
+    return json.dumps({"truncated": True, "excerpt": redacted[:2000]}, ensure_ascii=False)
 
 
 def _safe_json_value(value: object, depth: int = 0) -> Any:
@@ -123,7 +134,7 @@ def _branchable_flags(messages: Sequence[dict[str, Any]]) -> list[bool]:
     pending: set[str] = set()
     valid = True
     flags: list[bool] = []
-    for message in messages:
+    for index, message in enumerate(messages):
         role = message.get("role")
         if role == "assistant":
             if pending:
@@ -146,7 +157,10 @@ def _branchable_flags(messages: Sequence[dict[str, Any]]) -> list[bool]:
                 pending.remove(call_id)
         elif role not in {"system", "user"} or pending:
             valid = False
-        flags.append(valid and not pending and role in {"assistant", "tool"})
+        initial_alert = (
+            index == 1 and role == "user" and messages[0].get("role") == "system"
+        )
+        flags.append(valid and not pending and (role in {"assistant", "tool"} or initial_alert))
     return flags
 
 
@@ -241,14 +255,40 @@ class SessionJournal:
         ]
         parent_id = runs[-1].get("parentNodeId") if runs else None
         base = _path_nodes(nodes, str(parent_id)) if parent_id is not None else []
-        base_messages = [node["message"] for node in base]
+        snapshots = [
+            entry for entry in entries
+            if entry.get("type") == "session.transcript" and entry.get("taskId") == task_id
+        ]
+        previous = snapshots[-1] if snapshots else None
+        base_messages = (
+            previous.get("messages", []) if previous is not None
+            else [node["message"] for node in base]
+        )
+        if not isinstance(base_messages, list):
+            raise ValueError("Session 快照格式错误")
         if serialized[: len(base_messages)] != base_messages:
-            raise ValueError("恢复消息与选定 Session 分支不一致")
+            raise ValueError("Session 消息与已保存的完整前缀不一致")
+        if len(serialized) == len(base_messages):
+            return
 
         flags = _branchable_flags(serialized)
         events: list[tuple[str, dict[str, Any]]] = []
-        leaf_id = str(parent_id) if parent_id is not None else None
-        safe_head = leaf_id
+        task_nodes = [
+            entry for entry in entries
+            if entry.get("type") == "session.node" and entry.get("taskId") == task_id
+        ]
+        leaf_id = (
+            str(task_nodes[-1]["nodeId"]) if task_nodes
+            else str(parent_id) if parent_id is not None else None
+        )
+        heads = [
+            entry for entry in entries
+            if entry.get("type") == "session.head" and entry.get("taskId") == task_id
+        ]
+        safe_head = (
+            str(heads[-1]["nodeId"]) if heads
+            else str(parent_id) if parent_id is not None else None
+        )
         for index, payload in enumerate(serialized[len(base_messages):], len(base_messages)):
             node_id = "node-" + secrets.token_hex(8)
             events.append(("session.node", {
@@ -264,7 +304,9 @@ class SessionJournal:
         if safe_head is not None:
             events.append(("session.head", {"taskId": task_id, "nodeId": safe_head}))
         # 旧审计工具仍可读快照；新的恢复依据始终是节点父链。
-        events.append(("session.transcript", {"taskId": task_id, "messages": serialized}))
+        events.append(("session.transcript", {
+            "taskId": task_id, "messages": serialized, "leafId": leaf_id,
+        }))
         await self._append_many(events)
 
     async def append_result(

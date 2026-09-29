@@ -339,6 +339,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except (TaskNotFoundError, ValueError) as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
 
+    @app.get("/api/v1/sessions/{session_id}/working-memory")
+    async def get_session_working_memory(
+        session_id: str, request: Request, nodeId: str | None = None,
+    ) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(await store.get_session_working_memory(session_id, nodeId))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
     async def start_session_branch(
         session_id: str,
         node_id: str | None,

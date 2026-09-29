@@ -64,9 +64,10 @@ class MemoryStoreTest(unittest.IsolatedAsyncioTestCase):
         session_id: str,
         user: str,
         tool_content: str = "",
+        labels: dict[str, str] | None = None,
     ) -> SessionJournal:
         journal = SessionJournal(root / "sessions", session_id)
-        await journal.initialize("task-" + session_id[-4:], AlertEvent())
+        await journal.initialize("task-" + session_id[-4:], AlertEvent(labels=labels or {}))
         messages = [SystemMessage(content="trusted runtime"), HumanMessage(content=user)]
         if tool_content:
             messages.extend([
@@ -127,6 +128,67 @@ class MemoryStoreTest(unittest.IsolatedAsyncioTestCase):
                 len(list((root / "memory/sandboxd/rollout_summaries").glob("*.md"))),
                 1,
             )
+
+    async def test_scoped_auto_read_and_legacy_on_demand(self) -> None:
+        with TemporaryDirectory(dir="/tmp") as directory:
+            root = Path(directory)
+            store = MemoryStore(root / "memory", "sandboxd")
+            cluster_a = await self._session(
+                root, "session-0000000000000011",
+                "MEMORY[project_fact] owner=team-a",
+                labels={"cluster": "a", "namespace": "payments"},
+            )
+            cluster_b = await self._session(
+                root, "session-0000000000000012",
+                "MEMORY[project_fact] owner=team-b",
+                labels={"cluster": "b", "namespace": "payments"},
+            )
+            legacy = await self._session(
+                root, "session-0000000000000013",
+                "MEMORY[project_fact] owner=old-team",
+            )
+            cluster_a_new = await self._session(
+                root, "session-0000000000000014",
+                "MEMORY[project_fact] owner=team-a-new",
+                labels={"cluster": "a", "namespace": "payments"},
+            )
+            for journal in (cluster_a, cluster_b, legacy, cluster_a_new):
+                await store.extract_session(journal, ExplicitExtractor())
+            self.assertEqual(store.consolidate()["conflictCount"], 1)
+            current = store.read_summary_for_scope({"cluster": "a", "namespace": "payments"})
+            self.assertIn("team-a-new", current)
+            self.assertNotIn("team-b", current)
+            self.assertNotIn("old-team", current)
+            self.assertEqual(store.read_summary_for_scope({}), "")
+            self.assertIn("old-team", store.read_legacy())
+            registry = build_builtin_registry(store)
+            context = PluginContext(
+                sandbox_id="fake", prometheus=None, sandboxd=None,
+                linux_hosts=None,
+                workspace=FileWorkspace(root / "workspaces", "task-scoped"),
+                memory_scope={"cluster": "a", "namespace": "payments"},
+            )
+            detail = await registry.execute("read_memory", {"level": "detail"}, context)
+            self.assertIn("team-a-new", detail.body["content"])
+            self.assertNotIn("team-b", detail.body["content"])
+            self.assertNotIn("old-team", detail.body["content"])
+            legacy_read = await registry.execute("read_memory", {"level": "legacy"}, context)
+            self.assertIn("old-team", legacy_read.body["content"])
+            other_rollout = await registry.execute("read_memory", {
+                "level": "rollout", "sessionId": cluster_b.session_id,
+            }, context)
+            self.assertEqual(other_rollout.body["content"], "")
+            self.assertEqual(store.forget(cluster_a_new.session_id)["conflictCount"], 0)
+            self.assertIn("team-a", store.read_summary_for_scope(
+                {"cluster": "a", "namespace": "payments"},
+            ))
+            self.assertNotIn("team-a-new", store.read_summary_for_scope(
+                {"cluster": "a", "namespace": "payments"},
+            ))
+            store.forget(cluster_a.session_id)
+            self.assertNotIn("team-a", store.read_summary_for_scope(
+                {"cluster": "a", "namespace": "payments"},
+            ))
 
     async def test_only_succeeded_and_active_branch_are_extracted(self) -> None:
         with TemporaryDirectory(dir="/tmp") as directory:

@@ -1,0 +1,25 @@
+{
+  "kind": "deterministic-synthetic-context-comparison",
+  "priorAlgorithm": "PR HEAD context.py 48KiB character group trim",
+  "externalModelCalls": 0,
+  "sourceMessageCount": 116,
+  "sourceChars": 92400,
+  "observedRepeatedChecks": 0,
+  "old": {
+    "messageCount": 60,
+    "chars": 47705,
+    "firstEvidenceVisible": false,
+    "latestDenialVisible": false
+  },
+  "new": {
+    "messageCount": 77,
+    "chars": 25135,
+    "estimatedTokensWithOutputReserve": 32231,
+    "toolSchemaEstimatedTokens": 1682,
+    "firstEvidencePointerVisible": true,
+    "latestDenialVisible": true,
+    "retainedHypothesis": true,
+    "retainedPendingCheck": true
+  },
+  "interpretationLimit": "重复检查数来自固定合成 transcript；没有真实模型调用，不能据此推断优化会降低 Live Agent 重复调用。"
+}
