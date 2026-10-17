@@ -63,13 +63,42 @@ agentd/.venv/bin/python -m agentd.workspace_backup_component --output .cache/res
 
 当前只运行kind控制节点、NFS和专属备份MinIO；组件业务/维护Pod已清理，所有工作区、快照和Secret保留。没有Session联合绑定、元数据提交/崩溃恢复、分支恢复及引用GC证据前，不能宣称V2完成。全部十项正式验收仍pending，机器可读范围及证据hash见`evidence/phase9-v2-progress.json`。
 
-### 持久屏障模块（逻辑测试，尚未接真实执行器）
+### 持久屏障模块与可信备份执行器
 
 `internal/sandbox/workspace_barrier.go`与owner共用Go独占、fsync的JSONL。预留屏障与文件RPC使用同一短锁，先等待已在执行的RPC返回；随后长期扫描/上传不占这把锁。状态为reserved→submitted→identified→stopped→released，记录checkpoint/job/owner/代次和维护Pod UID。Files和Claim在屏障未释放时均拒绝；取消仍可停止业务owner，但无法绕过屏障换新Pod。
 
-提交API请求前先记submitted；请求结果不明或Pod消失不等于从未提交。只有从未提交的reserved，或未来可信Runtime确认同UID容器终止后，才能进入stopped，再解除。旧状态的精确CAS不能解除新job。注册表重开时同时重放屏障，非法状态迁移即使JSONL校验和合法也拒绝启动。
+提交API请求前先记submitted；请求结果不明或Pod消失不等于从未提交。只有从未提交的reserved，或可信Runtime确认同UID容器终止后，才能进入stopped，再解除。旧状态的精确CAS不能解除新job。注册表重开时同时重放屏障，非法状态迁移即使JSONL校验和合法也拒绝启动。
 
-8项定向测试通过；全项目Go测试通过`phase9-v2-go-full-regression-tests.txt`，六包race回归见`phase9-v2-barrier-regression-tests.txt`。这些是逻辑证据，维护Pod的物理停止证明与Agent接线仍待实现。V1旧记录保持可读；写过V2屏障的控制目录不支持旧二进制继续写入，旧reader拒绝未知事件。
+8项定向测试通过；全项目Go测试通过`phase9-v2-go-full-regression-tests.txt`，六包race回归见`phase9-v2-barrier-regression-tests.txt`。该批为逻辑证据；后续真实执行器探测见下节，Agent接线仍待实现。V1旧记录保持可读；写过V2屏障的控制目录不支持旧二进制继续写入，旧reader拒绝未知事件。
+
+### 后续真实执行器探测
+
+`internal/sandbox/backup_runtime.go`提供可信的Start / Wait / Abort / Finish，不注册Agent工具，不开放任意Pod spec。Go在屏障中固定维护镜像、仓库Secret名称和MinIO地址；启动重试不能换仓库配置。维护Pod带专属finalizer，读取时检查名称/UID、checkpoint注解、安全基线、挂载和固定argv。容器终止、节点Ready及近期Lease验证后先将停止证明fsync；Wait仅返回有界、结构合法的完整snapshot/repository/manifest身份，非零退出或坏结果不返回成功。仓库维护在MVP中全局串行，旧未解屏障会阻止新维护任务。
+
+Wait完成后仍保持屏障；上层写入COMMITTED或持久失败结果后才可Finish。Abort使用UID条件正常删除并等待真实终止，不强删finalizer、不unlock、不删除孤立快照。ctx超时本身不解除屏障。Finish确认丢失可用原请求幂等重试。没有维护Pod停止证明的NotFound仍拒绝；有已落盘停止证明后才允许清理重试接受NotFound。
+
+首轮`phase9-v2-executor-component.json`整体失败：已证实注册表重开后拦截成功，Pod实际完成备份，但即时结果读取返回通用不可用错误。对同一job再次读取并完成对账成功，`phase9-v2-executor-postfailure.json`保留；没有重做备份或改写首轮成绩。首轮未细分失败阶段，不能据此认定唯一根因；后续增加静态阶段错误，并为容器先终止、Pod终态稍后更新的情况增加原deadline内等待与单测。
+
+第二轮整体成功，但清理后CRI实例已回收，事后runtime观察报告记录0匹配，不用RuntimeClass代替实际runsc证明。第三轮`phase9-v2-executor-component-v3.json`在Finish前读取CRI白名单字段，实际runtimeType为`io.containerd.runsc.v1`，整体成功：
+
+- 新工作区写入44字节合成报告；备份期间读/写RPC和认领被屏障拦截。
+- 关闭并重新打开同一Go JSONL，原owner/工作区不变，屏障仍生效。这不是进程SIGKILL实验。
+- restic实际备份成功；停止证明落盘后仍冻结，显式Finish后内容/hash不变，禁止写入未留下文件。
+- 业务owner经Go确认停止，维护Pod正常清理，所有NFS文件、snapshot、Secret与控制日志保留。
+
+执行器7项顶层测试（另含子用例）覆盖创建结果不明不重发、配置/UID变化、超时、UID条件取消、非零退出、坏JSON/超大输出、节点Lease、Pod终态滞后及重复Finish；与既有屏障8项有重叠，不能相加作验收通过数。六包race见`phase9-v2-executor-final-regression-tests.txt`；Go全项目见`phase9-v2-executor-go-full-tests.txt`；随后Finish幂等修复的sandbox/API race见`phase9-v2-executor-finish-regression-tests.txt`。Python应用未改，本批未重跑Python全量。
+
+最小管理探测（先运行上一节初始化专用仓库的组件，并从其报告取Secret**名称**；不要打印Secret值）：
+
+```bash
+go build -o .cache/workspace-backup-runtime-smoke ./hack/workspace-backup-runtime-smoke
+# SANDBOXD_BACKUP_PROBE_DIR必须是新的原生Linux私有控制目录。
+.cache/workspace-backup-runtime-smoke -nfs-server "$SANDBOXD_NFS_SERVER" \
+  -minio-ip "$SANDBOXD_BACKUP_MINIO_IP" -secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
+  -control-dir "$SANDBOXD_BACKUP_PROBE_DIR" -output .cache/backup-runtime-probe.json
+```
+
+目前仅接可信Go备份路径，未接HTTP/Agent联合检查点、restore写屏障、Session父链引用或COMMITTED日志；不能把组件本地backend-result文件当成联合检查点提交。V2十项完整验收与性能比较均保持pending。
 
 ## 5. 官方参考与版本
 

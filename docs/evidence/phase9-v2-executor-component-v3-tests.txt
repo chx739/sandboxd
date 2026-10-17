@@ -1,0 +1,1 @@
+persistent-barrier backend component passed; files/snapshots/control retained

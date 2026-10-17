@@ -17,7 +17,7 @@ const BackupManagedBy = "sandboxd-backup"
 // BuildBackupPod is trusted-only. Neither the image/secret nor this PodSpec is an
 // Agent tool parameter. The actual caller must hold Go's workspace write barrier.
 func BuildBackupPod(cfg Config, id, workspaceID, secretName string, request backuphelper.Request) (*corev1.Pod, error) {
-	if cfg.Image == "" || cfg.RuntimeClass == "" || !runtimeIDPattern.MatchString(id) || !workspaceIDPattern.MatchString(workspaceID) ||
+	if cfg.Image == "" || cfg.RuntimeClass == "" || !runtimeIDPattern.MatchString(id) || len(id) > 46 || !workspaceIDPattern.MatchString(workspaceID) ||
 		!runtimeIDPattern.MatchString(secretName) || len(secretName) < 8 || secretName[:7] != "restic-" {
 		return nil, errors.New("invalid trusted backup configuration")
 	}

@@ -2,6 +2,7 @@ package sandbox
 
 import (
 	"errors"
+
 	"github.com/chx739/sandboxd/internal/backuphelper"
 )
 
@@ -19,6 +20,15 @@ type WorkspaceBarrier struct {
 	PodUID       string          `json:"podUid,omitempty"`
 	Phase        string          `json:"phase"`
 	StopReason   string          `json:"stopReason,omitempty"`
+	Job          BackupJobConfig `json:"job,omitempty"`
+}
+
+// Trusted deployment inputs are pinned with the job, so restart cannot silently
+// select another image, repository Secret or endpoint for an uncertain request.
+type BackupJobConfig struct {
+	ImageRef   string `json:"imageRef,omitempty"`
+	SecretName string `json:"secretName,omitempty"`
+	EndpointIP string `json:"endpointIp,omitempty"`
 }
 
 func (r *WorkspaceRegistry) barrierActive(workspaceID string) bool {
@@ -39,6 +49,17 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 	}
 	if _, err := backuphelper.FixedArgs(backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}); err != nil {
 		return err
+	}
+	if b.Job != (BackupJobConfig{}) {
+		if b.Operation != "backup" {
+			return ErrWorkspaceConflict
+		}
+		if _, err := BuildBackupPod(Config{Image: b.Job.ImageRef, RuntimeClass: "gvisor"}, b.JobID, b.WorkspaceID, b.Job.SecretName, backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}); err != nil {
+			return err
+		}
+		if _, err := BuildBackupNetworkPolicy(b.Job.EndpointIP); err != nil {
+			return err
+		}
 	}
 	record, ok := r.records[b.WorkspaceID]
 	if !ok {
@@ -92,7 +113,7 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		}
 		return nil
 	}
-	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) {
+	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.Job != b.Job || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) {
 		return ErrWorkspaceConflict
 	}
 	if b == previous {
@@ -127,10 +148,23 @@ func (r *WorkspaceRegistry) saveBarrier(b WorkspaceBarrier) (WorkspaceBarrier, e
 // reserveBarrier shares the file RPC mutex only during the fsynced transition.
 // This drains an in-flight file RPC; the long backup does not hold that mutex.
 func (r *WorkspaceRegistry) reserveBarrier(workspaceID, checkpointID, jobID, operation string, access WorkspaceAccess) (WorkspaceBarrier, error) {
+	return r.reserveConfiguredBarrier(workspaceID, checkpointID, jobID, operation, access, BackupJobConfig{})
+}
+
+func (r *WorkspaceRegistry) reserveConfiguredBarrier(workspaceID, checkpointID, jobID, operation string, access WorkspaceAccess, job BackupJobConfig) (WorkspaceBarrier, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	b := WorkspaceBarrier{Version: 1, WorkspaceID: workspaceID, CheckpointID: checkpointID, Operation: operation, Access: access, JobID: jobID, PodName: "workspace-backup-" + jobID, Phase: "reserved"}
-	if old, ok := r.barriers[workspaceID]; ok && old.Phase != "released" && old.CheckpointID == checkpointID && old.JobID == jobID && old.Access == access && old.Operation == operation {
+	// This MVP serializes repository maintenance. A crashed job in another
+	// workspace must be reconciled before starting another backup.
+	if job != (BackupJobConfig{}) {
+		for id, old := range r.barriers {
+			if id != workspaceID && old.Phase != "released" {
+				return WorkspaceBarrier{}, ErrWorkspaceConflict
+			}
+		}
+	}
+	b := WorkspaceBarrier{Version: 1, WorkspaceID: workspaceID, CheckpointID: checkpointID, Operation: operation, Access: access, JobID: jobID, PodName: "workspace-backup-" + jobID, Phase: "reserved", Job: job}
+	if old, ok := r.barriers[workspaceID]; ok && old.Phase != "released" && old.CheckpointID == checkpointID && old.JobID == jobID && old.Access == access && old.Operation == operation && old.Job == job {
 		return old, nil
 	}
 	return r.saveBarrier(b)

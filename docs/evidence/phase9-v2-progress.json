@@ -5,7 +5,7 @@
   "externalModelCalls": 0,
   "componentReport": "phase9-v2-backup-component-v3.json",
   "componentScope": "trusted backend component only; no Agent/session joint checkpoint or production write barrier acceptance",
-  "goBarrierScope": "Persistent registry module and logical tests; not yet wired to maintenance execution or Agent checkpoints",
+  "goBarrierScope": "Real trusted backup execution, registry close/reopen, file/claim exclusion, termination proof and explicit finish verified; no process SIGKILL or Agent joint commit claim",
   "requirements": [
     {
       "id": "V2-01",
@@ -59,7 +59,7 @@
     }
   ],
   "remaining": [
-    "trusted executor with persistent barrier and runtime termination proof",
+    "checkpoint journal / immutable Session reference / trusted execution HTTP and Agent integration; restore write barrier still pending",
     "PREPARING / DATA_READY / atomic COMMITTED branch head journal",
     "readable immutable Session prefix reference and complete-boundary hook",
     "cancellation ordering, original budget/deadline and recovery reconciliation",
@@ -107,6 +107,54 @@
     {
       "path": "docs/evidence/phase9-v2-component-v2-postfailure.json",
       "sha256": "f343dc8ba7305d5bf220f5cb4f9144a7f9108ca8b589db3449ffea964d10b168"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-tests.txt",
+      "sha256": "cc7a80cb84be2feb82146b7dd566c69e35fe3fc6236378717c1a4c0c20e5ce56"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v2-tests.txt",
+      "sha256": "9bb37a761bf699447342ba48d5c9debdb0aab4d630d7d7dbf0a9913c322dcd7f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v2.json",
+      "sha256": "103907addd0f63e5b7b6a25b119ee7d47d4aed07968cd673cb533384e81a3bf8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v3-tests.txt",
+      "sha256": "9bb37a761bf699447342ba48d5c9debdb0aab4d630d7d7dbf0a9913c322dcd7f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v3.json",
+      "sha256": "0ce8f28b40dcfef2aa9de4bb222beb31139ad952eae4fc1543c5f1bb25c8f4a7"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component.json",
+      "sha256": "a3f84971e91eb902bab2b5c0daa6023f46c8324f1f7bb3959bba64eaa420cf69"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-final-regression-tests.txt",
+      "sha256": "6ef512f77c909abee1a73d7ccd6f988d35fa498eb4c30bd944f2c5b598b19f13"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-finish-regression-tests.txt",
+      "sha256": "290f22a96e6d5b1c3d7bfada0a1b2a86c743d4d862200ce39b158eafc30d7501"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-go-full-tests.txt",
+      "sha256": "2180159130bdb4235fbf259e66c27f6dce7ec6821208143c1396d180977e75fb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-postfailure.json",
+      "sha256": "a6effb2c5783f7bb0c2f821af5ed86ef2abb32f367111e07caefea989245f107"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-runtime-observation.json",
+      "sha256": "c6b5ab2b00c555f0d75ca291cd9a02354383d57240b17b6607e1b20b0cc66355"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-unit-tests.txt",
+      "sha256": "5b535548f08bef73b83dace9ccabf4da1d43cbbbc64c2dc1aad9195a7a37d36f"
     },
     {
       "path": "docs/evidence/phase9-v2-go-full-regression-tests.txt",

@@ -1,0 +1,6 @@
+ok  	github.com/chx739/sandboxd/internal/control	(cached)
+ok  	github.com/chx739/sandboxd/internal/workspace	(cached)
+ok  	github.com/chx739/sandboxd/internal/backuphelper	(cached)
+ok  	github.com/chx739/sandboxd/internal/sandbox	3.290s
+ok  	github.com/chx739/sandboxd/internal/api	1.038s
+ok  	github.com/chx739/sandboxd/internal/config	(cached)

@@ -14,9 +14,12 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M4：V1已交付；V2可信备份后端组件已真实验证、持久屏障逻辑回归通过，联合检查点与10项验收尚未完成；Goal active
+    Phase 9 M4：V1已交付；V2可信备份执行器与持久屏障已真实验证，联合检查点与10项验收尚未完成；Goal active
 
 ## Phase 9 当前恢复点
+
+- e74aacc后接入BackupRuntime可信备份执行器：维护配置持久固定，submitted先落盘、精确Pod/UID/spec/finalizer核对、终止+节点健康证明、Wait保留屏障、Abort有界、Finish幂等；源备份仍只读，尚未接restore/HTTP/Agent。执行器7项顶层逻辑测试（含子用例）、六包race及Go全项目通过；最后Finish幂等改动由sandbox/API race单列覆盖，不冒称先前全量包含后改动。
+- 实际维护执行器探测：首轮备份成功但即时读取失败，原失败与同job后续对账保留；第二轮通过但事后CRI已回收；第三轮phase9-v2-executor-component-v3.json整体成功且清理前实际runtimeType=io.containerd.runsc.v1。注册表重开后写/认领仍拒绝、等待结果后仍冻结、显式Finish后内容/hash一致，业务owner和维护Pod已正常清理。不是进程SIGKILL或Session联合提交；原数据/快照/Secret/卷保留，外部模型0。
 
 - V2分支已从9c91c9b创建，90d9c22已提交并推送、草稿[PR #3](https://github.com/chx739/sandboxd/pull/3)已创建并附到当前聊天；base=codex/workspace-nfs-v1，依赖PR#2→PR#1，不合并。该批模块：固定restic安装、只读manifest、受限backuphelper/CLI、gVisor维护Pod构造/定向MinIO网络策略、独立MinIO Compose与组件夹具。学习/后续持久屏障约束见文档47；尚未接Agent自动检查点，不将内存mutex当崩溃后屏障。
 - restic0.18.1官方资产约10.14MB下载并校验，phase9-v2-restic-tool.json；新sandboxd-restic:0.18.1-v1已构建/载入kind，不覆盖业务runtime-v1.5。相关Go/race通过phase9-v2-backup-foundation-tests.txt。专属MinIO项目sandboxd-workspace-backup已启动，localhost9002，独立卷/私有本机凭据，不触碰RAG MinIO。当前是隔离本机HTTP，TLS未测。
@@ -73,7 +76,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 固定负载serial基线9/9通过、267次读写，phase9-nfs-fixed-workload-serial.json；NFS容器收发合计3462282字节（约3.30MiB，含挂载/元数据/协议，非公网）。文件读写P50约199–201ms，Go/NFS/控制器端点CPU与内存已记录，不是峰值。首次并行探索另存phase9-nfs-fixed-workload.json，不混算。学习/硬件/数据/完整表见文档46。
 - 最终全量Python201/201、288.476秒通过，phase9-python-benchmark-final-regression-tests.txt；此前200/280.764秒与负载夹具3项原文保留，不相加。统一joint入口3/3通过，phase9-entry-joint-replay.json，实际Milvus2.5.10/OpenSearch+缓存E5/BGE，脚本模型/Fake路由与生命周期；4个已有服务临时启动后全部停回原状态，ES未启动，未导入/重建索引，外部模型0。
 - 当前V1的14项验收及迁移/安装启动/小规模性能有证据，M3可交付审查；verify all本批次未整套重跑，首次联网安装未重复，现有各场景原始证据与缓存安装分开。V2未开始，完整Goal保持active。上一有效HEAD=cd871aa，仍更新draft PR#2（依赖PR#1），不合并；用户docs32/docs34未纳入。
-- 第一项下一步：持久屏障接可信维护执行器，使用UID/finalizer/容器终止与节点健康证明后释放；再实现checkpoint日志/Session不可变父链引用/完整边界自动提交与取消排序。V2分支已创建，不重复M0或重跑已终止组件。V2继续在NFS运行，十项完整验收均pending，完整Goal active。
+- 第一项下一步：实现checkpoint日志与Session不可变父链引用，接Go可信执行器和完整边界自动保存；提交前校验owner/head/取消并将COMMITTED+head前移写成同一fsync记录。随后接restore新空工作区屏障、历史分支与引用保护。V2分支已创建，不重复M0或重跑已终止组件。V2继续在NFS运行，十项完整验收均pending，完整Goal active。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移与当前状态见本节后续记录/文档45 §7，原始数据保留。
