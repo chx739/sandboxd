@@ -279,7 +279,7 @@ RESERVED首轮在端口预检即报EADDRINUSE，未创建控制目录、Go或Age
 
 本批新增三轮：preparing的kill→API ready55,281.38ms、→核查71,626.33ms；before-commit为55,903.56/71,971.31ms；before-data-ready为54,865.64/72,153.67ms。最后一轮由父进程对原job执行只读Wait核对实际完整snapshot ID，而Python点仍为PREPARING/data=null；重启后FAILED，最终head revision2，不提升孤立快照。所有原Task/调用/时间预算保持、原写入各仅一次。三轮使用原固定Go二进制，未用新恢复控制模块冒充实际恢复。最新夹具/协调器Python19/19、3.617s通过`phase9-v2-joint-six-cut-tests.txt`；既往239全量是前一批，不冒称含新切点代码。
 
-## 9. 新空恢复目标的控制日志约束（逻辑模块，尚未执行恢复）
+## 9. 新空恢复目标的控制日志约束（本节记录先前逻辑验证）
 
 新增Go `restore_barrier.go`，复用已有WorkspaceRegistry/持久屏障，不复制一套生命周期、数据库或控制服务。`RestoreSource`固定完整snapshot ID、manifest SHA256、仓库crypto ID、业务imageRef和实际imageID；同一job重试不能换来源。它不是自由PodSpec，维护镜像、Secret和endpoint仍来自可信部署配置。
 
@@ -287,7 +287,7 @@ RESERVED首轮在端口预检即报EADDRINUSE，未创建控制目录、Go或Age
 
 恢复失败或未核验时，维护Pod确认停止后可释放全局维护占用，但目标仍保持不可认领：`restoreSource != zero && !restoreVerified`。不删失败目录，不换另一个快照覆盖它；新恢复请求应使用新的workspace ID。其他工作区不因已停止的失败任务永久阻塞。执行者停止不明时仍保留原有屏障，不能据超时/Pod NotFound放行。
 
-可信执行器后续读取并验证实际repo/snapshot/manifest成功结果后，才可调用内部`completeRestore`：先将不可变`restoredFrom`来源写入workspace记录，再fsync释放屏障并标记verified。两次落盘之间崩溃仍冻结，重开可按同来源补齐；来源不能被移除或更换。业务Pod认领须使用原imageRef，并通过现有Bind路径核对实际imageID，不能用不同镜像静默继续。
+可信执行器读取并验证实际repo/snapshot/manifest成功结果后，先用verifyRestore将已核验标志fsync到stopped屏障（仍冻结），再清理维护Pod；completeRestore随后将不可变restoredFrom来源写入workspace记录并释放屏障。证明、来源与解屏障之间的中断均可按同来源接续；来源不能移除或更换。只看到容器停止而没有已核验证明时，不能直接把目标当作恢复成功。业务Pod认领须使用原imageRef，并通过现有Bind路径核对实际imageID，不能用不同镜像静默继续。
 
 零值字段使用项目Go1.26.5支持的omitzero，不改变旧backup/无恢复记录的JSON字段；新程序可读原记录。历史无配置restore逻辑夹具保持读取兼容，不将它当作真实已核验恢复。出现新恢复字段的日志不能交给旧严格解析二进制继续写；不改写旧日志或原数据。
 
@@ -295,9 +295,74 @@ RESERVED首轮在端口预检即报EADDRINUSE，未创建控制目录、Go或Age
 
 原始Go sandbox/API与race分别见`phase9-v2-restore-control-tests.txt`、`-race-tests.txt`；追加中间落盘用例后最终race见`phase9-v2-restore-control-final-race-tests.txt`，Go全项目回归见`phase9-v2-restore-control-full-go-tests.txt`。本轮真实Agent切点仍使用上一批固定Go二进制，新恢复字段未接运行中服务，不能用切点报告声称验证了本模块实际恢复。
 
-下一步仍需：可信恢复执行器/固定仓库身份校验、恢复成功前验证实际文件和镜像、失败目标隔离的真实服务验证、受限管理接口、Session精确父链与新分支接线、引用保护和受控清理。内部completeRestore不是对外成功证据，也不能将“容器停止”直接当作“文件完整恢复”。
+上述执行器及基本真实服务验证后续见§10；受限管理接口、Session精确父链与新分支接线、引用保护和受控清理仍待完成。内部completeRestore不是对外成功证据，也不能将“容器停止”直接当作“文件完整恢复”。
 
-## 10. 官方参考与版本
+## 10. 可信恢复执行器与真实NFS/MinIO验收
+
+`BackupRuntime`复用同一套维护Pod归属/UID/spec检查、submitted先落盘、节点健康与容器终止证明。新增ReserveRestore / StartRestore / FinishRestore，Wait / Abort共用原逻辑；没有新增模型工具、自由PodSpec或任意命令。源repo/snapshot/manifest/业务镜像在预留时固定，只写新ready/generation0目标；原NFS目录不覆盖。
+
+### 写入前后验证与清理顺序
+
+固定helper新增四参数restore：`restore <full_snapshot_id> <manifest_sha256> <repository_crypto_id>`。读取仓库config并比较完整crypto ID发生在任何文件恢复写入之前；随后检查目标实际为空、完整snapshot及manifest tag，restic restore --verify，最后重新计算文件manifest。结果包含仓库身份供Go再次比较。旧三参数管理组件保留兼容，新可信恢复路径始终传非空完整仓库ID。
+
+```text
+新空工作区与来源 → 持久屏障 → submitted → 受限gVisor维护Pod
+  → helper仓库身份/空目录检查 → restore/verify/manifest
+  → Wait验证真实成功结果和repo/snapshot/manifest
+  → verifyRestore fsync（stopped + verified，仍冻结）
+  → UID条件清理维护Pod → completeRestore fsync来源/解屏障
+  → 业务Pod认领并核对原imageRef及实际imageID
+```
+
+FinishRestore(success=true)会自己读取/核对真实结果，不能只信调用方自报成功。已持久化核验证明后，即使清理Pod后中断，也可以从同job证明接续；没有证明时Pod NotFound不能代替核验。失败结果只能在确认停止后清理，并保留目标隔离，不能将半恢复目录认领为成功。此处恢复控制与原Task预算账本分别负责各自数据，尚未接入历史Task/Session恢复。
+
+新维护镜像`sandboxd-restic:0.18.1-v2`增加仓库身份参数，restic二进制仍0.18.1且SHA256不变。v1/业务runtime-v1.5及旧数据保留。Docker inspect Id=`sha256:0d07dc6898e243106416570c005bd094ef86dec618cd57ef2c25677351468705`；实际维护CRI imageID=`sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58`，两者分别标注，不混称。构建/load原文见phase9-v2-restore-image-build/load.txt。
+
+### 可复现组件入口
+
+前提：既有kind/gVisor/NFS/专属MinIO与仓库Secret可用，source-report是此前真实COMMITTED合成证据。仓库自带的旧报告只对应本机保留的实验仓库；新环境必须先用§8的committed场景生成自己的来源报告，不能把旧snapshot ID当成新MinIO里已有的数据。只传Secret名称，不打印值；原生控制目录必须是此夹具的新UUID目录。
+
+```bash
+export GOMODCACHE=/tmp/sandboxd-workspace-go-mod GOCACHE=/tmp/sandboxd-workspace-go-build
+export PATH="$HOME/.local/bin:$PATH"
+mkdir -p .cache/restic-image-v2
+CGO_ENABLED=0 go build -o .cache/restic-image-v2/sandbox-restic ./cmd/sandbox-restic
+cp "$HOME/.local/share/sandboxd-tools/restic-0.18.1/restic" .cache/restic-image-v2/restic
+docker build --network=none -f deploy/workspace/restic.Dockerfile \
+  -t sandboxd-restic:0.18.1-v2 .cache/restic-image-v2
+kind load docker-image --name sandboxd sandboxd-restic:0.18.1-v2
+go build -o .cache/workspace-restore-runtime-smoke ./hack/workspace-restore-runtime-smoke
+# 新环境先生成当前仓库中的真实COMMITTED来源；需§7的Go二进制/原v1镜像。
+go build -o .cache/workspace-sandboxd-v2 ./cmd/sandboxd
+agentd/.venv/bin/python -m agentd.workspace_checkpoint_fault_demo --phase committed \
+  --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" \
+  --output .cache/restore-source.json
+# SANDBOXD_RESTORE_PROBE_DIR=$HOME/.local/share/sandboxd/workspace-restore-runtime-smoke/<新的32位UUIDhex>
+.cache/workspace-restore-runtime-smoke -nfs-server "$SANDBOXD_NFS_SERVER" \
+  -minio-ip "$SANDBOXD_BACKUP_MINIO_IP" -secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
+  -control-dir "$SANDBOXD_RESTORE_PROBE_DIR" -source-report .cache/restore-source.json \
+  -output .cache/restore-probe.json
+# 失败后只用原control-dir对账，不强删finalizer或新建job掩盖原结果。
+.cache/workspace-restore-runtime-smoke -reconcile -nfs-server "$SANDBOXD_NFS_SERVER" \
+  -minio-ip "$SANDBOXD_BACKUP_MINIO_IP" -secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
+  -control-dir "$SANDBOXD_RESTORE_PROBE_DIR" -source-report .cache/restore-source.json \
+  -output .cache/restore-reconcile.json
+```
+
+`phase9-v2-restore-runtime-component.json`真实通过两场景：
+
+- 正常：已有合成COMMITTED快照恢复到新空NFS工作区，文件manifest及报告hash核对；新业务Pod读回与NFS服务端hash一致，业务imageID匹配来源。维护与业务CRI均实际runsc；来源与verified控制记录落盘后才允许认领。
+- 错误仓库身份：实际启动同样受限的维护Pod，helper在写入前拒绝；目标仍为空、BeginClaim拒绝，停止/清理后目标继续隔离。它测试错误期望ID，不宣称已更换Secret或模拟凭据轮换。
+
+业务/维护Pod均经Go清理，NFS目录、PV/PVC、快照、Secret及控制日志保留。后续已停止夹具-reconcile通过，控制日志hash不变（phase9-v2-restore-runtime-reconcile及audit.json）；只是幂等对账，不是新的故障成绩。
+
+### 回归与剩余范围
+
+初始helper/sandbox/API race通过phase9-v2-restore-runtime-initial-tests.txt；最终逐项race见-final-race-tests.txt；新增入口后Go全项目先后见-full-go-tests.txt、-final-full-go-tests.txt。新增4个恢复Runtime顶层测试（含repo/snapshot/manifest三个子场景）、1个helper契约测试；与5个控制状态测试有重叠，不累加成服务验收数。管理对账入口一次编译因误用List方法失败，修正为既有Records后构建、真实幂等对账和最终全仓回归通过；未改写先前真实恢复报告。本批没有Python生产代码改动，未重跑Python全量，不冒称旧239项覆盖本批Go行为。
+
+**尚未完成**：受限restore HTTP/客户端、会话父链与新branch/workspace联合接线、恢复中的Task原预算与取消、恢复引用保护/清理预览/受控forget-prune、真实存储异常/仓库锁、同条件性能及完整V2矩阵。Go工作区元数据中的branchId不等于已经创建Python会话分支；本组件不加载Session引用，也不重放模型/工具。
+
+## 11. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

@@ -22,10 +22,11 @@ var checkpointID = regexp.MustCompile(`^cp-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9
 var fullHash = regexp.MustCompile(`^[a-f0-9]{64}$`)
 
 type Request struct {
-	Operation      string `json:"operation"`
-	CheckpointID   string `json:"checkpointId,omitempty"`
-	SnapshotID     string `json:"snapshotId,omitempty"`
-	ManifestSHA256 string `json:"manifestSha256,omitempty"`
+	Operation          string `json:"operation"`
+	CheckpointID       string `json:"checkpointId,omitempty"`
+	SnapshotID         string `json:"snapshotId,omitempty"`
+	ManifestSHA256     string `json:"manifestSha256,omitempty"`
+	RepositoryCryptoID string `json:"repositoryCryptoId,omitempty"`
 }
 
 func Parse(args []string) (Request, error) {
@@ -45,10 +46,16 @@ func Parse(args []string) (Request, error) {
 		}
 		r.CheckpointID = args[1]
 	case "restore":
-		if len(args) != 3 || !fullHash.MatchString(args[1]) || !fullHash.MatchString(args[2]) {
+		if (len(args) != 3 && len(args) != 4) || !fullHash.MatchString(args[1]) || !fullHash.MatchString(args[2]) {
 			return r, errors.New("restore requires full snapshot and manifest hashes")
 		}
 		r.SnapshotID, r.ManifestSHA256 = args[1], args[2]
+		if len(args) == 4 {
+			if !fullHash.MatchString(args[3]) {
+				return r, errors.New("restore requires full repository identity")
+			}
+			r.RepositoryCryptoID = args[3]
+		}
 	default:
 		return r, errors.New("unsupported maintenance operation")
 	}
@@ -235,6 +242,14 @@ func Run(ctx context.Context, r Request) (map[string]any, error) {
 		result["checkpointId"] = r.CheckpointID
 		return result, nil
 	case "restore":
+		identity, err := config(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if err = checkRestoreRepository(identity, r.RepositoryCryptoID); err != nil {
+			return nil, err
+		}
+		// 在任何恢复写入之前检查仓库身份；同名bucket/错误Secret不能替换来源。
 		before, err := workspace.SnapshotManifest("/workspace")
 		if err != nil {
 			return nil, err
@@ -259,6 +274,7 @@ func Run(ctx context.Context, r Request) (map[string]any, error) {
 		}
 		result["snapshotId"] = r.SnapshotID
 		result["manifest"] = after
+		result["repository"] = identity
 		return result, nil
 	default:
 		return nil, errors.New("unvalidated maintenance operation")
@@ -273,6 +289,9 @@ func FixedArgs(r Request) ([]string, error) {
 	}
 	if r.Operation == "restore" {
 		args = append(args, r.SnapshotID, r.ManifestSHA256)
+		if r.RepositoryCryptoID != "" {
+			args = append(args, r.RepositoryCryptoID)
+		}
 	}
 	parsed, err := Parse(args)
 	if err != nil || parsed != r {
@@ -284,4 +303,11 @@ func FixedArgs(r Request) ([]string, error) {
 		}
 	}
 	return args, nil
+}
+
+func checkRestoreRepository(identity map[string]any, expected string) error {
+	if expected != "" && (!fullHash.MatchString(expected) || identity["repositoryCryptoId"] != expected) {
+		return errors.New("restore repository identity does not match")
+	}
+	return nil
 }

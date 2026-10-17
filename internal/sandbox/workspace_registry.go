@@ -129,7 +129,7 @@ func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
 	if previous, ok := r.records[record.WorkspaceID]; ok {
 		if record.RestoredFrom != previous.RestoredFrom {
 			b, exists := r.barriers[record.WorkspaceID]
-			if previous.RestoredFrom != (RestoreSource{}) || !exists || b.Operation != "restore" || b.Phase != "stopped" || b.StopReason != "containers-terminated" || b.RestoreSource != record.RestoredFrom || record.Phase != "ready" || record.Generation != 0 {
+			if previous.RestoredFrom != (RestoreSource{}) || !exists || b.Operation != "restore" || b.Phase != "stopped" || b.StopReason != "containers-terminated" || !b.RestoreVerified || b.RestoreSource != record.RestoredFrom || record.Phase != "ready" || record.Generation != 0 {
 				return ErrWorkspaceConflict
 			}
 		}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "source": "phase9-v2-restore-runtime-component.json",
+  "sourceSha256": "108ad575c8490dacbfdb7590aa3e85c134d873313bc457ec55aa70f0fd38b372",
+  "controlJournalSha256": "34f9307a06ea371c1d0bcc7725b7adc24f31e2bfe036a7e624671e064ef7d7e5",
+  "events": 23,
+  "publicationSequence": {
+    "verifiedStopped": 7,
+    "sourcePinned": 8,
+    "barrierReleased": 9,
+    "businessClaim": 10
+  },
+  "checks": {
+    "realReportPassed": true,
+    "durableProofBeforePinBeforeReleaseBeforeClaim": true,
+    "businessAndMaintenanceActualRunsc": true,
+    "wrongRepoTargetEmptyAndBlocked": true,
+    "failedTargetNeverClaimed": true,
+    "originalBusinessImagePinned": true,
+    "noPaidModels": true
+  },
+  "scope": "independent audit of actual component/control records; not another service run"
+}

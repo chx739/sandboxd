@@ -109,6 +109,10 @@ func TestVerifiedRestorePinsBusinessImageAndReplaysMetadata(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	b, err = r.verifyRestore(b)
+	if err != nil {
+		t.Fatal(err)
+	}
 	b, err = r.completeRestore(b)
 	if err != nil || !b.RestoreVerified || b.Phase != "released" {
 		t.Fatal(b, err)
@@ -180,6 +184,10 @@ func TestRestorePinPublicationCrashWindowStaysFrozen(t *testing.T) {
 		t.Fatal(err)
 	}
 	b, err = r.stopBarrier(b, "containers-terminated")
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err = r.verifyRestore(b)
 	if err != nil {
 		t.Fatal(err)
 	}

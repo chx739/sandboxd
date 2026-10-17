@@ -18,6 +18,16 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：可信恢复执行器与真实组件通过
+
+- 基线7f2f911，PR#3远端一致，用户docs32/docs34保留。复用BackupRuntime维护Pod/终止证明，新增ReserveRestore/StartRestore/FinishRestore；没有restore HTTP/模型工具。helper四参数restore绑定完整repo crypto ID，config匹配在写入前；旧三参数管理组件保留兼容。
+- 增加持久核验证明：Wait结果核对后先verifyRestore fsync，stopped仍冻结；再清理Pod、completeRestore记录来源并放行。修复“清理Pod后、来源提交前”失去核验结果的窗口；已落盘证明允许缺Pod清理重试，无证明仍拒绝。不信调用方success自报，失败目标隔离保留。
+- 新维护镜像restic0.18.1-v2已从缓存固定基础/已校验restic构建并载入kind，v1与业务runtime-v1.5保留。Docker inspect Id=sha256:0d07dc6898e243106416570c005bd094ef86dec618cd57ef2c25677351468705，实际CRI imageID=sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58，类型分别记录，见文档47 §10。
+- 真实phase9-v2-restore-runtime-component.json通过：从此前真实合成COMMITTED快照恢复到新空NFS目录，manifest/完整ID/业务imageID核对；新业务Pod读报告与NFS服务端hash一致，维护/业务CRI均runsc。错误期望仓库ID在写入前拒绝，目标仍为空、claim拒绝，清理后隔离保留。不是Secret轮换/历史会话分支/真实模型实验。
+- 原控制目录-reconcile已验证幂等，日志hash不变，report与audit单列，不记作新故障成绩。对账入口首次编译误用List、修正为Records后构建通过。新组件失败输出仅记录stage，不输出raw Secret/CRI env；仅操作自己保留的native UUID目录。
+- 新Runtime4项顶层（含三个身份不匹配子场景）、helper契约1项及原控制模块回归，helper/sandbox/API初始及最终race通过，Go全项目最终phase9-v2-restore-runtime-final-full-go-tests.txt通过。本批Python生产代码未改，未重跑全量，不冒称旧239项覆盖本批。资源可用内存20,680MiB、swap使用0、根盘931GiB；实验后两项目namespace无Pod，仅kind/NFS/专属MinIO运行，所有目录/快照/卷/Secret/日志保留，外部模型0。
+- **第一项下一步**：受限restore HTTP/客户端，并接Session精确父链与历史分支管理；完整COMMITTED来源、目标新branch/workspace、原Task调用审计/预算/取消不可回滚，活动恢复源先做引用保护。然后真实存储异常/仓库锁、受控forget/prune与性能。当前仅可信文件恢复组件通过，Python会话分支仍未实现；Goal active。
+
 ### 2026-10-18：六个提交切点已验证；恢复目标控制模块已测试
 
 - 本批有效实现cb4ce37已推送至草稿PR#3（起点c70251d，依赖PR#2→PR#1，不合并），用户docs32/docs34未暂存。已核对项目仅kind/NFS/专属MinIO，业务/维护Pod空闲，可用内存约20.7GiB/swap用量0/根盘931GiB。

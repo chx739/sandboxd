@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "source": "phase9-v2-restore-runtime-reconcile.json",
+  "controlJournalUnchanged": true,
+  "journalSha256": "34f9307a06ea371c1d0bcc7725b7adc24f31e2bfe036a7e624671e064ef7d7e5",
+  "scope": "idempotent reconciliation of already stopped real fixture; not fault recovery"
+}

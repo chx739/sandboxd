@@ -46,7 +46,7 @@ func (r *WorkspaceRegistry) completeRestore(expected WorkspaceBarrier) (Workspac
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	b, ok := r.barriers[expected.WorkspaceID]
-	if !ok || b != expected || b.Operation != "restore" || b.Phase != "stopped" || b.StopReason != "containers-terminated" || !b.RestoreSource.valid() {
+	if !ok || b != expected || b.Operation != "restore" || b.Phase != "stopped" || b.StopReason != "containers-terminated" || !b.RestoreSource.valid() || !b.RestoreVerified {
 		return WorkspaceBarrier{}, ErrWorkspaceConflict
 	}
 	record := r.records[b.WorkspaceID]
@@ -61,4 +61,12 @@ func (r *WorkspaceRegistry) completeRestore(expected WorkspaceBarrier) (Workspac
 	}
 	b.Phase, b.RestoreVerified = "released", true
 	return r.saveBarrier(b)
+}
+
+// 仅在可信执行器核对实际成功结果后调用，必须早于删除维护Pod。
+func (r *WorkspaceRegistry) verifyRestore(expected WorkspaceBarrier) (WorkspaceBarrier, error) {
+	if expected.Operation != "restore" || expected.Phase != "stopped" || expected.StopReason != "containers-terminated" || !expected.RestoreSource.valid() {
+		return WorkspaceBarrier{}, ErrWorkspaceConflict
+	}
+	return r.updateBarrier(expected, func(next *WorkspaceBarrier) { next.RestoreVerified = true })
 }

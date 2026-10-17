@@ -46,3 +46,31 @@ func TestSnapshotTagAndBoundedOutput(t *testing.T) {
 		t.Fatal("output not bounded")
 	}
 }
+
+func TestRepositoryBoundRestoreContract(t *testing.T) {
+	r := Request{Operation: "restore", SnapshotID: string64("a"), ManifestSHA256: string64("b"), RepositoryCryptoID: string64("c")}
+	args, err := FixedArgs(r)
+	if err != nil || len(args) != 4 || args[3] != r.RepositoryCryptoID {
+		t.Fatal(args, err)
+	}
+	parsed, err := Parse(args)
+	if err != nil || parsed != r {
+		t.Fatal(parsed, err)
+	}
+	if _, err = Parse([]string{"restore", r.SnapshotID, r.ManifestSHA256, "s3:other"}); err == nil {
+		t.Fatal("accepted arbitrary repository")
+	}
+	if err = checkRestoreRepository(map[string]any{"repositoryCryptoId": r.RepositoryCryptoID}, r.RepositoryCryptoID); err != nil {
+		t.Fatal(err)
+	}
+	if err = checkRestoreRepository(map[string]any{"repositoryCryptoId": string64("d")}, r.RepositoryCryptoID); err == nil {
+		t.Fatal("accepted another repository")
+	}
+	if err = checkRestoreRepository(map[string]any{}, r.RepositoryCryptoID); err == nil {
+		t.Fatal("accepted missing identity")
+	}
+	// 旧三参数管理组件保留兼容；可信恢复Runtime必须传非空完整身份。
+	if err = checkRestoreRepository(map[string]any{}, ""); err != nil {
+		t.Fatal(err)
+	}
+}

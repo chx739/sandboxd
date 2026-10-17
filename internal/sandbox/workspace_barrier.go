@@ -55,7 +55,7 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 	if b.Job != (BackupJobConfig{}) {
 		request := backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}
 		if b.Operation == "restore" && b.RestoreSource.valid() {
-			request = backuphelper.Request{Operation: "restore", SnapshotID: b.RestoreSource.SnapshotID, ManifestSHA256: b.RestoreSource.ManifestSHA256}
+			request = backuphelper.Request{Operation: "restore", SnapshotID: b.RestoreSource.SnapshotID, ManifestSHA256: b.RestoreSource.ManifestSHA256, RepositoryCryptoID: b.RestoreSource.RepositoryCryptoID}
 		} else if b.Operation != "backup" {
 			return ErrWorkspaceConflict
 		}
@@ -81,7 +81,7 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 			return ErrWorkspaceConflict
 		}
 		if (b.RestoreSource != (RestoreSource{}) && (!b.RestoreSource.valid() || b.Job == (BackupJobConfig{}))) ||
-			(b.RestoreVerified && (b.Phase != "released" || record.RestoredFrom != b.RestoreSource || b.RestoreSource == (RestoreSource{}))) {
+			(b.RestoreVerified && ((b.Phase != "stopped" && b.Phase != "released") || b.StopReason != "containers-terminated" || (b.Phase == "released" && record.RestoredFrom != b.RestoreSource) || b.RestoreSource == (RestoreSource{}))) {
 			return ErrWorkspaceConflict
 		}
 	default:
@@ -126,7 +126,7 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		return nil
 	}
 	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.Job != b.Job || previous.RestoreSource != b.RestoreSource || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) ||
-		(previous.RestoreVerified != b.RestoreVerified && !(previous.Phase == "stopped" && b.Phase == "released" && !previous.RestoreVerified && b.RestoreVerified)) {
+		(previous.RestoreVerified != b.RestoreVerified && !(previous.Phase == "stopped" && b.Phase == "stopped" && !previous.RestoreVerified && b.RestoreVerified)) {
 		return ErrWorkspaceConflict
 	}
 	if b == previous {
@@ -136,7 +136,7 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		"reserved":   {"submitted": true, "stopped": true},
 		"submitted":  {"identified": true},
 		"identified": {"stopped": true},
-		"stopped":    {"released": true},
+		"stopped":    {"stopped": true, "released": true},
 	}
 	if !allowed[previous.Phase][b.Phase] || (previous.Phase == "reserved" && b.Phase == "stopped" && b.StopReason != "never-submitted") || (previous.Phase == "identified" && b.Phase == "stopped" && b.StopReason != "containers-terminated") {
 		return ErrWorkspaceConflict

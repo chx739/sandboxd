@@ -55,10 +55,17 @@ func NewBackupRuntime(w *WorkspaceRuntime, job BackupJobConfig) (*BackupRuntime,
 }
 
 func (b *BackupRuntime) expected(barrier WorkspaceBarrier) (*corev1.Pod, error) {
-	if barrier.Job != b.job || barrier.Operation != "backup" {
+	if barrier.Job != b.job || (barrier.Operation != "backup" && barrier.Operation != "restore") {
 		return nil, ErrWorkspaceConflict
 	}
-	pod, err := BuildBackupPod(Config{Image: b.job.ImageRef, RuntimeClass: "gvisor"}, barrier.JobID, barrier.WorkspaceID, b.job.SecretName, backuphelper.Request{Operation: "backup", CheckpointID: barrier.CheckpointID})
+	request := backuphelper.Request{Operation: "backup", CheckpointID: barrier.CheckpointID}
+	if barrier.Operation == "restore" {
+		if !barrier.RestoreSource.valid() || barrier.RestoreSource.ImageRef != b.workspace.image {
+			return nil, ErrWorkspaceConflict
+		}
+		request = backuphelper.Request{Operation: "restore", SnapshotID: barrier.RestoreSource.SnapshotID, ManifestSHA256: barrier.RestoreSource.ManifestSHA256, RepositoryCryptoID: barrier.RestoreSource.RepositoryCryptoID}
+	}
+	pod, err := BuildBackupPod(Config{Image: b.job.ImageRef, RuntimeClass: "gvisor"}, barrier.JobID, barrier.WorkspaceID, b.job.SecretName, request)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +76,7 @@ func (b *BackupRuntime) expected(barrier WorkspaceBarrier) (*corev1.Pod, error) 
 
 func (b *BackupRuntime) current(expected WorkspaceBarrier) (WorkspaceBarrier, error) {
 	got, ok := b.workspace.registry.Barrier(expected.WorkspaceID)
-	if !ok || got.JobID != expected.JobID || got.CheckpointID != expected.CheckpointID || got.Access != expected.Access || got.Job != b.job || got.Operation != "backup" || got.Phase == "released" {
+	if !ok || got.JobID != expected.JobID || got.CheckpointID != expected.CheckpointID || got.Access != expected.Access || got.Job != b.job || got.Operation != expected.Operation || got.RestoreSource != expected.RestoreSource || (got.Operation != "backup" && got.Operation != "restore") || got.Phase == "released" {
 		return WorkspaceBarrier{}, ErrWorkspaceConflict
 	}
 	return got, nil
@@ -98,6 +105,11 @@ func (b *BackupRuntime) Start(ctx context.Context, access WorkspaceAccess, check
 	if err != nil {
 		return barrier, err
 	}
+	return b.startReserved(ctx, barrier)
+}
+
+func (b *BackupRuntime) startReserved(ctx context.Context, barrier WorkspaceBarrier) (WorkspaceBarrier, error) {
+	w := b.workspace
 	pod, err := b.expected(barrier)
 	if err != nil {
 		return barrier, err
@@ -226,7 +238,7 @@ func (b *BackupRuntime) Wait(ctx context.Context, expected WorkspaceBarrier) (Wo
 					SHA256 string `json:"sha256"`
 				} `json:"manifest"`
 			}
-			if json.Unmarshal(raw, &result) != nil || !result.OK || result.Operation != "backup" || result.CheckpointID != barrier.CheckpointID || !backupHash.MatchString(result.SnapshotID) || !backupHash.MatchString(result.Repository.ID) || !backupHash.MatchString(result.Manifest.SHA256) {
+			if json.Unmarshal(raw, &result) != nil || !result.OK || result.Operation != barrier.Operation || (barrier.Operation == "backup" && result.CheckpointID != barrier.CheckpointID) || !backupHash.MatchString(result.SnapshotID) || !backupHash.MatchString(result.Repository.ID) || !backupHash.MatchString(result.Manifest.SHA256) || (barrier.Operation == "restore" && (result.SnapshotID != barrier.RestoreSource.SnapshotID || result.Repository.ID != barrier.RestoreSource.RepositoryCryptoID || result.Manifest.SHA256 != barrier.RestoreSource.ManifestSHA256)) {
 				return barrier, BackupResult{}, fmt.Errorf("%w: maintenance result contract", ErrWorkspaceUnavailable)
 			}
 			return barrier, BackupResult{result.SnapshotID, result.Repository.ID, result.Manifest.SHA256, pod.Status.ContainerStatuses[0].ImageID, string(pod.UID)}, nil
@@ -274,17 +286,35 @@ func (b *BackupRuntime) Abort(ctx context.Context, expected WorkspaceBarrier) (W
 // Finish须在上层持久化提交/失败结果之后调用。停止证明已经fsync，
 // 因此清理重试才可接受NotFound；结果不明的执行者不能进入这里。
 func (b *BackupRuntime) Finish(ctx context.Context, expected WorkspaceBarrier) (WorkspaceBarrier, error) {
+	if expected.Operation != "backup" {
+		return WorkspaceBarrier{}, ErrWorkspaceConflict
+	}
+	return b.finish(ctx, expected, false)
+}
+
+func (b *BackupRuntime) finish(ctx context.Context, expected WorkspaceBarrier, verifiedRestore bool) (WorkspaceBarrier, error) {
 	w := b.workspace
 	if err := w.enter(ctx); err != nil {
 		return WorkspaceBarrier{}, err
 	}
 	defer func() { <-w.gate }()
-	if old, ok := w.registry.Barrier(expected.WorkspaceID); ok && old.Phase == "released" && old.JobID == expected.JobID && old.CheckpointID == expected.CheckpointID && old.Access == expected.Access && old.Job == b.job && old.Operation == "backup" {
+	if old, ok := w.registry.Barrier(expected.WorkspaceID); ok && old.Phase == "released" && old.JobID == expected.JobID && old.CheckpointID == expected.CheckpointID && old.Access == expected.Access && old.Job == b.job && old.Operation == expected.Operation && old.RestoreSource == expected.RestoreSource && old.RestoreVerified == verifiedRestore {
 		return old, nil
 	}
 	barrier, err := b.current(expected)
 	if err != nil {
 		return barrier, err
+	}
+	if verifiedRestore && !barrier.RestoreVerified {
+		var result BackupResult
+		barrier, result, err = b.Wait(ctx, barrier)
+		if err != nil || result.RepositoryCryptoID != barrier.RestoreSource.RepositoryCryptoID {
+			return barrier, ErrWorkspaceConflict
+		}
+		barrier, err = w.registry.verifyRestore(barrier)
+		if err != nil {
+			return barrier, err
+		}
 	}
 	if barrier.Phase != "stopped" {
 		return barrier, ErrWorkspaceConflict
@@ -307,6 +337,9 @@ func (b *BackupRuntime) Finish(ctx context.Context, expected WorkspaceBarrier) (
 				return barrier, ErrWorkspaceUnavailable
 			}
 		}
+	}
+	if verifiedRestore {
+		return w.registry.completeRestore(barrier)
 	}
 	return w.registry.releaseBarrier(barrier)
 }

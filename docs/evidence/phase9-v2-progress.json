@@ -61,7 +61,7 @@
   "remaining": [
     "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "trusted restore runtime/API over tested target control state; verify repository crypto before writes, empty target and immutable business image; actual integration pending",
+    "restricted restore HTTP/client and Session branch integration over actual validated executor; original budgets/cancel and reference protection required",
     "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
     "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
     "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
@@ -435,6 +435,50 @@
     {
       "path": "docs/evidence/phase9-v2-restore-control-tests.txt",
       "sha256": "2f74d53fc73a6256659042051c352d68267c69fd01de1fff4ac19e06f2001f27"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-image-build.txt",
+      "sha256": "1fb084ef053f1f7fb8358ae13be4d304bd58bc68457c0d7362b5b31ee99b977b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-image-load.txt",
+      "sha256": "d6868f11245da854edad0446834df3f0a673e87b3e029cd433b4ae76af48763e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-component-audit.json",
+      "sha256": "e30453a602f2066419acab871104455387e8a9f7655ba7867c0401318f08fce2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-component.json",
+      "sha256": "108ad575c8490dacbfdb7590aa3e85c134d873313bc457ec55aa70f0fd38b372"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-final-full-go-tests.txt",
+      "sha256": "02bdc2d4c5a0679500e392740be636f4a06a106df31056ab4b70cb604c5fa199"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-final-race-tests.txt",
+      "sha256": "56af4a43dc8ed4ceba944c8a31b97d6708daa8423b732a386e3e80e36abee280"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-full-go-tests.txt",
+      "sha256": "db3464470604be3bb6e68491a66d0c455783c4b9af9ac5c8919d10b7e097da9c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-initial-tests.txt",
+      "sha256": "b9d9649c68d64e5f4e24661b85655acb90dbbd65f238be310f302347211d723e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-module-status.json",
+      "sha256": "ca7486ee6c37b1d456be63e5e522dd40b76a9946df38132b7c223e63132b039d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-reconcile-audit.json",
+      "sha256": "bbea23803471e39829b5c18396910acc3c6de90a4f901e31122285a1020c4738"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-reconcile.json",
+      "sha256": "07a18c3e7c0dd75072a30561aa7c478d61bbc055058dd82fcab499cf45db5f9f"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -442,5 +486,6 @@
   "agentJointCheckpointScope": "Real TaskStore/Runner/Go HTTP/gVisor/NFS/restic/MinIO normal complete tool groups and Runtime final diagnosis verified; process fault/restore/GC acceptance pending",
   "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json",
   "agentFaultScope": "Six actual Agent SIGKILL cut points verified (reserved, preparing, before-data-ready, data-ready, before-commit, committed); Go/storage stayed available; restore API/full matrix not yet complete",
-  "restoreControlScope": "synthetic Go control-journal tests only: fixed descriptor, failed target quarantine, image pin, publication restart; no trusted restore runtime/API or actual joint restore acceptance yet"
+  "restoreControlScope": "prior synthetic control-module evidence retained; current actual executor evidence recorded in restoreExecutorScope; HTTP/Session integration pending",
+  "restoreExecutorScope": "actual trusted Go/gVisor/NFS/restic/MinIO component restored new empty target and rejected wrong expected repository before writes; no HTTP/Session historical branch/Task resume acceptance yet"
 }

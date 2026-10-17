@@ -278,3 +278,7 @@ NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工�
 ### V2联合提交进程切点
 
 [文档47 §8](../../docs/47-联合检查点与restic-MinIO学习手册.md#8-联合提交切点的真实agent进程实验)提供独立真实SIGKILL夹具：`python -m agentd.workspace_checkpoint_fault_demo --phase <固定切点> --secret-name <专属Secret名称> --minio-ip <已核对私网IP> --output <新报告路径>`。使用项目venv，从仓库根目录执行；每次只操作自己启动的Agent进程，保留全部数据。可选reserved/preparing/before-data-ready/data-ready/before-commit/committed，必须串行；已执行范围按逐个报告核对，不把单个切点当作全部V2完成。默认生产服务没有切点开关。
+
+### V2可信文件恢复组件
+
+已新增固定维护镜像`sandboxd-restic:0.18.1-v2`及`hack/workspace-restore-runtime-smoke`，实际NFS/MinIO新空目标恢复与错误仓库身份写入前拒绝已通过；安装、运行及保留控制目录对账命令见[文档47 §10](../../docs/47-联合检查点与restic-MinIO学习手册.md#10-可信恢复执行器与真实nfsminio验收)。这是可信文件恢复组件，restore HTTP与Python会话历史分支尚未接线；默认V1/旧备份入口不因此自动改为历史恢复。
