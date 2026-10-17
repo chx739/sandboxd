@@ -1,0 +1,9 @@
+{"operation": "init", "passed": true, "podUid": "af4f5aec-9f8a-4939-b6e1-b1e1bb1923ba"}
+{"operation": "backup", "passed": true, "podUid": "c3b264c0-5fc4-44a8-b577-99bbb2c9cbce"}
+{"operation": "backup", "passed": true, "podUid": "30865c1c-4066-4473-8931-82144f455a3a"}
+{"operation": "backup", "passed": true, "podUid": "a370dd2c-4119-4118-a27a-f35d4fa3b306"}
+{"operation": "restore", "passed": true, "podUid": "8471b580-3f55-47ed-b2ad-dbfa4a3a4b2b"}
+{"operation": "restore", "passed": true, "podUid": "9d4682bf-c3e6-4b22-8c27-73ac62f5bfe9"}
+{"operation": "check", "passed": true, "podUid": "c6119d99-271c-45fa-999b-7411008789c8"}
+{"operation": "stats", "passed": true, "podUid": "765378f0-9903-4a1e-b034-c288796c6320"}
+{"passed": true, "output": "docs/evidence/phase9-v2-backup-component-v3.json"}

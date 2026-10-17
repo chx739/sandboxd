@@ -1,6 +1,6 @@
 # NFS V1 部署与验收
 
-当前状态：M3，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
+当前状态：M3，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2真实restic/MinIO后端组件已验证，联合检查点与正式验收尚未完成，见[47](../../docs/47-联合检查点与restic-MinIO学习手册.md)。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。

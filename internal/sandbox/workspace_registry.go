@@ -59,9 +59,10 @@ func (a WorkspaceAccess) Validate() error {
 }
 
 type WorkspaceRegistry struct {
-	mu      sync.Mutex
-	journal *control.Journal
-	records map[string]WorkspaceRecord
+	mu       sync.Mutex
+	journal  *control.Journal
+	records  map[string]WorkspaceRecord
+	barriers map[string]WorkspaceBarrier
 }
 
 func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
@@ -69,8 +70,19 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 	if err != nil {
 		return nil, err
 	}
-	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}}
+	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}, barriers: map[string]WorkspaceBarrier{}}
 	for _, entry := range journal.Entries() {
+		if entry.Type == "workspace.barrier" {
+			var barrier WorkspaceBarrier
+			decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))
+			decoder.DisallowUnknownFields()
+			if decoder.Decode(&barrier) != nil || r.validateBarrier(barrier) != nil {
+				journal.Close()
+				return nil, errors.New("invalid persistent workspace barrier")
+			}
+			r.barriers[barrier.WorkspaceID] = barrier
+			continue
+		}
 		var record WorkspaceRecord
 		decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))
 		decoder.DisallowUnknownFields()
@@ -135,6 +147,9 @@ func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
 		}
 		if record.Generation > previous.Generation && previous.Phase != "ready" && previous.Phase != "released" {
 			return errors.New("workspace takeover without a stopped owner")
+		}
+		if r.barrierActive(record.WorkspaceID) && record.Generation != previous.Generation {
+			return ErrWorkspaceConflict
 		}
 	} else if record.Phase != "registered" || record.Generation != 0 {
 		return errors.New("workspace history must start with registration")
@@ -209,6 +224,9 @@ func (r *WorkspaceRegistry) Records() []WorkspaceRecord {
 func (r *WorkspaceRegistry) BeginClaim(workspaceID, taskID, attemptID, sandboxID, imageRef string) (WorkspaceRecord, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+	if r.barrierActive(workspaceID) {
+		return WorkspaceRecord{}, ErrWorkspaceConflict
+	}
 	record, ok := r.records[workspaceID]
 	if !ok {
 		return WorkspaceRecord{}, ErrWorkspaceConflict
@@ -357,7 +375,7 @@ func (r *WorkspaceRegistry) WithOwner(ctx context.Context, access WorkspaceAcces
 		return err
 	}
 	record, ok := r.records[access.WorkspaceID]
-	if !ok || record.Phase != "bound" || !matches(record, access) || record.Owner.StopConfirmed {
+	if !ok || record.Phase != "bound" || !matches(record, access) || record.Owner.StopConfirmed || r.barrierActive(access.WorkspaceID) {
 		return ErrWorkspaceConflict
 	}
 	if err := fn(record); err != nil {

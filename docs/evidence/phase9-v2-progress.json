@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M4-in-progress",
+  "formalV2AcceptanceComplete": false,
+  "externalModelCalls": 0,
+  "componentReport": "phase9-v2-backup-component-v3.json",
+  "componentScope": "trusted backend component only; no Agent/session joint checkpoint or production write barrier acceptance",
+  "goBarrierScope": "Persistent registry module and logical tests; not yet wired to maintenance execution or Agent checkpoints",
+  "requirements": [
+    {
+      "id": "V2-01",
+      "status": "pending",
+      "note": "backend component evidence available; Session binding/protocol acceptance pending"
+    },
+    {
+      "id": "V2-02",
+      "status": "pending",
+      "note": "backend component evidence available; Session binding/protocol acceptance pending"
+    },
+    {
+      "id": "V2-03",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    },
+    {
+      "id": "V2-04",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    },
+    {
+      "id": "V2-05",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    },
+    {
+      "id": "V2-06",
+      "status": "pending",
+      "note": "backend component evidence available; Session binding/protocol acceptance pending"
+    },
+    {
+      "id": "V2-07",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    },
+    {
+      "id": "V2-08",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    },
+    {
+      "id": "V2-09",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    },
+    {
+      "id": "V2-10",
+      "status": "pending",
+      "note": "full acceptance not executed"
+    }
+  ],
+  "remaining": [
+    "trusted executor with persistent barrier and runtime termination proof",
+    "PREPARING / DATA_READY / atomic COMMITTED branch head journal",
+    "readable immutable Session prefix reference and complete-boundary hook",
+    "cancellation ordering, original budget/deadline and recovery reconciliation",
+    "historical branch / new empty workspace restoration and image identity checks",
+    "protected references, controlled cleanup preview and forget/prune",
+    "ten V2 acceptance cases and fixed-workload V1/V2 performance comparison"
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-tests.txt",
+      "sha256": "45ff6c3b87204b8b84b6b13e66d3fc570095bbcaa52b4a743c8316ad3af17f6b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v2-tests.txt",
+      "sha256": "939d33734bded5a42ac6eb82df660f30affc4e86d5ea594590803dcfea05b8f4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v2.json",
+      "sha256": "8b833c17eb0ebbea9a5626e5f93d824398f987842b9c3a3071fbe57744d09661"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v3-tests.txt",
+      "sha256": "a8924c574eb1db6dbe41366ae18b406b6b4dedf9d381f9e5b30db3b91689328c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v3.json",
+      "sha256": "2a09851abf0667b0da2c43464d7c963bd011b4bbfde601bc67276afe6d46cd42"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component.json",
+      "sha256": "caa9d603de942d811481df61831c718e766946c5b298bba2f9e6411c063f4f8c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-foundation-final-tests.txt",
+      "sha256": "31c269e55b20e4546b7725732410513af77ee98628478078fef5f501e005bfd8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-foundation-tests.txt",
+      "sha256": "7ab05cf0e022bb1228afe71cc8d089886a876ed4fe99765b283856e45a9058a2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-barrier-regression-tests.txt",
+      "sha256": "fcdd4f6ac9ac811e3905c7385c09b59df0ed9090ceefbdbc153707bf6135e458"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-component-v2-postfailure.json",
+      "sha256": "f343dc8ba7305d5bf220f5cb4f9144a7f9108ca8b589db3449ffea964d10b168"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-go-full-regression-tests.txt",
+      "sha256": "eb3ea8737bd4e23af8ba8095c65877051c73ce65252a00cf237fb47e634877eb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-image-build-tests.txt",
+      "sha256": "64990e1d09280e34f5d591bbcf6d6ef3d11ad837c65b1ab3f2a98145e06eb5c8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-image-load-tests.txt",
+      "sha256": "c5525172a3c9aeab676b27a284da742d8eddcca802a57e50d1c6ce770ce9add6"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-install-tests.txt",
+      "sha256": "12afe4add748efcfc75125f2b3f510a9f3d1c833febc956c3246b094438c619c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-tool.json",
+      "sha256": "ae0acfa865c44bd26a4b890f3bfb21495d36e62cec4005069d9f95c68b897950"
+    }
+  ]
+}

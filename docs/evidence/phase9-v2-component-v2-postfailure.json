@@ -1,0 +1,38 @@
+{
+  "scope": "read-only post-failure inspection plus own completed Pod cleanup; failed fixture report not promoted",
+  "observations": [
+    {
+      "podName": "workspace-backup-probe-89d95327927848a8",
+      "podUid": "ae34270b-321f-49e3-b3ae-7579d30ff4ff",
+      "containerExitCode": 0,
+      "nodeReady": true,
+      "leaseAgeSeconds": 6.187517,
+      "result": {
+        "manifest": {
+          "files": [
+            {
+              "path": "remove-synthetic.txt",
+              "bytes": 32,
+              "mode": 384,
+              "sha256": "f5d19347c36a8193382279769396801763f5c97c92e9c2c485d1403d28e0a068"
+            },
+            {
+              "path": "report.md",
+              "bytes": 22,
+              "mode": 384,
+              "sha256": "e745eeb80f3dd60fffa217fdf20e3d36185eb686aeb0ceaca4e7ebfdfcad8d59"
+            }
+          ],
+          "sha256": "f11c95d81f9815331f457babe21c34bd1070acc36adb8253a11b21848757b0ef",
+          "entries": 2,
+          "bytes": 54
+        },
+        "ok": true,
+        "operation": "restore",
+        "resticVersion": "0.18.1",
+        "snapshotId": "fbfeb8893a21c110e3f10f16b01f7edad21b70307d9e95028220bfccf9d3066e"
+      },
+      "completedPodNormallyDeleted": true
+    }
+  ]
+}
