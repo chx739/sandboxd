@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：联合检查点进程切点（3个真实切点已验证）
 
-- 起点56285fc（PR#3远端一致）；新增workspace_checkpoint_fault_demo及测试，复用workspace_process_demo.start_agent默认V1行为，显式restic模式才使用切点子进程。仅管理夹具包裹真实方法，不添加生产故障开关、不改账本/时钟、不使用外部模型。
+- 本批有效实现9a6e519（起点56285fc，推送至草稿PR#3，依赖PR#2→PR#1，不合并）；新增workspace_checkpoint_fault_demo及测试，复用workspace_process_demo.start_agent默认V1行为，显式restic模式才使用切点子进程。仅管理夹具包裹真实方法，不添加生产故障开关、不改账本/时钟、不使用外部模型。
 - 切点固定为reserved、preparing、data-ready、before-commit、committed；标记文件fsync/原子发布后SIGSTOP，父进程waitpid确认再SIGKILL(-9)，第二进程普通create_app原目录自动接续。Go不重启，本批不是Go崩溃或历史快照恢复证据。
 - 首个真实data-ready通过：phase9-v2-agent-cut-data-ready.json；原点DATA_READY拒绝恢复，重启后FAILED且原snapshot身份保留，最终head revision2；同Task/会话/分支/工作区、原deadline/limits/timing/provider不变，原调用表逐项保留、写/读各1次，2attempt旧owner均停止，Session前缀与NFS hash一致。实际维护CRI runsc；kill→API ready57,013.97ms、→最终核查73,746.66ms，含挂载盘启动/清理，不是生产RTO。
 - 首次夹具单测因Mock PID不是整数而打印JSON失败，原始29项1error保留；修正后29/29、7.051s通过。随后增加reserved测试与完整回归，结果单列，不能将旧29项冒称覆盖新用例。
