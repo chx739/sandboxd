@@ -59,22 +59,30 @@ def state_for(path: Path, task_id: str) -> dict | None:
     return next((e["data"] for e in reversed(entries(path)) if e["type"] == "task.state" and e["data"]["taskId"] == task_id), None)
 
 
-def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, number: int, replay_path: Path | None = None, *, port: int = 18090):
+def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, number: int, replay_path: Path | None = None, *, port: int = 18090,
+                checkpoint_mode: str = "off", checkpoint_cutpoint: str | None = None):
     if port not in {18090, 18091}:
         raise ValueError("process fixture only uses ports 18090/18091")
+    if checkpoint_mode not in {"off", "restic"} or (checkpoint_cutpoint is not None and (
+            checkpoint_mode != "restic" or port != 18090 or checkpoint_cutpoint not in {"reserved","preparing","data-ready","before-commit","committed"})):
+        raise ValueError("invalid fixed checkpoint process fixture mode")
     # 清除继承的模型/路由/Operator配置。子进程只拿本次合成Agent身份，不拿Operator Token。
     env = {k: v for k, v in os.environ.items() if not k.startswith(("AGENTD_", "SANDBOXD_"))
            and k not in {"TYPESAFE_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY"}}
     env.update({"AGENTD_TOKEN": api_token, "AGENTD_ALERT_TOKEN": alert_token, "SANDBOXD_TOKEN": go_token,
                 "AGENTD_LLM_MODE": "replay", "AGENTD_ROUTER_MODE": "off", "AGENTD_REPLAY_FILE": str(replay_path or root / "replay.json"),
                 "AGENTD_RECOVERY_DIR": str(root / "agent-control"), "AGENTD_TRACE_DIR": str(root / "legacy-traces"),
+                "AGENTD_CHECKPOINT_MODE":checkpoint_mode,"AGENTD_CHECKPOINT_REPOSITORY_ID":"repo-component",
                 "AGENTD_SANDBOXD_URL": "http://127.0.0.1:10880", "AGENTD_PROMETHEUS_URL": "http://127.0.0.1:19090"})
     # 故意不传WORKSPACE_BACKEND，验证部署入口的nfs默认值。
     log_path = root / ("agentd-process-" + str(number) + ".log")
     log = log_path.open("w")
     log_path.chmod(0o600)
-    process = subprocess.Popen([sys.executable, "-m", "uvicorn", "agentd.app.main:create_app", "--factory",
-                                "--host", "127.0.0.1", "--port", str(port), "--log-level", "warning", "--no-access-log"],
+    command=[sys.executable, "-m", "uvicorn", "agentd.app.main:create_app", "--factory",
+             "--host", "127.0.0.1", "--port", str(port), "--log-level", "warning", "--no-access-log"]
+    if checkpoint_cutpoint is not None:
+        command=[sys.executable,"-m","agentd.workspace_checkpoint_fault_demo","--child-phase",checkpoint_cutpoint,"--child-root",str(root)]
+    process = subprocess.Popen(command,
                                cwd=REPO, env=env, stdout=log, stderr=subprocess.STDOUT)
     print(json.dumps({"stage": "agentd-process-started", "number": number, "pid": process.pid}), flush=True)
     return process, log

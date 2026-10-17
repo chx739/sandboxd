@@ -274,3 +274,7 @@ bash hack/workspace.sh benchmark --repeats 3 --background-condition serial --out
 ## V2 可选联合检查点
 
 NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工具组与最终诊断的同步联合保存；默认off。可信Go另需固定维护镜像、专用仓库Secret名称与MinIO私网地址，凭据不能交给业务Pod/模型。安装、两终端启动、独立真实演示及未验收范围见[文档47 §7](../../docs/47-联合检查点与restic-MinIO学习手册.md#7-agent完整边界自动保存与最终诊断接续)。不因有备份就认为历史分支恢复、NFS高可用或自动GC已经实现。
+
+### V2联合提交进程切点
+
+[文档47 §8](../../docs/47-联合检查点与restic-MinIO学习手册.md#8-联合提交切点的真实agent进程实验)提供独立真实SIGKILL夹具：`python -m agentd.workspace_checkpoint_fault_demo --phase <固定切点> --secret-name <专属Secret名称> --minio-ip <已核对私网IP> --output <新报告路径>`。使用项目venv，从仓库根目录执行；每次只操作自己启动的Agent进程，保留全部数据。可选reserved/preparing/data-ready/before-commit/committed，必须串行；已执行范围按逐个报告核对，不把单个切点当作全部V2完成。默认生产服务没有切点开关。

@@ -18,6 +18,15 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：联合检查点进程切点（3个真实切点已验证）
+
+- 起点56285fc（PR#3远端一致）；新增workspace_checkpoint_fault_demo及测试，复用workspace_process_demo.start_agent默认V1行为，显式restic模式才使用切点子进程。仅管理夹具包裹真实方法，不添加生产故障开关、不改账本/时钟、不使用外部模型。
+- 切点固定为reserved、preparing、data-ready、before-commit、committed；标记文件fsync/原子发布后SIGSTOP，父进程waitpid确认再SIGKILL(-9)，第二进程普通create_app原目录自动接续。Go不重启，本批不是Go崩溃或历史快照恢复证据。
+- 首个真实data-ready通过：phase9-v2-agent-cut-data-ready.json；原点DATA_READY拒绝恢复，重启后FAILED且原snapshot身份保留，最终head revision2；同Task/会话/分支/工作区、原deadline/limits/timing/provider不变，原调用表逐项保留、写/读各1次，2attempt旧owner均停止，Session前缀与NFS hash一致。实际维护CRI runsc；kill→API ready57,013.97ms、→最终核查73,746.66ms，含挂载盘启动/清理，不是生产RTO。
+- 首次夹具单测因Mock PID不是整数而打印JSON失败，原始29项1error保留；修正后29/29、7.051s通过。随后增加reserved测试与完整回归，结果单列，不能将旧29项冒称覆盖新用例。
+- committed已通过（原COMMITTED保留，最终revision3，kill→ready50,588.48ms、→核查66,022.02ms）；reserved-v2也通过（原Go屏障存在/Python记录始终无伪造，最终revision2，kill→ready55,176.11ms、→核查72,445.33ms）。首轮reserved仅端口预检EADDRINUSE即终止，未创建实验Task；当时唯一根因未证实，后续无监听者，probe支持REUSEADDR并用实际监听拒绝测试验证；原失败输出和preflight整理保留，新路径重跑。执行前资源可用内存约20,714MiB、swap用量0、根盘931GiB，项目业务/维护Pod空闲。当前运行时不覆盖输出、不重复启动；进程是否仍活由实际执行句柄/系统进程判断，不能凭本文判定停止。
+- 本批完整239/239、282.089s通过phase9-v2-joint-fault-full-tests.txt；端口probe后改动最终5/5、0.068s覆盖，中间4项报告保留，不冒称239项包含后改动。三个raw报告均有独立hash/一致性审计。业务/维护Pod已清理，仅kind/NFS/专属MinIO保留，工作区/快照/PV/PVC/控制日志/Secret未删，外部模型0。**第一项下一步**：补preparing/before-commit真实切点；再推进真实取消/MinIO故障、可信restore新空目录与镜像身份、历史分支、引用清理和同条件性能。V2十项完整验收尚未完成，Goal active；用户docs32/docs34不纳入。
+
 ### 2026-10-18：Agent联合保存接线与最终诊断恢复
 
 - 本批实现fb426a7已提交并推送（前置有效HEAD d85aa2d），当前仍为codex/workspace-restic-v2/草稿PR#3，base为未合并V1 PR#2；后者依赖PR#1。用户docs32/docs34原有修改保留，不暂存。

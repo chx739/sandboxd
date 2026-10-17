@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "phase": "reserved",
+  "passed": false,
+  "stage": "port preflight before control-directory, Go or Agent creation",
+  "rawOutput": "phase9-v2-agent-cut-reserved-tests.txt",
+  "observedError": "OSError: [Errno 98] Address already in use",
+  "rootCauseProven": false,
+  "subsequentInspection": "No listener on 10880/18090; no fixture process remaining at inspection time",
+  "change": "SO_REUSEADDR probe still rejects live listener; preserve first failure and retry using a new report path",
+  "rerunReport": "phase9-v2-agent-cut-reserved-v2.json",
+  "externalModelCalls": 0
+}

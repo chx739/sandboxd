@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "source": "phase9-v2-agent-cut-committed.json",
+  "sha256": "c4499a841484584309f894b1d9efebd6cd4c65219d0385c609d8a1b0ef45280e",
+  "passed": true,
+  "checks": {
+    "actualSigkill": true,
+    "sameScopeBudgetsDeadline": true,
+    "originalCallsPreserved": true,
+    "committedPointUnchanged": true,
+    "headAdvancedExactly": true,
+    "writeOnce": true,
+    "actualRunsc": true,
+    "noPaidModel": true
+  },
+  "scope": "independent report audit; not another service run"
+}

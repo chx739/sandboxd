@@ -1,0 +1,17 @@
+test_cut_point_root_is_private_fixture_scope (agentd.tests.test_checkpoint_fault_fixture.CheckpointFaultFixtureTests.test_cut_point_root_is_private_fixture_scope) ... ok
+test_fixed_cut_points_pause_before_or_after_selected_transition (agentd.tests.test_checkpoint_fault_fixture.CheckpointFaultFixtureTests.test_fixed_cut_points_pause_before_or_after_selected_transition) ... {"stage": "checkpoint-cutpoint-persisted", "phase": "preparing", "pid": 214173, "checkpointId": "cp-fixture", "status": "PREPARING", "headCheckpointId": null, "timestamp": "2026-10-17T22:53:54.906094+00:00"}
+{"stage": "checkpoint-cutpoint-persisted", "phase": "data-ready", "pid": 214173, "checkpointId": "cp-fixture", "status": "DATA_READY", "headCheckpointId": null, "timestamp": "2026-10-17T22:53:54.919343+00:00"}
+{"stage": "checkpoint-cutpoint-persisted", "phase": "before-commit", "pid": 214173, "checkpointId": "cp-fixture", "status": "DATA_READY", "headCheckpointId": null, "timestamp": "2026-10-17T22:53:54.932034+00:00"}
+{"stage": "checkpoint-cutpoint-persisted", "phase": "committed", "pid": 214173, "checkpointId": "cp-fixture", "status": "COMMITTED", "headCheckpointId": "cp-fixture", "timestamp": "2026-10-17T22:53:54.944665+00:00"}
+ok
+test_launch_defaults_preserved_and_child_mode_explicit (agentd.tests.test_checkpoint_fault_fixture.CheckpointFaultFixtureTests.test_launch_defaults_preserved_and_child_mode_explicit) ... {"stage": "agentd-process-started", "number": 1, "pid": 12345}
+{"stage": "agentd-process-started", "number": 2, "pid": 12345}
+ok
+test_port_probe_still_rejects_a_live_listener (agentd.tests.test_checkpoint_fault_fixture.CheckpointFaultFixtureTests.test_port_probe_still_rejects_a_live_listener) ... ok
+test_reserved_cut_happens_after_go_freeze_before_python_prepare (agentd.tests.test_checkpoint_fault_fixture.CheckpointFaultFixtureTests.test_reserved_cut_happens_after_go_freeze_before_python_prepare) ... {"stage": "checkpoint-cutpoint-persisted", "phase": "reserved", "pid": 214173, "checkpointId": "cp-fixture", "status": "RESERVED", "headCheckpointId": null, "timestamp": "2026-10-17T22:53:54.960041+00:00"}
+ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.068s
+
+OK

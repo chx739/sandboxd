@@ -1,0 +1,4 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 211088}
+{"stage": "joint-cut-sigkill-confirmed", "phase": "data-ready", "checkpointId": "cp-d2349512ae5042049c9e902000186357"}
+{"stage": "agentd-process-started", "number": 2, "pid": 211643}
+{"passed": true, "phase": "data-ready", "output": "docs/evidence/phase9-v2-agent-cut-data-ready.json"}

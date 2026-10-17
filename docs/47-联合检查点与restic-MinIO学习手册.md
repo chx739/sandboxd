@@ -240,7 +240,43 @@ agentd/.venv/bin/python -m agentd.workspace_checkpoint_demo \
 
 尚未完成：真实进程在PREPARING/DATA_READY/COMMITTED前后中断、真实取消/MinIO异常/仓库锁、restore新空工作区屏障及镜像校验、精确历史分支、引用保护/清理预览/受控forget/prune、十项V2完整验收、同条件V1/V2性能与流量测量。正常联合保存不是上述故障和恢复的替代证据，Goal仍active。
 
-## 8. 官方参考与版本
+## 8. 联合提交切点的真实Agent进程实验
+
+`agentd.workspace_checkpoint_fault_demo`是独立管理夹具，不向生产Runtime或HTTP API增加故障开关。第一进程仍调用实际create_app/TaskStore/Runner/协调器，只在本夹具子进程中包裹指定方法；在真实操作前/后发布私有fsync标记并SIGSTOP。父进程用waitpid确认OS已停止，再向自己启动的该进程发送SIGKILL，检查返回码-9，然后用原生控制目录启动没有切点包装的第二个普通Agent进程。Go服务及NFS/MinIO持续运行；不是Go进程崩溃、节点分区或历史文件还原实验。
+
+固定切点如下：
+
+| 参数 | 实际停止位置 | 自动接续要求 |
+|---|---|---|
+| reserved | Go Reserve返回、Session引用/PREPARING之前 | 仅Go屏障存在；不能凭空制造Python检查点，先对账释放原job |
+| preparing | PREPARING真实fsync之后、Start之前 | 不能作为恢复点；原点失败后沿NFS最新目录接续 |
+| data-ready | restic成功、DATA_READY真实fsync之后 | 文件已备份不等于提交；原点不能成为head |
+| before-commit | 已核对owner，在短锁内调用commit之前 | 仍为DATA_READY，不能暴露为COMMITTED |
+| committed | COMMITTED真实fsync后、Go Finish之前 | 重建必须保留原提交/head/revision；先Finish再换attempt |
+
+每轮独立Task/工作区/控制目录，模型固定为写报告→读取→最终诊断。原调用表、Task/session/branch/workspace、provider、阶段时钟、额度和deadline逐项比对，旧写入仅一次；Session前缀保留，工具调用与结果各出现一次。父进程在原进程退出后才取得检查点账本锁，确认未提交点拒绝restore_point、已提交点可读取Session引用。恢复后的head/revision由原始JSONL重建，不修改日志造状态或补时间。
+
+```bash
+# 前提同§7；10880/18090空闲，仅本项目单节点和专用存储。
+agentd/.venv/bin/python -m agentd.workspace_checkpoint_fault_demo \
+  --phase data-ready --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
+  --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" --output .cache/checkpoint-cut-data-ready.json
+# 可分别选择reserved/preparing/before-commit/committed；串行执行，输出路径不可复用。
+```
+
+首个实际`phase9-v2-agent-cut-data-ready.json`通过：真实SIGKILL、原Task自动接续2个attempt、原未提交点变FAILED、最终head revision2；原模型槽保留并共3模型/2工具槽，写/读各1次，NFS服务端hash一致。杀进程至API ready约57,013.97ms、至最终核查73,746.66ms，包含Windows挂载盘Python启动等待及核查/清理，不是生产RTO。DATA_READY时维护Pod的CRI实际为runsc。随后`phase9-v2-agent-cut-committed.json`也通过：原COMMITTED点及revision1在重启后保留，最终head revision3；原Task/额度/时钟保持、写/读各1次，kill→API ready50,588.48ms、→核查66,022.02ms。其余切点按PROGRESS和逐个原始报告判断，不能从部分成功推断整项V2-04已完成。
+
+`phase9-v2-agent-cut-reserved-v2.json`也通过：Go已冻结而Python尚无检查点记录，重启后仍不制造该ID的Python记录；先对账旧reserved job/业务owner，再同Task新attempt接续，最终head revision2，原调用/时间预算保持。该切点Start尚未发生，维护Pod为空是正确现象，不伪造runsc维护证据；业务Pod实际gVisor/NFS仍核验。kill→API ready55,176.11ms、→核查72,445.33ms。
+
+RESERVED首轮在端口预检即报EADDRINUSE，未创建控制目录、Go或Agent，只有原始失败输出`phase9-v2-agent-cut-reserved-tests.txt`；整理快照`phase9-v2-agent-cut-reserved-preflight.json`明确唯一根因未证实。随后无监听者，端口probe设置SO_REUSEADDR，且真实本机监听拒绝单测通过；第二轮用新路径，不覆盖首次失败。
+
+本批完整Python239/239、282.089s通过`phase9-v2-joint-fault-full-tests.txt`，包含五类切点包装与启动默认兼容；此后端口probe抽取及额外本机监听用例由最终5/5、0.068s覆盖`phase9-v2-joint-fault-fixture-final-v2-tests.txt`，不将239项冒称包含后加用例，也不相加。中间4/4、0.187s报告单列。
+
+三个真实切点的独立报告一致性审计分别以`*-audit.json`保存，附原报告SHA256；它们是只读核对，不算额外三次服务实验。PREPARING后、COMMITTED前两轮尚未执行，V2-04完整项仍pending；取消/存储异常、历史恢复与引用GC也未由这些实验验证。
+
+夹具首轮单测29项1 error：模拟Popen.pid未设置整数导致状态打印无法JSON序列化；原始phase9-v2-joint-fault-fixture-tests.txt保留。修正后29/29、7.051s通过phase9-v2-joint-fault-fixture-v2-tests.txt；后续增加reserved包装的单测和完整回归分别记录，不能将29项冒称覆盖后增加用例。测试的暂停信号在单测中被Mock，不冒充真实进程实验。
+
+## 9. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

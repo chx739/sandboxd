@@ -25,7 +25,7 @@
     {
       "id": "V2-04",
       "status": "pending",
-      "note": "full acceptance not executed"
+      "note": "three real Agent cut points passed (reserved/data-ready/committed); preparing/before-commit and full protocol matrix pending"
     },
     {
       "id": "V2-05",
@@ -59,7 +59,7 @@
     }
   ],
   "remaining": [
-    "real process interruption at PREPARING / DATA_READY / COMMITTED cut points and cancellation/startup reconciliation",
+    "real Agent PREPARING and before-COMMITTED interruptions; real cancellation/startup reconciliation; full V2-04 still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
     "trusted restore barrier into new empty NFS workspace and immutable business image identity checks",
     "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
@@ -119,6 +119,50 @@
     {
       "path": "docs/evidence/phase9-v2-agent-checkpoint-task-scope-tests.txt",
       "sha256": "4045e21a0c90fe5b9fb664e34b0a5ff3265f59bf3a8ed4738fb268caf7f537d3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-committed-audit.json",
+      "sha256": "520894b74e9c6add71dea632bcce4389107a5b491ab3fa1d30d4c0d2a8e3d071"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-committed-tests.txt",
+      "sha256": "07974a5bdbe5d693f238a6ac44c917100cbe0abceb36c25d0e57d8ead0d2f047"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-committed.json",
+      "sha256": "c4499a841484584309f894b1d9efebd6cd4c65219d0385c609d8a1b0ef45280e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready-audit.json",
+      "sha256": "8ab15c5e57b02455eb3420df717681017d5b3d91a1ff60b3d84af89bd31b188b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready-tests.txt",
+      "sha256": "a809204c0056a6462a4592df32f3169c7afa46461ef1ed591f98d6d8ca465587"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready.json",
+      "sha256": "f2080f02a7f99dc056e0068d9fbb096c8a865178a38e6fdfa803e7ca46fb7a38"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-preflight.json",
+      "sha256": "729fe46f27d91817e1881476bbc52801c418d27dd4cc52b023d25fef0ee224ef"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-tests.txt",
+      "sha256": "c40af65a13d9857c8f82427620ecfaed173d64986f35fa039016e8bc6e070314"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2-audit.json",
+      "sha256": "565024df7a7a95c0fa500c7b42956779f05c831646661a16022fbb1a4a00230d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2-tests.txt",
+      "sha256": "706209549dcfa7b0c6619961f4d518082c02e0725a43b93935c4054aa3fa8f4c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2.json",
+      "sha256": "2f8157365a5f1f6e4162a61b70efe209481b0b788bc48db0485831311af29525"
     },
     {
       "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-tests.txt",
@@ -289,6 +333,30 @@
       "sha256": "eb3ea8737bd4e23af8ba8095c65877051c73ce65252a00cf237fb47e634877eb"
     },
     {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-final-tests.txt",
+      "sha256": "efc989329c7c4cd5c5241b149b936ddf75199449c9a9d4778d84d374c345b62b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-final-v2-tests.txt",
+      "sha256": "a1d558d52b16f4b60c03caa72c0f095c652f747327e35dd54d180d8fec34eed8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-tests.txt",
+      "sha256": "ca7dbc6833eb94d5ede98d66e2a4c4efc96d9783e9bff5ee1dd42c814c73c347"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-v2-tests.txt",
+      "sha256": "4c6a2463c8015dd24ace97b4f2f1b44915e3ca240c2b21fea681572d16cf12d0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-full-tests.txt",
+      "sha256": "8cc900e333c7dab2ee1170bfd9cf98ba1ef04e781570f81a7731e7e840abe66e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-module-status.json",
+      "sha256": "63f76087976822d713ce5e121e4c062409887534754a1b1dd04c4cb2bb9b35d9"
+    },
+    {
       "path": "docs/evidence/phase9-v2-restic-image-build-tests.txt",
       "sha256": "64990e1d09280e34f5d591bbcf6d6ef3d11ad837c65b1ab3f2a98145e06eb5c8"
     },
@@ -308,5 +376,6 @@
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
   "backupHTTPScope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator",
   "agentJointCheckpointScope": "Real TaskStore/Runner/Go HTTP/gVisor/NFS/restic/MinIO normal complete tool groups and Runtime final diagnosis verified; process fault/restore/GC acceptance pending",
-  "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json"
+  "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json",
+  "agentFaultScope": "Real Agent SIGKILL at reserved/data-ready/committed passed; preparing/before-commit and full V2-04 still pending; Go/storage stayed available"
 }
