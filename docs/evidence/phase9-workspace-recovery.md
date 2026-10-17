@@ -194,3 +194,15 @@
 最终代码实际复验 `phase9-agent-command-recovery-final.json` / 同名`-tests.txt`通过：Task `task-ce136e4d18a06604`，两条命令计数 `[1,1]`、实际OS强杀、两attempt/不同Pod、旧工具证据、原预算/时钟、终态第三进程日志不变均通过。夹具退出码0，sandboxd-demo/storage无遗留Pod，NFS Running=true/Paused=false；卷和文件保留。至此V1矩阵14/14有对应证据；这不等于V1全部交付或完整Goal完成，迁移、统一入口、性能和10项V2仍待完成。最终全量回归见下方结果。
 
 最终全量 `phase9-python-call-audit-final-regression-tests.txt`：190/190、271.294秒，通过，包含最终ownerStopped/Trace窗口和只读投影；与此前188批次分开、不相加。compileall和diff检查通过，新文件凭据形状启发式扫描无匹配（不是完整秘密扫描证明）。Goal仍active；下一步显式迁移、统一命令、固定负载性能，再V2独立分支。
+
+## 2026-10-18 显式旧工作区迁移与统一入口
+
+新增`agentd.workspace_migrate`管理CLI、`runtime/workspace_imports.py`与TaskStore首次resume映射。先预览文件manifest/源Session hash，apply持Task账本锁并要求源匹配；新专属NFS目录经原Go接口复制、list_files完整清单hash核查、旧owner停止确认、Session副本fsync后，imports.jsonl才COMMITTED。未完成记录保留；重试先停止旧owner、相同hash跳过，最多3次导入attempt。只支持现有文件工具可完整校验的UTF-8文本范围；100文件/16MiB/单文件256KiB，空目录、symlink、硬链接、特殊文件拒绝。不是通用POSIX元数据迁移或V2历史快照。
+
+真实两轮报告：`phase9-agent-workspace-migration.json`、`phase9-agent-workspace-migration-entry.json`。两者都是合成旧线性Session+两个文本文件，包含中文路径；实际Go/gVisor/NFS，客户端丢弃首个写确认，再执行迁移。两个导入attempt、两个文件各实际写一次，第二次按hash跳过已写文件；重复apply不改imports日志。COMMITTED后手动resume产生新Task，Replay只读文件并核对工具返回与NFS服务端hash；V1旧节点携带工作区恢复拒绝，源Session/源文件保持。该项不是实际用户数据迁移，也不是TCP丢包或外部模型质量测评。外部模型0。
+
+第二报告原字节复制自`.cache/workspace-eval/run-LV9TMnKz/migration.json`，SHA256=`318015ad9318290cb12651b14c21ae5bf2c3ce1f739fe34653109fc7a388fd7e`；命令是`bash hack/workspace.sh verify migration`。入口只读check原文`phase9-workspace-entry-check.txt`、分发原文`phase9-workspace-entry-migration-tests.txt`均通过。统一入口还提供install/build/nfs/go/agent/test/migrate/verify all/joint；本批次未逐一重新安装/启动或执行all/joint，不把分发代码视为这些运行证据。输出每次新建目录，失败原文与控制目录保留。
+
+首次`phase9-migration-initial-tests.txt`：19项有3错误，使用了不符合Go实际响应的sha256字段；修正为newSha256后`phase9-migration-boundary-tests.txt`19/19、3.534秒。最终完整`phase9-python-migration-regression-tests.txt`197/197、288.024秒，通过，含迁移幂等/未知写核查/线性副本/路径与映射边界、既有恢复。首次失败不覆盖，各测试重叠不相加。compileall、bash语法、diff检查通过。没有修改本机时间、系统权限或现有数据卷。
+
+当前V1矩阵14/14和显式迁移有证据，完整启动分发验证与固定负载性能仍待完成，V2未开始；Goal active。下一步先复验统一入口的Go/agentd启动与接续，再测同条件文件工具/挂载/恢复/资源与流量，完成V1交付后另开V2依赖分支。

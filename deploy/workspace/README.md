@@ -22,7 +22,7 @@ Ganesha VFS 的文件句柄访问需要额外 `CAP_DAC_READ_SEARCH`。该权限�
 3. 运行资源检查、创建本项目单节点 kind，检查 gVisor 与网络安全基线。
 4. 按已确认的存储服务权限，实际测试 mount、锁、非 root 权限及持久化；失败就记录事实，不用本地 bind mount 代替 NFS 验收。
 
-后续统一启动脚本在 M2 完成。不要执行 `docker compose down -v`；Pod 删除与业务数据删除必须分开。
+统一命令入口见本文末尾；完整启动分发验证仍待执行。不要执行 `docker compose down -v`；Pod 删除与业务数据删除必须分开。
 
 ## Python部署默认值与真实验收入口
 
@@ -34,7 +34,7 @@ export AGENTD_RECOVERY_DIR="$HOME/.local/share/sandboxd/agent-control"
 agentd/.venv/bin/python -m uvicorn agentd.app.main:create_app --factory --host 127.0.0.1 --port 8090
 ```
 
-环境读取函数默认nfs；control目录须在原生Linux持久盘，不能用/tmp。旧离线流程可显式配置`AGENTD_WORKSPACE_BACKEND=local`，只读旧Session可回退到旧trace目录；旧业务文件未自动搬迁，显式映射/校验迁移仍待交付。
+环境读取函数默认nfs；control目录须在原生Linux持久盘，不能用/tmp。旧离线流程可显式配置`AGENTD_WORKSPACE_BACKEND=local`，只读旧Session可回退到旧trace目录；旧业务文件不自动搬迁；显式映射/校验迁移见本文后半部分，真实合成数据验证已通过。
 
 下述管理夹具自行启动并结束本项目Go服务（固定127.0.0.1:10880需空闲），生成只用于本轮的合成Token，不读取真实Key；创建的NFS文件、PV/PVC和原生控制目录保留。它实际调用TaskStore/Runner与受限HTTP文件工具：
 
@@ -162,3 +162,56 @@ agentd/.venv/bin/python -m agentd.workspace_command_demo --nfs-server "$SANDBOXD
 ```
 
 同样要求10880/18090空闲；只强杀夹具自己启动的agentd子进程。模型为固定Replay，不请求外部API；验证已确认的steer/follow-up重启后各注入一次、旧调用审计可查、终态再启动不改日志。不要与其他真实工作区夹具并发运行。
+
+## 显式迁移旧agentd文件目录
+
+先停止旧/新agentd及其他源目录写入者，保持Go sandboxd运行。`SOURCE`指旧`workspace-root/task-id`目录，`SESSION`指对应旧Session JSONL。命令不删除源文件；只支持现有文件工具能完整校验的UTF-8文本范围，超限/空目录/链接等明确拒绝。旧Task须为终态。
+
+先预览（不访问外部服务）：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_migrate \
+  --source "$SOURCE" --session "$SESSION" --session-id "$SESSION_ID" --task-id "$OLD_TASK_ID"
+```
+
+核对返回的文件清单，将`manifestSha256`和`sourceSessionSha256`分别放入下方参数。Agent Token通过现有仓库外环境`SANDBOXD_TOKEN`传入，不使用Operator Token：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_migrate \
+  --source "$SOURCE" --session "$SESSION" --session-id "$SESSION_ID" --task-id "$OLD_TASK_ID" \
+  --control "$AGENTD_RECOVERY_DIR" --sandboxd-url "$AGENTD_SANDBOXD_URL" \
+  --expected-manifest "$MANIFEST_SHA256" --expected-session "$SOURCE_SESSION_SHA256" --apply
+```
+
+COMMITTED后启动agentd，再用原resume接口手动接续最新节点；新Task接回导入工作区，旧节点仍不支持文件恢复。PREPARING时重试先核查旧owner，结果不明的写入按hash跳过，不盲目重发；最多3次attempt。映射与原数据均保留。新Task已开始后禁止重新导入同一Session。回滚边界见学习手册45 §7。
+
+真实合成数据验收（串行，10880端口需空闲，不使用用户旧数据）：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_migration_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/workspace-migration.json
+```
+
+## 统一命令入口
+
+`bash hack/workspace.sh help`列出固定子命令。脚本不接收任意Shell，服务前台运行，不建立守护器，不清理业务文件或数据卷。
+
+| 阶段 | 命令 | 前置条件与边界 |
+|---|---|---|
+| 工具/依赖安装 | `bash hack/workspace.sh install` | 复用固定工具安装器与uv frozen锁；需网络，本批次未重新下载安装 |
+| 环境检查 | `bash hack/workspace.sh check` | 只读；明确kind-sandboxd、NFS项目标签/状态、工具版本和资源 |
+| Go构建 | `bash hack/workspace.sh build` | Go1.26.5，隔离可重建缓存，不删除旧镜像 |
+| NFS启动 | `bash hack/workspace.sh nfs` | 已构建/核验SANDBOXD_NFS_IMAGE，kind网络已存在；保留named volumes |
+| Go前台启动 | `bash hack/workspace.sh go` | 仓库外配置Agent/Operator Token、原生持久SANDBOXD_WORKSPACE_CONTROL_DIR；8080需空闲 |
+| Agent前台启动 | `bash hack/workspace.sh agent` | 独立终端，仓库外Agent API/Alert/sandboxd Agent Token与AGENTD_RECOVERY_DIR；8090需空闲 |
+| 迁移 | `bash hack/workspace.sh migrate ...` | 参数同上文；apply前停止agentd，控制账本锁防并发 |
+| 本地回归 | `bash hack/workspace.sh test` | Python冻结依赖，不请求模型 |
+| 独立存储验收 | `bash hack/workspace.sh verify migration` | 真实Go/gVisor/NFS，使用合成数据；10880需空闲 |
+| 全套存储夹具 | `bash hack/workspace.sh verify all` | 串行，不与正常8080/8090业务任务共享实验窗口；部分场景临时暂停专属NFS/删除自己的Pod/强杀自己的agentd |
+| 三类联合回放 | `bash hack/workspace.sh joint --output .cache/joint.json` | 既有Milvus2.5.10/OpenSearch与缓存模型须先就绪；离线模型缓存，脚本不启动数据库、不重建索引 |
+
+`agent`固定NFS+Replay、Jev关闭；若环境要求live则直接拒绝。它会移除Operator Token环境变量，Python只获得Agent凭据。`go`使用当前固定runtime-v1.5，须先按原安装流程将该镜像载入本项目kind、部署Calico/gVisor/RBAC等基础能力；统一入口不替代这些前置安装。
+
+`verify`每次创建独立`.cache/workspace-eval/run-*`目录，包含逐场景JSON与stdout，失败保留现场与输出，不覆盖旧证据。`all`覆盖存储夹具集合，不等于完整Goal完成：联合服务回放、性能和V2仍分别验收。本批次实际验证check、help/语法及migration分发；其余分发复用已有命令，未声称逐个重新执行。
+
+线性旧格式的预览节点属于临时视图，实际节点以COMMITTED映射为准；执行确认使用源Session hash与文件manifest hash。

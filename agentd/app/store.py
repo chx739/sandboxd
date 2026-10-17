@@ -19,6 +19,7 @@ from .runtime.control import AgentControl
 from .runtime.session import SessionJournal
 from .runtime.recovery import RecoveryLedger, RecoveryConflict, RecoveryLimit, new_id, TERMINAL
 from .runtime.execution import RecoveryAttempt
+from .runtime.workspace_imports import WorkspaceImports
 from .tools.remote_files import WorkspaceExecutionError
 import httpx
 from .working_memory import project_working_memory
@@ -56,6 +57,12 @@ class TaskStore:
         self._session_dir = recovery_dir / "sessions" if recovery_dir is not None else trace_dir / "sessions"
         self._legacy_session_dir = trace_dir / "sessions"
         self._ledger = RecoveryLedger(recovery_dir / "tasks.jsonl") if recovery_dir is not None else None
+        try:
+            self._imports = WorkspaceImports(recovery_dir / "imports.jsonl") if recovery_dir is not None else None
+        except BaseException:
+            if self._ledger is not None:
+                self._ledger.close()
+            raise
         self._startup_queue: deque[str] = deque()
         self._tasks: dict[str, AgentTask] = {}
         self._dedupe: dict[str, tuple[str, datetime]] = {}
@@ -115,8 +122,15 @@ class TaskStore:
             if self._ledger is not None and session_id is not None:
                 history = [s for s in self._ledger.records() if s["sessionId"] == session_id]
                 if not history:
-                    raise TaskConflictError("旧会话没有工作区映射，仅可读取上下文；请显式迁移后继续")
-                previous = history[-1]
+                    imported = self._imports.get(session_id)
+                    if imported is None or imported["status"] != "COMMITTED":
+                        raise TaskConflictError("旧会话没有工作区映射，仅可读取上下文；请显式迁移后继续")
+                    if (hashlib.sha256(journal.path.read_bytes()).hexdigest() != imported["sessionSha256"]
+                            or parent_node_id != imported["nodeId"]):
+                        raise TaskConflictError("迁移会话边界已变化，不能静默使用旧映射")
+                    previous = imported
+                else:
+                    previous = history[-1]
                 branch_id, workspace_id = previous["branchId"], previous["workspaceId"]
                 if any(s["workspaceId"] == workspace_id and s["status"] not in TERMINAL for s in history):
                     raise TaskConflictError("工作区已有未完成任务")
@@ -543,6 +557,8 @@ class TaskStore:
             return [trace.model_dump(mode="json", by_alias=True)] if trace is not None else []
 
     def close(self) -> None:
+        if self._imports is not None:
+            self._imports.close()
         if self._ledger is not None:
             self._ledger.close()
 

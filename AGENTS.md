@@ -16,6 +16,8 @@ Phase 8 开发还必须完整阅读 `docs/37-Kubernetes运维Agent目标与验�
 
 Phase 9 允许增加本项目沙箱专属工作区的受限文件 RPC、NFS 挂载、持久任务/attempt 日志及 restic/MinIO 检查点。它只替代默认 agentd 本地 task 文件路径，不授权外部主机任意写入、任意 Shell、生产级 HA 或数据库。历史 Phase 4“仅本地文件”、Phase 7“恢复创建新 Task”不限制本轮明确授权的工作区迁移和同 Task 自动接续；手动 resume 仍创建新 Task。
 
+旧工作区迁移使用显式管理CLI，先停源写入者并持部署Task账本锁；PREPARING不算可恢复映射，只有Go停止确认、文件清单/hash和Session副本校验后COMMITTED才可接续。保留源文件/原JSONL/失败目录，不把迁移能力暴露为LLM工具。统一入口见hack/workspace.sh；分发代码与实际执行成绩必须分开记录。
+
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。

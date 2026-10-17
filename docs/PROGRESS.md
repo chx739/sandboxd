@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M3：V1验收矩阵14/14通过，迁移/统一入口/性能待完成；V2未开始；Goal active
+    Phase 9 M3：V1矩阵14/14与显式迁移通过，统一入口完整启动验证/性能待完成；V2未开始；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -59,7 +59,12 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - ownerStopped与最终Trace提交窗口已补齐；只读partial-audit视图不修改日志或证明停止。Session fsync后命令游标缺口、旧attempt不引用后续head、未确认owner查询无副作用，34/34定向5.433秒。实际写入丢确认核查新增workspace-recovery审计复验通过，phase9-agent-audited-write-inspection.json。旧188全量277.950秒属于最后窗口修复前，最终全量另记，不混算。
 - 本批次前已推送HEAD=0ef9b51；交付仍更新draft PR#2，base=codex/agent-memory-rag-plan，依赖PR#1，不合并。当前测试Pod均已释放，NFS运行/未暂停，数据保留；用户docs32/docs34修改不纳入提交。
 - 最终代码全量190/190、271.294秒通过，phase9-python-call-audit-final-regression-tests.txt；含最终窗口修复与查询测试。此前188批次和34定向保留，不相加。compileall/diff检查、证据JSON与校验和检查通过；无付费模型。
-- 第一项下一步：补显式旧文件迁移与Session/workspace/hash映射，再补统一命令和固定负载性能。当前V1矩阵14/14通过，清单phase9-v1-acceptance-progress.json；不等于V1全部交付。缺失最终Trace从已fsync调用审计恢复，缺失响应仍usageKnown=false；查询部分审计不会确认旧owner停止。先完成V1交付再推进V2主链路。
+- 显式旧文件迁移已完成：workspace_migrate管理CLI先预览hash、持Task锁、经Go复制/核查到新NFS目录，imports.jsonl保存PREPARING/COMMITTED和来源映射；结果不明写入按hash跳过，旧owner须确认停止，最多3次导入attempt。旧线性Session只适配副本，源文件与原JSONL保留。首次resume新建Task，复用导入分支/工作区；V1旧节点继续拒绝。
+- 两轮真实合成迁移通过：phase9-agent-workspace-migration.json及phase9-agent-workspace-migration-entry.json，后一份从.cache/workspace-eval/run-LV9TMnKz/migration.json原字节复制。首写确认丢失后两attempt恢复，两个文件各写一次；中文路径hash与NFS服务端一致，Replay新Task只读原文件，重复apply日志不变，原Session/源目录保持。Pod均正常清理，外部模型0。
+- 最终完整Python197/197、288.024秒通过，phase9-python-migration-regression-tests.txt；19项定向3.534秒，phase9-migration-boundary-tests.txt。首次19项3错误为写响应hash字段误用，原文phase9-migration-initial-tests.txt保留；修正为Go实际newSha256后再做真实验收，不用Fake成绩替代。源限UTF-8、100文件/16MiB，空目录/链接/特殊文件明确拒绝。
+- 统一入口hack/workspace.sh已实现install/check/build/nfs/go/agent/test/migrate/verify/joint，实际check与migration分发通过；完整安装、前台启动、all/joint分发未逐项复验。agent入口固定Replay/关闭Jev并移除Operator环境；verify独立结果目录、串行夹具、不删除数据。当前待完整启动验证/性能与全部V2。
+- 本批次前有效HEAD=fd51737；仍更新draft PR#2并依赖PR#1，不合并。用户docs32/docs34原修改不纳入。Go/gVisor/NFS仍运行，旧数据/索引/卷保留；迁移控制目录均在原生Linux持久盘。
+- 第一项下一步：通过统一入口验证Go/agentd完整启动与接续，再做固定负载性能与流量测量。当前V1矩阵14/14与显式迁移通过，清单phase9-v1-acceptance-progress.json；不等于V1全部交付。随后V2另开依赖分支，不提前替换NFS运行路线。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移仍未完成。

@@ -1,0 +1,15 @@
+CPU: 12
+可用内存: 20540 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   26G  931G   3% /
+C:\             932G  802G  130G  87% /mnt/c
+运行中的 Docker 容器: 2
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+Python 3.12.14
+go version go1.26.5 linux/amd64
+29.8.0
+项目NFS地址：172.23.0.3
+NAME     HANDLER   AGE
+gvisor   runsc     4h46m

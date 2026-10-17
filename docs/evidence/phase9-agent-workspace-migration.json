@@ -1,0 +1,948 @@
+{
+  "mode": "real-local-services-workspace-migration-replay",
+  "syntheticLegacyData": true,
+  "externalModelCalls": 0,
+  "passed": true,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/2cfd308f4c6c481ca908247f3bd5edcf",
+  "preview": {
+    "sessionId": "session-1ac91bd32302466b",
+    "sourceTaskId": "task-dab482d691a448bb",
+    "nodeId": "node-f86bab9595177cbf",
+    "sourceSessionSha256": "34e2e578948b04a4610cb3c78b4839ffed74486dd29ef544bef3a2f54d20dabe",
+    "sessionSha256": "59bf52e97c340e574427c01e0543ba36d46443f47a1503c40dc93bdc3ee9c560",
+    "manifestSha256": "58db226af092b2ca2d13f871427aca551ca217247e6c3b1ac15f04728f91f8ff",
+    "files": [
+      {
+        "path": "draft.md",
+        "bytes": 33,
+        "sha256": "bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559"
+      },
+      {
+        "path": "reports/结论.md",
+        "bytes": 55,
+        "sha256": "a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9"
+      }
+    ]
+  },
+  "confirmationLoss": {
+    "error": "workspace transport failed",
+    "kind": "client discarded acknowledgment after actual RPC"
+  },
+  "pendingAfterLostAck": {
+    "attempts": [
+      "attempt-e7ab87b6e6e14dd799ea810b3c5bef5f"
+    ],
+    "branchId": "branch-bb35f148e1304b609e89d04354f20b65",
+    "files": [
+      {
+        "bytes": 33,
+        "path": "draft.md",
+        "sha256": "bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559"
+      },
+      {
+        "bytes": 55,
+        "path": "reports/结论.md",
+        "sha256": "a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9"
+      }
+    ],
+    "importId": "import-eae1b2190bb142d082f58051033ab9da",
+    "manifestSha256": "58db226af092b2ca2d13f871427aca551ca217247e6c3b1ac15f04728f91f8ff",
+    "nodeId": "node-3b7415ebca953ce2",
+    "sessionId": "session-1ac91bd32302466b",
+    "sessionSha256": "5006d38e69584db39ee0ea8a69207d27c3ce446bb98a5109727a0bec15878599",
+    "sourceSessionSha256": "34e2e578948b04a4610cb3c78b4839ffed74486dd29ef544bef3a2f54d20dabe",
+    "sourceTaskId": "task-dab482d691a448bb",
+    "status": "PREPARING",
+    "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075"
+  },
+  "oldNodeWorkspaceResumeRejected": true,
+  "imported": {
+    "attempts": [
+      "attempt-e7ab87b6e6e14dd799ea810b3c5bef5f",
+      "attempt-c37e2c917ed84c45a2795f0e78af5759"
+    ],
+    "branchId": "branch-bb35f148e1304b609e89d04354f20b65",
+    "files": [
+      {
+        "bytes": 33,
+        "path": "draft.md",
+        "sha256": "bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559"
+      },
+      {
+        "bytes": 55,
+        "path": "reports/结论.md",
+        "sha256": "a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9"
+      }
+    ],
+    "importId": "import-eae1b2190bb142d082f58051033ab9da",
+    "manifestSha256": "58db226af092b2ca2d13f871427aca551ca217247e6c3b1ac15f04728f91f8ff",
+    "nodeId": "node-3b7415ebca953ce2",
+    "sessionId": "session-1ac91bd32302466b",
+    "sessionSha256": "5006d38e69584db39ee0ea8a69207d27c3ce446bb98a5109727a0bec15878599",
+    "sourceSessionSha256": "34e2e578948b04a4610cb3c78b4839ffed74486dd29ef544bef3a2f54d20dabe",
+    "sourceTaskId": "task-dab482d691a448bb",
+    "status": "COMMITTED",
+    "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075"
+  },
+  "task": {
+    "taskId": "task-ab5db415e484d0d0",
+    "status": "succeeded",
+    "sessionId": "session-1ac91bd32302466b",
+    "branchId": "branch-bb35f148e1304b609e89d04354f20b65",
+    "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075",
+    "attemptId": "attempt-678c5226e5914a73a8cd441bce9ec60d",
+    "attemptCount": 1,
+    "alert": {
+      "status": "firing",
+      "labels": {
+        "cluster": "local-kind"
+      },
+      "annotations": {
+        "summary": "synthetic legacy import"
+      },
+      "startsAt": null,
+      "fingerprint": "386f16353a4a6dc47cbe604f826fca36"
+    },
+    "createdAt": "2026-10-17T19:57:14.013300Z",
+    "updatedAt": "2026-10-17T19:57:18.179464Z",
+    "result": {
+      "summary": "Read imported synthetic evidence",
+      "rootCause": "",
+      "severity": "warning",
+      "evidence": [
+        {
+          "source": "read_file",
+          "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic migrated investigation\\n\",\"offset\":0,\"path\":\"draft.md\",\"redacted\":false,\"sha256\":\"bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3233fd050774a4744c7c\",\"observedAt\":\"2026-10-17T19:57:15.759930+00:00\"}"
+        },
+        {
+          "source": "read_file",
+          "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"合成历史排障记录，不含真实运维数据。\\n\",\"offset\":0,\"path\":\"reports/结论.md\",\"redacted\":false,\"sha256\":\"a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9\",\"totalChars\":19,\"truncated\":false},\"evidenceId\":\"ev-f9974299e3f9c4b29355\",\"observedAt\":\"2026-10-17T19:57:15.821647+00:00\"}"
+        }
+      ],
+      "injectionDetected": false,
+      "deniedActions": [],
+      "recommendation": "observe",
+      "planId": null
+    },
+    "error": null,
+    "trace": {
+      "taskId": "task-ab5db415e484d0d0",
+      "attemptId": "attempt-678c5226e5914a73a8cd441bce9ec60d",
+      "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075",
+      "status": "succeeded",
+      "mode": "replay",
+      "model": "replay",
+      "provider": "replay",
+      "capabilities": {
+        "deterministic": true,
+        "toolCalling": true
+      },
+      "plugins": [
+        {
+          "capabilities": [
+            "network:prometheus",
+            "metrics:read"
+          ],
+          "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+          "id": "prometheus",
+          "tools": [
+            "query_prometheus"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "sandbox:claim",
+            "kubernetes:read",
+            "deployment-scale:propose"
+          ],
+          "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+          "id": "kubernetes",
+          "tools": [
+            "kubernetes_read",
+            "propose_plan"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "network:ssh",
+            "linux:read"
+          ],
+          "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+          "id": "linux-host",
+          "tools": [
+            "linux_read"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "task-workspace:read",
+            "task-workspace:write"
+          ],
+          "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+          "id": "files",
+          "tools": [
+            "list_files",
+            "read_file",
+            "search_files",
+            "write_file",
+            "edit_file"
+          ],
+          "version": "1.0.0"
+        }
+      ],
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "routing": {},
+      "sandboxId": "b892b314ef546203",
+      "alertFingerprint": "386f16353a4a6dc47cbe604f826fca36",
+      "injectedVia": [],
+      "steps": [
+        {
+          "index": 1,
+          "node": "execute_tool",
+          "tool": "read_file",
+          "arguments": {
+            "path": "draft.md"
+          },
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "denied": false,
+          "denyLayer": "",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic migrated investigation\\n\",\"offset\":0,\"path\":\"draft.md\",\"redacted\":false,\"sha256\":\"bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3233fd050774a4744c7c\",\"observedAt\":\"2026-10-17T19:57:15.759930+00:00\"}",
+          "auditDetails": {
+            "body": {
+              "content": "synthetic migrated investigation\n",
+              "offset": 0,
+              "path": "draft.md",
+              "redacted": false,
+              "sha256": "bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559",
+              "totalChars": 33,
+              "truncated": false
+            },
+            "evidenceId": "ev-3233fd050774a4744c7c",
+            "observedAt": "2026-10-17T19:57:15.759930+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "elapsedMs": 46
+        },
+        {
+          "index": 2,
+          "node": "execute_tool",
+          "tool": "read_file",
+          "arguments": {
+            "path": "reports/结论.md"
+          },
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "denied": false,
+          "denyLayer": "",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"合成历史排障记录，不含真实运维数据。\\n\",\"offset\":0,\"path\":\"reports/结论.md\",\"redacted\":false,\"sha256\":\"a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9\",\"totalChars\":19,\"truncated\":false},\"evidenceId\":\"ev-f9974299e3f9c4b29355\",\"observedAt\":\"2026-10-17T19:57:15.821647+00:00\"}",
+          "auditDetails": {
+            "body": {
+              "content": "合成历史排障记录，不含真实运维数据。\n",
+              "offset": 0,
+              "path": "reports/结论.md",
+              "redacted": false,
+              "sha256": "a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9",
+              "totalChars": 19,
+              "truncated": false
+            },
+            "evidenceId": "ev-f9974299e3f9c4b29355",
+            "observedAt": "2026-10-17T19:57:15.821647+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "elapsedMs": 48
+        }
+      ],
+      "events": [
+        {
+          "index": 1,
+          "type": "agent.started",
+          "iteration": null,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 2,
+          "type": "sandbox.claim.started",
+          "iteration": null,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 3,
+          "type": "sandbox.claim.completed",
+          "iteration": null,
+          "tool": "",
+          "elapsedMs": 1631,
+          "details": {}
+        },
+        {
+          "index": 4,
+          "type": "context.transformed",
+          "iteration": 1,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {
+            "afterChars": 1182,
+            "afterMessages": 5,
+            "beforeChars": 1182,
+            "beforeMessages": 5,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 10642,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          }
+        },
+        {
+          "index": 5,
+          "type": "turn.started",
+          "iteration": 1,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 6,
+          "type": "model.completed",
+          "iteration": 1,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {
+            "finishReason": "tool_calls",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          }
+        },
+        {
+          "index": 7,
+          "type": "tool.started",
+          "iteration": 1,
+          "tool": "read_file",
+          "elapsedMs": 0,
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          }
+        },
+        {
+          "index": 8,
+          "type": "tool.completed",
+          "iteration": 1,
+          "tool": "read_file",
+          "elapsedMs": 46,
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          }
+        },
+        {
+          "index": 9,
+          "type": "tool.started",
+          "iteration": 1,
+          "tool": "read_file",
+          "elapsedMs": 0,
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          }
+        },
+        {
+          "index": 10,
+          "type": "tool.completed",
+          "iteration": 1,
+          "tool": "read_file",
+          "elapsedMs": 48,
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          }
+        },
+        {
+          "index": 11,
+          "type": "turn.completed",
+          "iteration": 1,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 12,
+          "type": "context.transformed",
+          "iteration": 2,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {
+            "afterChars": 3476,
+            "afterMessages": 9,
+            "beforeChars": 2039,
+            "beforeMessages": 8,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 13084,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          }
+        },
+        {
+          "index": 13,
+          "type": "turn.started",
+          "iteration": 2,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 14,
+          "type": "model.completed",
+          "iteration": 2,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {
+            "finishReason": "stop",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          }
+        },
+        {
+          "index": 15,
+          "type": "turn.completed",
+          "iteration": 2,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 16,
+          "type": "agent.completed",
+          "iteration": null,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 17,
+          "type": "sandbox.release.started",
+          "iteration": null,
+          "tool": "",
+          "elapsedMs": 0,
+          "details": {}
+        },
+        {
+          "index": 18,
+          "type": "sandbox.release.completed",
+          "iteration": null,
+          "tool": "",
+          "elapsedMs": 2271,
+          "details": {}
+        }
+      ],
+      "verdict": "completed",
+      "final": {
+        "summary": "Read imported synthetic evidence",
+        "rootCause": "",
+        "severity": "warning",
+        "evidence": [
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic migrated investigation\\n\",\"offset\":0,\"path\":\"draft.md\",\"redacted\":false,\"sha256\":\"bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3233fd050774a4744c7c\",\"observedAt\":\"2026-10-17T19:57:15.759930+00:00\"}"
+          },
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"合成历史排障记录，不含真实运维数据。\\n\",\"offset\":0,\"path\":\"reports/结论.md\",\"redacted\":false,\"sha256\":\"a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9\",\"totalChars\":19,\"truncated\":false},\"evidenceId\":\"ev-f9974299e3f9c4b29355\",\"observedAt\":\"2026-10-17T19:57:15.821647+00:00\"}"
+          }
+        ],
+        "injectionDetected": false,
+        "deniedActions": [],
+        "recommendation": "observe",
+        "planId": null
+      },
+      "elapsedMs": 4135
+    }
+  },
+  "traces": [
+    {
+      "alertFingerprint": "386f16353a4a6dc47cbe604f826fca36",
+      "attemptId": "attempt-678c5226e5914a73a8cd441bce9ec60d",
+      "capabilities": {
+        "deterministic": true,
+        "toolCalling": true
+      },
+      "elapsedMs": 4135,
+      "events": [
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 2,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 1631,
+          "index": 3,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.completed"
+        },
+        {
+          "details": {
+            "afterChars": 1182,
+            "afterMessages": 5,
+            "beforeChars": 1182,
+            "beforeMessages": 5,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 10642,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 4,
+          "iteration": 1,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 5,
+          "iteration": 1,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "tool_calls",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 0,
+          "index": 6,
+          "iteration": 1,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          },
+          "elapsedMs": 0,
+          "index": 7,
+          "iteration": 1,
+          "tool": "read_file",
+          "type": "tool.started"
+        },
+        {
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          },
+          "elapsedMs": 46,
+          "index": 8,
+          "iteration": 1,
+          "tool": "read_file",
+          "type": "tool.completed"
+        },
+        {
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          },
+          "elapsedMs": 0,
+          "index": 9,
+          "iteration": 1,
+          "tool": "read_file",
+          "type": "tool.started"
+        },
+        {
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          },
+          "elapsedMs": 48,
+          "index": 10,
+          "iteration": 1,
+          "tool": "read_file",
+          "type": "tool.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 11,
+          "iteration": 1,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {
+            "afterChars": 3476,
+            "afterMessages": 9,
+            "beforeChars": 2039,
+            "beforeMessages": 8,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 13084,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 12,
+          "iteration": 2,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 13,
+          "iteration": 2,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "stop",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 0,
+          "index": 14,
+          "iteration": 2,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 15,
+          "iteration": 2,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 16,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 17,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 2271,
+          "index": 18,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.completed"
+        }
+      ],
+      "final": {
+        "deniedActions": [],
+        "evidence": [
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic migrated investigation\\n\",\"offset\":0,\"path\":\"draft.md\",\"redacted\":false,\"sha256\":\"bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3233fd050774a4744c7c\",\"observedAt\":\"2026-10-17T19:57:15.759930+00:00\"}"
+          },
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"合成历史排障记录，不含真实运维数据。\\n\",\"offset\":0,\"path\":\"reports/结论.md\",\"redacted\":false,\"sha256\":\"a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9\",\"totalChars\":19,\"truncated\":false},\"evidenceId\":\"ev-f9974299e3f9c4b29355\",\"observedAt\":\"2026-10-17T19:57:15.821647+00:00\"}"
+          }
+        ],
+        "injectionDetected": false,
+        "planId": null,
+        "recommendation": "observe",
+        "rootCause": "",
+        "severity": "warning",
+        "summary": "Read imported synthetic evidence"
+      },
+      "injectedVia": [],
+      "mode": "replay",
+      "model": "replay",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [
+        {
+          "capabilities": [
+            "network:prometheus",
+            "metrics:read"
+          ],
+          "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+          "id": "prometheus",
+          "tools": [
+            "query_prometheus"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "sandbox:claim",
+            "kubernetes:read",
+            "deployment-scale:propose"
+          ],
+          "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+          "id": "kubernetes",
+          "tools": [
+            "kubernetes_read",
+            "propose_plan"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "network:ssh",
+            "linux:read"
+          ],
+          "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+          "id": "linux-host",
+          "tools": [
+            "linux_read"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "task-workspace:read",
+            "task-workspace:write"
+          ],
+          "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+          "id": "files",
+          "tools": [
+            "list_files",
+            "read_file",
+            "search_files",
+            "write_file",
+            "edit_file"
+          ],
+          "version": "1.0.0"
+        }
+      ],
+      "provider": "replay",
+      "routing": {},
+      "sandboxId": "b892b314ef546203",
+      "status": "succeeded",
+      "steps": [
+        {
+          "arguments": {
+            "path": "draft.md"
+          },
+          "auditDetails": {
+            "body": {
+              "content": "synthetic migrated investigation\n",
+              "offset": 0,
+              "path": "draft.md",
+              "redacted": false,
+              "sha256": "bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559",
+              "totalChars": 33,
+              "truncated": false
+            },
+            "evidenceId": "ev-3233fd050774a4744c7c",
+            "observedAt": "2026-10-17T19:57:15.759930+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 46,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic migrated investigation\\n\",\"offset\":0,\"path\":\"draft.md\",\"redacted\":false,\"sha256\":\"bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3233fd050774a4744c7c\",\"observedAt\":\"2026-10-17T19:57:15.759930+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "read_file"
+        },
+        {
+          "arguments": {
+            "path": "reports/结论.md"
+          },
+          "auditDetails": {
+            "body": {
+              "content": "合成历史排障记录，不含真实运维数据。\n",
+              "offset": 0,
+              "path": "reports/结论.md",
+              "redacted": false,
+              "sha256": "a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9",
+              "totalChars": 19,
+              "truncated": false
+            },
+            "evidenceId": "ev-f9974299e3f9c4b29355",
+            "observedAt": "2026-10-17T19:57:15.821647+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 48,
+          "index": 2,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"合成历史排障记录，不含真实运维数据。\\n\",\"offset\":0,\"path\":\"reports/结论.md\",\"redacted\":false,\"sha256\":\"a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9\",\"totalChars\":19,\"truncated\":false},\"evidenceId\":\"ev-f9974299e3f9c4b29355\",\"observedAt\":\"2026-10-17T19:57:15.821647+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "read_file"
+        }
+      ],
+      "taskId": "task-ab5db415e484d0d0",
+      "verdict": "completed",
+      "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075"
+    }
+  ],
+  "observations": [
+    {
+      "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075",
+      "attemptId": "attempt-e7ab87b6e6e14dd799ea810b3c5bef5f",
+      "podUid": "72b290ef-1c71-44d7-a2f4-0390e0d9d1e3",
+      "sandboxId": "94b52de1e4d88a92",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-f6351df6670e4fe6babe4dbd427e8075",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    {
+      "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075",
+      "attemptId": "attempt-c37e2c917ed84c45a2795f0e78af5759",
+      "podUid": "2fcdab62-ceb3-4403-b769-88ed501eb363",
+      "sandboxId": "0cf036f7b46e5eda",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-f6351df6670e4fe6babe4dbd427e8075",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    {
+      "workspaceId": "workspace-f6351df6670e4fe6babe4dbd427e8075",
+      "attemptId": "attempt-678c5226e5914a73a8cd441bce9ec60d",
+      "podUid": "37fb5fb7-246e-4cd3-853c-4816cd63fda0",
+      "sandboxId": "b892b314ef546203",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-f6351df6670e4fe6babe4dbd427e8075",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    }
+  ],
+  "fileCalls": [
+    {
+      "operation": "list_files",
+      "path": ".",
+      "attemptId": "attempt-e7ab87b6e6e14dd799ea810b3c5bef5f"
+    },
+    {
+      "operation": "write_file",
+      "path": "draft.md",
+      "attemptId": "attempt-e7ab87b6e6e14dd799ea810b3c5bef5f"
+    },
+    {
+      "operation": "list_files",
+      "path": ".",
+      "attemptId": "attempt-c37e2c917ed84c45a2795f0e78af5759"
+    },
+    {
+      "operation": "write_file",
+      "path": "reports/结论.md",
+      "attemptId": "attempt-c37e2c917ed84c45a2795f0e78af5759"
+    },
+    {
+      "operation": "list_files",
+      "path": ".",
+      "attemptId": "attempt-c37e2c917ed84c45a2795f0e78af5759"
+    },
+    {
+      "operation": "read_file",
+      "path": "draft.md",
+      "attemptId": "attempt-678c5226e5914a73a8cd441bce9ec60d"
+    },
+    {
+      "operation": "read_file",
+      "path": "reports/结论.md",
+      "attemptId": "attempt-678c5226e5914a73a8cd441bce9ec60d"
+    }
+  ],
+  "sourcePreserved": true,
+  "copiedSessionPrefixPreserved": true,
+  "repeatedApplyUnchanged": true,
+  "serverHashes": [
+    {
+      "path": "draft.md",
+      "sha256": "bb6748f99b64248459896559e2dfd074a2c45fc133cea7d9b091f079294b6559"
+    },
+    {
+      "path": "reports/结论.md",
+      "sha256": "a98bac5d746d3e045002bbd6e459453e0f526ad6d23600db789320b38fe7d0f9"
+    }
+  ],
+  "sourceSessionSha256": "34e2e578948b04a4610cb3c78b4839ffed74486dd29ef544bef3a2f54d20dabe",
+  "currentSessionSha256": "9acb2ff33b0b43c02567096fa508dfe25c56397bab0828f4e60f238ec258eb00",
+  "timestamp": "2026-10-17T19:57:18.378497+00:00"
+}

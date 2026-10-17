@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "timestamp": "2026-10-17T19:46:11.137435+00:00",
-  "scope": "V1 acceptance matrix passed; migration/unified commands/performance and V2 remain incomplete; active Goal",
+  "timestamp": "2026-10-17T20:02:24.032046+00:00",
+  "scope": "V1 acceptance matrix14/14 and explicit legacy migration passed; unified startup validation/performance and V2 remain incomplete; Goal active",
   "externalModelCalls": 0,
   "passedV1": 14,
   "totalV1": 14,
@@ -162,7 +162,7 @@
     {
       "id": "V1-13",
       "status": "passed",
-      "qualification": "Actual local Milvus/OpenSearch three scripted replays3/3 retained; latest final Python190/190 passes including call audits and crash windows. Fixed-clock Fake Store/Runner clearly separated from real process clocks; host clock rollback remains fail closed.",
+      "qualification": "Actual local Milvus/OpenSearch three scripted replays3/3 retained; latest Python197/197 includes explicit legacy import and durable-store regressions. Fake clocks versus real process evidence remain separate; host rollback guard unchanged.",
       "evidence": [
         {
           "path": "docs/evidence/phase9-joint-ops-replay.json",
@@ -183,6 +183,10 @@
         {
           "path": "docs/evidence/phase9-python-call-audit-final-regression-tests.txt",
           "sha256": "d12cf9738026313a70140960f607565fd5e7c4eee32dd858105ef32845362fae"
+        },
+        {
+          "path": "docs/evidence/phase9-python-migration-regression-tests.txt",
+          "sha256": "a6adf0678218b8407d44ec74a550dcdb28d3792ceae65728802aa6be98decd86"
         }
       ]
     },
@@ -203,8 +207,7 @@
     }
   ],
   "additionalDeliverablesPending": [
-    "Explicit legacy workspace migration and hash mapping",
-    "Unified startup/acceptance command",
+    "Unified entry exists; full installation/startup/joint dispatch validation still pending",
     "Fixed-workload latency/resource measurements",
     "All restic/MinIO V2 implementation and acceptance"
   ],
@@ -243,6 +246,11 @@
       "path": "docs/evidence/phase9-shutdown-clock-reproduction-tests.txt",
       "sha256": "c22dad7070d811901ccde762d2383775607dc9b56951b8e25a7613eaa128231f",
       "qualification": "20 shutdown repetitions reproduce one backwards-clock failure; original reservations are not refunded."
+    },
+    {
+      "path": "docs/evidence/phase9-migration-initial-tests.txt",
+      "sha256": "4a0085070b79aa4b1e58b9f939e797500ecce2c37b1d11d341b9a1da40cc49fd",
+      "qualification": "First migration batch has3 errors from wrong write-response hash field; corrected to actual Go newSha256. Original failed output retained; final197 regression and two actual integrations pass."
     }
   ],
   "diagnostics": [
@@ -255,6 +263,34 @@
       "path": "docs/evidence/phase9-cancel-clock-final-tests.txt",
       "sha256": "78840011b96bf79758bb6acb4db5b0a256fdb4d51402c03515aec6bf1e8daf54",
       "qualification": "39 targeted logic regressions, including fixed-clock Fake Store and unchanged explicit clock rollback guards."
+    }
+  ],
+  "additionalDeliverablesCompleted": [
+    {
+      "name": "Explicit legacy workspace migration and Session/workspace/hash mapping",
+      "qualification": "Two real Go/gVisor/NFS runs with synthetic legacy linear Session, discarded write confirmation, no repeated write, manual new Task reading imported files. Source preserved; limited UTF-8 text migration, not generic filesystem metadata migration.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-workspace-migration.json",
+          "sha256": "723e8998f394560b49435c492b64564132227e19f6f5445904fd5afa60bc025f"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-workspace-migration-entry.json",
+          "sha256": "318015ad9318290cb12651b14c21ae5bf2c3ce1f739fe34653109fc7a388fd7e"
+        },
+        {
+          "path": "docs/evidence/phase9-migration-boundary-tests.txt",
+          "sha256": "c0abb0ce3c5289ca4e226d4552a4766e46bcefc58bb7d8468d51a58c711af56f"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-check.txt",
+          "sha256": "10661427f0f9faa489c97bd1d5ca43504dde4593fbd663fc7998402447c83193"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-migration-tests.txt",
+          "sha256": "e65ba66c771790df789c4b9794d257bdf39f57a1024db7df073d584619e6a0b8"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,11 @@
+CPU: 12
+可用内存: 20518 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   26G  931G   3% /
+C:\             932G  802G  130G  87% /mnt/c
+运行中的 Docker 容器: 2
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+执行 migration；结果目录：/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/.cache/workspace-eval/run-LV9TMnKz
+存储验收结束：/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/.cache/workspace-eval/run-LV9TMnKz；联合回放与性能测量另执行。
