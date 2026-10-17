@@ -153,3 +153,12 @@ python3 hack/verify-workspace-nfs.py --output .cache/phase9-nfs-component-rerun.
 已存在的合成目录须先核对归属，不删除后重建；mkdir 因存在而报错时不要把所有错误都忽略。此低层夹具不登记Go账本，也不启用生产writer finalizer；使用独立storage-probe标签排除预热池。直接管理员exec只用于组件验收，不能宣传为Agent文件RPC或fencing验收；完整路线使用上面的Go生命周期探测。
 
 依据：[Ganesha VFS](https://github.com/nfs-ganesha/nfs-ganesha/wiki/VFS)、[SIG Storage 服务端部署说明](https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/master/docs/deployment.md)。
+
+命令接收与旧 attempt 审计恢复的独立真实验收：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_command_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/agentd-command-recovery.json
+```
+
+同样要求10880/18090空闲；只强杀夹具自己启动的agentd子进程。模型为固定Replay，不请求外部API；验证已确认的steer/follow-up重启后各注入一次、旧调用审计可查、终态再启动不改日志。不要与其他真实工作区夹具并发运行。

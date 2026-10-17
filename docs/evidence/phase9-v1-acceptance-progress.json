@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "timestamp": "2026-10-17T19:12:03.033608+00:00",
-  "scope": "Partial V1 acceptance, not completion of docs43 or the active Goal",
+  "timestamp": "2026-10-17T19:46:11.137435+00:00",
+  "scope": "V1 acceptance matrix passed; migration/unified commands/performance and V2 remain incomplete; active Goal",
   "externalModelCalls": 0,
-  "passedV1": 13,
+  "passedV1": 14,
   "totalV1": 14,
   "pendingV2": 10,
   "cases": [
@@ -93,6 +93,10 @@
         {
           "path": "docs/evidence/phase9-agent-write-ack-recovery.json",
           "sha256": "50c118930b6343006f085bf92eefa178eca3ae1f4c0005c99e34277554f30fc6"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-audited-write-inspection.json",
+          "sha256": "dfd4e03b9d9d0a85d02d83f00e350f8abde5c5305cb140fb911f0d851d948cd3"
         }
       ]
     },
@@ -104,6 +108,10 @@
         {
           "path": "docs/evidence/phase9-agent-interruption-cleanup-audit.json",
           "sha256": "3bf1a09ab2d4746ef3ba9a16496bdda9d391b3210394163dd76b8e4af9a9eb0f"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-command-recovery-final.json",
+          "sha256": "f01ba6d8af6f27e054ede30550f12b6f8a8e46dab46525268c01910a83f6bca6"
         }
       ]
     },
@@ -154,7 +162,7 @@
     {
       "id": "V1-13",
       "status": "passed",
-      "qualification": "Latest actual local Milvus/OpenSearch three replays pass with scripted model/Fake sandbox; full176 Python regressions, with explicit fixed-clock Fake Store. Original175 failed on host clock rollback and is retained; actual clock issue not declared fixed.",
+      "qualification": "Actual local Milvus/OpenSearch three scripted replays3/3 retained; latest final Python190/190 passes including call audits and crash windows. Fixed-clock Fake Store/Runner clearly separated from real process clocks; host clock rollback remains fail closed.",
       "evidence": [
         {
           "path": "docs/evidence/phase9-joint-ops-replay.json",
@@ -171,21 +179,33 @@
         {
           "path": "docs/evidence/phase9-python-concurrency-final-regression-tests.txt",
           "sha256": "0de65182c1f6acbf0a3a8aeeee6fe4b6c776325e2bd01285954bffb8397f8aed"
+        },
+        {
+          "path": "docs/evidence/phase9-python-call-audit-final-regression-tests.txt",
+          "sha256": "d12cf9738026313a70140960f607565fd5e7c4eee32dd858105ef32845362fae"
         }
       ]
     },
     {
       "id": "V1-14",
-      "status": "pending",
-      "qualification": "Formal real-service acceptance remains incomplete.",
-      "evidence": []
+      "status": "passed",
+      "qualification": "Actual HTTP steer/follow-up202, SIGKILL -9 and same-task restart; commands each injected once, durable old tool evidence/partial usage, third terminal restart unchanged. Final code real rerun plus explicitly Fake cross-journal crash-window tests.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-command-recovery-final.json",
+          "sha256": "f01ba6d8af6f27e054ede30550f12b6f8a8e46dab46525268c01910a83f6bca6"
+        },
+        {
+          "path": "docs/evidence/phase9-call-audit-final-boundary-tests.txt",
+          "sha256": "8f7b2e86ce26b504ece65254c3022f1ae5bae79d67a369fe7ebfdc3bef5a7bac"
+        }
+      ]
     }
   ],
   "additionalDeliverablesPending": [
     "Explicit legacy workspace migration and hash mapping",
     "Unified startup/acceptance command",
     "Fixed-workload latency/resource measurements",
-    "Remaining acknowledged-command and crash Trace recovery case V1-14",
     "All restic/MinIO V2 implementation and acceptance"
   ],
   "failedExperiments": [

@@ -208,7 +208,10 @@ async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_tur
         traces = await store.get_task_traces(task.task_id)
         assert len(traces) == (2 if fault_after_first_turn or lose_write_ack else 1) and traces[-1]["status"] == "succeeded"
         steps = [step for trace in traces for step in trace["steps"]]
-        assert [s["tool"] for s in steps] == (["read_file"] if lose_write_ack else ["write_file", "read_file"])
+        assert [s["tool"] for s in steps] == (["read_file", "read_file"] if lose_write_ack else ["write_file", "read_file"])
+        if lose_write_ack:
+            assert steps[0]["pluginId"] == "workspace-recovery"
+            assert json.loads(steps[0]["observation"])["matchesExpectedWrite"] is True
         read = json.loads(steps[-1]["observation"])["body"]
         expected = hashlib.sha256(CONTENT.encode()).hexdigest()
         assert read["content"] == CONTENT and read["sha256"] == expected

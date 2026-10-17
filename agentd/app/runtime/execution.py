@@ -48,6 +48,9 @@ class RecoveryAttempt:
     def finish(self, call_id: str) -> None:
         self.ledger.finish_call(self.task_id, self.attempt_id, call_id)
 
+    def audit(self, audit: dict[str, Any], call_id: str | None = None) -> None:
+        self.ledger.record_audit(self.task_id, self.attempt_id, audit, call_id)
+
     def boundary(self, node_id: str | None, messages: Sequence[BaseMessage] = ()) -> None:
         if node_id is not None:
             pending = {c["commandId"] for c in self.snapshot()["commands"] if c["appliedNodeId"] is None}

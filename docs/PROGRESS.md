@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M3：V1正式验收13/14通过，其余1项与迁移/性能待完成；V2未开始；Goal active
+    Phase 9 M3：V1验收矩阵14/14通过，迁移/统一入口/性能待完成；V2未开始；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -55,7 +55,11 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 本批次首轮完整Python175项有1项失败：shutdown接续触发墙钟早于attempt开始。20次复现中再次出现1次，观测UTC19:03:42.938596早于19:03:43.735467；不重置deadline或放宽保护。补安全时间诊断，纯逻辑Fake Store用显式固定时钟；Runner预算检查先于协程创建，避免抛错留下未await对象。真实进程验收仍用真实墙钟；最终完整Python176/176、280.193秒通过，phase9-python-concurrency-final-regression-tests.txt；首次失败未覆盖。上一有效提交36b20e0，本批次交付以PR#2最新HEAD为准。
 - 独立只读宿主时钟观测phase9-host-clock-observation.json：30秒2942样本发现2次墙钟倒退约1.242/0.813秒，单调时钟各前进约10ms；校时来源未定位，不改变系统时间。最终39项定向4.593秒通过，phase9-cancel-clock-final-tests.txt；纯逻辑固定时钟和真实进程结果分开，墙钟回拨安全停止保留。
 - 当前三类既有运维回放复验3/3：phase9-joint-ops-concurrency-replay.json，真实Milvus2.5.10/OpenSearch+缓存E5/BGE，脚本模型/Fake路由/Fake沙箱，外部模型0；不重新导入或重建索引，临时四服务已停回初始状态，ES未启动。最终完整176含本批次取消/预算预检及固定时钟Fake Store，未把它冒称真实墙钟稳定性证明。
-- 第一项下一步：剩余V1-14命令游标与崩溃Trace；补显式旧文件迁移、统一命令和性能统计。当前13/14已过，机器可读清单phase9-v1-acceptance-progress.json；强杀Trace缺失用usageKnown=false控制面记录，不把它当完整已知用量。V1全验收前不推进V2主链路。
+- V1-14真实命令接续通过：phase9-agent-command-recovery-final.json，实际HTTP202后SIGKILL、原Task自动接续、两条命令各注入一次、原预算/时钟保持、只写一次guard、旧Trace含已保存工具证据；第三次终态启动Task/Session/Go日志字节不变。全部固定Replay，外部模型0。新call.audit先fsync再确认调用完成，缺失响应不伪报0 token。
+- ownerStopped与最终Trace提交窗口已补齐；只读partial-audit视图不修改日志或证明停止。Session fsync后命令游标缺口、旧attempt不引用后续head、未确认owner查询无副作用，34/34定向5.433秒。实际写入丢确认核查新增workspace-recovery审计复验通过，phase9-agent-audited-write-inspection.json。旧188全量277.950秒属于最后窗口修复前，最终全量另记，不混算。
+- 本批次前已推送HEAD=0ef9b51；交付仍更新draft PR#2，base=codex/agent-memory-rag-plan，依赖PR#1，不合并。当前测试Pod均已释放，NFS运行/未暂停，数据保留；用户docs32/docs34修改不纳入提交。
+- 最终代码全量190/190、271.294秒通过，phase9-python-call-audit-final-regression-tests.txt；含最终窗口修复与查询测试。此前188批次和34定向保留，不相加。compileall/diff检查、证据JSON与校验和检查通过；无付费模型。
+- 第一项下一步：补显式旧文件迁移与Session/workspace/hash映射，再补统一命令和固定负载性能。当前V1矩阵14/14通过，清单phase9-v1-acceptance-progress.json；不等于V1全部交付。缺失最终Trace从已fsync调用审计恢复，缺失响应仍usageKnown=false；查询部分审计不会确认旧owner停止。先完成V1交付再推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移仍未完成。

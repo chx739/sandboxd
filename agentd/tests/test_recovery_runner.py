@@ -22,6 +22,7 @@ from agentd.app.runtime.recovery import RecoveryConflict, RecoveryLedger, Recove
 from agentd.app.runtime.session import SessionJournal
 from agentd.app.tools.remote_files import WorkspaceExecutionError
 from agentd.app.router import ChoiceJudgement, ModelRouter
+from agentd.tests.recovery_clock import install_fixed_recovery_clock
 
 
 class FakeWorkspaceService:
@@ -98,6 +99,7 @@ class FakeWorkspaceService:
 
 class RecoveryRunnerTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
+        install_fixed_recovery_clock(self)
         self.tmp = tempfile.TemporaryDirectory(prefix="sandboxd-runner-recovery-", dir="/tmp")
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -174,6 +176,12 @@ class RecoveryRunnerTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotEqual(first.attempt_id, trace.attempt_id)
         self.assertEqual(len(self.ledger.traces("task-demo")), 2)
         self.assertTrue(any(e.type == "workspace.write.inspected" for e in trace.events))
+        self.assertEqual(trace.steps[0].plugin_id, "workspace-recovery")
+        self.assertTrue(json.loads(trace.steps[0].observation)["matchesExpectedWrite"])
+        inspections = [a for a in self.ledger.audits("task-demo", second.attempt_id)
+                       if a["audit"]["kind"] == "tool" and a["audit"]["step"]["pluginId"] == "workspace-recovery"]
+        self.assertEqual(len(inspections), 1)
+        self.assertEqual(inspections[0]["audit"]["step"]["tool"], "read_file")
 
     async def test_unknown_write_without_matching_hash_stops_before_another_model_call(self):
         self.client.lose_write, self.client.commit_write = True, False

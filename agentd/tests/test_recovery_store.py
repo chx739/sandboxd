@@ -4,31 +4,20 @@ import asyncio
 import json
 import tempfile
 import unittest
-from datetime import datetime, timezone
 from pathlib import Path
-from unittest.mock import patch
 
 from agentd.app.models import AlertEvent
 from agentd.app.model_gateway import ReplayModelGateway
 from agentd.app.runner import AgentRunner
 from agentd.app.store import TaskStore, TaskConflictError
 from agentd.tests.test_recovery_runner import FakeWorkspaceService
+from agentd.tests.recovery_clock import install_fixed_recovery_clock
 
 
 class DurableTaskStoreTests(unittest.IsolatedAsyncioTestCase):
     """真实TaskStore/Runner + Fake Go及固定时钟；不冒称真实NFS或SIGKILL验收。"""
     async def asyncSetUp(self):
-        class FixedClock(datetime):
-            @classmethod
-            def now(cls, tz=None):
-                fixed = datetime(2026, 10, 18, tzinfo=timezone.utc)
-                return fixed.astimezone(tz) if tz is not None else fixed.replace(tzinfo=None)
-
-        # 本类验证状态机，不依赖宿主墙钟；真实时钟/回拨由专门用例及进程验收覆盖。
-        for target in ("agentd.app.models.datetime", "agentd.app.runner.datetime", "agentd.app.runtime.execution.datetime"):
-            clock = patch(target, FixedClock)
-            clock.start()
-            self.addCleanup(clock.stop)
+        install_fixed_recovery_clock(self)
         self.tmp = tempfile.TemporaryDirectory(prefix="sandboxd-store-recovery-", dir="/tmp")
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -164,6 +153,109 @@ class DurableTaskStoreTests(unittest.IsolatedAsyncioTestCase):
         messages = [e["message"] for e in entries if e["type"] == "session.node"]
         for command_id in ids_before:
             self.assertEqual(sum(m.get("commandId") == command_id for m in messages), 1)
+
+    async def test_session_fsync_before_command_cursor_is_reconciled_without_reinjection(self):
+        task = await self.store.enqueue(self.alert)
+        await self.store.send_control(task.task_id, "steer", "only inspect")
+        await self.store.send_control(task.task_id, "follow-up", "explain evidence")
+        ids = [c["commandId"] for c in self.store._ledger.get(task.task_id)["commands"]]
+        original = self.store._ledger.complete_boundary
+        interrupted = []
+
+        def boundary(task_id, attempt_id, node_id, command_ids):
+            if command_ids and not interrupted:
+                # Session已经fsync，此处显式中断，模拟跨日志提交窗口；不是SIGKILL证据。
+                interrupted.append(node_id)
+                raise asyncio.CancelledError
+            return original(task_id, attempt_id, node_id, command_ids)
+
+        self.store._ledger.complete_boundary = boundary
+        worker = await self.worker()
+        self.assertEqual((await self.settled(task.task_id)).status, "interrupted")
+        self.assertIsNone(self.store._ledger.get(task.task_id)["commands"][0]["appliedNodeId"])
+        path = self.store._journals[task.task_id].path
+        prefix = path.read_bytes()
+        self.assertIn(ids[0], prefix.decode())
+        worker.cancel()
+        await asyncio.gather(worker, return_exceptions=True)
+        self.reopen()
+        await self.worker()
+        result = await self.settled(task.task_id)
+        self.assertEqual(result.status, "succeeded", result.error)
+        self.assertEqual(result.attempt_count, 2)
+        commands = self.store._ledger.get(task.task_id)["commands"]
+        self.assertEqual([c["commandId"] for c in commands], ids)
+        self.assertTrue(all(c["appliedNodeId"] for c in commands))
+        self.assertTrue(path.read_bytes().startswith(prefix))
+        nodes = [json.loads(line) for line in path.read_text().splitlines() if json.loads(line)["type"] == "session.node"]
+        for cid in ids:
+            self.assertEqual(sum(n["message"].get("commandId") == cid for n in nodes), 1)
+        self.assertEqual(len(self.client.writes), 1)
+
+    async def test_stopped_owner_without_final_trace_is_reconstructed_before_next_attempt(self):
+        task = await self.store.enqueue(self.alert)
+        original = self.store._ledger.record_trace
+        interrupted = []
+
+        def crash_before_trace(trace):
+            if not interrupted:
+                interrupted.append(trace.attempt_id)
+                raise asyncio.CancelledError
+            original(trace)
+
+        self.store._ledger.record_trace = crash_before_trace
+        worker = await self.worker()
+        self.assertEqual((await self.settled(task.task_id)).status, "interrupted")
+        state = self.store._ledger.get(task.task_id)
+        self.assertTrue(state["attempts"][-1]["ownerStopped"])
+        self.assertEqual(self.store._ledger.traces(task.task_id), [])
+        journal = self.control / "tasks.jsonl"
+        before = journal.read_bytes()
+        snapshot = (await self.store.get_task_traces(task.task_id))[0]
+        self.assertEqual(snapshot["verdict"], "partial-audit")
+        self.assertTrue(snapshot["events"][0]["details"]["ownerStopped"])
+        self.assertEqual(journal.read_bytes(), before)
+        session_path = self.store._journals[task.task_id].path
+        prefix = session_path.read_bytes()
+        worker.cancel()
+        await asyncio.gather(worker, return_exceptions=True)
+        self.reopen()
+        await self.worker()
+        result = await self.settled(task.task_id)
+        self.assertEqual(result.status, "succeeded", result.error)
+        final = self.store._ledger.get(task.task_id)
+        self.assertEqual(len(final["attempts"]), 2)
+        self.assertEqual(final["limits"], state["limits"])
+        self.assertEqual(final["timing"], state["timing"])
+        traces = self.store._ledger.traces(task.task_id)
+        self.assertEqual(len(traces), 2)
+        self.assertEqual(traces[0]["attemptId"], interrupted[0])
+        self.assertEqual(traces[0]["steps"][0]["tool"], "write_file")
+        self.assertEqual(traces[0]["events"][0]["type"], "attempt.recovered")
+        self.assertEqual(len(self.client.writes), 1)
+        self.assertTrue(session_path.read_bytes().startswith(prefix))
+        # 旧attempt缺失的边界不能误指向后续attempt的全局最新节点。
+        old_view = self.store._ledger.recovery_trace(task.task_id, interrupted[0])
+        self.assertIsNone(old_view.events[0].details["completeNodeId"])
+
+    async def test_unconfirmed_owner_has_read_only_partial_audit_not_completion(self):
+        task = await self.store.enqueue(self.alert)
+        self.client.unknown_claim = True
+        self.store._ledger.record_trace = lambda trace: None  # 显式Fake落盘缺口。
+        await self.worker()
+        self.assertEqual((await self.settled(task.task_id)).status, "interrupted")
+        journal = self.control / "tasks.jsonl"
+        before = journal.read_bytes()
+        traces = await self.store.get_task_traces(task.task_id)
+        self.assertEqual(len(traces), 1)
+        self.assertEqual(traces[0]["mode"], "in-progress-audit")
+        details = traces[0]["events"][0]["details"]
+        self.assertFalse(details["completionTracePersisted"])
+        self.assertFalse(details["ownerStopped"])
+        self.assertEqual(await self.store.get_task_traces(task.task_id), traces)
+        self.assertEqual(journal.read_bytes(), before)
+        self.assertEqual(self.store._ledger.traces(task.task_id), [])
+        self.assertEqual(len(self.store._ledger.get(task.task_id)["attempts"]), 1)
 
     async def test_v1_old_node_resume_rejected_but_latest_uses_same_workspace(self):
         task = await self.store.enqueue(self.alert)

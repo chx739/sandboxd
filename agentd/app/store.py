@@ -12,7 +12,7 @@ from typing import Literal
 
 from langchain_core.messages import BaseMessage, HumanMessage
 
-from .models import AgentTask, AgentTrace, AgentEvent, AlertEvent, utc_now
+from .models import AgentTask, AgentTrace, AlertEvent, utc_now
 from .redaction import public_error
 from .runner import AgentRunner
 from .runtime.control import AgentControl
@@ -444,18 +444,12 @@ class TaskStore:
                 except Exception as exc:
                     await self._set_error(task_id, "interrupted", "旧执行者未确认停止：" + public_error(exc))
                     return
-                # 强杀进程可能没有 finally Trace；只补控制面中断事实，不编造模型用量。
-                if not any(t["attemptId"] == old["attemptId"] for t in self._ledger.traces(task_id)):
-                    provider = state["provider"] or {}
-                    self._ledger.record_trace(AgentTrace(
-                        taskId=task_id, attemptId=old["attemptId"], workspaceId=state["workspaceId"],
-                        mode="recovery", model=provider.get("model", "not-selected"),
-                        provider=provider.get("provider", "unknown"), sandboxId=self._ledger.get(task_id)["attempts"][-1]["sandboxId"],
-                        verdict="process-interrupted", status="interrupted",
-                        events=[AgentEvent(index=1, type="attempt.recovered", details={"usageKnown": False,
-                                           "reason": "prior attempt had no persisted completion trace"})],
-                    ))
                 state = self._ledger.get(task_id)
+            # ownerStopped与Trace分两次fsync；两者之间退出也必须补齐旧审计。
+            if state["attempts"] and state["attempts"][-1]["ownerStopped"]:
+                old = state["attempts"][-1]
+                if not any(t["attemptId"] == old["attemptId"] for t in self._ledger.traces(task_id)):
+                    self._ledger.record_trace(self._ledger.recovery_trace(task_id, old["attemptId"]))
             if state["cancelRequested"]:
                 await self._finish_durable(task_id, "cancelled")
                 return
@@ -526,7 +520,25 @@ class TaskStore:
             if task_id not in self._tasks:
                 raise TaskNotFoundError("task not found")
             if self._ledger is not None:
-                return self._ledger.traces(task_id)
+                traces = self._ledger.traces(task_id)
+                persisted = {t["attemptId"]: t for t in traces}
+                state = self._ledger.get(task_id)
+                result = []
+                for attempt in state["attempts"]:
+                    aid = attempt["attemptId"]
+                    if aid in persisted:
+                        result.append(persisted[aid])
+                        continue
+                    # 只读投影不写账本、不证明停止，也不充当内部恢复用的完成Trace。
+                    partial = self._ledger.recovery_trace(task_id, aid)
+                    partial.mode, partial.verdict = "in-progress-audit", "partial-audit"
+                    partial.status = self._tasks[task_id].status if aid == state["attempts"][-1]["attemptId"] else "interrupted"
+                    event = partial.events[0]
+                    event.type = "attempt.audit.snapshot"
+                    event.details.update({"completionTracePersisted": False, "ownerStopped": attempt["ownerStopped"],
+                                          "reason": "read-only audit view; attempt completion not persisted"})
+                    result.append(partial.model_dump(mode="json", by_alias=True))
+                return result
             trace = self._tasks[task_id].trace
             return [trace.model_dump(mode="json", by_alias=True)] if trace is not None else []
 

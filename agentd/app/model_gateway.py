@@ -19,6 +19,7 @@ class ModelInvocation:
     usage: ModelUsage
     finish_reason: str
     elapsed_ms: int
+    usage_known: bool = False
 
 
 def _non_negative_int(value: Any) -> int:
@@ -62,6 +63,8 @@ class LiveModelSession:
             usage=usage,
             finish_reason=str(response.response_metadata.get("finish_reason") or "unknown"),
             elapsed_ms=int((time.monotonic() - started) * 1000),
+            usage_known=all(type(raw_usage.get(key)) is int and raw_usage[key] >= 0
+                            for key in ("input_tokens", "output_tokens", "total_tokens")),
         )
 
 
@@ -142,6 +145,7 @@ class ReplayModelSession:
             usage=ModelUsage(),
             finish_reason="tool_calls" if tool_calls else "stop",
             elapsed_ms=int((time.monotonic() - started) * 1000) if delay_ms else 0,
+            usage_known=True,  # Replay明确没有外部模型token用量，不冒称真实Provider计费。
         )
 
 

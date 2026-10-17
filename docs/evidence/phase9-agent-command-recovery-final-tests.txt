@@ -1,0 +1,5 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 149317}
+{"stage": "commands-accepted-and-sigkill", "taskId": "task-ce136e4d18a06604", "commandIds": ["command-c8461e3aedae4e5b8225272cd998bcff", "command-15da0751e57f46a9ae5d1454419f6c19"]}
+{"stage": "agentd-process-started", "number": 2, "pid": 149665}
+{"stage": "agentd-process-started", "number": 3, "pid": 150102}
+{"passed": true, "output": "docs/evidence/phase9-agent-command-recovery-final.json"}

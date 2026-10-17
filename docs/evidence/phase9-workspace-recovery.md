@@ -178,3 +178,19 @@
 **回归与时钟诊断：** 首轮`phase9-python-concurrency-regression-tests.txt`完整175项有1项shutdown时钟失败；20次`phase9-shutdown-clock-reproduction-tests.txt`再次1次失败。`phase9-host-clock-observation.json`独立30秒2942样本确认2次墙钟倒退约1.242/0.813秒，单调时钟正常前进；校时来源未定位，不改系统时间。生产回拨保护保留并附observed/started，Fake Store纯逻辑用显式固定时钟；Runner预算预检先于协程创建，新增0认领/无未await协程/never-bound清理测试。最终39项定向通过4.593秒，`phase9-cancel-clock-final-tests.txt`。最终全量另记，不覆盖首轮失败；所有本轮外部模型调用0。
 
 最终完整回归`phase9-python-concurrency-final-regression-tests.txt`：176/176、280.193秒，原175项失败未覆盖。三类联合运维复验`phase9-joint-ops-concurrency-replay.json`：3/3，实际Milvus2.5.10/OpenSearch和缓存E5/BGE，脚本模型/Fake路由/Fake沙箱；HF/Transformers离线、OMP=2，未重建或导入索引。四个已有项目服务临时启动后已停止回原状态，ES未启动。该全量含固定时钟Fake Store测试，不宣称宿主墙钟问题已修复；真实SIGKILL/原截止时间证据仍单列。
+
+## 2026-10-18 命令游标与崩溃前调用审计
+
+本批次增加 `call.audit`：模型响应的计数/已知标记和工具的有界脱敏证据在调用完成确认前 fsync。调用状态与审计独立，中断后没有响应的预留仍占用额度、用量未知；已有响应的 token 和证据可从旧 attempt 查询，不能统一写零。新增格式读取旧日志，旧写入器不支持新记录，不支持把新控制目录直接交给旧版本回退。
+
+首次真实通过 `phase9-agent-command-recovery.json`：HTTP 接收 steer/follow-up 后，实际 SIGKILL 自建 agentd，再同目录自动接续；同 Task/分支/工作区/预算/原时钟保持。两条命令各注入一次、只写一次 guard，旧 Trace 可查原写入步骤与证据 ID。旧 attempt 有2次模型预留但只保存1次响应，因此 `usageKnown=false`；记录的 Replay 零用量是无外部模型，不冒称 SDK 账单。第三次终态服务重启后任务/会话/Go日志字节不变。实际 Go/gVisor/NFS，脚本模型，不是生产 HA。
+
+`phase9-agent-audited-write-inspection.json`：实际写入后客户端丢弃确认，再读取目标 hash，`workspace-recovery` 核查和模型读取都进入后续 Trace；写操作仍仅一次。不将客户端丢确认描述为 TCP 丢包。
+
+另补两个持久化窗口的确定性测试：Session fsync 后、命令消费游标前中断，恢复补游标不重注入；ownerStopped fsync 后、最终 Trace 前中断，恢复先补旧审计再新建 attempt。停止未确认且缺少最终 Trace 时公开查询只给 `partial-audit` 只读视图，查询前后日志不变、不新认领。老 attempt 不引用后续 attempt 的新 head。上述精确窗口由显式 Fake/CancelledError 注入，不冒充真实强杀时序。
+
+新增边界最终定向 `phase9-call-audit-final-boundary-tests.txt`：34/34，5.433秒。早期完整回归 `phase9-python-call-audit-regression-tests.txt`：188/188，277.950秒，发生在最后 ownerStopped/Trace 窗口与只读投影修复前，不能代表最终代码全量。最新真实复验与最终全量结果另列；原始结果不覆盖。
+
+最终代码实际复验 `phase9-agent-command-recovery-final.json` / 同名`-tests.txt`通过：Task `task-ce136e4d18a06604`，两条命令计数 `[1,1]`、实际OS强杀、两attempt/不同Pod、旧工具证据、原预算/时钟、终态第三进程日志不变均通过。夹具退出码0，sandboxd-demo/storage无遗留Pod，NFS Running=true/Paused=false；卷和文件保留。至此V1矩阵14/14有对应证据；这不等于V1全部交付或完整Goal完成，迁移、统一入口、性能和10项V2仍待完成。最终全量回归见下方结果。
+
+最终全量 `phase9-python-call-audit-final-regression-tests.txt`：190/190、271.294秒，通过，包含最终ownerStopped/Trace窗口和只读投影；与此前188批次分开、不相加。compileall和diff检查通过，新文件凭据形状启发式扫描无匹配（不是完整秘密扫描证明）。Goal仍active；下一步显式迁移、统一命令、固定负载性能，再V2独立分支。

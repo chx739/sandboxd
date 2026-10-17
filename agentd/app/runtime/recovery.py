@@ -10,8 +10,9 @@ from typing import Any
 from uuid import uuid4
 
 from ..redaction import redact_text
-from ..models import AgentTrace
+from ..models import AgentTrace, AgentEvent, ModelUsage, sum_model_usage
 from .durable import DurableJournal, JournalCorrupt
+from .call_audit import normalize_audit
 
 TERMINAL = frozenset({"succeeded", "failed", "cancelled", "limit_exceeded"})
 _IDENTITY = re.compile(r"[a-z][a-z0-9-]{0,95}\Z")
@@ -70,9 +71,14 @@ class RecoveryLedger:
         self._mutex = threading.RLock()
         self._tasks: dict[str, dict[str, Any]] = {}
         self._traces: dict[str, dict[str, Any]] = {}
+        self._audits: dict[str, dict[str, Any]] = {}
         self._created_at: dict[str, str] = {}
         try:
             for event in self._journal.entries():
+                if event["type"] == "call.audit":
+                    self._check_audit(event["data"])
+                    self._audits[event["data"]["auditId"]] = event["data"]
+                    continue
                 if event["type"] == "attempt.trace":
                     data = event["data"]
                     self._check_trace(data)
@@ -485,6 +491,74 @@ class RecoveryLedger:
                 raise RecoveryConflict("stale or completed call")
             call["state"] = "finished"
             return self._save(state)
+
+    def _check_audit(self, data: dict[str, Any]) -> None:
+        try:
+            if set(data) != {"auditId", "taskId", "attemptId", "callId", "audit"}:
+                raise ValueError
+            _identity(data["auditId"])
+            if data["auditId"] in self._audits:
+                raise ValueError
+            state = self._tasks[data["taskId"]]
+            attempt = self._active(state, data["attemptId"])
+            audit = normalize_audit(data["audit"])
+            if audit != data["audit"]:
+                raise ValueError("audit is not canonical and redacted")
+            call_id = data["callId"]
+            if call_id is not None:
+                call = state["calls"][call_id]
+                if call["attemptId"] != attempt["attemptId"] or call["kind"] != audit["kind"] or call["state"] not in {"reserved", "finished"}:
+                    raise ValueError
+                if any(a["taskId"] == data["taskId"] and a["callId"] == call_id for a in self._audits.values()):
+                    raise ValueError("duplicate call audit")
+                if audit["kind"] == "tool" and audit["step"]["tool"] != call["operation"]:
+                    raise ValueError
+            elif audit["kind"] != "tool":
+                raise ValueError("model audit requires a reservation")
+            if audit["kind"] == "tool":
+                previous_steps = [a for a in self._audits.values()
+                                  if a["taskId"] == data["taskId"] and a["attemptId"] == data["attemptId"] and a["audit"]["kind"] == "tool"]
+                if audit["step"]["index"] != len(previous_steps) + 1:
+                    raise ValueError("duplicate or out-of-order tool step")
+        except (KeyError, TypeError, ValueError, RecoveryConflict) as exc:
+            raise JournalCorrupt("invalid call audit history") from exc
+
+    def record_audit(self, task_id: str, attempt_id: str, audit: dict[str, Any], call_id: str | None = None) -> None:
+        with self._mutex:
+            data = {"auditId": new_id("audit"), "taskId": task_id, "attemptId": attempt_id,
+                    "callId": call_id, "audit": normalize_audit(audit)}
+            self._check_audit(data)
+            row = self._journal.append("call.audit", data)
+            self._audits[data["auditId"]] = row["data"]
+
+    def audits(self, task_id: str, attempt_id: str) -> list[dict[str, Any]]:
+        with self._mutex:
+            return copy.deepcopy([a for a in self._audits.values() if a["taskId"] == task_id and a["attemptId"] == attempt_id])
+
+    def recovery_trace(self, task_id: str, attempt_id: str) -> AgentTrace:
+        state = self.get(task_id)
+        attempt = next(a for a in state["attempts"] if a["attemptId"] == attempt_id)
+        audits = self.audits(task_id, attempt_id)
+        models = [a for a in audits if a["audit"]["kind"] == "model"]
+        calls = {cid: c for cid, c in state["calls"].items() if c["attemptId"] == attempt_id}
+        model_calls = [c for c in calls.values() if c["kind"] == "model"]
+        provider = state["provider"] or {}
+        return AgentTrace(
+            taskId=task_id, attemptId=attempt_id, workspaceId=state["workspaceId"],
+            mode="recovery", model=provider.get("model", "not-selected"), provider=provider.get("provider", "unknown"),
+            sandboxId=attempt["sandboxId"], verdict="process-interrupted", status="interrupted",
+            modelUsage=sum_model_usage([ModelUsage.model_validate(a["audit"]["usage"]) for a in models]),
+            steps=[a["audit"]["step"] for a in audits if a["audit"]["kind"] == "tool"],
+            events=[AgentEvent(index=1, type="attempt.recovered", details={
+                "usageKnown": len(models) == len(model_calls) and all(a["audit"]["usageKnown"] for a in models),
+                "modelReservations": len(model_calls), "modelResponsesRecorded": len(models),
+                "uncertainReservations": [cid for cid, c in calls.items() if c["state"] in {"reserved", "uncertain"}],
+                "auditIds": [a["auditId"] for a in audits],
+                "completeNodeId": state["completeNodeId"] if state["attempts"][-1]["attemptId"] == attempt_id else None,
+                "provenance": "durable-call-audit; missing metadata remains unknown; legacy logs may have no audit",
+                "reason": "prior attempt had no persisted completion trace",
+            })],
+        )
 
     def select_provider(
         self, task_id: str, provider: str, model: str, *, fingerprint: str | None = None,

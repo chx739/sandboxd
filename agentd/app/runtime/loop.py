@@ -366,6 +366,9 @@ class PiStyleAgentLoop:
         reservation = self._recovery.reserve("model") if self._recovery is not None else None
         invocation = await self._session.invoke(transformed.messages)
         if reservation is not None:
+            self._recovery.audit({"kind": "model", "usage": invocation.usage.model_dump(by_alias=True),
+                                  "usageKnown": invocation.usage_known, "elapsedMs": invocation.elapsed_ms,
+                                  "finishReason": invocation.finish_reason}, reservation)
             self._recovery.finish(reservation)
         self.state.messages.append(invocation.message)
         self.state.iteration_count = iteration
@@ -378,6 +381,7 @@ class PiStyleAgentLoop:
             details={
                 "finishReason": invocation.finish_reason,
                 "usage": invocation.usage.model_dump(by_alias=True),
+                "usageKnown": invocation.usage_known,
             },
         )
         return invocation.message
@@ -516,9 +520,6 @@ class PiStyleAgentLoop:
                         % (type(exc).__name__, public_error(exc)),
                     }
 
-            if reservation is not None and outcome_known:
-                self._recovery.finish(reservation)
-
             if name != "update_working_memory":
                 payload["evidenceId"] = evidence_id(self.state.task_id, str(call["id"]))
                 payload["observedAt"] = datetime.now(timezone.utc).isoformat()
@@ -622,6 +623,13 @@ class PiStyleAgentLoop:
                     elapsedMs=elapsed,
                 )
             )
+            if self._recovery is not None:
+                # 审计先fsync，随后确认额度。崩溃夹在两者间仍保守占用预留；
+                # 不把审计结果写回模型上下文或当作完整Session边界。
+                self._recovery.audit({"kind": "tool", "step": self.state.trace_steps[-1].model_dump(mode="json", by_alias=True),
+                                      "outcomeKnown": bool(outcome_known or denied)}, reservation)
+                if reservation is not None and outcome_known:
+                    self._recovery.finish(reservation)
 
         append_event(
             self.state.events,

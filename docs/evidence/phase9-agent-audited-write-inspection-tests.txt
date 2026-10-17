@@ -1,0 +1,1 @@
+{"passed": true, "output": "docs/evidence/phase9-agent-audited-write-inspection.json", "mode": "real-local-services-replay-agent"}
