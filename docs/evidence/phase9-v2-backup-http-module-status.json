@@ -1,0 +1,23 @@
+{
+  "mode": "real-trusted-backup-http-component-and-local-client-tests",
+  "externalModelCalls": 0,
+  "realHTTP": {
+    "passed": true,
+    "evidence": "phase9-v2-backup-http-component.json",
+    "scope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator"
+  },
+  "pythonClient": {
+    "passed": true,
+    "count": 26,
+    "seconds": 1.948,
+    "evidence": "phase9-v2-backup-client-tests.txt",
+    "transport": "MockTransport for client; related remote-file/checkpoint logic tests"
+  },
+  "goTests": [
+    "phase9-v2-backup-http-final-go-tests.txt",
+    "phase9-v2-backup-http-full-go-tests.txt"
+  ],
+  "standaloneGoStartupWithNewFlags": "not executed this batch; config/parser tests and actual Server HTTP component verified",
+  "formalV2AcceptanceComplete": false,
+  "remaining": "Agent complete-boundary coordinator, cancellation/startup reconciliation, restore/branches/reference GC and full V2 acceptance"
+}

@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"flag"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -26,6 +27,9 @@ type Config struct {
 	WorkspaceNFSServer  string
 	WorkspaceImage      string
 	WorkspaceControlDir string
+	BackupImage         string
+	BackupSecret        string
+	BackupMinIOIP       string
 }
 
 func Parse(args []string) (Config, error) {
@@ -44,6 +48,9 @@ func Parse(args []string) (Config, error) {
 	flags.StringVar(&cfg.WorkspaceNFSServer, "workspace-nfs-server", "", "可信NFS服务器IP；配置后启用持久工作区")
 	flags.StringVar(&cfg.WorkspaceImage, "workspace-image", "", "包含固定文件/初始化helper的工作区镜像")
 	flags.StringVar(&cfg.WorkspaceControlDir, "workspace-control-dir", "", "Go专属原生Linux持久控制目录")
+	flags.StringVar(&cfg.BackupImage, "workspace-backup-image", "", "可信restic维护镜像；三项备份配置齐全才启用")
+	flags.StringVar(&cfg.BackupSecret, "workspace-backup-secret", "", "已配置的专属仓库Secret名称；不是凭据值")
+	flags.StringVar(&cfg.BackupMinIOIP, "workspace-backup-minio-ip", "", "专属MinIO固定IPv4；不接受调用方存储URL")
 
 	if err := flags.Parse(args); err != nil {
 		return Config{}, err
@@ -79,6 +86,12 @@ func Parse(args []string) (Config, error) {
 			if clean == root || strings.HasPrefix(clean, root+"/") {
 				return Config{}, errors.New("工作区控制目录必须持久化，不能放临时目录")
 			}
+		}
+	}
+	if cfg.BackupImage != "" || cfg.BackupSecret != "" || cfg.BackupMinIOIP != "" {
+		ip := net.ParseIP(cfg.BackupMinIOIP)
+		if cfg.WorkspaceNFSServer == "" || cfg.BackupImage == "" || !strings.HasPrefix(cfg.BackupSecret, "restic-") || ip == nil || ip.To4() == nil || cfg.RuntimeClass != "gvisor" {
+			return Config{}, errors.New("备份模式要求完整NFS配置、固定维护镜像、专用Secret、MinIO IPv4和gvisor")
 		}
 	}
 	return cfg, nil

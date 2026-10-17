@@ -93,6 +93,7 @@ func main() {
 	control := flag.String("control-dir", "", "new private native Linux fixture directory")
 	output := flag.String("output", "", "new public result file")
 	recoverWorkspace := flag.String("recover-workspace", "", "reconcile only this prior synthetic fixture barrier")
+	httpMode := flag.Bool("http", false, "exercise authenticated trusted backup HTTP routes")
 	flag.Parse()
 	if *control == "" || *output == "" {
 		panic("control-dir/output required")
@@ -134,6 +135,26 @@ func main() {
 	config := sandbox.BackupJobConfig{ImageRef: "sandboxd-restic:0.18.1-v1", SecretName: *secret, EndpointIP: *endpoint}
 	backup, err := sandbox.NewBackupRuntime(run, config)
 	must(err)
+	var transport backupTransport = backup
+	var closeHTTP func()
+	configureHTTP := func() {
+		if closeHTTP != nil {
+			closeHTTP()
+			closeHTTP = nil
+		}
+		transport = backup
+		if *httpMode {
+			transport, closeHTTP = newHTTPBackup(run, backup)
+			report["transport"] = "authenticated real loopback HTTP"
+			report["unauthorizedAndOperatorRejected"] = true
+		}
+	}
+	defer func() {
+		if closeHTTP != nil {
+			closeHTTP()
+		}
+	}()
+	configureHTTP()
 	if *recoverWorkspace != "" {
 		barrier, ok := registry.Barrier(*recoverWorkspace)
 		if !ok {
@@ -177,7 +198,13 @@ func main() {
 		panic("write failed")
 	}
 	checkpoint, job := id("cp"), id("probe")
-	barrier, err := backup.Start(ctx, a, checkpoint, job)
+	reserved, err := transport.Reserve(ctx, a, checkpoint, job)
+	must(err)
+	if reserved.Phase != "reserved" {
+		panic("Reserve did not freeze source")
+	}
+	report["reservedBeforeStart"] = true
+	barrier, err := transport.Start(ctx, a, checkpoint, job)
 	report["startedBarrier"] = barrier
 	must(err)
 	_, err = run.Files(ctx, a, workspace.Request{Operation: "read_file", Path: "report.md"})
@@ -192,6 +219,7 @@ func main() {
 	must(err)
 	backup, err = sandbox.NewBackupRuntime(run, config)
 	must(err)
+	configureHTTP()
 	_, err = run.Files(ctx, a, workspace.Request{Operation: "write_file", Path: "must-not-exist.md", Content: "forbidden during backup"})
 	if !errors.Is(err, sandbox.ErrWorkspaceConflict) {
 		panic("write passed reopened barrier")
@@ -202,7 +230,7 @@ func main() {
 		panic("claim passed reopened barrier")
 	}
 	report["claimBlockedAfterRegistryRestart"] = true
-	barrier, result, err := backup.Wait(ctx, barrier)
+	barrier, result, err := transport.Wait(ctx, barrier)
 	report["stoppedBarrier"] = barrier
 	must(err)
 	report["backupResult"] = result
@@ -217,7 +245,7 @@ func main() {
 	report["heldUntilExplicitFinish"] = true
 	// This component records its backend outcome durably, not a fake Session COMMITTED.
 	save(filepath.Join(*control, "backend-component-result.json"), result)
-	finished, err := backup.Finish(ctx, barrier)
+	finished, err := transport.Finish(ctx, barrier)
 	must(err)
 	report["finishedBarrier"] = finished
 	read, err := run.Files(ctx, a, workspace.Request{Operation: "read_file", Path: "report.md"})

@@ -126,7 +126,7 @@ RecoveryLedger.commit_checkpoint：在与cancel相同的短锁内提交
 Go Finish解除屏障
 ```
 
-上述是目标接线顺序。当前Go新增Reserve入口并通过逻辑回归：只冻结，不运行restic，为后续协调器严格实现“先冻结、再PREPARING”提供接口；尚未暴露HTTP，也没有将上述顺序宣称为真实联合验收。
+上述是目标接线顺序。Go Reserve及受限HTTP已实现并有组件证据；只冻结、不运行restic，为后续协调器严格实现“先冻结、再PREPARING”提供接口。完整联合提交仍未接Agent，不能将上述顺序宣称为真实联合验收。
 
 ### Session引用为何要复制
 
@@ -144,9 +144,50 @@ RecoveryLedger新增同步commit_checkpoint，在与cancel共用的RLock内核�
 
 首次12项检查点单测通过，原文`phase9-v2-checkpoint-initial-tests.txt`；随后完整Python214/214、285.135秒通过`phase9-v2-checkpoint-full-regression-tests.txt`，包含线程取消/提交顺序与兄弟分支断言。后续镜像身份/作用域校验及新增第14个检查点用例由34项定向回归（2.140秒）覆盖，见`phase9-v2-checkpoint-final-boundary-tests.txt`；不把此前214项冒称包含后改动，也不将重叠测试数相加。最后引用发布窗口修复由35项定向回归（2.401秒）覆盖，见`phase9-v2-checkpoint-publication-final-tests.txt`；先前214/34批次不是最后改动的完整重跑。Go Reserve及相关API的race结果见`phase9-v2-checkpoint-reserve-go-tests.txt`。
 
-测试中的仓库/snapshot身份明确为合成，owner字典是固定夹具；不能当真实Go/restic联合证据。未完成：HTTP与Python客户端、完整轮次自动检查点、真实服务中的取消/崩溃对账、restore新目录/历史分支、引用GC及V2十项完整验收。Goal保持active。
+测试中的仓库/snapshot身份明确为合成，owner字典是固定夹具；不能当真实Go/restic联合证据。HTTP与Python客户端的后续证据见下节。未完成：完整轮次自动检查点、真实服务中的取消/崩溃对账、restore新目录/历史分支、引用GC及V2十项完整验收。Goal保持active。
 
-## 6. 官方参考与版本
+## 6. 受限备份HTTP与Python客户端
+
+新增Agent Token保护的接口：
+
+- `GET /api/v1/workspaces/{workspace}/backup`：查询已持久化的屏障，含配置引用名称、不含凭据值。
+- `POST /api/v1/workspaces/{workspace}/backup/{action}`：action仅reserve/start/wait/abort/finish；请求仅binding、UUIDv4 checkpointId、jobId和最多90秒timeoutMs。
+
+Go独立校验scope和已有job；额外image/secretName/repository/argv字段、shell/unlock/forget/restore动作均拒绝。wait超时保留屏障，abort/finish用独立30秒清理context；不随客户端断连丢失停止确认。这里只接可信备份编排，没有增加LLM工具。
+
+默认关闭，可信Go启动配置须同时提供三项：
+
+```bash
+# 仍需既有NFS、业务镜像、原生控制目录、独立Agent/Operator环境凭据。
+go build -o .cache/workspace-sandboxd-v2 ./cmd/sandboxd
+.cache/workspace-sandboxd-v2 -pool-size 0 \
+  -workspace-nfs-server "$SANDBOXD_NFS_SERVER" \
+  -workspace-image sandboxd-workspace:runtime-v1.5 \
+  -workspace-control-dir "$SANDBOXD_WORKSPACE_CONTROL_DIR" \
+  -workspace-backup-image sandboxd-restic:0.18.1-v1 \
+  -workspace-backup-secret "$SANDBOXD_BACKUP_SECRET_NAME" \
+  -workspace-backup-minio-ip "$SANDBOXD_BACKUP_MINIO_IP"
+```
+
+Secret名称来自已初始化的专属restic仓库；S3 URL/密码仍在Secret中，不放HTTP参数。三项配置不齐、非IPv4 endpoint或非gVisor拒绝启动；V1未配置时保持原行为。上述独立Go启动命令尚未作为本批真实入口执行，实际组件使用相同Server路由的loopback HTTP探测。
+
+Python `SandboxdClient.workspace_backup`只接同样固定动作及绑定，校验ID/有限超时，响应有界，无自动重试；start响应丢失留给协调器查询原job，不另起一次保存。GET状态和这些控制返回值不回灌模型。
+
+真实组件入口（沿用前文已准备的NFS/MinIO/Secret/镜像）：
+
+```bash
+go build -o .cache/workspace-backup-runtime-smoke ./hack/workspace-backup-runtime-smoke
+.cache/workspace-backup-runtime-smoke -http \
+  -nfs-server "$SANDBOXD_NFS_SERVER" -minio-ip "$SANDBOXD_BACKUP_MINIO_IP" \
+  -secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
+  -control-dir "$SANDBOXD_BACKUP_PROBE_DIR" -output .cache/backup-http-probe.json
+```
+
+`phase9-v2-backup-http-component.json`整体通过：实际loopback HTTP鉴权、Reserve/Start/Wait/Finish，跨注册表重开仍阻止Files/Claim，Wait完成后继续冻结，Finish后内容/hash一致；清理前CRI实际`io.containerd.runsc.v1`，业务owner经Go确认停止。工作区、快照、Secret与日志保留。它不包含Python Agent/Session联合提交或进程SIGKILL，不能勾选正式V2验收。
+
+Go路由/配置/Runtime race见`phase9-v2-backup-http-final-go-tests.txt`，Go全项目见`phase9-v2-backup-http-full-go-tests.txt`。Python客户端/远程文件/检查点26项本地测试通过（1.948秒），`phase9-v2-backup-client-tests.txt`；客户端用MockTransport，真实HTTP组件的请求方是管理Go夹具，两种证据分开。当前仍未接完整Agent自动保存和启动/取消协调器，下一步从这里继续。
+
+## 7. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

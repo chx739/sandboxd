@@ -59,7 +59,7 @@
     }
   ],
   "remaining": [
-    "trusted Go backup HTTP/Python client and Agent complete-boundary coordinator; restore write barrier pending",
+    "Agent complete-boundary coordinator and cancellation/startup reconciliation over implemented trusted HTTP/client; restore barrier pending",
     "wire tested PREPARING / DATA_READY / COMMITTED ledger and immutable Session reference into live Agent flow",
     "readable immutable Session prefix reference and complete-boundary hook",
     "cancellation ordering, original budget/deadline and recovery reconciliation",
@@ -68,6 +68,10 @@
     "ten V2 acceptance cases and fixed-workload V1/V2 performance comparison"
   ],
   "evidence": [
+    {
+      "path": "docs/evidence/phase9-v2-backup-client-tests.txt",
+      "sha256": "5db0438d56678ebc2c551bbe67811b4302c8c658ae5e47a25ef67999301b0768"
+    },
     {
       "path": "docs/evidence/phase9-v2-backup-component-tests.txt",
       "sha256": "45ff6c3b87204b8b84b6b13e66d3fc570095bbcaa52b4a743c8316ad3af17f6b"
@@ -99,6 +103,30 @@
     {
       "path": "docs/evidence/phase9-v2-backup-foundation-tests.txt",
       "sha256": "7ab05cf0e022bb1228afe71cc8d089886a876ed4fe99765b283856e45a9058a2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-component-tests.txt",
+      "sha256": "9bb37a761bf699447342ba48d5c9debdb0aab4d630d7d7dbf0a9913c322dcd7f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-component.json",
+      "sha256": "9f949d69466197cb8c1341153afa350abdc8380886d9c5a7c4519a94fdcb4328"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-final-go-tests.txt",
+      "sha256": "41840e1d03840f56491509d01d9a91b236f6e25002b7625b8a8e054e5d08a33d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-full-go-tests.txt",
+      "sha256": "84e6f5c50af637b30065b5cf7a44a69d56cbd6f6194c51baeca44c5c84a865b0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-go-tests.txt",
+      "sha256": "718d358f549bd64b8459b92317163f8d9c407c1e6b67d9c7bfe00e423b101976"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-module-status.json",
+      "sha256": "eb66036384754d9c350326f097edf7978273b488a7733cca14fd3e05606002bd"
     },
     {
       "path": "docs/evidence/phase9-v2-barrier-regression-tests.txt",
@@ -201,5 +229,6 @@
       "sha256": "ae0acfa865c44bd26a4b890f3bfb21495d36e62cec4005069d9f95c68b897950"
     }
   ],
-  "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired"
+  "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
+  "backupHTTPScope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator"
 }
