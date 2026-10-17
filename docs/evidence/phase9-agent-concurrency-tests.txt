@@ -1,0 +1,28 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 136227}
+{"stage": "agentd-process-started", "number": 2, "pid": 136488}
+{"stage": "duplicate-service-rejected-by-lock"}
+{"stage": "agentd-process-started", "number": 3, "pid": 136674}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_concurrency_demo.py", line 237, in <module>
+    main()
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_concurrency_demo.py", line 230, in main
+    result = asyncio.run(run(args.output, args.binary.resolve(), args.nfs_server))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_concurrency_demo.py", line 144, in run
+    after = await cancelled(task_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_concurrency_demo.py", line 80, in cancelled
+    assert task["status"] == "cancelled", task.get("error")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 执行已中断，资源状态待核查

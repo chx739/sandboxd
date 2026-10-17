@@ -1,0 +1,4106 @@
+{
+  "mode": "real-agentd-concurrency-replay",
+  "scope": "V1-06, bounded local single-node races",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/017e6e6782c947f8b2a9536c91ab9c9a",
+  "externalModelCalls": 0,
+  "apiRequests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/sessions/session-876b236f34664ab7/resume",
+      "statusCode": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/sessions/session-876b236f34664ab7/resume",
+      "statusCode": 409
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724/cancel",
+      "statusCode": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724/cancel",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-5e1f4dbecbd7d724",
+      "statusCode": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3/cancel",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-57b1e5381f9e00f3",
+      "statusCode": 200
+    }
+  ],
+  "passed": true,
+  "duplicateProcess": {
+    "pid": 137547,
+    "port": 18091,
+    "returnCode": 1,
+    "rejectedByJournalLock": true,
+    "journalUnchanged": true,
+    "logSha256": "bd53254e36fb67524aad2e5ccd7606f4974d1ea918e1bc5ca56abecd96d8056a"
+  },
+  "staleCleanup": {
+    "before": {
+      "alert": {
+        "annotations": {
+          "summary": "Synthetic stale cleanup after restart"
+        },
+        "fingerprint": "5f849e08f16dbcecae131c1202a604e6",
+        "labels": {
+          "case": "stale-release",
+          "cluster": "local-kind",
+          "source": "manual"
+        },
+        "status": "firing"
+      },
+      "attempts": [
+        {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "claimRequested": true,
+          "ownerStopped": false,
+          "podUid": "60240443-9ce4-4c8b-9575-31716b0208af",
+          "sandboxId": "b505fa1db556c6d0",
+          "startedAt": "2026-10-17T18:54:12.888994+00:00"
+        }
+      ],
+      "branchId": "branch-c23994008b6747e1946818cc380f5ab0",
+      "calls": {
+        "call-27112203e70c47ad82f16a37f1ca9a00": {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "reserved"
+        },
+        "call-878f639c82a5495293ae2948ce1a5280": {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "expectedNewSha256": "4764d1f6e21f816c57c55c16032e78de58efc5e873b8e54f8a3ac7e13d876ae0",
+          "kind": "tool",
+          "operation": "write_file",
+          "path": "guard.md",
+          "state": "finished"
+        },
+        "call-b97443344bcc4c659c7903b800762e38": {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "finished"
+        }
+      },
+      "cancelRequested": false,
+      "commands": [],
+      "completeNodeId": "node-4e711ac2c8c4110f",
+      "deadline": "2026-10-17T18:56:18.218746+00:00",
+      "limits": {
+        "model": 6,
+        "router": 1,
+        "tool": 8
+      },
+      "maxRecoveries": 2,
+      "provider": {
+        "fingerprint": "594407188df4578513ee932d45da732929685eec5ef1d2de817172397c312345",
+        "model": "workspace-concurrency",
+        "provider": "replay"
+      },
+      "schemaVersion": 2,
+      "sessionId": "session-876b236f34664ab7",
+      "status": "running",
+      "taskId": "task-5e1f4dbecbd7d724",
+      "timing": {
+        "claimSeconds": 190,
+        "claimStartedAt": "2026-10-17T18:54:12.888994+00:00",
+        "loopSeconds": 120,
+        "loopStartedAt": "2026-10-17T18:54:18.218746+00:00"
+      },
+      "workspaceId": "workspace-ec33d1c492994cb6b11a818328918011"
+    },
+    "after": {
+      "alert": {
+        "annotations": {
+          "summary": "Synthetic stale cleanup after restart"
+        },
+        "fingerprint": "5f849e08f16dbcecae131c1202a604e6",
+        "labels": {
+          "case": "stale-release",
+          "cluster": "local-kind",
+          "source": "manual"
+        },
+        "status": "firing"
+      },
+      "attempts": [
+        {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "claimRequested": true,
+          "ownerStopped": true,
+          "podUid": "60240443-9ce4-4c8b-9575-31716b0208af",
+          "sandboxId": "b505fa1db556c6d0",
+          "startedAt": "2026-10-17T18:54:12.888994+00:00",
+          "stopReason": "containers-terminated"
+        },
+        {
+          "attemptId": "attempt-73a4f7bf5c9446f2b9077903e0a97e82",
+          "claimRequested": true,
+          "ownerStopped": true,
+          "podUid": "43c0ab8c-2559-4b9e-b85e-2f8d0d9c4138",
+          "sandboxId": "6fd6d5a53c8d56e8",
+          "startedAt": "2026-10-17T18:55:13.407871+00:00",
+          "stopReason": "containers-terminated"
+        }
+      ],
+      "branchId": "branch-c23994008b6747e1946818cc380f5ab0",
+      "calls": {
+        "call-093ea85f8aeb42b4a34e399873b2df21": {
+          "attemptId": "attempt-73a4f7bf5c9446f2b9077903e0a97e82",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "uncertain"
+        },
+        "call-27112203e70c47ad82f16a37f1ca9a00": {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "uncertain"
+        },
+        "call-878f639c82a5495293ae2948ce1a5280": {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "expectedNewSha256": "4764d1f6e21f816c57c55c16032e78de58efc5e873b8e54f8a3ac7e13d876ae0",
+          "kind": "tool",
+          "operation": "write_file",
+          "path": "guard.md",
+          "state": "finished"
+        },
+        "call-b97443344bcc4c659c7903b800762e38": {
+          "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "finished"
+        }
+      },
+      "cancelRequested": true,
+      "commands": [],
+      "completeNodeId": "node-4e711ac2c8c4110f",
+      "deadline": "2026-10-17T18:56:18.218746+00:00",
+      "limits": {
+        "model": 6,
+        "router": 1,
+        "tool": 8
+      },
+      "maxRecoveries": 2,
+      "provider": {
+        "fingerprint": "594407188df4578513ee932d45da732929685eec5ef1d2de817172397c312345",
+        "model": "workspace-concurrency",
+        "provider": "replay"
+      },
+      "schemaVersion": 2,
+      "sessionId": "session-876b236f34664ab7",
+      "status": "cancelled",
+      "taskId": "task-5e1f4dbecbd7d724",
+      "timing": {
+        "claimSeconds": 190,
+        "claimStartedAt": "2026-10-17T18:54:12.888994+00:00",
+        "loopSeconds": 120,
+        "loopStartedAt": "2026-10-17T18:54:18.218746+00:00"
+      },
+      "workspaceId": "workspace-ec33d1c492994cb6b11a818328918011"
+    },
+    "oldPod": {
+      "workspaceId": "workspace-ec33d1c492994cb6b11a818328918011",
+      "attemptId": "attempt-5cfcd969032e4691bb0cae1ce477e414",
+      "podUid": "60240443-9ce4-4c8b-9575-31716b0208af",
+      "sandboxId": "b505fa1db556c6d0",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-ec33d1c492994cb6b11a818328918011",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    "newPod": {
+      "workspaceId": "workspace-ec33d1c492994cb6b11a818328918011",
+      "attemptId": "attempt-73a4f7bf5c9446f2b9077903e0a97e82",
+      "podUid": "43c0ab8c-2559-4b9e-b85e-2f8d0d9c4138",
+      "sandboxId": "6fd6d5a53c8d56e8",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-ec33d1c492994cb6b11a818328918011",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    "staleReleaseStatus": 409,
+    "newOwnerUnchangedAfterStaleRelease": true,
+    "newOwnerReadSha256": "4764d1f6e21f816c57c55c16032e78de58efc5e873b8e54f8a3ac7e13d876ae0",
+    "duplicateResumeStatuses": [
+      409,
+      409
+    ],
+    "duplicateCancelStatuses": [
+      202,
+      202
+    ]
+  },
+  "cancelDuringTakeover": {
+    "before": {
+      "alert": {
+        "annotations": {
+          "summary": "Synthetic cancellation during Pod takeover"
+        },
+        "fingerprint": "f5405cdf624063d76d88551bcb3cc1e5",
+        "labels": {
+          "case": "cancel-during-claim",
+          "cluster": "local-kind",
+          "source": "manual"
+        },
+        "status": "firing"
+      },
+      "attempts": [
+        {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "claimRequested": true,
+          "ownerStopped": false,
+          "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+          "sandboxId": "ebd9c4f239a5ad88",
+          "startedAt": "2026-10-17T18:55:17.414615+00:00"
+        }
+      ],
+      "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+      "calls": {
+        "call-43299a45088148669782794d296a540c": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "reserved"
+        },
+        "call-63339e020e6e4d54bf8289dc560df519": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": "4764d1f6e21f816c57c55c16032e78de58efc5e873b8e54f8a3ac7e13d876ae0",
+          "kind": "tool",
+          "operation": "write_file",
+          "path": "guard.md",
+          "state": "finished"
+        },
+        "call-d68ffd3a3ac64d5aa3c5b7df427805a6": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "finished"
+        }
+      },
+      "cancelRequested": false,
+      "commands": [],
+      "completeNodeId": "node-c6e2f8dd999734fa",
+      "deadline": "2026-10-17T18:57:24.163099+00:00",
+      "limits": {
+        "model": 6,
+        "router": 1,
+        "tool": 8
+      },
+      "maxRecoveries": 2,
+      "provider": {
+        "fingerprint": "594407188df4578513ee932d45da732929685eec5ef1d2de817172397c312345",
+        "model": "workspace-concurrency",
+        "provider": "replay"
+      },
+      "schemaVersion": 2,
+      "sessionId": "session-cc31d95addec9b56",
+      "status": "running",
+      "taskId": "task-57b1e5381f9e00f3",
+      "timing": {
+        "claimSeconds": 190,
+        "claimStartedAt": "2026-10-17T18:55:17.414615+00:00",
+        "loopSeconds": 120,
+        "loopStartedAt": "2026-10-17T18:55:24.163099+00:00"
+      },
+      "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210"
+    },
+    "after": {
+      "alert": {
+        "annotations": {
+          "summary": "Synthetic cancellation during Pod takeover"
+        },
+        "fingerprint": "f5405cdf624063d76d88551bcb3cc1e5",
+        "labels": {
+          "case": "cancel-during-claim",
+          "cluster": "local-kind",
+          "source": "manual"
+        },
+        "status": "firing"
+      },
+      "attempts": [
+        {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "claimRequested": true,
+          "ownerStopped": true,
+          "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+          "sandboxId": "ebd9c4f239a5ad88",
+          "startedAt": "2026-10-17T18:55:17.414615+00:00",
+          "stopReason": "containers-terminated"
+        },
+        {
+          "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+          "claimRequested": true,
+          "ownerStopped": true,
+          "podUid": "fa165248-515d-40af-833b-c47018761334",
+          "sandboxId": "f1ddd4c9cddf2754",
+          "startedAt": "2026-10-17T18:55:39.460456+00:00",
+          "stopReason": "containers-terminated"
+        }
+      ],
+      "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+      "calls": {
+        "call-43299a45088148669782794d296a540c": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "finished"
+        },
+        "call-45a906094ca34dedb3b5ec3a91f081c9": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": null,
+          "kind": "tool",
+          "operation": "read_file",
+          "path": "guard.md",
+          "state": "uncertain"
+        },
+        "call-63339e020e6e4d54bf8289dc560df519": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": "4764d1f6e21f816c57c55c16032e78de58efc5e873b8e54f8a3ac7e13d876ae0",
+          "kind": "tool",
+          "operation": "write_file",
+          "path": "guard.md",
+          "state": "finished"
+        },
+        "call-d68ffd3a3ac64d5aa3c5b7df427805a6": {
+          "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+          "expectedNewSha256": null,
+          "kind": "model",
+          "operation": "",
+          "path": "",
+          "state": "finished"
+        }
+      },
+      "cancelRequested": true,
+      "commands": [],
+      "completeNodeId": "node-c6e2f8dd999734fa",
+      "deadline": "2026-10-17T18:57:24.163099+00:00",
+      "limits": {
+        "model": 6,
+        "router": 1,
+        "tool": 8
+      },
+      "maxRecoveries": 2,
+      "provider": {
+        "fingerprint": "594407188df4578513ee932d45da732929685eec5ef1d2de817172397c312345",
+        "model": "workspace-concurrency",
+        "provider": "replay"
+      },
+      "schemaVersion": 2,
+      "sessionId": "session-cc31d95addec9b56",
+      "status": "cancelled",
+      "taskId": "task-57b1e5381f9e00f3",
+      "timing": {
+        "claimSeconds": 190,
+        "claimStartedAt": "2026-10-17T18:55:17.414615+00:00",
+        "loopSeconds": 120,
+        "loopStartedAt": "2026-10-17T18:55:24.163099+00:00"
+      },
+      "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210"
+    },
+    "oldPod": {
+      "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+      "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+      "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+      "sandboxId": "ebd9c4f239a5ad88",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-0a9dd835137f4807a53ff9693965c210",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    "observedAt": "2026-10-17T18:55:39.513235+00:00",
+    "goAtCancelRequest": {
+      "schemaVersion": 1,
+      "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+      "sessionId": "session-cc31d95addec9b56",
+      "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+      "generation": 2,
+      "phase": "starting",
+      "owner": {
+        "taskId": "task-57b1e5381f9e00f3",
+        "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+        "sandboxId": "f1ddd4c9cddf2754",
+        "podName": "sandbox-f1ddd4c9cddf2754",
+        "createSubmitted": true,
+        "stopConfirmed": false
+      },
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+    },
+    "cancelPersistedAt": "2026-10-17T18:55:39.513803+00:00",
+    "newBoundEvents": [],
+    "goAfterCancel": {
+      "schemaVersion": 1,
+      "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+      "sessionId": "session-cc31d95addec9b56",
+      "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+      "generation": 2,
+      "phase": "released",
+      "owner": {
+        "taskId": "task-57b1e5381f9e00f3",
+        "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+        "sandboxId": "f1ddd4c9cddf2754",
+        "podName": "sandbox-f1ddd4c9cddf2754",
+        "podUid": "fa165248-515d-40af-833b-c47018761334",
+        "createSubmitted": true,
+        "stopConfirmed": true
+      },
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "stopReason": "containers-terminated"
+    },
+    "goEvents": [
+      {
+        "seq": 17,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:17.441420755Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 0,
+          "phase": "registered",
+          "owner": {
+            "taskId": "",
+            "attemptId": "",
+            "sandboxId": "",
+            "podName": "",
+            "createSubmitted": false,
+            "stopConfirmed": false
+          }
+        }
+      },
+      {
+        "seq": 18,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:22.355196831Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 0,
+          "phase": "ready",
+          "owner": {
+            "taskId": "",
+            "attemptId": "",
+            "sandboxId": "",
+            "podName": "",
+            "createSubmitted": false,
+            "stopConfirmed": false
+          }
+        }
+      },
+      {
+        "seq": 19,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:22.570649359Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "starting",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "createSubmitted": false,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5"
+        }
+      },
+      {
+        "seq": 20,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:22.576905129Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "starting",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5"
+        }
+      },
+      {
+        "seq": 21,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:22.755903721Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "starting",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5"
+        }
+      },
+      {
+        "seq": 22,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:24.149123684Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "bound",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+            "nodeName": "sandboxd-control-plane",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+        }
+      },
+      {
+        "seq": 23,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.397702184Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "stopping",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+            "nodeName": "sandboxd-control-plane",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+        }
+      },
+      {
+        "seq": 24,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.408965241Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "stopping",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+            "nodeName": "sandboxd-control-plane",
+            "createSubmitted": true,
+            "stopConfirmed": true
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+          "stopReason": "containers-terminated"
+        }
+      },
+      {
+        "seq": 25,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.422668584Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 1,
+          "phase": "released",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-1b9154b9dd634a9d92487e4812daad02",
+            "sandboxId": "ebd9c4f239a5ad88",
+            "podName": "sandbox-ebd9c4f239a5ad88",
+            "podUid": "ff51fbb2-629c-46dc-b940-81f694e05357",
+            "nodeName": "sandboxd-control-plane",
+            "createSubmitted": true,
+            "stopConfirmed": true
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+          "stopReason": "containers-terminated"
+        }
+      },
+      {
+        "seq": 26,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.495797904Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 2,
+          "phase": "starting",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+            "sandboxId": "f1ddd4c9cddf2754",
+            "podName": "sandbox-f1ddd4c9cddf2754",
+            "createSubmitted": false,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+        }
+      },
+      {
+        "seq": 27,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.501495844Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 2,
+          "phase": "starting",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+            "sandboxId": "f1ddd4c9cddf2754",
+            "podName": "sandbox-f1ddd4c9cddf2754",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+        }
+      },
+      {
+        "seq": 28,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.52688934Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 2,
+          "phase": "starting",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+            "sandboxId": "f1ddd4c9cddf2754",
+            "podName": "sandbox-f1ddd4c9cddf2754",
+            "podUid": "fa165248-515d-40af-833b-c47018761334",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+        }
+      },
+      {
+        "seq": 29,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:39.564495435Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 2,
+          "phase": "stopping",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+            "sandboxId": "f1ddd4c9cddf2754",
+            "podName": "sandbox-f1ddd4c9cddf2754",
+            "podUid": "fa165248-515d-40af-833b-c47018761334",
+            "createSubmitted": true,
+            "stopConfirmed": false
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+        }
+      },
+      {
+        "seq": 30,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:41.399015037Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 2,
+          "phase": "stopping",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+            "sandboxId": "f1ddd4c9cddf2754",
+            "podName": "sandbox-f1ddd4c9cddf2754",
+            "podUid": "fa165248-515d-40af-833b-c47018761334",
+            "createSubmitted": true,
+            "stopConfirmed": true
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+          "stopReason": "containers-terminated"
+        }
+      },
+      {
+        "seq": 31,
+        "type": "workspace.state",
+        "timestamp": "2026-10-17T18:55:41.603181728Z",
+        "data": {
+          "schemaVersion": 1,
+          "workspaceId": "workspace-0a9dd835137f4807a53ff9693965c210",
+          "sessionId": "session-cc31d95addec9b56",
+          "branchId": "branch-2dfc3f48679b431a9c1121db77789288",
+          "generation": 2,
+          "phase": "released",
+          "owner": {
+            "taskId": "task-57b1e5381f9e00f3",
+            "attemptId": "attempt-f3d912912b6443379781f5d9cb8ec3e5",
+            "sandboxId": "f1ddd4c9cddf2754",
+            "podName": "sandbox-f1ddd4c9cddf2754",
+            "podUid": "fa165248-515d-40af-833b-c47018761334",
+            "createSubmitted": true,
+            "stopConfirmed": true
+          },
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+          "stopReason": "containers-terminated"
+        }
+      }
+    ]
+  },
+  "verifiedCases": [
+    "V1-06"
+  ],
+  "timestamp": "2026-10-17T18:55:41.874360+00:00"
+}

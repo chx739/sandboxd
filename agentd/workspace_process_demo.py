@@ -59,7 +59,9 @@ def state_for(path: Path, task_id: str) -> dict | None:
     return next((e["data"] for e in reversed(entries(path)) if e["type"] == "task.state" and e["data"]["taskId"] == task_id), None)
 
 
-def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, number: int, replay_path: Path | None = None):
+def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, number: int, replay_path: Path | None = None, *, port: int = 18090):
+    if port not in {18090, 18091}:
+        raise ValueError("process fixture only uses ports 18090/18091")
     # 清除继承的模型/路由/Operator配置。子进程只拿本次合成Agent身份，不拿Operator Token。
     env = {k: v for k, v in os.environ.items() if not k.startswith(("AGENTD_", "SANDBOXD_"))
            and k not in {"TYPESAFE_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY"}}
@@ -72,7 +74,7 @@ def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, num
     log = log_path.open("w")
     log_path.chmod(0o600)
     process = subprocess.Popen([sys.executable, "-m", "uvicorn", "agentd.app.main:create_app", "--factory",
-                                "--host", "127.0.0.1", "--port", "18090", "--log-level", "warning", "--no-access-log"],
+                                "--host", "127.0.0.1", "--port", str(port), "--log-level", "warning", "--no-access-log"],
                                cwd=REPO, env=env, stdout=log, stderr=subprocess.STDOUT)
     print(json.dumps({"stage": "agentd-process-started", "number": number, "pid": process.pid}), flush=True)
     return process, log

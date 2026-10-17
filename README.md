@@ -8,7 +8,7 @@ Go sandboxd 保留通用 Exec API 用于沙箱机制验证，但当前 Python ag
 
 ## 当前运维 MVP（Phase 8）
 
-> 当前实施Phase 9工作区恢复：默认部署已接入持久Task/attempt账本及Go受限RPC→gVisor→专属NFS。真实SIGKILL自动接续、终态重启、确认丢失等使V1正式通过11/14项；06/11/14、迁移/性能及全部V2仍待完成。全部实验无付费模型。[部署与复验](deploy/workspace/README.md)、[学习手册](docs/45-持久工作区与任务恢复学习手册.md)、[逐项状态](docs/evidence/phase9-workspace-recovery.md)。
+> 当前实施Phase 9工作区恢复：默认部署已接入持久Task/attempt账本及Go受限RPC→gVisor→专属NFS。真实SIGKILL自动接续、终态重启、确认丢失等使V1正式通过13/14项；V1-14、迁移/性能及全部V2仍待完成。全部实验无付费模型。[部署与复验](deploy/workspace/README.md)、[学习手册](docs/45-持久工作区与任务恢复学习手册.md)、[逐项状态](docs/evidence/phase9-workspace-recovery.md)。
 
 - 会话树与分层记忆：分支/恢复、完整工具组、来源/冲突/遗忘；参考固定 Pi/Codex 源码，未完整复刻。
 - 知识：Milvus **2.5.10 原生 BM25 + E5 Dense + RRF + BGE Reranker**，40 篇固定运维文档，默认不依赖 ES。

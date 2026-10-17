@@ -1,0 +1,21 @@
+test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup) ... Executing <Task pending name='Task-4' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:158> wait_for=<Future pending cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.212 seconds
+FAIL
+
+======================================================================
+FAIL: test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_recovery_store.py", line 128, in test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup
+    self.assertEqual(running.cancelling(), cancellations, "duplicate request interrupted shielded cleanup")
+AssertionError: 2 != 1 : duplicate request interrupted shielded cleanup
+
+----------------------------------------------------------------------
+Ran 1 test in 0.324s
+
+FAILED (failures=1)

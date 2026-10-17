@@ -204,6 +204,10 @@ class TaskStore:
                 raise TaskNotFoundError("task not found")
             if task.status in _TERMINAL_STATUSES:
                 raise TaskConflictError("task already finished")
+            if task.status == "cancelling":
+                # 首次请求已把取消和审计落盘；重复cancel不能再次中断Runner的
+                # shield清理窗口。interrupted仍允许重新排队核查未知owner。
+                return task.model_copy(deep=True)
 
             self._cancel_requested.add(task_id)
             previous_status = task.status

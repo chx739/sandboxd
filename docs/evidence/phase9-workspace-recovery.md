@@ -50,7 +50,7 @@
 
 ## 正式验收矩阵
 
-文档43当前正式通过 **V1-01/02/03/04/05/07/08/09/10/12/13，共11/14**；06/11/14及全部V2尚未完成。机器可读证据清单见`phase9-v1-acceptance-progress.json`。纯逻辑/Fake证据不能提前勾选真实集成项目。
+文档43当前正式通过 **V1-01/02/03/04/05/06/07/08/09/10/11/12/13，共13/14**；V1-14及全部V2尚未完成。机器可读证据清单见`phase9-v1-acceptance-progress.json`。纯逻辑/Fake证据不能提前勾选真实集成项目。
 
 默认Python TaskStore/Runner已接持久预算、Session多attempt及真实远程文件路径。真实SIGKILL、终态重启和确认丢失等证据见下面新批次；尚缺的场景不能由Go账本重开或Fake测试替代。V2主链路未启动。
 
@@ -85,7 +85,7 @@
 
 ## 下一步
 
-完成V1-06/11/14，以及显式旧工作区迁移、统一入口和性能统计。三类回放与当前回归已过，后续改动继续相关验证。全部V1完成后再启动V2，保留完整范围，不使用已消费的模型预算。
+完成V1-14，以及显式旧工作区迁移、统一入口和性能统计。三类回放与当前回归已过，后续改动继续相关验证。全部V1完成后再启动V2，保留完整范围，不使用已消费的模型预算。
 
 ## 2026-10-18 TaskStore/Runner接线与真实Agent验收
 
@@ -125,7 +125,7 @@
 - `phase9-agent-interruption-cleanup-audit.json`：对真实V1-02、SIGKILL与终态报告关联原始日志逐项复查；旧半组读工具AI节点留在审计、不进入当前完整父链，模型与工具槽保留；正常/取消/失败/超限工作区目录65532:65532:700、Retain PV/PVC和Session仍在、对应Pod已消失。覆盖V1-08/12，只读审计未再次执行工具。
 - `phase9-joint-ops-replay.json`：实际Milvus2.5.10/OpenSearch和缓存E5/BGE，memory/Service/readiness三类3/3。模型/Jev/沙箱生命周期仍为脚本/Fake，不评自然语言能力或语义引用蕴含；设置HF/Transformers离线及OMP=2，不下载模型、不重建索引。四个项目服务经资源检查临时启动后停回初始状态，ES及其他项目未启动，覆盖V1-13回放部分。
 - 完整Python165/165、290.536秒，`phase9-python-process-regression-tests.txt`；Replay延迟/只读监测与恢复定向16/16、0.995秒，`phase9-process-replay-tests.txt`。两份覆盖重叠，不相加。所有外部模型调用0。
-- 尚缺06/11/14真实验收、显式旧工作区迁移、统一入口、小负载性能及全部V2。SIGKILL旧Trace为控制面补录并注明usageKnown=false，后续14仍需检查命令窗口与崩溃证据可追溯，不能把未知用量当已知零。
+- 尚缺V1-14真实验收、显式旧工作区迁移、统一入口、小负载性能及全部V2。SIGKILL旧Trace为控制面补录并注明usageKnown=false，后续14仍需检查命令窗口与崩溃证据可追溯，不能把未知用量当已知零。
 
 ## 2026-10-18 分阶段时钟与Session多attempt
 
@@ -155,6 +155,26 @@
 
 **回归：** 最终`phase9-directory-descriptor-tests.txt`相关Go race通过、`phase9-go-directory-descriptor-regression-tests.txt`全Go回归通过；含目录路径被替换后仍使用原目录句柄及fsync。`phase9-budget-boundary-final-regression-tests.txt`22/22、0.699秒，覆盖夹具/原阶段时钟/Replay监测。此前165全Python结果仍是前一批次，没有冒称本次全量重跑；各批次重叠不相加。openat2候选和ENOTDIR断言的失败输出保留。
 
-当前正式11/14；剩余06/11/14、旧文件迁移、统一入口、固定负载性能及全部V2仍待完成，Goal active。
+当前正式13/14；剩余V1-14、旧文件迁移、统一入口、固定负载性能及全部V2仍待完成，Goal active。
 
 - 最新runtime-v1.5真实Agent文件写读及完整边界Pod故障接管复验通过：`phase9-agent-pod-descriptor-recovery.json`，23.491742秒单轮，原Task/工作区、2个attempt/不同Pod UID、模型4槽/工具3槽、服务端hash保持。该项是路径修复后的集成复查，不是额外生产RTO或模型能力成绩。
+
+## 2026-10-18 并发取消与NFS故障
+
+**V1-06第二轮通过：** `phase9-agent-concurrency-v2.json`及同名`-tests.txt`。
+
+- 实际第二个Uvicorn agentd使用同一控制目录、不同18091端口，因JournalInUse退出码1结束；日志不含端口占用原因，任务日志字节未变，第一进程继续ready。这是实际服务启动拒绝，不是同进程Mock锁。
+- 强杀自己的第一agentd后，同目录自动接续原Task。旧attempt release返回409，新owner/Pod UID/代次保持且直接读回原guard hash；两个并发手动resume均409，没有新增Task；两个并发cancel均202，最终cancelled，所有attempt有停止证明。
+- 第二Task完整轮次后正常删除自己的Pod，不force。替换attempt的Go phase=starting时发cancel，取消持久化时间UTC18:55:39.513803；后续没有该attempt的bound记录，也没有第3次模型调用，两个attempt停止、最终cancelled。仍核对原scope/limits/deadline/timing，不用绑定后取消冒充starting竞态。
+- 首轮`phase9-agent-concurrency.json`失败：重复cancel再次打断shield清理，公开状态interrupted。夹具退出服务后用原Go账本正常对账，没有抹掉失败。Fake固定释放窗口的修复前1→2次取消证据见`phase9-duplicate-cancel-before-fix-tests.txt`；只对cancelling幂等，interrupted仍能重排队核查，16项定向通过`phase9-duplicate-cancel-final-tests.txt`。
+
+**V1-11第二轮通过：** `phase9-nfs-unavailable-v2.json`及同名`-tests.txt`。
+
+- 开始前两个工作区命名空间没有其他Pod，核对专属NFS项目标签/完整容器ID。只暂停该NFS容器30.216秒，使用新随机名的未缓存文件路径；Go文件RPC30.017秒返回503、sandboxRecovery=true，非策略403或成功假数据。
+- NFS仍暂停时，Go owner没有stopConfirmed，新attempt claim409，工作区代次/归属未变；不把文件超时或Pod删除请求等同于停止证明。
+- 恢复NFS后先Go Stop确认旧容器终止，再gen2创建不同UID的真实gVisor/NFS Pod，读回服务端相同SHA256：`323302d94d91adbc4ca4bfdcf52171ea62a8643c65de40196a39047b18ba5edb`；最后正常释放，数据保留。
+- 45秒固定容器ID的一次性看门狗在故障前启动，正常流程主动unpause后结束它；没有宣称实测父进程强杀下看门狗。首轮`phase9-nfs-unavailable.json`已观察503/409但错误复用Exec超时请求回收的旧Pod，后续读取失败，原报告保留且不计正式通过。该场景是Go/gVisor/NFS边界，不冒称完整Python Agent存储故障自动恢复或网络分区HA。
+
+**回归与时钟诊断：** 首轮`phase9-python-concurrency-regression-tests.txt`完整175项有1项shutdown时钟失败；20次`phase9-shutdown-clock-reproduction-tests.txt`再次1次失败。`phase9-host-clock-observation.json`独立30秒2942样本确认2次墙钟倒退约1.242/0.813秒，单调时钟正常前进；校时来源未定位，不改系统时间。生产回拨保护保留并附observed/started，Fake Store纯逻辑用显式固定时钟；Runner预算预检先于协程创建，新增0认领/无未await协程/never-bound清理测试。最终39项定向通过4.593秒，`phase9-cancel-clock-final-tests.txt`。最终全量另记，不覆盖首轮失败；所有本轮外部模型调用0。
+
+最终完整回归`phase9-python-concurrency-final-regression-tests.txt`：176/176、280.193秒，原175项失败未覆盖。三类联合运维复验`phase9-joint-ops-concurrency-replay.json`：3/3，实际Milvus2.5.10/OpenSearch和缓存E5/BGE，脚本模型/Fake路由/Fake沙箱；HF/Transformers离线、OMP=2，未重建或导入索引。四个已有项目服务临时启动后已停止回原状态，ES未启动。该全量含固定时钟Fake Store测试，不宣称宿主墙钟问题已修复；真实SIGKILL/原截止时间证据仍单列。

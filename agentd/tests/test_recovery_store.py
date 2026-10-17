@@ -4,7 +4,9 @@ import asyncio
 import json
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from agentd.app.models import AlertEvent
 from agentd.app.model_gateway import ReplayModelGateway
@@ -14,8 +16,19 @@ from agentd.tests.test_recovery_runner import FakeWorkspaceService
 
 
 class DurableTaskStoreTests(unittest.IsolatedAsyncioTestCase):
-    """真实TaskStore/Runner + Fake Go服务；不冒称真实NFS或SIGKILL验收。"""
+    """真实TaskStore/Runner + Fake Go及固定时钟；不冒称真实NFS或SIGKILL验收。"""
     async def asyncSetUp(self):
+        class FixedClock(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                fixed = datetime(2026, 10, 18, tzinfo=timezone.utc)
+                return fixed.astimezone(tz) if tz is not None else fixed.replace(tzinfo=None)
+
+        # 本类验证状态机，不依赖宿主墙钟；真实时钟/回拨由专门用例及进程验收覆盖。
+        for target in ("agentd.app.models.datetime", "agentd.app.runner.datetime", "agentd.app.runtime.execution.datetime"):
+            clock = patch(target, FixedClock)
+            clock.start()
+            self.addCleanup(clock.stop)
         self.tmp = tempfile.TemporaryDirectory(prefix="sandboxd-store-recovery-", dir="/tmp")
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -102,6 +115,38 @@ class DurableTaskStoreTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.sleep(0.03)
         self.assertEqual((await self.store.get(task.task_id)).status, "cancelled")
         self.assertEqual(self.client.claims, 0)
+
+    async def test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup(self):
+        task = await self.store.enqueue(self.alert)
+        self.client.block_write = True
+        cleanup_entered, cleanup_gate = asyncio.Event(), asyncio.Event()
+        release = self.client.release_workspace
+
+        async def gated_release(binding):
+            cleanup_entered.set()
+            await cleanup_gate.wait()
+            return await release(binding)
+
+        self.client.release_workspace = gated_release
+        await self.worker()
+        await asyncio.wait_for(self.client.entered.wait(), 3)
+        try:
+            first = await self.store.cancel(task.task_id)
+            self.assertEqual(first.status, "cancelling")
+            await asyncio.wait_for(cleanup_entered.wait(), 3)
+            running = self.store._running[task.task_id]
+            cancellations = running.cancelling()
+            second = await self.store.cancel(task.task_id)
+            self.assertEqual(second.status, "cancelling")
+            self.assertEqual(running.cancelling(), cancellations, "duplicate request interrupted shielded cleanup")
+            cleanup_gate.set()
+            result = await self.settled(task.task_id)
+            self.assertEqual(result.status, "cancelled", result.error)
+            self.assertTrue(self.store._ledger.get(task.task_id)["attempts"][-1]["ownerStopped"])
+            rows = [json.loads(line) for line in self.store._journals[task.task_id].path.read_text().splitlines()]
+            self.assertEqual(sum(row["type"] == "session.command" and row.get("command") == "cancel" for row in rows), 1)
+        finally:
+            cleanup_gate.set()
 
     async def test_acknowledged_commands_survive_reopen_and_have_complete_boundaries(self):
         task = await self.store.enqueue(self.alert)

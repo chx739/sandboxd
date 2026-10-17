@@ -319,7 +319,8 @@ class RecoveryLedger:
             raise RecoveryConflict("task is cancelled or terminal")
         now = _utc(now)
         if state["attempts"] and now < datetime.fromisoformat(state["attempts"][-1]["startedAt"]):
-            raise RecoveryConflict("wall clock precedes the persisted attempt start")
+            raise RecoveryConflict("wall clock precedes the persisted attempt start: observed=" + now.isoformat()
+                                   + ", started=" + state["attempts"][-1]["startedAt"])
         if state["deadline"] is not None and now >= datetime.fromisoformat(state["deadline"]):
             raise RecoveryLimit("original task deadline has expired")
 

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "timestamp": "2026-10-17T18:41:27.964893+00:00",
+  "timestamp": "2026-10-17T19:12:03.033608+00:00",
   "scope": "Partial V1 acceptance, not completion of docs43 or the active Goal",
   "externalModelCalls": 0,
-  "passedV1": 11,
+  "passedV1": 13,
   "totalV1": 14,
   "pendingV2": 10,
   "cases": [
@@ -76,9 +76,14 @@
     },
     {
       "id": "V1-06",
-      "status": "pending",
-      "qualification": "Formal real-service acceptance remains incomplete.",
-      "evidence": []
+      "status": "passed",
+      "qualification": "Real duplicate agentd uses a different port and fails on journal lock; stale release409 preserves new Pod read; duplicate resume409/cancel202; cancellation observed during actual Go starting prevents binding/model call.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-concurrency-v2.json",
+          "sha256": "971b9051a7e5296deaa6bbe36f5301884aa0478b22c4b5f1cb717c0c5043f4d0"
+        }
+      ]
     },
     {
       "id": "V1-07",
@@ -126,9 +131,14 @@
     },
     {
       "id": "V1-11",
-      "status": "pending",
-      "qualification": "Formal real-service acceptance remains incomplete.",
-      "evidence": []
+      "status": "passed",
+      "qualification": "Actual project NFS container pause, uncached file RPC fails with503 after30s; Go lacks stop proof and rejects new claim409 with unchanged generation. After unpause, trusted old stop precedes replacement Pod/hash read. Backend integration, not full Python Agent outage or partition HA.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-nfs-unavailable-v2.json",
+          "sha256": "037b577e51612e613215d646f7648fb6aa6f3be0afb85f4e630a2dcfb4c3b962"
+        }
+      ]
     },
     {
       "id": "V1-12",
@@ -144,7 +154,7 @@
     {
       "id": "V1-13",
       "status": "passed",
-      "qualification": "Three actual local Milvus/OpenSearch replays with scripted model/Fake sandbox; 165 Python regressions.",
+      "qualification": "Latest actual local Milvus/OpenSearch three replays pass with scripted model/Fake sandbox; full176 Python regressions, with explicit fixed-clock Fake Store. Original175 failed on host clock rollback and is retained; actual clock issue not declared fixed.",
       "evidence": [
         {
           "path": "docs/evidence/phase9-joint-ops-replay.json",
@@ -153,6 +163,14 @@
         {
           "path": "docs/evidence/phase9-python-process-regression-tests.txt",
           "sha256": "fadd2f83ed1b8b8536891db698f8758838379b2b21d5adcb4fb5f2047a71c95e"
+        },
+        {
+          "path": "docs/evidence/phase9-joint-ops-concurrency-replay.json",
+          "sha256": "a2381f025e2408e460435233f4acc0c847f88e466c28d8ca4a0a7690e5207b86"
+        },
+        {
+          "path": "docs/evidence/phase9-python-concurrency-final-regression-tests.txt",
+          "sha256": "0de65182c1f6acbf0a3a8aeeee6fe4b6c776325e2bd01285954bffb8397f8aed"
         }
       ]
     },
@@ -167,7 +185,7 @@
     "Explicit legacy workspace migration and hash mapping",
     "Unified startup/acceptance command",
     "Fixed-workload latency/resource measurements",
-    "Remaining concurrency/unavailable-state/command and Trace recovery cases",
+    "Remaining acknowledged-command and crash Trace recovery case V1-14",
     "All restic/MinIO V2 implementation and acceptance"
   ],
   "failedExperiments": [
@@ -185,6 +203,38 @@
       "path": "docs/evidence/phase9-workspace-file-boundary-v3.json",
       "sha256": "5f7c81c65e651c75ddbf3985e4a3e5dd8f3c949725cf8333aba0cfbd2c9b0396",
       "qualification": "Third run: openat2 unsupported in actual gVisor; ordinary creation refused, not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-agent-concurrency.json",
+      "sha256": "426f164f1e9455332f0525ac42fd0b30d7096aa095c53af0e9de12376664c23a",
+      "qualification": "Duplicate cancel interrupts cleanup; real first run failed and was administratively reconciled."
+    },
+    {
+      "path": "docs/evidence/phase9-nfs-unavailable.json",
+      "sha256": "9a6af4a8e8537f82b042d8e33c8f25778617079c157bc55d23a62f59c77b0780",
+      "qualification": "First fixture incorrectly reuses Pod that timeout has requested to delete; NFS restored and old owner normally stopped. Not a full pass."
+    },
+    {
+      "path": "docs/evidence/phase9-python-concurrency-regression-tests.txt",
+      "sha256": "552d5ea78531619645ac8c720be08ab60a140b0a8b174ea5e6a573bd1f091b2b",
+      "qualification": "Original full175 has one shutdown recovery failure on backwards host wall clock; not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-shutdown-clock-reproduction-tests.txt",
+      "sha256": "c22dad7070d811901ccde762d2383775607dc9b56951b8e25a7613eaa128231f",
+      "qualification": "20 shutdown repetitions reproduce one backwards-clock failure; original reservations are not refunded."
+    }
+  ],
+  "diagnostics": [
+    {
+      "path": "docs/evidence/phase9-host-clock-observation.json",
+      "sha256": "1810360bee16c7a7437c85812b2e4af19bef5223206eda37f15cceedd9cc3e93",
+      "qualification": "Actual read-only host clock observation; backwards clock remains fail closed, not a performance or acceptance score."
+    },
+    {
+      "path": "docs/evidence/phase9-cancel-clock-final-tests.txt",
+      "sha256": "78840011b96bf79758bb6acb4db5b0a256fdb4d51402c03515aec6bf1e8daf54",
+      "qualification": "39 targeted logic regressions, including fixed-clock Fake Store and unchanged explicit clock rollback guards."
     }
   ]
 }

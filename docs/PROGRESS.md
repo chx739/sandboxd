@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M3：V1正式验收11/14通过，其余3项与迁移/性能待完成；V2未开始；Goal active
+    Phase 9 M3：V1正式验收13/14通过，其余1项与迁移/性能待完成；V2未开始；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -50,7 +50,12 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - V1-10第四轮phase9-workspace-file-boundary-v4.json通过：最新runtime-v1.5、真实Go/gVisor/NFS、绕过Python Policy，20项越权/路径/symlink/大小/CAS拒绝，正确CAS对照成功，两工作区guard hash与链接本身保持，两个owner正常释放。旧runtime-v1～v1.4及工作区/卷保留；当前固定镜像runtime-v1.5，Docker inspect Id=sha256:8e1abdb6e17c11c98fb04f7ad707d748a35c199c9fc80fabbec300a60c7fb465，实际CRI imageID=sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1，二者类型不同。
 - 本批次Go相关race与全仓库回归通过，最终phase9-directory-descriptor-tests.txt及phase9-go-directory-descriptor-regression-tests.txt；Python夹具/原时钟/Replay定向22/22、0.699秒，phase9-budget-boundary-final-regression-tests.txt。旧165全量为此前批次，未冒称本批次新全量；用户docs32/docs34未纳入。当前交付仍为PR#2依赖PR#1，不合并；本批次以前有效HEAD=1178856。
 - 最新runtime-v1.5真实Agent文件工具及完整轮次Pod接管复验通过，phase9-agent-pod-descriptor-recovery.json，23.491742秒；模型4槽/工具3槽、原Task/workspace与hash保持，两个新旧Pod正常释放。没有把单轮当生产RTO。
-- 第一项下一步：剩余V1-06并发取消/重复实例、11不可用/旧writer阻止接管、14命令游标与崩溃Trace；补显式旧文件迁移、统一命令和性能统计。当前11/14已过，机器可读清单phase9-v1-acceptance-progress.json；强杀Trace缺失用usageKnown=false控制面记录，不把它当完整已知用量。V1全验收前不推进V2主链路。
+- V1-06真实第二轮phase9-agent-concurrency-v2.json通过：第二agentd改用18091仍因JournalInUse退出，不是端口冲突；SIGKILL后自动接管原Task，旧attempt release409且新Pod仍读原hash；两个并发resume均409、两个cancel均202但只取消一次。另一个Task在Go starting时取消，取消落盘后没有bound事件/第三次模型调用，两个attempt均停止，最终cancelled。首轮phase9-agent-concurrency.json因重复cancel中断清理失败，原记录保留并正常对账；只对cancelling幂等，interrupted仍可再次请求核查owner。Fake固定清理窗口的修复前失败与修复后16项定向见phase9-duplicate-cancel系列。
+- V1-11真实复验phase9-nfs-unavailable-v2.json通过：只暂停项目NFS30.216秒，未缓存路径文件RPC30.017秒返回503/sandboxRecovery=true；无旧停止证明时新attempt认领409，代次不变。恢复NFS后Go确认旧Pod终止，再gen2新Pod读回服务端同hash。45秒独立看门狗配置保留、正常流程未触发；不是Python Agent全链路存储故障或网络分区HA。首轮phase9-nfs-unavailable.json错误地复用已被Exec超时回收的Pod，失败及正常清理保留。结束后NFS running/not-paused、两命名空间无遗留Pod。
+- 本批次首轮完整Python175项有1项失败：shutdown接续触发墙钟早于attempt开始。20次复现中再次出现1次，观测UTC19:03:42.938596早于19:03:43.735467；不重置deadline或放宽保护。补安全时间诊断，纯逻辑Fake Store用显式固定时钟；Runner预算检查先于协程创建，避免抛错留下未await对象。真实进程验收仍用真实墙钟；最终完整Python176/176、280.193秒通过，phase9-python-concurrency-final-regression-tests.txt；首次失败未覆盖。上一有效提交36b20e0，本批次交付以PR#2最新HEAD为准。
+- 独立只读宿主时钟观测phase9-host-clock-observation.json：30秒2942样本发现2次墙钟倒退约1.242/0.813秒，单调时钟各前进约10ms；校时来源未定位，不改变系统时间。最终39项定向4.593秒通过，phase9-cancel-clock-final-tests.txt；纯逻辑固定时钟和真实进程结果分开，墙钟回拨安全停止保留。
+- 当前三类既有运维回放复验3/3：phase9-joint-ops-concurrency-replay.json，真实Milvus2.5.10/OpenSearch+缓存E5/BGE，脚本模型/Fake路由/Fake沙箱，外部模型0；不重新导入或重建索引，临时四服务已停回初始状态，ES未启动。最终完整176含本批次取消/预算预检及固定时钟Fake Store，未把它冒称真实墙钟稳定性证明。
+- 第一项下一步：剩余V1-14命令游标与崩溃Trace；补显式旧文件迁移、统一命令和性能统计。当前13/14已过，机器可读清单phase9-v1-acceptance-progress.json；强杀Trace缺失用usageKnown=false控制面记录，不把它当完整已知用量。V1全验收前不推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移仍未完成。

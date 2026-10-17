@@ -3,10 +3,13 @@ from __future__ import annotations
 import asyncio
 import copy
 import hashlib
+import gc
 import json
 import tempfile
 import unittest
+import warnings
 from pathlib import Path
+from unittest.mock import patch
 
 import httpx
 
@@ -138,6 +141,18 @@ class RecoveryRunnerTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.ledger.traces("task-demo")), 1)
         with self.assertRaises(RecoveryConflict):
             self.ledger.record_trace(trace.model_copy(update={"verdict": "changed"}))
+
+    async def test_budget_preflight_failure_does_not_leak_unawaited_claim(self):
+        attempt = self.attempt()
+        with warnings.catch_warnings(record=True) as observed:
+            warnings.simplefilter("always", RuntimeWarning)
+            with patch.object(attempt, "remaining", side_effect=RecoveryConflict("synthetic clock rollback")):
+                with self.assertRaisesRegex(RecoveryConflict, "synthetic clock rollback"):
+                    await self.run_attempt(attempt)
+            gc.collect()
+        self.assertFalse(any("was never awaited" in str(w.message) for w in observed))
+        self.assertEqual(self.client.claims, 0)
+        self.assertTrue(attempt.snapshot()["attempts"][-1]["ownerStopped"])
 
     async def test_lost_write_response_is_inspected_after_reopen_and_not_replayed(self):
         first = self.attempt()

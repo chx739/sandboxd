@@ -1,0 +1,11 @@
+{
+  "kind": "deterministic-agent-replay-real-local-stores",
+  "logSnapshotHash": "e9f570530b333f10a1592035511c693bd13eb88e3332be62ef0ae0ada46918ea",
+  "modelCalls": "scripted",
+  "jev": "fake",
+  "sandbox": "fake-lifecycle-only",
+  "externalModelCalls": 0,
+  "scope": "No live cluster or repair; natural-language decisions and semantic citation entailment not evaluated",
+  "passed": 3,
+  "count": 3
+}

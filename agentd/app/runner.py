@@ -101,7 +101,9 @@ class AgentRunner:
             # 若不显式 wait_for，claim 只受 httpx 单请求超时约束，任务总时长
             # 的组成就不在同一个地方可审计。
             if recovery is not None:
-                binding = await asyncio.wait_for(self._claim_workspace(recovery), timeout=recovery.remaining())
+                # 预算/墙钟检查可能抛错，必须先检查再创建协程，避免泄漏未await对象。
+                claim_timeout = recovery.remaining()
+                binding = await asyncio.wait_for(self._claim_workspace(recovery), timeout=claim_timeout)
                 sandbox_id = binding.sandbox_id
                 workspace = RemoteFileWorkspace(self._sandboxd, binding)
             else:
@@ -152,13 +154,12 @@ class AgentRunner:
             )
             if recovery is not None:
                 recovery.ledger.begin_loop(task_id, recovery.attempt_id, datetime.now(timezone.utc))
-                await asyncio.wait_for(self._inspect_mutations(recovery, workspace, state), timeout=recovery.remaining())
+                inspection_timeout = recovery.remaining()
+                await asyncio.wait_for(self._inspect_mutations(recovery, workspace, state), timeout=inspection_timeout)
                 # 核查读操作也占原工具预算；Loop已构造，再同步当前计数。
                 state.tool_call_count = max(state.tool_call_count, recovery.used("tool"))
-            state = await asyncio.wait_for(
-                loop.run(),
-                timeout=recovery.remaining() if recovery is not None else MAX_TASK_SECONDS,
-            )
+            loop_timeout = recovery.remaining() if recovery is not None else MAX_TASK_SECONDS
+            state = await asyncio.wait_for(loop.run(), timeout=loop_timeout)
             if state.diagnosis is None:
                 raise RuntimeError("Agent Loop 结束但没有生成 Diagnosis")
 

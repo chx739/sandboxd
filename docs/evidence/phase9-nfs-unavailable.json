@@ -1,0 +1,91 @@
+{
+  "mode": "real-nfs-pause-go-gvisor",
+  "scope": "V1-11 local NFS unavailability and unconfirmed old writer rejection",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/d85ff70e2f8342979cfb78eef88a194d",
+  "workspaceId": "workspace-9df3d3fc5914442a92241ce7d3fd909e",
+  "externalModelCalls": 0,
+  "passed": false,
+  "podBeforeFault": {
+    "workspaceId": "workspace-9df3d3fc5914442a92241ce7d3fd909e",
+    "attemptId": "attempt-nfs-original",
+    "podUid": "05db5064-0ed5-4b42-b4c7-fd75d03a6c16",
+    "sandboxId": "d11957b1563260ae",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-9df3d3fc5914442a92241ce7d3fd909e",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "fault": {
+    "containerId": "497b2542b2227785b5c559ffe45c400df283a900d0bb2f4a17ac3e73498fd16b",
+    "kind": "docker-pause-own-nfs-only",
+    "startedAt": "2026-10-17T18:57:01.796364+00:00",
+    "watchdogSeconds": 45,
+    "execTimeoutSeconds": 30,
+    "httpClientTimeoutSeconds": 40,
+    "pausedMs": 30186.523
+  },
+  "fileRpc": {
+    "statusCode": 503,
+    "body": {
+      "error": "workspace operation did not complete",
+      "errorType": "workspace-execution",
+      "sandboxRecovery": true
+    },
+    "elapsedMs": 30017.275
+  },
+  "ownerWithoutStopProof": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-9df3d3fc5914442a92241ce7d3fd909e",
+    "sessionId": "session-nfs-unavailable",
+    "branchId": "branch-nfs-unavailable",
+    "generation": 1,
+    "phase": "bound",
+    "owner": {
+      "taskId": "task-nfs-unavailable",
+      "attemptId": "attempt-nfs-original",
+      "sandboxId": "d11957b1563260ae",
+      "podName": "sandbox-d11957b1563260ae",
+      "podUid": "05db5064-0ed5-4b42-b4c7-fd75d03a6c16",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": false
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+  },
+  "podUidDuringFault": "05db5064-0ed5-4b42-b4c7-fd75d03a6c16",
+  "unconfirmedTakeoverStatus": 409,
+  "generationUnchanged": true,
+  "failure": {
+    "type": "AssertionError",
+    "message": ""
+  },
+  "release": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-9df3d3fc5914442a92241ce7d3fd909e",
+    "sessionId": "session-nfs-unavailable",
+    "branchId": "branch-nfs-unavailable",
+    "generation": 1,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-nfs-unavailable",
+      "attemptId": "attempt-nfs-original",
+      "sandboxId": "d11957b1563260ae",
+      "podName": "sandbox-d11957b1563260ae",
+      "podUid": "05db5064-0ed5-4b42-b4c7-fd75d03a6c16",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "stopReason": "containers-terminated"
+  },
+  "timestamp": "2026-10-17T18:57:32.387168+00:00"
+}

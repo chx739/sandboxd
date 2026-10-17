@@ -1,6 +1,6 @@
 # NFS V1 部署候选配置
 
-当前状态：M3，Python持久TaskStore/Runner已接入。V1正式11/14项已过，含真实SIGKILL接续、终态不复活及确认丢失；其余06/11/14与迁移/性能仍待完成，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
+当前状态：M3，Python持久TaskStore/Runner已接入。V1正式13/14项已过，含真实SIGKILL接续、终态不复活及确认丢失；其余V1-14与迁移/性能仍待完成，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -73,6 +73,17 @@ agentd/.venv/bin/python -m agentd.workspace_boundary_demo --nfs-server "$SANDBOX
 ```
 
 过期场景按真实墙钟等待原120秒loop截止，再启动同目录服务，不修改时钟/账本。边界场景直接请求Go HTTP，不经过Python Policy；管理员只在自己的合成目录创建测试链接，验证拒绝后核对guard hash及链接保留。当前runtime-v1.5采用O_PATH目录描述符类型校验；原O_DIRECTORY组合与openat2候选的真实失败见踩坑53，旧镜像/报告保留，不以本地Linux单测代替gVisor结果。
+
+并发与NFS故障实验也必须串行，先结束其他工作区任务：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_concurrency_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/workspace-concurrency.json
+agentd/.venv/bin/python -m agentd.workspace_unavailable_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/workspace-nfs-unavailable.json
+```
+
+第一条还需18091空闲，用不同端口验证同控制目录锁拒绝；旧attempt清理、新Pod可读和starting时取消分别核验。第二条要求sandboxd-demo/storage无其他Pod，仅暂停已核实的项目NFS容器约30秒，45秒一次性看门狗兜底恢复；正常finally先unpause再确认旧owner停止。Exec超时会回收旧Pod，恢复数据读取要在停止证明后认领新Pod。单轮故障时长不是日常延迟或HA指标；不会删除NFS文件/PV/PVC，不调用外部模型。
 
 异常遗留时，核对报告中的controlRoot，只允许用本夹具原Go/Python账本恢复管理对账：
 
