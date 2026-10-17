@@ -18,7 +18,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
-- e74aacc后接入BackupRuntime可信备份执行器：维护配置持久固定，submitted先落盘、精确Pod/UID/spec/finalizer核对、终止+节点健康证明、Wait保留屏障、Abort有界、Finish幂等；源备份仍只读，尚未接restore/HTTP/Agent。执行器7项顶层逻辑测试（含子用例）、六包race及Go全项目通过；最后Finish幂等改动由sandbox/API race单列覆盖，不冒称先前全量包含后改动。
+- 当前有效实现提交1448c82（V2草稿PR#3；以下说明承接e74aacc）。接入BackupRuntime可信备份执行器：维护配置持久固定，submitted先落盘、精确Pod/UID/spec/finalizer核对、终止+节点健康证明、Wait保留屏障、Abort有界、Finish幂等；源备份仍只读，尚未接restore/HTTP/Agent。执行器7项顶层逻辑测试（含子用例）、六包race及Go全项目通过；最后Finish幂等改动由sandbox/API race单列覆盖，不冒称先前全量包含后改动。
 - 实际维护执行器探测：首轮备份成功但即时读取失败，原失败与同job后续对账保留；第二轮通过但事后CRI已回收；第三轮phase9-v2-executor-component-v3.json整体成功且清理前实际runtimeType=io.containerd.runsc.v1。注册表重开后写/认领仍拒绝、等待结果后仍冻结、显式Finish后内容/hash一致，业务owner和维护Pod已正常清理。不是进程SIGKILL或Session联合提交；原数据/快照/Secret/卷保留，外部模型0。
 
 - V2分支已从9c91c9b创建，90d9c22已提交并推送、草稿[PR #3](https://github.com/chx739/sandboxd/pull/3)已创建并附到当前聊天；base=codex/workspace-nfs-v1，依赖PR#2→PR#1，不合并。该批模块：固定restic安装、只读manifest、受限backuphelper/CLI、gVisor维护Pod构造/定向MinIO网络策略、独立MinIO Compose与组件夹具。学习/后续持久屏障约束见文档47；尚未接Agent自动检查点，不将内存mutex当崩溃后屏障。
