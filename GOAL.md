@@ -6,6 +6,8 @@
 
 ## 一句话目标
 
+> **2026-10-17 工作区恢复规划**：用户要求先编写 [NFS V1 → restic + MinIO V2 实施约束](docs/43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md)，用于防止后续实施偏移。V1 仅 NFS 最新状态，自动接续 Pod 故障及 agentd 重启后的未完成任务；保留 task_id、新增 attempt、继承预算和截止时间。V2 保留 NFS 运行并增加 restic/MinIO 历史快照。本次仅授权文档，未开始实现。后续实施须先核对明确授权，并将新增范围与历史限制的关系同步到本文件；本规划不取消 Phase 8 的未完成项或重新授权付费调用。
+
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
 
 ## 已完成目标：Phase 2 外部告警诊断 Agent
