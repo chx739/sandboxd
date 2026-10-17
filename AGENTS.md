@@ -20,7 +20,7 @@ Phase 9 允许增加本项目沙箱专属工作区的受限文件 RPC、NFS 挂�
 
 工作区性能与流量的基线见文档46与phase9-nfs-fixed-workload-serial.json；并行探索报告单列。V2比较复用固定seed/文件规模/缓存/并发，计入同步检查点等待；容器网络计数不等于公网流量，端点内存不等于峰值，不把本机小样本外推生产QPS。
 
-V2续作先读文档47：Go Reserve只冻结，Session引用/PREPARING持久化后才Start；DATA_READY不等于可恢复，COMMITTED同条日志投影head/revision。最终提交与Task取消共用短锁，不能将网络备份放进取消锁；当前提交模块的本地测试不代替真实Agent联合验收。
+V2续作先读文档47：Go Reserve只冻结，Session引用/PREPARING持久化后才Start；DATA_READY不等于可恢复，COMMITTED同条日志投影head/revision。最终提交与Task取消共用短锁，不能将网络备份放进取消锁；当前已有真实Agent正常保存证据（文档47 §7），不代替真实故障/历史恢复的完整验收。AGENTD_CHECKPOINT_MODE=off为V1默认，restic需完整可信Go配置；不注册备份模型工具。
 
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 

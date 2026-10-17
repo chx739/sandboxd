@@ -432,9 +432,15 @@ class TaskStore:
                         task.error = str(event.details.get("error", "attempt interrupted"))
                         break
 
-    async def _finish_durable(self, task_id: str, status: str, error: str | None = None) -> None:
-        state = self._ledger.finish(task_id, status)
+    async def _finish_durable(self, task_id: str, status: str, error: str | None = None) -> bool:
         async with self._lock:
+            current = self._ledger.get(task_id)
+            # 最终同步备份期间仍可接收命令。与接收/取消共用锁，不能把已确认
+            # 但尚未注入的命令留在一个刚被标为成功的Task里。
+            if (status == "succeeded" and not current["cancelRequested"]
+                    and any(c["appliedNodeId"] is None for c in current["commands"])):
+                return False
+            state = self._ledger.finish(task_id, status)
             task = self._tasks[task_id]
             task.status = state["status"]
             task.updated_at = utc_now()
@@ -442,6 +448,7 @@ class TaskStore:
             if error is not None:
                 task.error = error
         await self._journals[task_id].append_result(task_id, task.status, error or (task.result.summary if task.result else ""))
+        return True
 
     async def _run_durable_task(self, task_id: str, runner: AgentRunner) -> None:
         while True:
@@ -470,8 +477,8 @@ class TaskStore:
             traces = self._ledger.traces(task_id)
             if (traces and traces[-1].get("status") in TERMINAL
                     and state["attempts"][-1]["ownerStopped"]):
-                await self._finish_durable(task_id, traces[-1]["status"])
-                return
+                if await self._finish_durable(task_id, traces[-1]["status"]):
+                    return
             try:
                 state = self._ledger.begin_attempt(task_id, utc_now())
             except RecoveryLimit as exc:
@@ -526,8 +533,8 @@ class TaskStore:
                 status = "limit_exceeded" if isinstance(exc, (TimeoutError, RecoveryLimit)) else "failed"
                 await self._finish_durable(task_id, status, public_error(exc))
                 return
-            await self._finish_durable(task_id, status)
-            return
+            if await self._finish_durable(task_id, status):
+                return
 
     async def get_task_traces(self, task_id: str) -> list[dict]:
         async with self._lock:

@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Sequence
 
-from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 
 from .clients import LinuxHostClient, PrometheusClient, SandboxdClient
 from .memory import MemoryStore
@@ -23,9 +23,10 @@ from .runtime.loop import AgentLoopState, PiStyleAgentLoop, append_event
 from .runtime.session import SessionJournal
 from .runtime.execution import RecoveryAttempt
 from .runtime.recovery import RecoveryConflict, RecoveryLimit
+from .runtime.checkpoint_coordinator import CheckpointCoordinator
 from .tools.files import FileWorkspace
 from .tools.remote_files import RemoteFileWorkspace, WorkspaceBinding, WorkspaceExecutionError
-from .working_memory import WORKING_MEMORY_TOOL_SCHEMA, scope_from_alert
+from .working_memory import WORKING_MEMORY_TOOL_SCHEMA, scope_from_alert, stale_state_evidence
 
 
 class AgentRunner:
@@ -45,6 +46,7 @@ class AgentRunner:
         workspace_root: Path | None = None,
         memory_store: MemoryStore | None = None,
         model_router: ModelRouter | None = None,
+        checkpoints: CheckpointCoordinator | None = None,
     ) -> None:
         self._prometheus = prometheus
         self._sandboxd = sandboxd
@@ -55,6 +57,7 @@ class AgentRunner:
         self._workspace_root = workspace_root or Path("/tmp/sandboxd-agent-workspaces")
         self._memory_store = memory_store
         self._model_router = model_router
+        self._checkpoints = checkpoints
 
     async def run(
         self,
@@ -76,7 +79,12 @@ class AgentRunner:
         gateway = self._model_gateway
         routing: dict[str, object] = {}
         route = None
+        resumed_diagnosis = None
+        resumed_status = None
+        recovered_diagnosis_changed = False
         try:
+            if self._checkpoints is not None and (recovery is None or journal is None):
+                raise ValueError("joint checkpoints require durable NFS Task/Session")
             if recovery is not None:
                 if recovery.task_id != task_id or journal is None:
                     raise ValueError("durable attempt requires its Task and Session")
@@ -90,8 +98,20 @@ class AgentRunner:
                 await journal.initialize(task_id, alert, parent)
                 if parent is not None:
                     recovery.boundary(parent, resume_messages or [])
+            if (self._checkpoints is not None and resume_messages
+                    and not any(c["appliedNodeId"] is None for c in recovery.snapshot()["commands"])):
+                last = resume_messages[-1]
+                if isinstance(last, AIMessage) and last.additional_kwargs.get("sandboxdRuntimeFinalDiagnosis") is True:
+                    payload = json.loads(str(last.content))
+                    if payload.get("runtimeTaskId") == task_id:
+                        if payload.get("runtimeSource") != "final-diagnosis" or payload.get("runtimeStatus") not in {"succeeded","failed","limit_exceeded"}:
+                            raise RecoveryConflict("invalid persisted Runtime diagnosis")
+                        resumed_diagnosis = Diagnosis.model_validate(payload)
+                        resumed_status = payload["runtimeStatus"]
+            if self._checkpoints is not None:
+                await self._checkpoints.preflight(recovery)
             gateway, routing, route = await self._select_gateway(alert, recovery)
-            if recovery is not None and recovery.used("model") >= recovery.snapshot()["limits"]["model"]:
+            if resumed_diagnosis is None and recovery is not None and recovery.used("model") >= recovery.snapshot()["limits"]["model"]:
                 raise RecoveryLimit("original model call budget is exhausted")
             if routing:
                 append_event(events, "model.route.completed", details=routing)
@@ -131,6 +151,28 @@ class AgentRunner:
                 messages=list(resume_messages or []),
                 events=events,
             )
+            async def save_boundary(node_id: str) -> None:
+                if self._checkpoints is not None:
+                    saved = await self._checkpoints.save(recovery, journal, binding, node_id)
+                    append_event(events, "checkpoint.committed", details={"checkpointId":saved["checkpointId"],"nodeId":node_id,"revision":saved["revision"]})
+            def downgrade_stale_diagnosis() -> bool:
+                nonlocal recovered_diagnosis_changed
+                stale = stale_state_evidence(state.messages)
+                if not stale or recovered_diagnosis_changed:
+                    return False
+                state.diagnosis = state.diagnosis.model_copy(update={
+                    "summary":"已保存历史诊断；当前状态未核实。",
+                    "root_cause":"未确认；过期观测不能证明当前仍然如此。",
+                    "recommendation":"重新查询相关状态后再确认。历史证据："+", ".join(stale[:8]),
+                    "severity":"warning"})
+                recovered_diagnosis_changed = True
+                append_event(events,"diagnosis.freshness_blocked",details={"evidenceIds":stale[:16]})
+                return True
+
+            def append_runtime_diagnosis() -> None:
+                payload=state.diagnosis.model_dump(mode="json",by_alias=True)
+                payload.update(runtimeSource="final-diagnosis",runtimeStatus=state.status,runtimeTaskId=task_id)
+                state.messages.append(AIMessage(content=json.dumps(payload,ensure_ascii=False),additional_kwargs={"sandboxdRuntimeFinalDiagnosis":True}))
             loop = PiStyleAgentLoop(
                 session=session,
                 plugins=self._plugins,
@@ -147,6 +189,7 @@ class AgentRunner:
                 journal=journal,
                 tool_schemas=tool_schemas,
                 recovery=recovery,
+                on_boundary=save_boundary if self._checkpoints is not None else None,
                 memory_summary=(
                     self._memory_store.read_summary_for_scope(scope_from_alert(state.alert))
                     if self._memory_store else ""
@@ -154,19 +197,43 @@ class AgentRunner:
             )
             if recovery is not None:
                 recovery.ledger.begin_loop(task_id, recovery.attempt_id, datetime.now(timezone.utc))
-                inspection_timeout = recovery.remaining()
-                await asyncio.wait_for(self._inspect_mutations(recovery, workspace, state), timeout=inspection_timeout)
+                if resumed_diagnosis is None:
+                    inspection_timeout = recovery.remaining()
+                    await asyncio.wait_for(self._inspect_mutations(recovery, workspace, state), timeout=inspection_timeout)
                 # 核查读操作也占原工具预算；Loop已构造，再同步当前计数。
                 state.tool_call_count = max(state.tool_call_count, recovery.used("tool"))
             loop_timeout = recovery.remaining() if recovery is not None else MAX_TASK_SECONDS
-            state = await asyncio.wait_for(loop.run(), timeout=loop_timeout)
+            if resumed_diagnosis is not None:
+                state.diagnosis, state.status = resumed_diagnosis, resumed_status
+                downgrade_stale_diagnosis()
+                append_event(events,"diagnosis.recovered",details={"source":"persisted-runtime-final","modelReplayed":False})
+            else:
+                state = await asyncio.wait_for(loop.run(), timeout=loop_timeout)
             if state.diagnosis is None:
                 raise RuntimeError("Agent Loop 结束但没有生成 Diagnosis")
 
             if journal is not None:
+                if self._checkpoints is not None and (resumed_diagnosis is None or recovered_diagnosis_changed):
+                    # 原模型消息保留；公开诊断已经过freshness/证据安全降级。
+                    # 这个节点明确标为Runtime产物，不伪称新增模型调用。
+                    append_runtime_diagnosis()
                 node_id = await journal.append_transcript(task_id, state.messages)
+                if self._checkpoints is not None:
+                    append_event(events,"diagnosis.persisted",details={"source":"runtime-final-diagnosis","nodeId":node_id})
                 if recovery is not None:
                     recovery.boundary(node_id, state.messages)
+                if self._checkpoints is not None and node_id is not None:
+                    remaining=recovery.remaining()
+                    await asyncio.wait_for(save_boundary(node_id),timeout=remaining)
+                    # 同步备份也消耗观测TTL。若等待后过期，追加历史诊断及检查点；
+                    # 最多补一次，沿用原deadline，不查询模型、不回写旧Session节点。
+                    if downgrade_stale_diagnosis():
+                        append_runtime_diagnosis()
+                        node_id = await journal.append_transcript(task_id, state.messages)
+                        recovery.boundary(node_id, state.messages)
+                        append_event(events,"diagnosis.persisted",details={"source":"runtime-final-diagnosis","nodeId":node_id})
+                        remaining=recovery.remaining()
+                        await asyncio.wait_for(save_boundary(node_id),timeout=remaining)
                 transcript_saved = True
 
             denied = state.denied_actions
@@ -391,6 +458,8 @@ class AgentRunner:
         if attempt.get("claimRequested") is False and attempt["sandboxId"] is None:
             recovery.ledger.owner_stopped(recovery.task_id, recovery.attempt_id, "never-bound")
             return
+        if self._checkpoints is not None:
+            await self._checkpoints.cleanup(recovery)
         result = await self._sandboxd.get_workspace(state["workspaceId"])
         record = self._workspace_record(result, recovery)
         # ready/404/另一归属均不能证明一个结果不明的认领不会稍后生效。

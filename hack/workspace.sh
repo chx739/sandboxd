@@ -72,8 +72,20 @@ EOF
     check_cluster
     : "${SANDBOXD_TOKEN:?需要Agent Token}" "${SANDBOXD_OPERATOR_TOKEN:?需要独立Operator Token}"
     : "${SANDBOXD_WORKSPACE_CONTROL_DIR:?设置原生Linux持久控制目录}"
+    backup_args=()
+    case "${AGENTD_CHECKPOINT_MODE:-off}" in
+      off) ;;
+      restic)
+        : "${SANDBOXD_BACKUP_SECRET_NAME:?设置已初始化专属仓库的Secret名称}"
+        : "${SANDBOXD_BACKUP_MINIO_IP:?设置已核对的专属MinIO IPv4}"
+        backup_args=(-workspace-backup-image sandboxd-restic:0.18.1-v1 \
+                     -workspace-backup-secret "$SANDBOXD_BACKUP_SECRET_NAME" \
+                     -workspace-backup-minio-ip "$SANDBOXD_BACKUP_MINIO_IP")
+        ;;
+      *) echo 'AGENTD_CHECKPOINT_MODE只能为off或restic。' >&2; exit 1 ;;
+    esac
     exec "$binary" -listen 127.0.0.1:8080 -pool-size 0 -workspace-nfs-server "$(nfs_address)" \
-      -workspace-image sandboxd-workspace:runtime-v1.5 -workspace-control-dir "$SANDBOXD_WORKSPACE_CONTROL_DIR"
+      -workspace-image sandboxd-workspace:runtime-v1.5 -workspace-control-dir "$SANDBOXD_WORKSPACE_CONTROL_DIR" "${backup_args[@]}"
     ;;
   agent)
     : "${AGENTD_TOKEN:?需要Agent API Token}" "${AGENTD_ALERT_TOKEN:?需要独立Alert Token}" "${SANDBOXD_TOKEN:?需要sandboxd Agent Token}"

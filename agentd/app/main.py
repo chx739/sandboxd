@@ -22,6 +22,9 @@ from .plugins import build_builtin_registry
 from .plugins.knowledge import KnowledgePlugin
 from .plugins.logs import LogsPlugin
 from .router import JevChoiceSource, ModelPrice, ModelRouter
+from .runtime.checkpoint_coordinator import CheckpointCoordinator
+from .runtime.checkpoints import CheckpointLedger
+from .runtime.session_refs import SessionReferences
 from .store import (
     ControlKind,
     QueueFullError,
@@ -102,6 +105,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     logs_plugin = LogsPlugin(cfg.logs_file) if cfg.logs_file is not None else None
     plugins = build_builtin_registry(memory_store, knowledge_plugin, logs_plugin)
+    if cfg.workspace_backend == "nfs" and cfg.recovery_dir is None:
+        raise ValueError("NFS mode requires a durable recovery directory")
+    if cfg.checkpoint_mode != "off" and (cfg.checkpoint_mode != "restic" or cfg.workspace_backend != "nfs"):
+        raise ValueError("joint checkpoint mode requires durable NFS")
+    store = TaskStore(cfg.trace_dir, recovery_dir=cfg.recovery_dir if cfg.workspace_backend == "nfs" else None)
+    checkpoints = None
+    checkpoint_ledger = None
+    try:
+        if cfg.checkpoint_mode == "restic":
+            refs = SessionReferences(cfg.recovery_dir / "checkpoints")
+            checkpoint_ledger = CheckpointLedger(cfg.recovery_dir / "checkpoints/checkpoints.jsonl",refs)
+            checkpoints = CheckpointCoordinator(sandboxd,checkpoint_ledger,refs,cfg.checkpoint_repository_id)
+    except BaseException:
+        if checkpoint_ledger is not None:
+            checkpoint_ledger.close()
+        store.close()
+        raise
     runner = AgentRunner(
         prometheus,
         sandboxd,
@@ -111,10 +131,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         workspace_root=cfg.workspace_dir,
         memory_store=memory_store,
         model_router=model_router,
+        checkpoints=checkpoints,
     )
-    if cfg.workspace_backend == "nfs" and cfg.recovery_dir is None:
-        raise ValueError("NFS mode requires a durable recovery directory")
-    store = TaskStore(cfg.trace_dir, recovery_dir=cfg.recovery_dir if cfg.workspace_backend == "nfs" else None)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
@@ -127,6 +145,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 await worker
             except asyncio.CancelledError:
                 pass
+            if checkpoints is not None:
+                checkpoints.close()
             store.close()
             await prometheus.close()
             await sandboxd.close()

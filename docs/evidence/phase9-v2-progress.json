@@ -59,15 +59,87 @@
     }
   ],
   "remaining": [
-    "Agent complete-boundary coordinator and cancellation/startup reconciliation over implemented trusted HTTP/client; restore barrier pending",
-    "wire tested PREPARING / DATA_READY / COMMITTED ledger and immutable Session reference into live Agent flow",
-    "readable immutable Session prefix reference and complete-boundary hook",
-    "cancellation ordering, original budget/deadline and recovery reconciliation",
-    "historical branch / new empty workspace restoration and image identity checks",
-    "protected references, controlled cleanup preview and forget/prune",
-    "ten V2 acceptance cases and fixed-workload V1/V2 performance comparison"
+    "real process interruption at PREPARING / DATA_READY / COMMITTED cut points and cancellation/startup reconciliation",
+    "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
+    "trusted restore barrier into new empty NFS workspace and immutable business image identity checks",
+    "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
+    "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
+    "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
+    "actual unified shell startup restic-mode execution"
   ],
   "evidence": [
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-diagnosis-budget-tests.txt",
+      "sha256": "efed1e2ba6e2a38606902ba45d80398159fe5d2fecf29181120139332b37f92e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-final-boundary-tests.txt",
+      "sha256": "5d737eda47653d316fe81e220a4f7603cec32e78c7cba776987654cf20f7a6fb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-final-full-tests.txt",
+      "sha256": "ff1b519902e7534f4aeddf53001a8f763722467ad84197e6658090da026fcc03"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-freshness-final-tests.txt",
+      "sha256": "39ab28efaa7a613feaf15ba921f0422523b90bad0120743bc79318ece0269c39"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-full-tests.txt",
+      "sha256": "598a16f1e99ad99dd4d5220a0768aa7c8b4c2fbf16bcbae099ceabf5560daeda"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-initial-tests.txt",
+      "sha256": "409289162e94331d1fe4ceace77b993a99fa422d9093192b3ac523fbd303c947"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-late-control-tests.txt",
+      "sha256": "4f191249609d483d79406906569203c5fa97df0c7192d5ca27030b61cb8d9353"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-late-control-v2-tests.txt",
+      "sha256": "1a945894bd69d7647d0002e79e0f78d831166a8d97f317f41568a8cd8157f7bc"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-module-status.json",
+      "sha256": "c270a33b2627f93cd4b1b68af97368f308895676a61753e5a31168199f2f3950"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-preflight-final-tests.txt",
+      "sha256": "d73e906b091cbf4cf2aa8ab68df92726c7279108321343c00c3a40b39ce8bc96"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-recovery-final-tests.txt",
+      "sha256": "0463cdac6ad72e3b722e16df53371a92468ea96e40c29e003b33f676e7c4e978"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-task-scope-tests.txt",
+      "sha256": "4045e21a0c90fe5b9fb664e34b0a5ff3265f59bf3a8ed4738fb268caf7f537d3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-tests.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v2-tests.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v2.json",
+      "sha256": "d6c44cd9922afbf88e52fd6c1f0548c1a7938d35ce4c9f331ba08a4fc10dc54d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v3-tests.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v3.json",
+      "sha256": "1c370b3b10b20c00f23e99206f313a3a89c7ac9c8d1bcab6d595c09b5a11a5fb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint.json",
+      "sha256": "3ab4bf159bcdf24fead6dc578857f1f71b9ba1db95c4029043cc1f3317c1d509"
+    },
     {
       "path": "docs/evidence/phase9-v2-backup-client-tests.txt",
       "sha256": "5db0438d56678ebc2c551bbe67811b4302c8c658ae5e47a25ef67999301b0768"
@@ -230,5 +302,7 @@
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
-  "backupHTTPScope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator"
+  "backupHTTPScope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator",
+  "agentJointCheckpointScope": "Real TaskStore/Runner/Go HTTP/gVisor/NFS/restic/MinIO normal complete tool groups and Runtime final diagnosis verified; process fault/restore/GC acceptance pending",
+  "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json"
 }

@@ -1,0 +1,146 @@
+{
+  "mode": "real-agent-replay-go-gvisor-nfs-restic-minio-joint-checkpoint",
+  "passed": true,
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-checkpoint-demo/50c13a27597e4cc7be4807d24b647448",
+  "scope": "normal complete tool groups and final diagnosis only; fault/restore/GC acceptance pending",
+  "taskId": "task-057240d83ceb12ee",
+  "taskStatus": "succeeded",
+  "error": null,
+  "checkpoints": [
+    {
+      "checkpointId": "cp-1541727c3f6849a68eb4dac5938e8fda",
+      "revision": 3,
+      "nodeId": "node-ead75b7b0bb9d532",
+      "snapshotId": "daf1bd473da5b3b5ae9b5cc251d5211085e85a41802fe99be3f5713dcffe1517",
+      "sessionRef": {
+        "schemaVersion": 1,
+        "path": "session-refs/588c33a3986f5f1a3c7b68e9ad2549350e2b5106eeae858b8fc3998786972865.json",
+        "sha256": "588c33a3986f5f1a3c7b68e9ad2549350e2b5106eeae858b8fc3998786972865",
+        "bytes": 7556,
+        "sessionId": "session-bcaa3f5ec8cc7936",
+        "nodeId": "node-ead75b7b0bb9d532"
+      },
+      "messageCount": 8
+    },
+    {
+      "checkpointId": "cp-0370a45193364834b7d64e8821db010c",
+      "revision": 2,
+      "nodeId": "node-94e2d974bf9d308d",
+      "snapshotId": "745e1d7aa2425355d06d55a4bb85d9c84375c2f9f81ecb8cc7f8a9022912603c",
+      "sessionRef": {
+        "schemaVersion": 1,
+        "path": "session-refs/1229549264e46cc53d8bc9a2e1641c33c89ca8968fe9d228eaf578f9104ca817.json",
+        "sha256": "1229549264e46cc53d8bc9a2e1641c33c89ca8968fe9d228eaf578f9104ca817",
+        "bytes": 5506,
+        "sessionId": "session-bcaa3f5ec8cc7936",
+        "nodeId": "node-94e2d974bf9d308d"
+      },
+      "messageCount": 6
+    },
+    {
+      "checkpointId": "cp-92591d39c675421fbad13f1ae22d51e9",
+      "revision": 1,
+      "nodeId": "node-4dd18ea326053755",
+      "snapshotId": "a55fb0306bafaed2db218d1c0222a8ea372f8a7595cd6615dd1a6edab8c18c43",
+      "sessionRef": {
+        "schemaVersion": 1,
+        "path": "session-refs/4c77e483f9268888997cfde4481bb1ac9285a816da488b269f69a76e1fc6c7c9.json",
+        "sha256": "4c77e483f9268888997cfde4481bb1ac9285a816da488b269f69a76e1fc6c7c9",
+        "bytes": 4521,
+        "sessionId": "session-bcaa3f5ec8cc7936",
+        "nodeId": "node-4dd18ea326053755"
+      },
+      "messageCount": 4
+    }
+  ],
+  "maintenance": [
+    {
+      "checkpointId": "cp-92591d39c675421fbad13f1ae22d51e9",
+      "podUid": "9740c5af-41fc-4ff8-b070-e9af1c6b1098",
+      "podName": "workspace-backup-backup-92591d39c675421fbad13f1ae22d51e9",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:d84a466326ed959920fee751772ddfed5bfd0e766a4fa76c552d5063f0911b64",
+      "snapshotId": "a55fb0306bafaed2db218d1c0222a8ea372f8a7595cd6615dd1a6edab8c18c43"
+    },
+    {
+      "checkpointId": "cp-0370a45193364834b7d64e8821db010c",
+      "podUid": "ffcdb073-2858-42cc-92ba-d6922b4a9b2d",
+      "podName": "workspace-backup-backup-0370a45193364834b7d64e8821db010c",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:d84a466326ed959920fee751772ddfed5bfd0e766a4fa76c552d5063f0911b64",
+      "snapshotId": "745e1d7aa2425355d06d55a4bb85d9c84375c2f9f81ecb8cc7f8a9022912603c"
+    },
+    {
+      "checkpointId": "cp-1541727c3f6849a68eb4dac5938e8fda",
+      "podUid": "4c70c050-28a5-480a-acb1-90a951fa16fb",
+      "podName": "workspace-backup-backup-1541727c3f6849a68eb4dac5938e8fda",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:d84a466326ed959920fee751772ddfed5bfd0e766a4fa76c552d5063f0911b64",
+      "snapshotId": "daf1bd473da5b3b5ae9b5cc251d5211085e85a41802fe99be3f5713dcffe1517"
+    }
+  ],
+  "businessPods": [
+    {
+      "workspaceId": "workspace-608c7d35ed4146a19c6049c522da3632",
+      "attemptId": "attempt-0f01cb074b4c40949bf8a3e711606e1a",
+      "podUid": "aae2da0f-0498-451e-9c89-a5469ad1d117",
+      "sandboxId": "afd4819b4f98014e",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-608c7d35ed4146a19c6049c522da3632",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    }
+  ],
+  "workspaceId": "workspace-608c7d35ed4146a19c6049c522da3632",
+  "attempts": [
+    {
+      "attemptId": "attempt-0f01cb074b4c40949bf8a3e711606e1a",
+      "claimRequested": true,
+      "ownerStopped": true,
+      "podUid": "aae2da0f-0498-451e-9c89-a5469ad1d117",
+      "sandboxId": "afd4819b4f98014e",
+      "startedAt": "2026-10-17T22:33:58.155476+00:00",
+      "stopReason": "containers-terminated"
+    }
+  ],
+  "modelReservations": 3,
+  "toolReservations": 2,
+  "deadline": "2026-10-17T22:36:04.547715+00:00",
+  "timing": {
+    "claimSeconds": 190,
+    "claimStartedAt": "2026-10-17T22:33:58.155476+00:00",
+    "loopSeconds": 120,
+    "loopStartedAt": "2026-10-17T22:34:04.547715+00:00"
+  },
+  "fileSha256": "cbf6affda054d2c98541e976dae6116ce58d31de6cb706ed717b5ab643fca500",
+  "finalDiagnosis": {
+    "summary": "Synthetic report verified",
+    "rootCause": "",
+    "severity": "warning",
+    "evidence": [
+      {
+        "source": "write_file",
+        "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":34,\"created\":true,\"diff\":\"--- report.md:old\\n+++ report.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic joint checkpoint report\\n+\\n\",\"newSha256\":\"cbf6affda054d2c98541e976dae6116ce58d31de6cb706ed717b5ab643fca500\",\"oldSha256\":null,\"path\":\"report.md\",\"redacted\":false},\"evidenceId\":\"ev-f6b474a9e322bab72afe\",\"observedAt\":\"2026-10-17T22:34:04.644969+00:00\"}"
+      },
+      {
+        "source": "read_file",
+        "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic joint checkpoint report\\n\",\"offset\":0,\"path\":\"report.md\",\"redacted\":false,\"sha256\":\"cbf6affda054d2c98541e976dae6116ce58d31de6cb706ed717b5ab643fca500\",\"totalChars\":34,\"truncated\":false},\"evidenceId\":\"ev-124ce6acd3d99aa85956\",\"observedAt\":\"2026-10-17T22:34:11.635713+00:00\"}"
+      }
+    ],
+    "injectionDetected": false,
+    "deniedActions": [],
+    "recommendation": "review references",
+    "planId": null,
+    "runtimeSource": "final-diagnosis",
+    "runtimeStatus": "succeeded",
+    "runtimeTaskId": "task-057240d83ceb12ee"
+  },
+  "elapsedMs": 27881.229929000256
+}

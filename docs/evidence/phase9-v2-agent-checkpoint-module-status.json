@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "module": "Agent complete-boundary checkpoint coordinator",
+  "milestone": "M4-in-progress",
+  "formalV2AcceptanceComplete": false,
+  "externalModelCalls": 0,
+  "implementation": [
+    "opt-in restic mode over existing NFS TaskStore/Runner/Loop",
+    "preflight before claim/model; Reserve before Session/PREPARING; no model backup tool",
+    "complete tool groups and persisted Runtime final diagnosis; immutable Session prefix",
+    "DATA_READY and same-short-lock cancel/COMMITTED ordering; original budgets/deadline",
+    "positive maintenance stop cleanup; no automatic unknown write replay",
+    "trusted Runtime source and original Task identity; bounded no-model final-diagnosis resume",
+    "late accepted control commands reconciled before terminal success",
+    "state freshness checked on resume and after final backup; at most one historical correction checkpoint"
+  ],
+  "realNormalPathReports": [
+    "phase9-v2-agent-joint-checkpoint.json",
+    "phase9-v2-agent-joint-checkpoint-v2.json",
+    "phase9-v2-agent-joint-checkpoint-v3.json"
+  ],
+  "latestRealNormalPath": {
+    "report": "phase9-v2-agent-joint-checkpoint-v3.json",
+    "passed": true,
+    "elapsedMs": 27881.229929000256,
+    "committedCheckpoints": 3,
+    "modelReservations": 3,
+    "toolReservations": 2,
+    "actualMaintenanceRuntime": "io.containerd.runsc.v1"
+  },
+  "tests": {
+    "earlierFull": {
+      "path": "phase9-v2-agent-checkpoint-final-full-tests.txt",
+      "passed": true,
+      "tests": 231,
+      "seconds": 288.359,
+      "scope": "started before later preflight/diagnosis-budget/freshness changes"
+    },
+    "latestTargeted": {
+      "path": "phase9-v2-agent-checkpoint-freshness-final-tests.txt",
+      "passed": true,
+      "tests": 52,
+      "seconds": 9.409
+    },
+    "failedLauncher": "phase9-v2-agent-checkpoint-late-control-tests.txt"
+  },
+  "environment": {
+    "nfs": "NFSv4.1 runtime remains authoritative",
+    "minio": "project dedicated service/repository, existing Secret; private HTTP, TLS not verified",
+    "retained": "all workspaces, snapshots, PV/PVC, control logs, Secrets; user docs32/docs34 excluded"
+  },
+  "notProven": [
+    "real process SIGKILL at joint protocol cut points",
+    "real cancellation/MinIO failure/repository lock acceptance",
+    "new empty workspace restore barrier and image verification",
+    "historical branch restore and isolated continued execution",
+    "protected references and controlled forget/prune",
+    "ten complete V2 acceptance cases",
+    "same-workload V1/V2 performance and actual traffic comparison",
+    "new restic mode of unified shell startup"
+  ]
+}

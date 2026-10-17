@@ -44,6 +44,9 @@ class Settings:
     workspace_backend: str = "local"
     recovery_dir: Path | None = None
 
+    checkpoint_mode: str = "off"
+    checkpoint_repository_id: str = "repo-workspace"
+
 
 def _required(name: str) -> str:
     value = os.getenv(name, "")
@@ -80,6 +83,13 @@ def load_settings() -> Settings:
         resolved = recovery_dir.resolve()
         if any(resolved == root or root in resolved.parents for root in map(Path, ("/tmp", "/var/tmp", "/run", "/dev/shm"))):
             raise ValueError("AGENTD_RECOVERY_DIR 不能使用临时目录")
+    checkpoint_mode = os.getenv("AGENTD_CHECKPOINT_MODE", "off")
+    checkpoint_repository_id = os.getenv("AGENTD_CHECKPOINT_REPOSITORY_ID", "repo-workspace")
+    if checkpoint_mode not in {"off", "restic"} or (checkpoint_mode == "restic" and workspace_backend != "nfs"):
+        raise ValueError("检查点模式只能为off或NFS上的restic")
+    import re
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,95}",checkpoint_repository_id):
+        raise ValueError("检查点仓库只接逻辑ID，不接URL或凭据")
     mode = os.getenv("AGENTD_LLM_MODE", "replay")
     if mode not in {"live", "replay"}:
         raise ValueError("AGENTD_LLM_MODE 只能是 live 或 replay")
@@ -158,6 +168,8 @@ def load_settings() -> Settings:
         raise ValueError("Jev 输入单价必须是非负有限数字")
 
     return Settings(
+        checkpoint_mode=checkpoint_mode,
+        checkpoint_repository_id=checkpoint_repository_id,
         workspace_backend=workspace_backend,
         recovery_dir=recovery_dir if workspace_backend == "nfs" else None,
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),

@@ -30,7 +30,7 @@ restic进程的仓库和密码从只读Secret文件读取，S3凭据用SecretKey
 5. **恢复模式**：NFS最新目录可用则继续V1模式，不用旧快照覆盖；显式历史恢复/分支写新空workspace，匹配同一会话节点/镜像身份。已有Task预算/截止时间/调用审计不可回退，自动接续不能用新Task伪装预算重置。
 6. **引用保护**：保留分支头、明确保留项与活跃恢复源保护snapshot；默认无自动forget/prune，管理预览先检查所有引用，备份与清理串行，不强行unlock或删除MinIO底层块。
 
-这些均为后续必须实现项，当前后端组件代码没有完成整个协议。
+本节列出完整不变量。后端及控制模块到Agent正常保存的接线已逐步实现，证据见下文；恢复、真实故障和引用清理仍待完成。
 
 ## 4. 组件验证入口与当前范围
 
@@ -61,7 +61,7 @@ agentd/.venv/bin/python -m agentd.workspace_backup_component --output .cache/res
 
 首轮失败缺NetworkPolicy TypeMeta；第二轮遇Kubernetes省略readOnly=false字段，夹具取字段失败。原始失败报告`phase9-v2-backup-component.json`、`-v2.json`保留，修复后才完成第三轮，不改写失败成绩。
 
-当前只运行kind控制节点、NFS和专属备份MinIO；组件业务/维护Pod已清理，所有工作区、快照和Secret保留。没有Session联合绑定、元数据提交/崩溃恢复、分支恢复及引用GC证据前，不能宣称V2完成。全部十项正式验收仍pending，机器可读范围及证据hash见`evidence/phase9-v2-progress.json`。
+当前只运行kind控制节点、NFS和专属备份MinIO；组件业务/维护Pod已清理，所有工作区、快照和Secret保留。本节属于早期组件证据；后续Session联合提交正常路径见§7。崩溃/分支恢复及引用GC尚未验收，不能宣称V2完成。全部十项正式验收仍pending，机器可读范围及证据hash见`evidence/phase9-v2-progress.json`。
 
 ### 持久屏障模块与可信备份执行器
 
@@ -69,7 +69,7 @@ agentd/.venv/bin/python -m agentd.workspace_backup_component --output .cache/res
 
 提交API请求前先记submitted；请求结果不明或Pod消失不等于从未提交。只有从未提交的reserved，或可信Runtime确认同UID容器终止后，才能进入stopped，再解除。旧状态的精确CAS不能解除新job。注册表重开时同时重放屏障，非法状态迁移即使JSONL校验和合法也拒绝启动。
 
-8项定向测试通过；全项目Go测试通过`phase9-v2-go-full-regression-tests.txt`，六包race回归见`phase9-v2-barrier-regression-tests.txt`。该批为逻辑证据；后续真实执行器探测见下节，Agent接线仍待实现。V1旧记录保持可读；写过V2屏障的控制目录不支持旧二进制继续写入，旧reader拒绝未知事件。
+8项定向测试通过；全项目Go测试通过`phase9-v2-go-full-regression-tests.txt`，六包race回归见`phase9-v2-barrier-regression-tests.txt`。该批为逻辑证据；后续真实执行器探测见下节，后续Agent接线见§7。V1旧记录保持可读；写过V2屏障的控制目录不支持旧二进制继续写入，旧reader拒绝未知事件。
 
 ### 后续真实执行器探测
 
@@ -98,9 +98,9 @@ go build -o .cache/workspace-backup-runtime-smoke ./hack/workspace-backup-runtim
   -control-dir "$SANDBOXD_BACKUP_PROBE_DIR" -output .cache/backup-runtime-probe.json
 ```
 
-目前仅接可信Go备份路径，未接HTTP/Agent联合检查点、restore写屏障、Session父链引用或COMMITTED日志；不能把组件本地backend-result文件当成联合检查点提交。V2十项完整验收与性能比较均保持pending。
+本节为可信Go执行器阶段的历史证据。随后已接HTTP、Session引用、提交日志和Agent正常路径（§5–7）；restore写屏障及完整验收仍待完成。不能把组件本地backend-result文件当成联合检查点提交。V2十项完整验收与性能比较均保持pending。
 
-## 5. 联合检查点控制模块（本地逻辑，尚未接真实Agent）
+## 5. 联合检查点控制模块（本节记录接线前的逻辑验证）
 
 新增`runtime/checkpoints.py`、`runtime/session_refs.py`与`SessionJournal.checkpoint_prefix`。这不是另一套Agent Loop：它们只负责存储和校验，真实维护Pod仍由Go执行；Task/Session/记忆留在沙箱外。
 
@@ -126,7 +126,7 @@ RecoveryLedger.commit_checkpoint：在与cancel相同的短锁内提交
 Go Finish解除屏障
 ```
 
-上述是目标接线顺序。Go Reserve及受限HTTP已实现并有组件证据；只冻结、不运行restic，为后续协调器严格实现“先冻结、再PREPARING”提供接口。完整联合提交仍未接Agent，不能将上述顺序宣称为真实联合验收。
+上述顺序已由§7协调器接入真实Agent正常路径。Go Reserve只冻结、不运行restic；Session引用/PREPARING落盘后才Start。真实正常保存证据不能替代崩溃/历史恢复及十项完整验收。
 
 ### Session引用为何要复制
 
@@ -138,13 +138,13 @@ Go Finish解除屏障
 
 每条状态使用DurableJournal的独占文件锁、校验和、fsync和断尾处理。PREPARING/DATA_READY可查询但不能作为restore_point，FAILED不改变旧head；COMMITTED才投影分支头。分支revision只在成功提交时递增；相同请求确认丢失不追加记录，不按最大UUID或时间猜head。boundary查询可在重启后按task/attempt/node找回原checkpoint ID，避免重新分配。
 
-RecoveryLedger新增同步commit_checkpoint，在与cancel共用的RLock内核对：Task仍运行、未取消/未过期、完整节点一致、当前attempt/Pod UID及Go工作区generation/image一致。该方法不改Task额度、deadline或调用审计。取消先落盘则拒绝提交；提交已成立后再取消，不撤销历史检查点。网络备份和Session复制不能放入这把短锁。协调器仍须从可信Go取得最新owner和有效job/屏障，不能拿模型自报字典替代查询；该网络接线尚未实现。
+RecoveryLedger新增同步commit_checkpoint，在与cancel共用的RLock内核对：Task仍运行、未取消/未过期、完整节点一致、当前attempt/Pod UID及Go工作区generation/image一致。该方法不改Task额度、deadline或调用审计。取消先落盘则拒绝提交；提交已成立后再取消，不撤销历史检查点。网络备份和Session复制不能放入这把短锁。协调器仍须从可信Go取得最新owner和有效job/屏障，不能拿模型自报字典替代查询；该网络接线后续已由§7实现。
 
 ### 当前验证边界
 
 首次12项检查点单测通过，原文`phase9-v2-checkpoint-initial-tests.txt`；随后完整Python214/214、285.135秒通过`phase9-v2-checkpoint-full-regression-tests.txt`，包含线程取消/提交顺序与兄弟分支断言。后续镜像身份/作用域校验及新增第14个检查点用例由34项定向回归（2.140秒）覆盖，见`phase9-v2-checkpoint-final-boundary-tests.txt`；不把此前214项冒称包含后改动，也不将重叠测试数相加。最后引用发布窗口修复由35项定向回归（2.401秒）覆盖，见`phase9-v2-checkpoint-publication-final-tests.txt`；先前214/34批次不是最后改动的完整重跑。Go Reserve及相关API的race结果见`phase9-v2-checkpoint-reserve-go-tests.txt`。
 
-测试中的仓库/snapshot身份明确为合成，owner字典是固定夹具；不能当真实Go/restic联合证据。HTTP与Python客户端的后续证据见下节。未完成：完整轮次自动检查点、真实服务中的取消/崩溃对账、restore新目录/历史分支、引用GC及V2十项完整验收。Goal保持active。
+测试中的仓库/snapshot身份明确为合成，owner字典是固定夹具；不能当真实Go/restic联合证据。HTTP与Python客户端的后续证据见下节。本节记录接线前验证；完整轮次自动保存后续见§7。真实服务中的取消/崩溃对账、restore新目录/历史分支、引用GC及V2十项完整验收仍待完成，Goal保持active。
 
 ## 6. 受限备份HTTP与Python客户端
 
@@ -169,7 +169,7 @@ go build -o .cache/workspace-sandboxd-v2 ./cmd/sandboxd
   -workspace-backup-minio-ip "$SANDBOXD_BACKUP_MINIO_IP"
 ```
 
-Secret名称来自已初始化的专属restic仓库；S3 URL/密码仍在Secret中，不放HTTP参数。三项配置不齐、非IPv4 endpoint或非gVisor拒绝启动；V1未配置时保持原行为。上述独立Go启动命令尚未作为本批真实入口执行，实际组件使用相同Server路由的loopback HTTP探测。
+Secret名称来自已初始化的专属restic仓库；S3 URL/密码仍在Secret中，不放HTTP参数。三项配置不齐、非IPv4 endpoint或非gVisor拒绝启动；V1未配置时保持原行为。本节当时只使用相同Server路由的loopback HTTP探测；§7联合夹具随后已用实际Go子进程及相同新flags验证。
 
 Python `SandboxdClient.workspace_backup`只接同样固定动作及绑定，校验ID/有限超时，响应有界，无自动重试；start响应丢失留给协调器查询原job，不另起一次保存。GET状态和这些控制返回值不回灌模型。
 
@@ -185,9 +185,62 @@ go build -o .cache/workspace-backup-runtime-smoke ./hack/workspace-backup-runtim
 
 `phase9-v2-backup-http-component.json`整体通过：实际loopback HTTP鉴权、Reserve/Start/Wait/Finish，跨注册表重开仍阻止Files/Claim，Wait完成后继续冻结，Finish后内容/hash一致；清理前CRI实际`io.containerd.runsc.v1`，业务owner经Go确认停止。工作区、快照、Secret与日志保留。它不包含Python Agent/Session联合提交或进程SIGKILL，不能勾选正式V2验收。
 
-Go路由/配置/Runtime race见`phase9-v2-backup-http-final-go-tests.txt`，Go全项目见`phase9-v2-backup-http-full-go-tests.txt`。Python客户端/远程文件/检查点26项本地测试通过（1.948秒），`phase9-v2-backup-client-tests.txt`；客户端用MockTransport，真实HTTP组件的请求方是管理Go夹具，两种证据分开。当前仍未接完整Agent自动保存和启动/取消协调器，下一步从这里继续。
+Go路由/配置/Runtime race见`phase9-v2-backup-http-final-go-tests.txt`，Go全项目见`phase9-v2-backup-http-full-go-tests.txt`。Python客户端/远程文件/检查点26项本地测试通过（1.948秒），`phase9-v2-backup-client-tests.txt`；客户端用MockTransport，真实HTTP组件的请求方是管理Go夹具，两种证据分开。本节当时未接Agent；随后接线及明确剩余边界见§7。
 
-## 7. 官方参考与版本
+## 7. Agent完整边界自动保存与最终诊断接续
+
+### 调用路径与开关
+
+`main.create_app → TaskStore / AgentRunner → PiStyleAgentLoop.on_boundary → CheckpointCoordinator.save → SandboxdClient → Go可信备份执行器`。不新增模型工具或另一套Agent循环。配置默认`AGENTD_CHECKPOINT_MODE=off`，V1行为保留；`restic`仅允许NFS及持久Task/Session。`AGENTD_CHECKPOINT_REPOSITORY_ID`只接受逻辑ID，默认`repo-workspace`，不接受S3 URL或凭据。
+
+协调器先检查可信Go备份服务是否配置；未启用时在模型调用和claim之前失败，不产生额外模型用量。按§5顺序冻结、复制Session、保存PREPARING、Start/Wait、DATA_READY、复核owner/屏障/Task后提交，再Finish。只在完整工具组和已持久化的最终诊断触发，初始化告警不备份；网络等待计入原Task截止时间。
+
+清理用Runner原有独立窗口：先核对当前attempt及是否曾认领，随后Abort原维护job，确认停止，未提交项记FAILED，最后Finish及释放原owner。停止不明仍阻止换Pod；不创建新job掩盖未知结果、不forget孤立快照。取消在DATA_READY后先落盘时拒绝COMMITTED，已经提交的历史点不因后续取消撤销。
+
+### 最终诊断为什么单独保存
+
+模型原文与对外诊断可能不同：Runtime会按证据、状态时效和策略降级公开结论。保留模型原文，再追加明确标为Runtime生成的AI消息，内容包括`runtimeSource=final-diagnosis`、原`runtimeTaskId`和`runtimeStatus`；独立JSONL消息元数据`runtimeGenerated=final-diagnosis`是恢复识别依据。Provider返回的同名additional_kwargs会在Loop剥离，不能只因模型文本自报标记就跳过调用。
+
+最终诊断已保存、最后备份失败后，同Task自动接续可直接采用该Runtime节点，重新核对状态时效并完成检查点，不重放模型或历史工具；额度、原deadline不回滚。手动resume创建新Task，不能用旧Task诊断短路。存在未应用的持久控制命令时仍进入Loop；最终备份期间已确认的follow-up/steer不能在成功状态被遗漏，TaskStore在相同接受锁下决定接续，必要时同Task新attempt，仍受原预算/截止时间及最多2次恢复限制。
+
+恢复诊断以及最终备份等待后都会检查60秒状态时效。若已过期，追加“历史诊断、当前状态未核实”的安全视图；备份后降级最多补一次检查点，沿用原时间预算，没有额外模型调用。历史模型原文和早期检查点仍保留，不声称历史结论现在仍成立。
+
+普通消息仍受16Ki字符持久化限制；Runtime最终诊断使用独立128Ki字符、深度8、集合64项的结构化JSON预算并逐叶脱敏，防止多条证据被截断成无法恢复的半个JSON。超限明确失败；这不扩大模型输入预算，Session引用仍最多2MiB/2048节点。原始诊断与Session都是公开脱敏内容，不存隐藏思维或凭据。
+
+### 安装、启动与独立演示
+
+先完成§4的固定镜像构建、专用MinIO仓库初始化、Secret与NFS准备；不要复用RAG bucket。两终端共享模式选择，凭据从现有仓库外配置注入：
+
+```bash
+export AGENTD_CHECKPOINT_MODE=restic
+export AGENTD_CHECKPOINT_REPOSITORY_ID=repo-workspace
+# 设置已核对的SANDBOXD_BACKUP_SECRET_NAME、SANDBOXD_BACKUP_MINIO_IP。
+# Go终端仍需独立Agent/Operator凭据及SANDBOXD_WORKSPACE_CONTROL_DIR。
+bash hack/workspace.sh build
+bash hack/workspace.sh go
+# agent终端仅传Agent所需凭据，不能带Operator Token；设置AGENTD_RECOVERY_DIR。
+bash hack/workspace.sh agent
+```
+
+统一入口的restic分支已增加配置与语法检查，尚未通过该shell分支启动整套服务；以下独立演示实际使用Go二进制和相同flags启动，二者证据不混淆。退出V2时默认`off`只关闭新备份，不能让旧二进制写入含V2事件的Go控制目录。
+
+```bash
+go build -o .cache/workspace-sandboxd-v2 ./cmd/sandboxd
+agentd/.venv/bin/python -m agentd.workspace_checkpoint_demo \
+  --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
+  --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" \
+  --output .cache/agent-joint-checkpoint.json
+```
+
+演示使用真实TaskStore/Runner/Go HTTP/gVisor/NFS/restic/专属MinIO，模型为固定Replay，外部模型调用0。写报告→读报告→最终诊断，检查3个COMMITTED点、父链/revision、完整snapshot ID、可读Session引用、Task/工作区/镜像身份、3模型槽/2工具槽和实际NFS服务端hash；清理前观察维护Pod实际CRI runtimeType。每次独立原生Linux控制目录，拒绝覆盖已存在输出，保留所有文件、快照、Secret与控制日志。
+
+### 当前证据与待办
+
+`phase9-v2-agent-joint-checkpoint.json`和`-v2.json`均为实际正常路径成功；第二轮包含Runtime来源元数据及原Task标记断言。最终代码第三轮`phase9-v2-agent-joint-checkpoint-v3.json`通过，27,881.23ms，仍为3个COMMITTED点/3模型槽/2工具槽；没有伪造故障、删数据或外部模型调用。后续回归结果见PROGRESS及机器可读索引。早期全量223/223，随后全量231/231（288.359秒）；后者启动之后新增的预检/诊断预算/状态时效不能用该批全量冒称覆盖。最终时效定向52/52、9.409秒通过，含两项过期降级与额外调用为0断言。首次late-control命令误引用不存在的test_runtime模块，原始FAILED输出保留；修正后33/33通过，不改写失败记录。
+
+尚未完成：真实进程在PREPARING/DATA_READY/COMMITTED前后中断、真实取消/MinIO异常/仓库锁、restore新空工作区屏障及镜像校验、精确历史分支、引用保护/清理预览/受控forget/prune、十项V2完整验收、同条件V1/V2性能与流量测量。正常联合保存不是上述故障和恢复的替代证据，Goal仍active。
+
+## 8. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

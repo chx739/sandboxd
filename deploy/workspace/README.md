@@ -1,6 +1,6 @@
 # NFS V1 部署与验收
 
-当前状态：M3，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2真实restic/MinIO后端组件已验证，联合检查点与正式验收尚未完成，见[47](../../docs/47-联合检查点与restic-MinIO学习手册.md)。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
+当前状态：M4进行中，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2真实restic/MinIO后端及Agent联合检查点正常保存已验证，故障/恢复与正式验收尚未完成，见[47](../../docs/47-联合检查点与restic-MinIO学习手册.md)。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -270,3 +270,7 @@ bash hack/workspace.sh benchmark --repeats 3 --background-condition serial --out
 ```
 
 两个实验串行；入口实验要求8080/8090空闲，性能实验要求10880及项目工作区空闲。测量口径、缓存、资源/网络边界和原始结果见[46](../../docs/46-工作区恢复性能与流量测量.md)。serial是调用者对项目调度的声明，不保证宿主没有其他后台工作。
+
+## V2 可选联合检查点
+
+NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工具组与最终诊断的同步联合保存；默认off。可信Go另需固定维护镜像、专用仓库Secret名称与MinIO私网地址，凭据不能交给业务Pod/模型。安装、两终端启动、独立真实演示及未验收范围见[文档47 §7](../../docs/47-联合检查点与restic-MinIO学习手册.md#7-agent完整边界自动保存与最终诊断接续)。不因有备份就认为历史分支恢复、NFS高可用或自动GC已经实现。

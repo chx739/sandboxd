@@ -93,16 +93,21 @@ class ObservedClient(SandboxdClient):
         return result
 
 
-def start_go(root: Path, binary: Path, nfs_server: str):
+def start_go(root: Path, binary: Path, nfs_server: str, *, backup_secret: str | None = None, backup_minio_ip: str | None = None):
     agent_token = secrets.token_urlsafe(32)
     child_env = dict(os.environ, SANDBOXD_TOKEN=agent_token, SANDBOXD_OPERATOR_TOKEN=secrets.token_urlsafe(32))
     log_path = root / "sandboxd.log"
     log = log_path.open("a")
     log_path.chmod(0o600)
-    process = subprocess.Popen([str(binary), "-listen", "127.0.0.1:10880", "-pool-size", "0",
-                                "-workspace-nfs-server", nfs_server, "-workspace-image", "sandboxd-workspace:runtime-v1.5",
-                                "-workspace-control-dir", str(root / "go-control")],
-                               env=child_env, stdout=log, stderr=subprocess.STDOUT)
+    command = [str(binary), "-listen", "127.0.0.1:10880", "-pool-size", "0",
+               "-workspace-nfs-server", nfs_server, "-workspace-image", "sandboxd-workspace:runtime-v1.5",
+               "-workspace-control-dir", str(root / "go-control")]
+    if backup_secret is not None or backup_minio_ip is not None:
+        if not backup_secret or not backup_minio_ip:
+            raise ValueError("trusted backup fixture needs Secret name and MinIO IPv4")
+        command += ["-workspace-backup-image", "sandboxd-restic:0.18.1-v1",
+                    "-workspace-backup-secret", backup_secret, "-workspace-backup-minio-ip", backup_minio_ip]
+    process = subprocess.Popen(command, env=child_env, stdout=log, stderr=subprocess.STDOUT)
     return process, log, agent_token
 
 

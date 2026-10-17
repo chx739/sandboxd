@@ -25,6 +25,16 @@ class RecoveryConfigTests(unittest.TestCase):
         self.assertEqual(settings.workspace_backend, "local")
         self.assertIsNone(settings.recovery_dir)
 
+    def test_checkpoint_mode_is_explicit_and_nfs_only(self):
+        with self.environment():
+            self.assertEqual(load_settings().checkpoint_mode,"off")
+        with self.environment(AGENTD_CHECKPOINT_MODE="restic"):
+            self.assertEqual(load_settings().checkpoint_mode,"restic")
+        for extra in ({"AGENTD_CHECKPOINT_MODE":"restic","AGENTD_WORKSPACE_BACKEND":"local"},
+                      {"AGENTD_CHECKPOINT_MODE":"async"},
+                      {"AGENTD_CHECKPOINT_REPOSITORY_ID":"s3://caller-selected"}):
+            with self.environment(**extra),self.assertRaises(ValueError): load_settings()
+
     def test_temporary_or_relative_deployment_control_directory_is_rejected(self):
         for directory in ("relative/control", "/tmp/agent-control", "/run/user/agent-control", "/var/tmp/control", "/dev/shm/control"):
             with self.subTest(directory=directory), self.environment(AGENTD_RECOVERY_DIR=directory):

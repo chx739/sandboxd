@@ -5,7 +5,7 @@ import time
 import httpx
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Callable, Awaitable
 
 from langchain_core.messages import (
     AIMessage,
@@ -200,6 +200,7 @@ class PiStyleAgentLoop:
         journal: SessionJournal | None = None,
         tool_schemas: list[dict[str, Any]] | None = None,
         recovery: RecoveryAttempt | None = None,
+        on_boundary: Callable[[str], Awaitable[None]] | None = None,
     ) -> None:
         self._session = session
         self._plugins = plugins
@@ -210,6 +211,7 @@ class PiStyleAgentLoop:
         self._journal = journal
         self._tool_schemas = tool_schemas or []
         self._recovery = recovery
+        self._on_boundary = on_boundary
         if recovery is not None:
             state.iteration_count = max(state.iteration_count, recovery.used("model"))
             state.tool_call_count = max(state.tool_call_count, recovery.used("tool"))
@@ -255,6 +257,11 @@ class PiStyleAgentLoop:
                 await self._checkpoint()
 
         pending = self._control.drain_steering()
+        if (self.state.messages and isinstance(self.state.messages[-1], AIMessage)
+                and self.state.messages[-1].additional_kwargs.get("sandboxdRuntimeFinalDiagnosis") is True):
+            # 上一attempt已自然结束；备份窗口接受的follow-up可直接进入下一轮，
+            # 无需先空调一次模型才能到达外层循环。
+            pending.extend(self._control.drain_follow_ups())
         limit_reached = False
 
         # 外层循环只负责 follow-up：当前任务自然结束后，有追加消息才重新进入。
@@ -370,6 +377,8 @@ class PiStyleAgentLoop:
                                   "usageKnown": invocation.usage_known, "elapsedMs": invocation.elapsed_ms,
                                   "finishReason": invocation.finish_reason}, reservation)
             self._recovery.finish(reservation)
+        # Provider元数据不能伪造Runtime诊断来源，文本中的同名字段也不算证明。
+        invocation.message.additional_kwargs.pop("sandboxdRuntimeFinalDiagnosis", None)
         self.state.messages.append(invocation.message)
         self.state.iteration_count = iteration
         self.state.model_usages.append(invocation.usage)
@@ -645,6 +654,9 @@ class PiStyleAgentLoop:
             node_id = await self._journal.append_transcript(self.state.task_id, self.state.messages)
             if self._recovery is not None:
                 self._recovery.boundary(node_id, self.state.messages)
+            if (self._on_boundary is not None and node_id is not None
+                    and self.state.messages and isinstance(self.state.messages[-1], ToolMessage)):
+                await self._on_boundary(node_id)
 
     def _finalize(self) -> None:
         last = self.state.messages[-1]
