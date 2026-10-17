@@ -1,6 +1,6 @@
 # 联合检查点与 restic + MinIO（V2）
 
-> Phase9 M4进行中；V1交付基线9c91c9b，V2分支codex/workspace-restic-v2，后续PR依赖V1 PR#2。本文区分后端组件验证与完整Agent联合检查点；组件通过不能直接勾选V2十项验收。规格以文档43为准。
+> Phase9 M4进行中；V1交付基线9c91c9b，V2分支codex/workspace-restic-v2，[草稿PR#3](https://github.com/chx739/sandboxd/pull/3)依赖V1 PR#2，首批提交90d9c22。本文区分后端组件验证与完整Agent联合检查点；组件通过不能直接勾选V2十项验收。规格以文档43为准。
 
 ## 1. 已固定的实现路线
 

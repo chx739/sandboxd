@@ -18,7 +18,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
-- V2分支已从9c91c9b创建，当前未提交的新模块：固定restic安装、只读manifest、受限backuphelper/CLI、gVisor维护Pod构造/定向MinIO网络策略、独立MinIO Compose与组件夹具。学习/后续持久屏障约束见文档47；尚未接Agent自动检查点，不将内存mutex当崩溃后屏障。
+- V2分支已从9c91c9b创建，90d9c22已提交并推送、草稿[PR #3](https://github.com/chx739/sandboxd/pull/3)已创建并附到当前聊天；base=codex/workspace-nfs-v1，依赖PR#2→PR#1，不合并。该批模块：固定restic安装、只读manifest、受限backuphelper/CLI、gVisor维护Pod构造/定向MinIO网络策略、独立MinIO Compose与组件夹具。学习/后续持久屏障约束见文档47；尚未接Agent自动检查点，不将内存mutex当崩溃后屏障。
 - restic0.18.1官方资产约10.14MB下载并校验，phase9-v2-restic-tool.json；新sandboxd-restic:0.18.1-v1已构建/载入kind，不覆盖业务runtime-v1.5。相关Go/race通过phase9-v2-backup-foundation-tests.txt。专属MinIO项目sandboxd-workspace-backup已启动，localhost9002，独立卷/私有本机凭据，不触碰RAG MinIO。当前是隔离本机HTTP，TLS未测。
 - 三轮真实组件探测均已终止：首轮缺TypeMeta；第二轮备份/首恢复实际成功但夹具读取省略的readOnly=false字段失败，两份失败报告保留；修复后phase9-v2-backup-component-v3.json整体通过，8个操作均真实runsc，两个文件版本恢复至两个新空目录、重复后端请求复用snapshot。业务/维护Pod已清理，源目录/快照/Secret/卷保留。后端通过不等于V2联合检查点完成，十项正式验收仍pending。
 - 本轮新增Go持久屏障模块：workspace.barrier与owner共用Go独占JSONL，reserved→submitted→identified→stopped→released，Files/Claim在重启后仍拒绝；提交结果不明、错误UID/旧CAS不能解除，停止业务owner仍可执行。8项逻辑测试与六包race通过phase9-v2-barrier-regression-tests.txt；全项目Go测试通过phase9-v2-go-full-regression-tests.txt；尚未接维护执行器，不把逻辑测试称为真实屏障验收。旧V1日志兼容；出现V2事件的控制目录不能再交给旧V1二进制写入，旧解析器将拒绝未知事件。
