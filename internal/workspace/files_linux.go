@@ -111,9 +111,8 @@ func parts(path string, allowRoot bool) ([]string, error) {
 	return result, nil
 }
 
-// Execute operates only beneath a trusted root. Production passes /workspace.
-// Each parent is opened relative to an already opened directory descriptor with
-// O_NOFOLLOW; moving a parent cannot redirect an operation to another directory.
+// Execute 的生产根固定为 /workspace。父目录逐层通过已打开的目录描述符及
+// O_NOFOLLOW 访问，避免先校验字符串、随后路径被 symlink 替换的竞态。
 func Execute(rootPath string, req Request) (map[string]any, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err

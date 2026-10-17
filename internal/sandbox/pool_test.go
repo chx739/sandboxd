@@ -12,13 +12,47 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/client-go/kubernetes/fake"
 	corelisters "k8s.io/client-go/listers/core/v1"
+	clienttesting "k8s.io/client-go/testing"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 )
+
+func TestPoolCannotCleanClaimOrReleasePersistentWorkspace(t *testing.T) {
+	pod := readyIdlePod("persistent")
+	pod.Labels[LabelWorkspace] = testWorkspaceID
+	pod.Labels[LabelSource] = "workspace"
+	pod.Status.Phase = corev1.PodFailed
+	client := fake.NewSimpleClientset(pod.DeepCopy())
+	indexer := cache.NewIndexer(cache.MetaNamespaceKeyFunc, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc})
+	indexer.Add(pod)
+	lister := corelisters.NewPodLister(indexer)
+	manager := NewManager(client, nil, Config{Namespace: "sandboxd-demo"}, lister)
+	pool := &Pool{client: client, lister: lister, manager: manager, target: 0}
+	if err := pool.Reconcile(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := client.CoreV1().Pods("sandboxd-demo").Get(context.Background(), pod.Name, metav1.GetOptions{}); err != nil {
+		t.Fatal("pool deleted persistent termination evidence", err)
+	}
+	if err := pool.Release(context.Background(), "persistent"); !errors.Is(err, ErrWorkspaceExecDenied) {
+		t.Fatal("generic release accepted workspace", err)
+	}
+	client.PrependReactor("patch", "pods", func(action clienttesting.Action) (bool, runtime.Object, error) {
+		t.Error("pool attempted to claim persistent Pod")
+		return true, nil, errors.New("not allowed")
+	})
+	client.PrependReactor("create", "pods", func(action clienttesting.Action) (bool, runtime.Object, error) {
+		return true, nil, errors.New("expected stateless cold start")
+	})
+	if _, err := pool.Claim(context.Background()); err == nil || !strings.Contains(err.Error(), "expected stateless cold start") {
+		t.Fatal("did not skip workspace candidate", err)
+	}
+}
 
 func TestConcurrentClaimReturnsDifferentPods(t *testing.T) {
 	first := readyIdlePod("first")

@@ -2,6 +2,7 @@ package sandbox
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"sort"
@@ -115,6 +116,15 @@ func (p *Pool) Reconcile(ctx context.Context) error {
 		return fmt.Errorf("列出 Pool Pod: %w", err)
 	}
 
+	// Persistent Pods are reconciled by their durable owner. Pool cleanup must
+	// not remove the termination evidence needed before a replacement can write.
+	stateless := make([]*corev1.Pod, 0, len(pods))
+	for _, pod := range pods {
+		if !isPersistentWorkspace(pod) {
+			stateless = append(stateless, pod)
+		}
+	}
+	pods = stateless
 	recordPoolSize(pods)
 	idle := make([]*corev1.Pod, 0, len(pods))
 	for _, pod := range pods {
@@ -172,7 +182,7 @@ func (p *Pool) Claim(ctx context.Context) (*Sandbox, error) {
 
 	candidates := make([]*corev1.Pod, 0, len(pods))
 	for _, pod := range pods {
-		if pod.DeletionTimestamp == nil && isPodReady(pod) {
+		if !isPersistentWorkspace(pod) && pod.DeletionTimestamp == nil && isPodReady(pod) {
 			candidates = append(candidates, pod)
 		}
 	}
@@ -225,6 +235,9 @@ func isClaimConflict(err error) bool {
 
 // Release 直接删除而不复用，避免上一个命令留下文件或子进程污染下一次任务。
 func (p *Pool) Release(ctx context.Context, id string) error {
+	if _, err := p.manager.GenericExecPodName(id); errors.Is(err, ErrWorkspaceExecDenied) {
+		return ErrWorkspaceExecDenied
+	}
 	if err := p.manager.Delete(ctx, id); err != nil {
 		return err
 	}

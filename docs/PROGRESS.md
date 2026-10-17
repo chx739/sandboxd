@@ -26,8 +26,11 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 新增 Go 固定文件 helper 与专属 Pod/PV/PVC 构造：路径/symlink/特殊文件/CAS/额度边界，helper 9 顶层测试及 race 通过；sandbox 定向回归通过。尚未接公开文件 RPC，默认文件工具仍是旧后端。
 - NFS 配置在 deploy/workspace；用户已明确允许仅给可信服务容器增加 DAC_READ_SEARCH，不放宽业务 Pod。官方 Google Registry 连接超时，已从固定 Debian 基础摘要与 Ganesha4.3-2 包构建，单独服务172.23.0.3。导出父目录0711、工作区0700、root_squash匿名映射65532；真实非 root gVisor/NFS/helper读写及服务端hash一致通过，属于组件探测，不能冒充 Agent/自动恢复验收。
 - 学习文档：[45](45-持久工作区与任务恢复学习手册.md)；逐项状态与原始证据：[Phase9](evidence/phase9-workspace-recovery.md)。V1 14项/V2 10项正式验收尚未执行，外部模型调用0。
-- Go全仓库回归通过；完整Python回归进行中，最新原始输出 phase9-python-regression-tests.txt，不提前写成通过。
-- 第一项下一步：Go 授权/目录初始化/文件 RPC，再接 TaskStore/Runner/Session 多 attempt 自动接续。V1 验收前不推进 V2 主链路。M0合成Pod sandbox-workspace-probe 与其PVC保留，手动节点根挂载 /var/lib/sandboxd-nfs-probe 已卸载；不删除NFS数据卷。
+- 第二批：Go独立JSONL与WorkspaceRegistry、固定workspace-init、工作区通用exec/释放拒绝与预热池隔离已实现，相关Go/race通过；仍未接真实生命周期和受限RPC。必须由Go采集真实容器终止证明后才能ConfirmStopped，不能把状态机方法当fencing。
+- 完整Python离线回归110/110通过，295.970秒，原始输出 phase9-python-regression-native-tests.txt。第一次受限执行器因asyncio.to_thread线程唤醒无法退出而主动中断，部分输出phase9-python-regression-tests.txt保留为环境问题，非通过成绩；不改应用逻辑规避。
+- Git交付：第一批dbc02d2已推送，草稿 [PR #2](https://github.com/chx739/sandboxd/pull/2) base=codex/agent-memory-rag-plan，依赖PR#1，已附到当前聊天；不合并。用户docs32/docs34原修改仍保留。
+- 第一项下一步：Go物理停止/finalizer、可信目录初始化维护Pod/文件RPC，再接 TaskStore/Runner/Session 多attempt自动接续。Runner接线须补原claim/loop/cleanup独立时钟锚点；当前账本的通用deadline测试不是完整Runner预算验收。V1验收前不推进V2主链路。
+- 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 
 ## 2026-10-17 工作区持久化与恢复规格（实施授权前记录）
 

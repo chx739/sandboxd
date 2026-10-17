@@ -11,6 +11,8 @@
 | Go 文件 helper | 9 个顶层测试通过，含 race detector | phase9-workspace-helper-tests.txt |
 | Go workspace Pod/PV/PVC 构造及 sandbox 回归 | 通过 | phase9-go-foundation-tests.txt |
 | Go 全仓库回归 | 通过 | phase9-go-regression-tests.txt |
+| Go 持久 JSONL、归属状态机、初始化 helper、旧路径隔离及相关回归/race | 通过 | phase9-go-authority-tests.txt |
+| Python 完整离线回归 | 110/110通过，295.970s | phase9-python-regression-native-tests.txt |
 
 这些是原生 Linux 临时目录与构造函数测试，不是真实 NFS、真实 Pod 故障或真实模型验证。20/20 包含前述 8 项，不可累加为 28 项。
 
@@ -39,12 +41,24 @@
 
 本轮为同 UID 单租户 MVP，隔离依赖专属挂载、网络边界与 Go 所有权校验，不能声称 AUTH_SYS 或 Unix UID提供了独立多租户安全。
 
+探测结束后，正常删除合成 Pod（未使用force），保留PVC/PV和数据卷；服务端 component-report.md 的SHA256仍为 a31625d26c5418620aadb9ccc1ba7ab3526f20778796bc60c4a7f3d88190aea9，与组件报告一致。这只是手动清理后的文件持久性，仍不等于自动接续验收。
+
 ## 正式验收矩阵
 
 文档43的 V1-01～V1-14、V2-01～V2-10 **全部尚未验收**。纯逻辑测试只作为相关不变量的先行证据，不能提前勾选真实集成项目。
 
 当前尚未接通默认运行：远程文件 RPC、Go 持久归属、TaskStore/Runner/Session 接续、真实 NFS 接管。V2 主链路未启动。
 
+## 第二批实现与测试执行环境
+
+- Go 独立日志与 WorkspaceRegistry 已补注册/初始化/认领/绑定/停止/释放状态、代次、镜像身份约束和互斥；仍待接真实 Kubernetes 生命周期及公开受限接口。
+- 新可信 workspace-init 二进制只初始化固定 ID 的私有目录，尚未部署维护 Pod；其单测使用本地 Linux 临时目录。
+- 预热池不再认领/删除持久工作区 Pod；旧通用exec与无归属释放明确拒绝持久工作区，相关单测通过。
+- 第一次全 Python 回归在受限执行环境停在 asyncio.to_thread 的线程唤醒阶段，被主动中断，原始部分输出保留 phase9-python-regression-tests.txt，不能作通过成绩。
+- 该部分输出末尾追加了明确的INTERRUPTED标记以结束未写完的单测状态行；此前捕获内容保留，没有将中断伪报为测试通过。
+- 最小无网络 asyncio线程复现也在受限环境无法退出，而允许本机socket的执行环境0.002秒结束；改在后者运行纯离线测试，110/110通过。未为测试修改应用逻辑或放宽业务沙箱配置。
+- 当前草稿 [PR #2](https://github.com/chx739/sandboxd/pull/2) 依赖 PR #1，未合并；第一批提交 dbc02d2 已推送。后续继续追加小提交。
+
 ## 下一步
 
-完成 Go 权威绑定、可信目录初始化与文件 RPC，再接 Python 生命周期及自动恢复。全 Python 回归仍在运行；不能提前宣称全部通过。持续保存失败记录与真实结果，不使用已消费的模型预算。
+将 Go 权威绑定接入物理终止证明、可信维护 Pod 和文件 RPC，再接 Python 生命周期及自动恢复。Runner接线时须保留原claim/loop/cleanup独立预算语义，不能简单用enqueue时间+120秒替代。持续保存失败记录与真实结果，不使用已消费的模型预算。

@@ -34,8 +34,10 @@ export SANDBOXD_NFS_IMAGE="$(docker image inspect sandboxd-nfs:ganesha-4.3-2 --f
 docker compose -f deploy/workspace/compose.yml up -d nfs
 
 CGO_ENABLED=0 go build -trimpath -o .cache/sandbox-filetool ./cmd/sandbox-filetool
+CGO_ENABLED=0 go build -trimpath -o .cache/sandbox-workspace-init ./cmd/sandbox-workspace-init
 mkdir -p .cache/workspace-image
 install -m 0755 .cache/sandbox-filetool .cache/workspace-image/sandbox-filetool
+install -m 0755 .cache/sandbox-workspace-init .cache/workspace-image/sandbox-workspace-init
 docker build -f deploy/workspace/sandbox.Dockerfile -t sandboxd-workspace:probe-v1 .cache/workspace-image
 kind load docker-image sandboxd-workspace:probe-v1 --name sandboxd
 ```
