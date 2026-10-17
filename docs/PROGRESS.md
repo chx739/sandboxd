@@ -18,7 +18,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
-- e8443ff后新增CheckpointLedger与不可变SessionReferences：所选完整父链复制/hash/私有权限，PREPARING→DATA_READY→COMMITTED/FAILED，单条COMMITTED投影head/revision，幂等与边界ID查询、断尾/坏行检查。RecoveryLedger.commit_checkpoint与cancel共用短锁，核对原Task截止时间、节点、attempt和Go owner/generation/image，不修改预算。初始12项本地测试通过；完整Python214/214、285.135秒通过phase9-v2-checkpoint-full-regression-tests.txt，含线程取消/提交顺序与兄弟分支检查。随后镜像格式/作用域硬化由最终34项定向（2.140秒）覆盖，phase9-v2-checkpoint-final-boundary-tests.txt；不将214冒称包含后改动或把测试数相加。
+- 当前有效实现提交6c14c68（PR#3，承接e8443ff）。新增CheckpointLedger与不可变SessionReferences：所选完整父链复制/hash/私有权限，PREPARING→DATA_READY→COMMITTED/FAILED，单条COMMITTED投影head/revision，幂等与边界ID查询、断尾/坏行检查。RecoveryLedger.commit_checkpoint与cancel共用短锁，核对原Task截止时间、节点、attempt和Go owner/generation/image，不修改预算。初始12项本地测试通过；完整Python214/214、285.135秒通过phase9-v2-checkpoint-full-regression-tests.txt，含线程取消/提交顺序与兄弟分支检查。随后镜像格式/作用域硬化由最终34项定向（2.140秒）覆盖，phase9-v2-checkpoint-final-boundary-tests.txt；不将214冒称包含后改动或把测试数相加。
 - 引用发布最终修正：初稿link发布在崩溃后可能残留第二个硬链接导致拒读，改为单写入者下fsync临时文件→原子rename→fsync目录；目标已存在只验证，不用副本掩盖损坏。新增发布/目录fsync中断重试测试与相关回归35/35、2.401秒通过phase9-v2-checkpoint-publication-final-tests.txt；先前214/34批次不冒称含此后改动。
 - Go BackupRuntime新增Reserve：只fsync冻结、不创建Pod，再由后续协调器保存Session引用/PREPARING；sandbox/API race通过phase9-v2-checkpoint-reserve-go-tests.txt。新检查点模块尚未接HTTP/Runner，所有十项V2正式验收仍pending；本批未新增真实存储/外部模型调用。
 
