@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：可信恢复执行器与真实组件通过
 
-- 基线7f2f911，PR#3远端一致，用户docs32/docs34保留。复用BackupRuntime维护Pod/终止证明，新增ReserveRestore/StartRestore/FinishRestore；没有restore HTTP/模型工具。helper四参数restore绑定完整repo crypto ID，config匹配在写入前；旧三参数管理组件保留兼容。
+- 本批有效实现a1eaab9已推送至草稿PR#3（基线7f2f911，依赖PR#2→PR#1，不合并），用户docs32/docs34保留。复用BackupRuntime维护Pod/终止证明，新增ReserveRestore/StartRestore/FinishRestore；没有restore HTTP/模型工具。helper四参数restore绑定完整repo crypto ID，config匹配在写入前；旧三参数管理组件保留兼容。
 - 增加持久核验证明：Wait结果核对后先verifyRestore fsync，stopped仍冻结；再清理Pod、completeRestore记录来源并放行。修复“清理Pod后、来源提交前”失去核验结果的窗口；已落盘证明允许缺Pod清理重试，无证明仍拒绝。不信调用方success自报，失败目标隔离保留。
 - 新维护镜像restic0.18.1-v2已从缓存固定基础/已校验restic构建并载入kind，v1与业务runtime-v1.5保留。Docker inspect Id=sha256:0d07dc6898e243106416570c005bd094ef86dec618cd57ef2c25677351468705，实际CRI imageID=sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58，类型分别记录，见文档47 §10。
 - 真实phase9-v2-restore-runtime-component.json通过：从此前真实合成COMMITTED快照恢复到新空NFS目录，manifest/完整ID/业务imageID核对；新业务Pod读报告与NFS服务端hash一致，维护/业务CRI均runsc。错误期望仓库ID在写入前拒绝，目标仍为空、claim拒绝，清理后隔离保留。不是Secret轮换/历史会话分支/真实模型实验。
