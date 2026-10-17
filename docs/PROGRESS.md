@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M3：V1矩阵14/14与显式迁移通过，统一入口完整启动验证/性能待完成；V2未开始；Goal active
+    Phase 9 M3：NFS V1单节点MVP的矩阵14/14、迁移、统一启动/联合回放与性能基线完成；M4/V2未开始；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -64,10 +64,15 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 最终完整Python197/197、288.024秒通过，phase9-python-migration-regression-tests.txt；19项定向3.534秒，phase9-migration-boundary-tests.txt。首次19项3错误为写响应hash字段误用，原文phase9-migration-initial-tests.txt保留；修正为Go实际newSha256后再做真实验收，不用Fake成绩替代。源限UTF-8、100文件/16MiB，空目录/链接/特殊文件明确拒绝。
 - 统一入口hack/workspace.sh已实现install/check/build/nfs/go/agent/test/migrate/verify/joint，实际check与migration分发通过；完整安装、前台启动、all/joint分发未逐项复验。agent入口固定Replay/关闭Jev并移除Operator环境；verify独立结果目录、串行夹具、不删除数据。当前待完整启动验证/性能与全部V2。
 - 本批次前有效HEAD=fd51737；仍更新draft PR#2并依赖PR#1，不合并。用户docs32/docs34原修改不纳入。Go/gVisor/NFS仍运行，旧数据/索引/卷保留；迁移控制目录均在原生Linux持久盘。
-- 第一项下一步：通过统一入口验证Go/agentd完整启动与接续，再做固定负载性能与流量测量。当前V1矩阵14/14与显式迁移通过，清单phase9-v1-acceptance-progress.json；不等于V1全部交付。随后V2另开依赖分支，不提前替换NFS运行路线。
+- 统一安装/启动验收完成：缓存安装复核固定下载校验和，uv frozen --all-extras检查79包未变化；修正原入口无extras会移除已有RAG依赖的风险。Go构建通过，NFS no-recreate与V1-11同容器ID/172.23.0.3保持；Go/agentd实际由入口启动、SIGKILL后原Task接续，Operator环境已移除。最终phase9-agent-unified-entry-final.json成功，原预算/时钟/来源hash保持。
+- Pod分段观测phase9-agent-pod-recovery-timing.json通过（来自.cache/workspace-eval/run-7qsr3gDy/pod.json原字节）：故障请求→失败RPC112.74ms→旧停止2245.30ms→新claim就绪3494.61ms→成功读取3839.60ms；1次写预留/2次读预留（含失败），没有重复写。统一入口重启样本强杀→读回约60.04秒，源码导入与轮询计入，不当生产RTO。
+- 固定负载serial基线9/9通过、267次读写，phase9-nfs-fixed-workload-serial.json；NFS容器收发合计3462282字节（约3.30MiB，含挂载/元数据/协议，非公网）。文件读写P50约199–201ms，Go/NFS/控制器端点CPU与内存已记录，不是峰值。首次并行探索另存phase9-nfs-fixed-workload.json，不混算。学习/硬件/数据/完整表见文档46。
+- 最终全量Python201/201、288.476秒通过，phase9-python-benchmark-final-regression-tests.txt；此前200/280.764秒与负载夹具3项原文保留，不相加。统一joint入口3/3通过，phase9-entry-joint-replay.json，实际Milvus2.5.10/OpenSearch+缓存E5/BGE，脚本模型/Fake路由与生命周期；4个已有服务临时启动后全部停回原状态，ES未启动，未导入/重建索引，外部模型0。
+- 当前V1的14项验收及迁移/安装启动/小规模性能有证据，M3可交付审查；verify all本批次未整套重跑，首次联网安装未重复，现有各场景原始证据与缓存安装分开。V2未开始，完整Goal保持active。上一有效HEAD=cd871aa，仍更新draft PR#2（依赖PR#1），不合并；用户docs32/docs34未纳入。
+- 第一项下一步：核对PR#2远端最新HEAD与本批次交付，然后从其最新HEAD另开codex/workspace-restic-v2依赖分支；检查固定restic版本/校验和与专属MinIO仓库、可信执行器和联合检查点。V2继续在NFS运行，全部10项尚未执行，完整Goal active。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
-- 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移仍未完成。
+- 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移与当前状态见本节后续记录/文档45 §7，原始数据保留。
 
 ## 2026-10-17 工作区持久化与恢复规格（实施授权前记录）
 

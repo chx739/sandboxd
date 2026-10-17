@@ -1,0 +1,640 @@
+{
+  "mode": "real-unified-entry-sigkill-replay",
+  "passed": true,
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/563987832e114c8c83ee194857637fc5",
+  "entryScriptSha256": "0c5e2d7b863914b5654ef84ce4a9cdd5025cb006e430d717f126a66849d8692c",
+  "binarySha256": "4ce54eff91f7d25dda1894542a8ccc16af8d307843b46f8286d8bc80c9705622",
+  "replaySha256": "40e9b3efc48898decb27edfaa454097ec57c65c9075299054161b1d734fe85f3",
+  "goReadyMs": 747.0472259992675,
+  "initialAgentReadyMs": 55074.868555999274,
+  "operatorEnvironmentRemoved": true,
+  "killToApiReadyMs": 49665.99411900097,
+  "killToReplacementObservedMs": 51862.631250998675,
+  "stateBeforeKill": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic entry verification"
+      },
+      "fingerprint": "d4832e782ba11b96d5aef3e976f5a071",
+      "labels": {
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "17825238-908f-431b-8ff5-27fb6300f8e5",
+        "sandboxId": "fba798f5bebc393a",
+        "startedAt": "2026-10-17T20:08:24.576656+00:00"
+      }
+    ],
+    "branchId": "branch-35272f50119d45fbbf7369024621bfd0",
+    "calls": {
+      "call-a04c6833c95140e586625f8672e0569f": {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "expectedNewSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "entry.md",
+        "state": "finished"
+      },
+      "call-e3e0a6efb41243fb9ba6c59a14c44391": {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-e4280e7437dc4330998a2909c6b76f39": {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "reserved"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-2dc5c1e692357069",
+    "deadline": "2026-10-17T20:10:30.505195+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "40e9b3efc48898decb27edfaa454097ec57c65c9075299054161b1d734fe85f3",
+      "model": "replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-ed6760a4a6f2d106",
+    "status": "running",
+    "taskId": "task-04a4ffadfaeb91bb",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T20:08:24.576656+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T20:08:30.505195+00:00"
+    },
+    "workspaceId": "workspace-a77bf2fff50c4d4d98269bb29fa90b1e"
+  },
+  "stateAfterRestart": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic entry verification"
+      },
+      "fingerprint": "d4832e782ba11b96d5aef3e976f5a071",
+      "labels": {
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "17825238-908f-431b-8ff5-27fb6300f8e5",
+        "sandboxId": "fba798f5bebc393a",
+        "startedAt": "2026-10-17T20:08:24.576656+00:00",
+        "stopReason": "containers-terminated"
+      },
+      {
+        "attemptId": "attempt-a3bbb5d545d445ebb769dd3bb41c3d80",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "eb6d064c-4745-4967-8ce9-662e4af7a871",
+        "sandboxId": "5aaddf128b1b6b8c",
+        "startedAt": "2026-10-17T20:09:21.162025+00:00",
+        "stopReason": "containers-terminated"
+      }
+    ],
+    "branchId": "branch-35272f50119d45fbbf7369024621bfd0",
+    "calls": {
+      "call-173e17575b774222a992cd09e0b34fab": {
+        "attemptId": "attempt-a3bbb5d545d445ebb769dd3bb41c3d80",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-4436ddbf6188413fbf4f3f2f98f17713": {
+        "attemptId": "attempt-a3bbb5d545d445ebb769dd3bb41c3d80",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "read_file",
+        "path": "entry.md",
+        "state": "finished"
+      },
+      "call-a04c6833c95140e586625f8672e0569f": {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "expectedNewSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "entry.md",
+        "state": "finished"
+      },
+      "call-e3e0a6efb41243fb9ba6c59a14c44391": {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-e4280e7437dc4330998a2909c6b76f39": {
+        "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "uncertain"
+      },
+      "call-eac11da5dc604dbc8a25858da8771969": {
+        "attemptId": "attempt-a3bbb5d545d445ebb769dd3bb41c3d80",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-f3d5010f8366a573",
+    "deadline": "2026-10-17T20:10:30.505195+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "40e9b3efc48898decb27edfaa454097ec57c65c9075299054161b1d734fe85f3",
+      "model": "replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-ed6760a4a6f2d106",
+    "status": "succeeded",
+    "taskId": "task-04a4ffadfaeb91bb",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T20:08:24.576656+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T20:08:30.505195+00:00"
+    },
+    "workspaceId": "workspace-a77bf2fff50c4d4d98269bb29fa90b1e"
+  },
+  "oldPod": {
+    "workspaceId": "workspace-a77bf2fff50c4d4d98269bb29fa90b1e",
+    "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+    "podUid": "17825238-908f-431b-8ff5-27fb6300f8e5",
+    "sandboxId": "fba798f5bebc393a",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-a77bf2fff50c4d4d98269bb29fa90b1e",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "newPod": {
+    "workspaceId": "workspace-a77bf2fff50c4d4d98269bb29fa90b1e",
+    "attemptId": "attempt-a3bbb5d545d445ebb769dd3bb41c3d80",
+    "podUid": "eb6d064c-4745-4967-8ce9-662e4af7a871",
+    "sandboxId": "5aaddf128b1b6b8c",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-a77bf2fff50c4d4d98269bb29fa90b1e",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "traces": [
+    {
+      "alertFingerprint": "",
+      "attemptId": "attempt-9e0dfcac6b6f40b3be9aa0e598fa0bf3",
+      "capabilities": {},
+      "elapsedMs": 0,
+      "events": [
+        {
+          "details": {
+            "auditIds": [
+              "audit-10c571d2c47f4442a8643566f16cb8c9",
+              "audit-3e52a21b57e74f0b9d117c1cd41a636b"
+            ],
+            "completeNodeId": "node-2dc5c1e692357069",
+            "modelReservations": 2,
+            "modelResponsesRecorded": 1,
+            "provenance": "durable-call-audit; missing metadata remains unknown; legacy logs may have no audit",
+            "reason": "prior attempt had no persisted completion trace",
+            "uncertainReservations": [
+              "call-e4280e7437dc4330998a2909c6b76f39"
+            ],
+            "usageKnown": false
+          },
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "attempt.recovered"
+        }
+      ],
+      "final": null,
+      "injectedVia": [],
+      "mode": "recovery",
+      "model": "replay",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [],
+      "provider": "replay",
+      "routing": {},
+      "sandboxId": "fba798f5bebc393a",
+      "status": "interrupted",
+      "steps": [
+        {
+          "arguments": {
+            "content": {
+              "bytes": 33,
+              "redacted": true,
+              "sha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57"
+            },
+            "path": "entry.md"
+          },
+          "auditDetails": {
+            "body": {
+              "bytes": 33,
+              "created": true,
+              "diff": "--- entry.md:old\n+++ entry.md:new\n@@ -1,0 +1,2 @@\n+synthetic unified-entry recovery\n+\n",
+              "newSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+              "oldSha256": null,
+              "path": "entry.md",
+              "redacted": false
+            },
+            "evidenceId": "ev-3879edd53206f329219f",
+            "observedAt": "2026-10-17T20:08:30.681508+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 135,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":33,\"created\":true,\"diff\":\"--- entry.md:old\\n+++ entry.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic unified-entry recovery\\n+\\n\",\"newSha256\":\"10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57\",\"oldSha256\":null,\"path\":\"entry.md\",\"redacted\":false},\"evidenceId\":\"ev-3879edd53206f329219f\",\"observedAt\":\"2026-10-17T20:08:30.681508+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "write_file"
+        }
+      ],
+      "taskId": "task-04a4ffadfaeb91bb",
+      "verdict": "process-interrupted",
+      "workspaceId": "workspace-a77bf2fff50c4d4d98269bb29fa90b1e"
+    },
+    {
+      "alertFingerprint": "d4832e782ba11b96d5aef3e976f5a071",
+      "attemptId": "attempt-a3bbb5d545d445ebb769dd3bb41c3d80",
+      "capabilities": {
+        "deterministic": true,
+        "toolCalling": true
+      },
+      "elapsedMs": 10300,
+      "events": [
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.started"
+        },
+        {
+          "details": {
+            "effectiveTier": null,
+            "restored": true
+          },
+          "elapsedMs": 0,
+          "index": 2,
+          "iteration": null,
+          "tool": "",
+          "type": "model.route.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 3,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 1574,
+          "index": 4,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.completed"
+        },
+        {
+          "details": {
+            "afterChars": 2882,
+            "afterMessages": 5,
+            "beforeChars": 1982,
+            "beforeMessages": 4,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 12328,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 5,
+          "iteration": 3,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 6,
+          "iteration": 3,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "tool_calls",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 0,
+          "index": 7,
+          "iteration": 3,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          },
+          "elapsedMs": 0,
+          "index": 8,
+          "iteration": 3,
+          "tool": "read_file",
+          "type": "tool.started"
+        },
+        {
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          },
+          "elapsedMs": 152,
+          "index": 9,
+          "iteration": 3,
+          "tool": "read_file",
+          "type": "tool.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 10,
+          "iteration": 3,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {
+            "afterChars": 3917,
+            "afterMessages": 7,
+            "beforeChars": 2417,
+            "beforeMessages": 6,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 13395,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 11,
+          "iteration": 4,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 12,
+          "iteration": 4,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "stop",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 8001,
+          "index": 13,
+          "iteration": 4,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 14,
+          "iteration": 4,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 15,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 16,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 463,
+          "index": 17,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.completed"
+        }
+      ],
+      "final": {
+        "deniedActions": [],
+        "evidence": [
+          {
+            "source": "session-history:write_file",
+            "summary": "{\"historical\": true, \"toolCallId\": \"write-entry\", \"evidenceId\": \"ev-3879edd53206f329219f\", \"observedAt\": \"2026-10-17T20:08:30.681508+00:00\"}"
+          },
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic unified-entry recovery\\n\",\"offset\":0,\"path\":\"entry.md\",\"redacted\":false,\"sha256\":\"10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-e20f9caba080dd5233e8\",\"observedAt\":\"2026-10-17T20:09:22.932360+00:00\"}"
+          }
+        ],
+        "injectionDetected": false,
+        "planId": null,
+        "recommendation": "observe",
+        "rootCause": "",
+        "severity": "warning",
+        "summary": "Recovered via unified entry"
+      },
+      "injectedVia": [],
+      "mode": "replay",
+      "model": "replay",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [
+        {
+          "capabilities": [
+            "network:prometheus",
+            "metrics:read"
+          ],
+          "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+          "id": "prometheus",
+          "tools": [
+            "query_prometheus"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "sandbox:claim",
+            "kubernetes:read",
+            "deployment-scale:propose"
+          ],
+          "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+          "id": "kubernetes",
+          "tools": [
+            "kubernetes_read",
+            "propose_plan"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "network:ssh",
+            "linux:read"
+          ],
+          "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+          "id": "linux-host",
+          "tools": [
+            "linux_read"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "task-workspace:read",
+            "task-workspace:write"
+          ],
+          "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+          "id": "files",
+          "tools": [
+            "list_files",
+            "read_file",
+            "search_files",
+            "write_file",
+            "edit_file"
+          ],
+          "version": "1.0.0"
+        }
+      ],
+      "provider": "replay",
+      "routing": {
+        "effectiveTier": null,
+        "restored": true
+      },
+      "sandboxId": "5aaddf128b1b6b8c",
+      "status": "succeeded",
+      "steps": [
+        {
+          "arguments": {
+            "path": "entry.md"
+          },
+          "auditDetails": {
+            "body": {
+              "content": "synthetic unified-entry recovery\n",
+              "offset": 0,
+              "path": "entry.md",
+              "redacted": false,
+              "sha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+              "totalChars": 33,
+              "truncated": false
+            },
+            "evidenceId": "ev-e20f9caba080dd5233e8",
+            "observedAt": "2026-10-17T20:09:22.932360+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 152,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic unified-entry recovery\\n\",\"offset\":0,\"path\":\"entry.md\",\"redacted\":false,\"sha256\":\"10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-e20f9caba080dd5233e8\",\"observedAt\":\"2026-10-17T20:09:22.932360+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "read_file"
+        }
+      ],
+      "taskId": "task-04a4ffadfaeb91bb",
+      "verdict": "completed",
+      "workspaceId": "workspace-a77bf2fff50c4d4d98269bb29fa90b1e"
+    }
+  ],
+  "killToReadObservedMs": 52233.448997998494,
+  "killToSucceededMs": 60615.95655099882,
+  "serverSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+  "sessionPrefixPreserved": true,
+  "timingScope": "single sample; source mount import and deliberate Replay delay included; not production RTO",
+  "timestamp": "2026-10-17T20:09:31.912257+00:00"
+}

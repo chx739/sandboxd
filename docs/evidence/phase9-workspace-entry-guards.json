@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-10-17T20:17:11.498544+00:00",
+  "scope": "actual shell guards; no Python Agent or model started",
+  "passed": true,
+  "externalModelCalls": 0,
+  "cases": [
+    {
+      "args": [
+        "verify",
+        "unknown"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "缺少或未知CASE，参见help。\n"
+    },
+    {
+      "args": [
+        "agent"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "本入口只允许Replay。\n"
+    }
+  ]
+}

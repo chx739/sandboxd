@@ -1,6 +1,6 @@
-# NFS V1 部署候选配置
+# NFS V1 部署与验收
 
-当前状态：M3，Python持久TaskStore/Runner已接入。V1正式13/14项已过，含真实SIGKILL接续、终态不复活及确认丢失；其余V1-14与迁移/性能仍待完成，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
+当前状态：M3，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -22,7 +22,7 @@ Ganesha VFS 的文件句柄访问需要额外 `CAP_DAC_READ_SEARCH`。该权限�
 3. 运行资源检查、创建本项目单节点 kind，检查 gVisor 与网络安全基线。
 4. 按已确认的存储服务权限，实际测试 mount、锁、非 root 权限及持久化；失败就记录事实，不用本地 bind mount 代替 NFS 验收。
 
-统一命令入口见本文末尾；完整启动分发验证仍待执行。不要执行 `docker compose down -v`；Pod 删除与业务数据删除必须分开。
+统一命令入口见本文末尾；缓存安装、Go构建、NFS复用、Go/agentd启动与重启接续已有真实证据。不要执行 `docker compose down -v`；Pod 删除与业务数据删除必须分开。
 
 ## Python部署默认值与真实验收入口
 
@@ -198,7 +198,7 @@ agentd/.venv/bin/python -m agentd.workspace_migration_demo --nfs-server "$SANDBO
 
 | 阶段 | 命令 | 前置条件与边界 |
 |---|---|---|
-| 工具/依赖安装 | `bash hack/workspace.sh install` | 复用固定工具安装器与uv frozen锁；需网络，本批次未重新下载安装 |
+| 工具/依赖安装 | `bash hack/workspace.sh install` | 复用固定工具安装器与uv frozen全部已声明extras；首次需网络，缓存安装已验证 |
 | 环境检查 | `bash hack/workspace.sh check` | 只读；明确kind-sandboxd、NFS项目标签/状态、工具版本和资源 |
 | Go构建 | `bash hack/workspace.sh build` | Go1.26.5，隔离可重建缓存，不删除旧镜像 |
 | NFS启动 | `bash hack/workspace.sh nfs` | 已构建/核验SANDBOXD_NFS_IMAGE，kind网络已存在；保留named volumes |
@@ -212,6 +212,61 @@ agentd/.venv/bin/python -m agentd.workspace_migration_demo --nfs-server "$SANDBO
 
 `agent`固定NFS+Replay、Jev关闭；若环境要求live则直接拒绝。它会移除Operator Token环境变量，Python只获得Agent凭据。`go`使用当前固定runtime-v1.5，须先按原安装流程将该镜像载入本项目kind、部署Calico/gVisor/RBAC等基础能力；统一入口不替代这些前置安装。
 
-`verify`每次创建独立`.cache/workspace-eval/run-*`目录，包含逐场景JSON与stdout，失败保留现场与输出，不覆盖旧证据。`all`覆盖存储夹具集合，不等于完整Goal完成：联合服务回放、性能和V2仍分别验收。本批次实际验证check、help/语法及migration分发；其余分发复用已有命令，未声称逐个重新执行。
+`verify`每次创建独立`.cache/workspace-eval/run-*`目录，包含逐场景JSON与stdout，失败保留现场与输出，不覆盖旧证据。`all`覆盖存储夹具集合，不等于完整Goal完成：联合服务回放、性能和V2仍分别验收。本批次实际验证缓存install、build、nfs、check、test、entry、joint以及migration/pod分发；verify all未整套重跑，既有逐场景证据保留。
 
 线性旧格式的预览节点属于临时视图，实际节点以COMMITTED映射为准；执行确认使用源Session hash与文件manifest hash。
+
+
+### 首次镜像准备与前台启动
+
+已存在的runtime-v1.5/NFS镜像应复用，不能覆盖标签后让旧任务静默换镜像。下面是**首次安装、尚无这些镜像**时的构建方式；源、Go1.26.5与基础镜像均固定。已有安装先inspect并复用实际ID，升级另用新版本与显式兼容检查。
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+export GOMODCACHE=/tmp/sandboxd-workspace-go-mod
+export GOCACHE=/tmp/sandboxd-workspace-go-build
+mkdir -p .cache/workspace-image
+if ! docker image inspect sandboxd-workspace:runtime-v1.5 >/dev/null 2>&1; then
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o .cache/workspace-image/sandbox-filetool ./cmd/sandbox-filetool
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o .cache/workspace-image/sandbox-workspace-init ./cmd/sandbox-workspace-init
+  docker build -f deploy/workspace/sandbox.Dockerfile -t sandboxd-workspace:runtime-v1.5 .cache/workspace-image
+fi
+kind load docker-image --name sandboxd sandboxd-workspace:runtime-v1.5
+if docker container inspect sandboxd-workspace-nfs-1 >/dev/null 2>&1; then
+  export SANDBOXD_NFS_IMAGE="$(docker inspect --format '{{.Image}}' sandboxd-workspace-nfs-1)"
+else
+  if ! docker image inspect sandboxd-nfs:ganesha-4.3-2 >/dev/null 2>&1; then
+    docker build -f deploy/workspace/nfs.Dockerfile -t sandboxd-nfs:ganesha-4.3-2 deploy/workspace
+  fi
+  export SANDBOXD_NFS_IMAGE="$(docker image inspect --format '{{.Id}}' sandboxd-nfs:ganesha-4.3-2)"
+fi
+bash hack/workspace.sh nfs
+```
+
+Ganesha固定包版本与基础digest见Dockerfile，构建镜像内保存package-versions.txt；构建结果ID以实际inspect为准，不虚构跨时间apt依赖完全相同。当前环境已验证的镜像ID及CRI身份见学习手册45/原始报告；本轮不重新构建已有业务镜像。
+
+仓库外配置好三个不同的Agent API/Alert/sandboxd Agent Token及独立Operator Token。两个终端分别执行：
+
+```bash
+export SANDBOXD_WORKSPACE_CONTROL_DIR="$HOME/.local/share/sandboxd/workspace-control"
+bash hack/workspace.sh go
+```
+
+```bash
+export AGENTD_RECOVERY_DIR="$HOME/.local/share/sandboxd/agent-control"
+export AGENTD_SANDBOXD_URL=http://127.0.0.1:8080
+export AGENTD_LLM_MODE=replay
+# 可通过AGENTD_REPLAY_FILE选择固定回放文件，默认沿用原示例。
+bash hack/workspace.sh agent
+```
+
+要求已按原安装流程建立kind/Calico/gVisor/RBAC；先Go就绪再启动agentd，退出时先agentd再Go。不能把/tmp作为部署控制盘，不把Operator Token传入Python；agent子命令会主动移除它。无外部API Key也可运行Replay。
+
+完整启动/重启与独立性能入口：
+
+```bash
+bash hack/workspace.sh entry --output .cache/entry-result.json
+bash hack/workspace.sh benchmark --repeats 3 --background-condition serial --output .cache/nfs-benchmark.json
+```
+
+两个实验串行；入口实验要求8080/8090空闲，性能实验要求10880及项目工作区空闲。测量口径、缓存、资源/网络边界和原始结果见[46](../../docs/46-工作区恢复性能与流量测量.md)。serial是调用者对项目调度的声明，不保证宿主没有其他后台工作。

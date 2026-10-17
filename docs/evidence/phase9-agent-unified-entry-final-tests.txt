@@ -1,0 +1,13 @@
+CPU: 12
+可用内存: 20825 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   26G  931G   3% /
+C:\             932G  802G  130G  87% /mnt/c
+运行中的 Docker 容器: 2
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+{"stage": "entry-started", "action": "go", "number": 1, "pid": 161129}
+{"stage": "entry-started", "action": "agent", "number": 1, "pid": 161283}
+{"stage": "entry-started", "action": "agent", "number": 2, "pid": 161449}
+{"passed": true, "output": "docs/evidence/phase9-agent-unified-entry-final.json"}

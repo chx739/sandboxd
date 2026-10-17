@@ -29,7 +29,7 @@ case "$action" in
   help)
     cat <<'EOF'
 用法：bash hack/workspace.sh ACTION [参数]
-  install       安装仓库固定工具并uv sync --frozen（需要网络）
+  install       固定工具与uv frozen全部已声明extras（首次需要网络）
   check         只读资源/集群/NFS/版本检查
   build         编译可信Go服务（要求Go1.26.5）
   nfs           启动已配置的专属NFS；要求已核实SANDBOXD_NFS_IMAGE
@@ -37,6 +37,8 @@ case "$action" in
   agent         前台启动NFS+Replay agentd；路由关闭，不调用外部模型
   test          本地Python全量回归
   migrate ARGS  旧工作区预览/显式导入，参数见workspace_migrate --help
+  entry ARGS    通过本入口启动Go/agentd并验收重启接续；要求--output
+  benchmark ARGS 固定NFS文本负载；要求--output，可设--repeats 1..5
   verify CASE   真实存储验收，独立输出目录；CASE可选：
                 file pod process terminal ack budget expired boundary concurrency nfs command migration all
   joint         三类运维Replay；要求已有Milvus/OpenSearch及缓存模型正常运行
@@ -44,7 +46,7 @@ EOF
     ;;
   install)
     bash hack/install-tools.sh
-    uv sync --frozen --project agentd --python 3.12
+    uv sync --frozen --project agentd --python 3.12 --all-extras
     ;;
   check)
     check_cluster
@@ -63,7 +65,8 @@ EOF
   nfs)
     check_cluster
     : "${SANDBOXD_NFS_IMAGE:?设置已核实的固定NFS镜像ID或digest}"
-    docker compose -f deploy/workspace/compose.yml up -d nfs
+    # 保留既有容器/IP和named volumes；升级存储服务另走显式迁移。
+    docker compose -f deploy/workspace/compose.yml up -d --no-recreate nfs
     ;;
   go)
     check_cluster
@@ -86,6 +89,18 @@ EOF
   migrate)
     unset SANDBOXD_OPERATOR_TOKEN
     exec "$python_bin" -m agentd.workspace_migrate "$@"
+    ;;
+  entry)
+    check_cluster
+    nfs_address >/dev/null
+    [[ -z "$(ss -ltnH '( sport = :8080 or sport = :8090 )')" ]] || { echo '入口实验要求8080/8090空闲。' >&2; exit 1; }
+    exec "$python_bin" -m agentd.workspace_entry_demo "$@"
+    ;;
+  benchmark)
+    check_cluster
+    server="$(nfs_address)"
+    [[ -z "$(ss -ltnH '( sport = :10880 )')" ]] || { echo '性能实验要求10880空闲。' >&2; exit 1; }
+    exec "$python_bin" -m agentd.workspace_benchmark --nfs-server "$server" "$@"
     ;;
   joint)
     # 不替用户启动数据库、重建索引或下载模型；缺少依赖时明确失败。

@@ -59,15 +59,31 @@ class ObservedClient(SandboxdClient):
         self.observations = []
         self.lose_write_ack = lose_write_ack
         self.ack_losses = []
+        self.rpc_timings = []
 
     async def claim_workspace(self, workspace, task, attempt):
+        started = time.perf_counter()
         result = await super().claim_workspace(workspace, task, attempt)
+        self.rpc_timings.append({"event": "claim", "attemptId": attempt, "statusCode": result.status_code,
+                                 "completedMonotonic": time.perf_counter(), "elapsedMs": (time.perf_counter() - started) * 1000})
         if 200 <= result.status_code < 300:
             self.observations.append(observe_pod(result.body))
         return result
 
+    async def release_workspace(self, binding):
+        started = time.perf_counter()
+        result = await super().release_workspace(binding)
+        self.rpc_timings.append({"event": "release", "attemptId": binding["attemptId"], "statusCode": result.status_code,
+                                 "completedMonotonic": time.perf_counter(), "elapsedMs": (time.perf_counter() - started) * 1000,
+                                 "stopConfirmed": isinstance(result.body, dict) and result.body.get("owner", {}).get("stopConfirmed") is True})
+        return result
+
     async def workspace_files(self, binding, operation):
+        started = time.perf_counter()
         result = await super().workspace_files(binding, operation)
+        self.rpc_timings.append({"event": "file", "operation": operation["operation"], "attemptId": binding["attemptId"],
+                                 "statusCode": result.status_code, "completedMonotonic": time.perf_counter(),
+                                 "elapsedMs": (time.perf_counter() - started) * 1000})
         if self.lose_write_ack and operation["operation"] == "write_file" and 200 <= result.status_code < 300:
             self.lose_write_ack = False
             self.ack_losses.append({"kind": "discard-confirmation-after-real-RPC", "workspaceId": binding["workspaceId"],
@@ -184,10 +200,11 @@ async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_tur
                 pod = json.loads(checked([*k, "get", "pod", pod_name, "-o", "json"]))
                 assert pod["metadata"]["uid"] == owner["podUid"]
                 assert "sandbox.io/workspace-writer" in pod["metadata"]["finalizers"]
+                requested_monotonic = time.perf_counter()
                 checked([*k, "delete", "pod", pod_name, "--wait=false", "--grace-period=1"])
                 faults.append({"kind": "administrative-normal-pod-delete", "afterCompleteNodeId": node_id,
                                "taskId": task_id, "attemptId": attempt_id, "podUid": owner["podUid"],
-                               "timestamp": datetime.now(timezone.utc).isoformat()})
+                               "timestamp": datetime.now(timezone.utc).isoformat(), "requestedMonotonic": requested_monotonic})
             return state
         store._ledger.complete_boundary = boundary
     worker = None
@@ -261,6 +278,23 @@ async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_tur
                   "podDisappearanceWaitMs": deletion_wait_ms,
                   "serverFileSha256AfterRelease": server_hash, "expectedSha256": expected,
                   "elapsedMs": round((time.perf_counter() - started) * 1000, 3)}
+        if fault_after_first_turn:
+            origin = faults[0]["requestedMonotonic"]
+            timings = client.rpc_timings
+            def first_ms(predicate):
+                return next(((r["completedMonotonic"] - origin) * 1000 for r in timings
+                             if r["completedMonotonic"] >= origin and predicate(r)), None)
+            report["recoveryTiming"] = {
+                "scope": "single controlled Pod deletion; monotonic observer times, includes Go/HTTP overhead; not production RTO",
+                "faultToRejectedFileRpcMs": first_ms(lambda r: r["event"] == "file" and r["statusCode"] >= 400),
+                "faultToOldStopConfirmedMs": first_ms(lambda r: r["event"] == "release" and r["attemptId"] == faults[0]["attemptId"] and r["stopConfirmed"]),
+                "faultToNewClaimReadyMs": first_ms(lambda r: r["event"] == "claim" and r["attemptId"] != faults[0]["attemptId"] and 200 <= r["statusCode"] < 300),
+                "faultToSuccessfulReadMs": first_ms(lambda r: r["event"] == "file" and r.get("operation") == "read_file" and r["attemptId"] != faults[0]["attemptId"] and r["statusCode"] == 200),
+                "writeFileReservations": sum(c["operation"] == "write_file" for c in state["calls"].values()),
+                "readFileReservations": sum(c["operation"] == "read_file" for c in state["calls"].values()),
+                "successfulRecoveryReads": sum(r["event"] == "file" and r.get("operation") == "read_file" and r["statusCode"] == 200 and r["attemptId"] != faults[0]["attemptId"] for r in timings),
+            }
+            report["rpcTimings"] = timings
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
         return report

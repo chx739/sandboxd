@@ -206,3 +206,19 @@
 首次`phase9-migration-initial-tests.txt`：19项有3错误，使用了不符合Go实际响应的sha256字段；修正为newSha256后`phase9-migration-boundary-tests.txt`19/19、3.534秒。最终完整`phase9-python-migration-regression-tests.txt`197/197、288.024秒，通过，含迁移幂等/未知写核查/线性副本/路径与映射边界、既有恢复。首次失败不覆盖，各测试重叠不相加。compileall、bash语法、diff检查通过。没有修改本机时间、系统权限或现有数据卷。
 
 当前V1矩阵14/14和显式迁移有证据，完整启动分发验证与固定负载性能仍待完成，V2未开始；Goal active。下一步先复验统一入口的Go/agentd启动与接续，再测同条件文件工具/挂载/恢复/资源与流量，完成V1交付后另开V2依赖分支。
+
+## 2026-10-18 V1统一启动与固定负载收尾
+
+完整Goal仍active，V2尚未开始。本批次补齐V1剩余交付项：
+
+- `phase9-workspace-entry-install-tests.txt`：实际缓存重复安装，固定Go1.26.5/kind0.31.0/runsc20260810校验和通过；uv frozen all-extras检查79包未变化。原安装入口不带extras会移除现有RAG包，已修正。首次联网安装未重复，不虚称重新下载所有依赖。
+- `phase9-workspace-entry-build-tests.txt`：统一Go构建成功；`phase9-workspace-entry-nfs-tests.txt`/`phase9-workspace-entry-nfs-reuse.json`：no-recreate启动复用与V1-11相同容器497b2542…、原IP172.23.0.3和named volumes。没有扩大权限或重建业务镜像。
+- `phase9-agent-unified-entry-final.json`及原始输出：实际通过bash entry→go/agent启动，Python环境未包含Operator Token，SIGKILL后同Task接续，原scope/limits/timing/provider不变、写一次、读回NFS服务端hash。单次强杀→API57.07秒→新Pod观察59.65秒→读回60.04秒→成功68.31秒；包含挂载盘源码导入、轮询和8秒Replay等待，不当生产RTO。首次入口样本另存，不覆盖。
+- `phase9-agent-pod-recovery-timing.json`原字节复制自`.cache/workspace-eval/run-7qsr3gDy/pod.json`：请求正常删除自己的Pod→失败文件RPC112.74ms→旧owner停止2245.30ms→新claim就绪3494.61ms→成功读回3839.60ms。写预留1、读预留2（含失败）、新attempt成功检查1；只加管理观测，不改变Actor Loop或Go策略。
+- `phase9-nfs-fixed-workload-serial.json`：同机单并发，固定seed20261018，4×1KiB、32×256B、8×4KiB/改1文件，3轮9工作区、267计时读写，9/9通过且所有hash/清单正确。NFS窗口收发3,462,282字节（3.30MiB），含mount/元数据/协议，非公网；工具P50约199–201ms，不能当纯NFS延迟/QPS上限。GoCPU1.95秒、NFS cgroup CPU0.72秒、控制器CPU0.41秒；端点内存非峰值。正式基线时没有并发项目测试/安装，数据库服务已停回原状；宿主其他后台未完全隔离。首次并行探索`phase9-nfs-fixed-workload.json`单列保留，不混算。
+- `phase9-entry-joint-replay.json`3/3：统一joint入口，实际Milvus2.5.10/OpenSearch/缓存E5-BGE；决策/路由/沙箱生命周期仍为脚本/Fake。4个已有服务临时启动、结束停回原状态，未导入/重建索引，ES未启动；服务白名单与最终状态`phase9-entry-joint-services.json`。外部模型0。
+- `phase9-python-benchmark-final-regression-tests.txt`：最终201/201、288.476秒，通过；此前200/280.764秒与负载夹具3项原文保留，不累加。`phase9-workspace-entry-guards.json`为实际shell拒绝live/未知case，未启动模型。compileall、shell语法与diff检查另核对。
+
+V1的14项验收、显式迁移、安装启动和小规模基线具备交付证据；完整数值/口径/失败边界见文档46。verify all本批次未整套再跑，其各场景原始证据仍登记在矩阵。文档43的全部10项V2及V1/V2同条件比较尚未实现，不能标完整Goal完成；下一步从V1最新HEAD另开V2依赖分支。
+
+验证备注：Docker Compose原始stdout末尾自带空格，phase9-workspace-entry-nfs-tests.txt保持原字节；不为通过格式检查修改原始证据。排除原始txt日志后源码/文档diff检查通过，所有索引checksum仍一致。
