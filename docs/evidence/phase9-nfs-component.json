@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-10-17T15:23:20.187522+00:00",
+  "mode": "real-local-service-component",
+  "externalModelCalls": 0,
+  "scope": "gVisor + dedicated NFSv4.1 PVC + fixed file helper; not Agent RPC or automatic recovery",
+  "workspaceId": "workspace-00000000000000000000000000000001",
+  "podUid": "f8c6ebfc-38e9-4895-b147-48deca90eb6e",
+  "runtimeClass": "gvisor",
+  "identity": "uid=65532 gid=65532 groups=65532",
+  "gvisorStartup": "[   0.000000] Starting gVisor...",
+  "imageRef": "sandboxd-workspace:probe-v1",
+  "imageId": "sha256:f6ff159c41c101fa0e8709da64d5636cddd8ac75f9f550108d7960e4a685160e",
+  "nfsImageId": "sha256:504f663c8f65a3fb88640b8c5523c82fb6275a0bf0a6ff3f7fed427384c8db61",
+  "nfsMount": {
+    "source": "172.23.0.3:/workspaces/workspace-00000000000000000000000000000001",
+    "fstype": "nfs4",
+    "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+  },
+  "nfsConfigSha256": "21d9e8cc7164cf73e9468a302d30d280ef97f1fad682e883ba65fc6b830321db",
+  "serverFileSha256": "a31625d26c5418620aadb9ccc1ba7ab3526f20778796bc60c4a7f3d88190aea9",
+  "observations": [
+    {
+      "operation": "write_file",
+      "elapsedMs": 138.13315700099338,
+      "result": {
+        "bytes": 37,
+        "created": false,
+        "diff": "",
+        "newSha256": "a31625d26c5418620aadb9ccc1ba7ab3526f20778796bc60c4a7f3d88190aea9",
+        "oldSha256": "a31625d26c5418620aadb9ccc1ba7ab3526f20778796bc60c4a7f3d88190aea9",
+        "path": "probe/component-report.md",
+        "redacted": false
+      }
+    },
+    {
+      "operation": "read_file",
+      "elapsedMs": 119.99900599948887,
+      "result": {
+        "content": "synthetic NFS gVisor component probe\n",
+        "offset": 0,
+        "path": "probe/component-report.md",
+        "redacted": false,
+        "sha256": "a31625d26c5418620aadb9ccc1ba7ab3526f20778796bc60c4a7f3d88190aea9",
+        "totalChars": 37,
+        "truncated": false
+      }
+    },
+    {
+      "operation": "write_file",
+      "negativeCase": "../escape",
+      "elapsedMs": 119.05818400009593,
+      "result": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid or reserved path component"
+      }
+    },
+    {
+      "operation": "write_file",
+      "negativeCase": "probe/component-report.md",
+      "elapsedMs": 116.1978750005801,
+      "result": {
+        "denyLayer": "workspace-policy",
+        "error": "expectedSha256 mismatch or absent"
+      }
+    }
+  ],
+  "passed": true
+}

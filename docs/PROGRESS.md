@@ -6,15 +6,30 @@
 
 Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索和 Jev 代码及证据保留在 [PR #1](https://github.com/chx739/sandboxd/pull/1)。**当前为用户 2026-09-29 批准的 Phase 8 Kubernetes 运维 Agent MVP**；完整目标和验收见 [37](37-Kubernetes运维Agent目标与验收.md)。用户最新已更新 Key 并重新授权 Jev 最小路由，覆盖此前暂停。历史 Jev 首题与 TypeSafe 401 只作旧证据。Phase 8 尚未完成。
 
+当前实施目标：**Phase 9 工作区持久化与自动恢复**，用户于 2026-10-17 明确授权按文档 43 开始实现并进入目标模式。Phase 8 的未完成审核/Live 保留，本轮不执行付费模型请求。
+
 当前分支：
 
-    codex/agent-memory-rag-plan（本轮方案分支；实施前重新检查 git status）
+    codex/workspace-nfs-v1（基于 281111d；前置 PR #1 仍 OPEN，后续 PR 明确依赖）
 
 当前里程碑：
 
-    Phase 8 M2/M3：60题检索消融、40题日志、Benchmark、3类联合回放完成；Live 与人工审核待办
+    Phase 9 M0/M1：工具/集群已创建，持久账本与文件 helper 单测通过；尚未接通默认运行；Goal active
 
-## 2026-10-17 工作区持久化与恢复规格
+## Phase 9 当前恢复点
+
+- 规格：[43](43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md)；完整目标：[44](44-工作区恢复目标模式Prompt.md)。先 V1 最新状态、再 V2 restic/MinIO 历史快照，不改 NFS 运行主路径。
+- 已检查：PR #1 为 OPEN，HEAD=281111d，base=main。新建 codex/workspace-nfs-v1；用户原有 docs32/docs34 修改仍未暂存、不纳入新提交。
+- 本轮环境与旧快照不同：Ubuntu 22.04.5、可用内存约 22 GiB、swap=0、Linux 根盘约 935 GiB 可用。Python3.12/uv 存在；系统 Go 为 1.25.1，项目要求 1.26.5，需使用隔离工具链与缓存。
+- Docker Desktop 已正常启动，Server29.8.0；旧容器/卷保留。本项目单节点 kind-sandboxd 已创建，Calico Ready、gVisor smoke通过；固定工具 Go1.26.5/kind0.31.0/runsc20260810.0 已下载并校验。
+- 新增 DurableJournal 与 RecoveryLedger：进程锁、fsync/断尾/坏行处理、身份/预算/截止时间/取消/命令游标，20/20 本地测试通过。尚未接 TaskStore；不能声称重启自动接续完成。
+- 新增 Go 固定文件 helper 与专属 Pod/PV/PVC 构造：路径/symlink/特殊文件/CAS/额度边界，helper 9 顶层测试及 race 通过；sandbox 定向回归通过。尚未接公开文件 RPC，默认文件工具仍是旧后端。
+- NFS 配置在 deploy/workspace；用户已明确允许仅给可信服务容器增加 DAC_READ_SEARCH，不放宽业务 Pod。官方 Google Registry 连接超时，已从固定 Debian 基础摘要与 Ganesha4.3-2 包构建，单独服务172.23.0.3。导出父目录0711、工作区0700、root_squash匿名映射65532；真实非 root gVisor/NFS/helper读写及服务端hash一致通过，属于组件探测，不能冒充 Agent/自动恢复验收。
+- 学习文档：[45](45-持久工作区与任务恢复学习手册.md)；逐项状态与原始证据：[Phase9](evidence/phase9-workspace-recovery.md)。V1 14项/V2 10项正式验收尚未执行，外部模型调用0。
+- Go全仓库回归通过；完整Python回归进行中，最新原始输出 phase9-python-regression-tests.txt，不提前写成通过。
+- 第一项下一步：Go 授权/目录初始化/文件 RPC，再接 TaskStore/Runner/Session 多 attempt 自动接续。V1 验收前不推进 V2 主链路。M0合成Pod sandbox-workspace-probe 与其PVC保留，手动节点根挂载 /var/lib/sandboxd-nfs-probe 已卸载；不删除NFS数据卷。
+
+## 2026-10-17 工作区持久化与恢复规格（实施授权前记录）
 
 - 用户本轮只要求编写后续 Agent 使用的需求实现文档。已完成 [43 NFS V1 → restic + MinIO V2 实施约束](43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md)；功能、部署、故障实验和新测评均未开始。
 - 已确认：V1 仅 NFS 最新状态；Pod 故障与 agentd 重启均自动接续未完成任务；保留 task_id，新增 attempt，继承原预算及截止时间；旧节点可读，V1 不允许携带工作区恢复旧节点。

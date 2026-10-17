@@ -1,0 +1,63 @@
+=== RUN   TestWaitReadyRequiresReadyCondition
+--- PASS: TestWaitReadyRequiresReadyCondition (0.02s)
+=== RUN   TestRandomIDIsDNSLabelFriendly
+--- PASS: TestRandomIDIsDNSLabelFriendly (0.00s)
+=== RUN   TestConcurrentClaimReturnsDifferentPods
+--- PASS: TestConcurrentClaimReturnsDifferentPods (0.01s)
+=== RUN   TestReconcileCreateIdleIsBounded
+--- PASS: TestReconcileCreateIdleIsBounded (0.10s)
+=== RUN   TestClaimPatchPathMatchesStateLabel
+--- PASS: TestClaimPatchPathMatchesStateLabel (0.00s)
+=== RUN   TestIsClaimConflict
+=== RUN   TestIsClaimConflict/json_patch_test_失败返回_422_invalid
+=== RUN   TestIsClaimConflict/版本冲突返回_409
+=== RUN   TestIsClaimConflict/错误文本包含_test_failed_时兜底放行
+=== RUN   TestIsClaimConflict/权限与网络类错误必须中止_Claim
+=== RUN   TestIsClaimConflict/普通基础设施错误
+--- PASS: TestIsClaimConflict (0.00s)
+    --- PASS: TestIsClaimConflict/json_patch_test_失败返回_422_invalid (0.00s)
+    --- PASS: TestIsClaimConflict/版本冲突返回_409 (0.00s)
+    --- PASS: TestIsClaimConflict/错误文本包含_test_failed_时兜底放行 (0.00s)
+    --- PASS: TestIsClaimConflict/权限与网络类错误必须中止_Claim (0.00s)
+    --- PASS: TestIsClaimConflict/普通基础设施错误 (0.00s)
+=== RUN   TestBuildPodUsesControlledTokenAndBoundedWritableVolumes
+--- PASS: TestBuildPodUsesControlledTokenAndBoundedWritableVolumes (0.00s)
+=== RUN   TestBuildPodSecurityBaseline
+--- PASS: TestBuildPodSecurityBaseline (0.00s)
+=== RUN   TestBuildPodRuntimeClassCanBeDisabled
+--- PASS: TestBuildPodRuntimeClassCanBeDisabled (0.00s)
+=== RUN   TestWorkspacePodPreservesSecurityAndDedicatedVolume
+--- PASS: TestWorkspacePodPreservesSecurityAndDedicatedVolume (0.00s)
+=== RUN   TestWorkspaceBindingCannotChooseFreePaths
+--- PASS: TestWorkspaceBindingCannotChooseFreePaths (0.00s)
+=== RUN   TestNFSVolumePinsVersionAndRetainsWorkspace
+--- PASS: TestNFSVolumePinsVersionAndRetainsWorkspace (0.00s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/sandbox	1.170s
+=== RUN   TestWriteReadEditAndCAS
+--- PASS: TestWriteReadEditAndCAS (0.10s)
+=== RUN   TestPathsAndSymlinks
+--- PASS: TestPathsAndSymlinks (0.00s)
+=== RUN   TestSpecialFilesDoNotBlock
+=== RUN   TestSpecialFilesDoNotBlock/fifo
+=== RUN   TestSpecialFilesDoNotBlock/symlink
+=== RUN   TestSpecialFilesDoNotBlock/hardlink
+--- PASS: TestSpecialFilesDoNotBlock (0.00s)
+    --- PASS: TestSpecialFilesDoNotBlock/fifo (0.00s)
+    --- PASS: TestSpecialFilesDoNotBlock/symlink (0.00s)
+    --- PASS: TestSpecialFilesDoNotBlock/hardlink (0.00s)
+=== RUN   TestSizeUTF8AndUniqueEdit
+--- PASS: TestSizeUTF8AndUniqueEdit (0.03s)
+=== RUN   TestListSearchRedactionAndLimits
+--- PASS: TestListSearchRedactionAndLimits (0.03s)
+=== RUN   TestStrictProtocol
+--- PASS: TestStrictProtocol (0.02s)
+=== RUN   TestSingleWriterCAS
+--- PASS: TestSingleWriterCAS (0.03s)
+=== RUN   TestInterruptedTemporaryFileIsNotAUserFile
+--- PASS: TestInterruptedTemporaryFileIsNotAUserFile (0.01s)
+=== RUN   TestEntryQuotaCountsEmptyDirectories
+--- PASS: TestEntryQuotaCountsEmptyDirectories (0.06s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/workspace	1.295s
+?   	github.com/chx739/sandboxd/cmd/sandbox-filetool	[no test files]

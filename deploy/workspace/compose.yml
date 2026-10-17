@@ -1,0 +1,35 @@
+# Trusted NFS server only. Business Pods keep their restricted gVisor profile.
+# Set an inspected immutable image digest; never substitute a floating latest tag.
+name: sandboxd-workspace
+services:
+  nfs:
+    image: ${SANDBOXD_NFS_IMAGE:?Set the verified NFS Ganesha image digest}
+    hostname: sandboxd-workspace-nfs
+    entrypoint: ["/bin/sh", "/etc/sandboxd/start-nfs.sh"]
+    cap_add:
+      # Needed by FSAL_VFS open_by_handle_at; requires explicit approval per doc43.
+      - DAC_READ_SEARCH
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /run:size=16m
+    volumes:
+      - workspace-data:/export
+      - nfs-state:/var/lib/nfs
+      - ./ganesha.conf:/etc/sandboxd/ganesha.conf:ro
+      - ./start-nfs.sh:/etc/sandboxd/start-nfs.sh:ro
+    # No host port, host filesystem, Docker socket or kubeconfig is exposed.
+    networks: [kind]
+    cpus: 0.5
+    mem_limit: 256m
+    pids_limit: 128
+    restart: "no"
+volumes:
+  workspace-data:
+  nfs-state:
+networks:
+  kind:
+    external: true
+    name: kind
