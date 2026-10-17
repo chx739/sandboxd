@@ -85,6 +85,8 @@ func (s *Server) routes() {
 	s.mux.Handle("POST /api/v1/workspaces/{workspace}/files", s.requireAgent(http.HandlerFunc(s.workspaceFiles)))
 	s.mux.Handle("GET /api/v1/workspaces/{workspace}/backup", s.requireAgent(http.HandlerFunc(s.getWorkspaceBackup)))
 	s.mux.Handle("POST /api/v1/workspaces/{workspace}/backup/{action}", s.requireAgent(http.HandlerFunc(s.workspaceBackup)))
+	s.mux.Handle("GET /api/v1/workspaces/{workspace}/restore", s.requireAgent(http.HandlerFunc(s.getWorkspaceRestore)))
+	s.mux.Handle("POST /api/v1/workspaces/{workspace}/restore/{action}", s.requireAgent(http.HandlerFunc(s.workspaceRestore)))
 
 	// Operator 需要先读取 Plan 再决策，所以 list 同时允许两种角色。
 	s.mux.Handle("GET /api/v1/plans", s.requireEither(http.HandlerFunc(s.listPlans)))

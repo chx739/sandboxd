@@ -305,6 +305,10 @@ func (b *BackupRuntime) finish(ctx context.Context, expected WorkspaceBarrier, v
 	if err != nil {
 		return barrier, err
 	}
+	// Finish的独立清理窗口不能替仍在执行的恢复追加等待预算。
+	if barrier.Phase != "stopped" {
+		return barrier, ErrWorkspaceConflict
+	}
 	if verifiedRestore && !barrier.RestoreVerified {
 		var result BackupResult
 		barrier, result, err = b.Wait(ctx, barrier)

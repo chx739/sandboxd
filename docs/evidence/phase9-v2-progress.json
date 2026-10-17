@@ -61,7 +61,7 @@
   "remaining": [
     "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "restricted restore HTTP/client and Session branch integration over actual validated executor; original budgets/cancel and reference protection required",
+    "Session branch integration over validated restricted restore HTTP/client; original budgets/cancel and active source reference protection required",
     "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
     "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
     "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
@@ -479,6 +479,38 @@
     {
       "path": "docs/evidence/phase9-v2-restore-runtime-reconcile.json",
       "sha256": "07a18c3e7c0dd75072a30561aa7c478d61bbc055058dd82fcab499cf45db5f9f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-client-tests.txt",
+      "sha256": "5de280c33ce1b2b3c6fe4258fe8fa71359bf0e5b1e856a8db34e68dd5d9a6597"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-component-tests.txt",
+      "sha256": "69df83aea0ed24edc99580525fcf6c2775600d991e188889da67e6c0c1ecf184"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-component.json",
+      "sha256": "17d71866c62ce8c9a2cd9a63bf4a69ffe928945ac63e87de8830995f4896dea1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-final-go-tests.txt",
+      "sha256": "633bc52b1c377cfca5d0ca7e9de764f335a5affef6bfbef8ea616328788bc6fa"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-final-v2-go-tests.txt",
+      "sha256": "398edc44532efe8ca66e525dc63ab8e33a4a46f570898a00701be1341507e298"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-full-go-tests.txt",
+      "sha256": "a7284367d8826bca6b6abb3692ce6a1dc9e1ca1687f7cb25d0702e259d7fc738"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-initial-go-tests.txt",
+      "sha256": "02bc54bdd55faae0b5dd5cff61e3fa7a4fea0df52bdec63630d8a0ed45346e4f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-full-python-tests.txt",
+      "sha256": "6505103688323ef08b669ac5b8a680cecdd444270ce294516e09c3a728bdb46f"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

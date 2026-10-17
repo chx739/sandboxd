@@ -1,0 +1,20 @@
+test_bad_scope_source_config_and_timeout_never_send (agentd.tests.test_restore_client.RestoreClientTests.test_bad_scope_source_config_and_timeout_never_send) ... Executing <Task finished name='Task-1' coro=<RestoreClientTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_restore_client.py:10> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.383 seconds
+ok
+test_fixed_restore_actions_and_scoped_request (agentd.tests.test_restore_client.RestoreClientTests.test_fixed_restore_actions_and_scoped_request) ... ok
+test_uncertain_start_is_not_retried (agentd.tests.test_restore_client.RestoreClientTests.test_uncertain_start_is_not_retried) ... ok
+test_fixed_actions_scope_timeout_and_no_implicit_retry (agentd.tests.test_backup_client.BackupClientTests.test_fixed_actions_scope_timeout_and_no_implicit_retry) ... ok
+test_invalid_actions_ids_and_limits_never_send_http (agentd.tests.test_backup_client.BackupClientTests.test_invalid_actions_ids_and_limits_never_send_http) ... ok
+test_transport_uncertainty_not_retried (agentd.tests.test_backup_client.BackupClientTests.test_transport_uncertainty_not_retried) ... ok
+test_backend_and_stale_owner_failures_are_distinct (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_backend_and_stale_owner_failures_are_distinct) ... ok
+test_binding_cannot_choose_free_endpoint_or_zero_generation (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_binding_cannot_choose_free_endpoint_or_zero_generation) ... ok
+test_file_plugin_uses_remote_binding_without_local_workspace (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_file_plugin_uses_remote_binding_without_local_workspace) ... ok
+test_file_response_has_its_own_bounded_limit (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_file_response_has_its_own_bounded_limit) ... ok
+test_go_policy_rejection_is_preserved (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_go_policy_rejection_is_preserved) ... ok
+test_operation_cannot_be_replaced_by_model_arguments (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_operation_cannot_be_replaced_by_model_arguments) ... ok
+test_runtime_stops_attempt_instead_of_asking_model_to_repeat_unknown_write (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_runtime_stops_attempt_instead_of_asking_model_to_repeat_unknown_write) ... ok
+test_transport_loss_does_not_retry_or_claim_write_did_not_happen (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_transport_loss_does_not_retry_or_claim_write_did_not_happen) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.634s
+
+OK

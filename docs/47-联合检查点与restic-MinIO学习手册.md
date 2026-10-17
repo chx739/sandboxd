@@ -360,9 +360,41 @@ agentd/.venv/bin/python -m agentd.workspace_checkpoint_fault_demo --phase commit
 
 初始helper/sandbox/API race通过phase9-v2-restore-runtime-initial-tests.txt；最终逐项race见-final-race-tests.txt；新增入口后Go全项目先后见-full-go-tests.txt、-final-full-go-tests.txt。新增4个恢复Runtime顶层测试（含repo/snapshot/manifest三个子场景）、1个helper契约测试；与5个控制状态测试有重叠，不累加成服务验收数。管理对账入口一次编译因误用List方法失败，修正为既有Records后构建、真实幂等对账和最终全仓回归通过；未改写先前真实恢复报告。本批没有Python生产代码改动，未重跑Python全量，不冒称旧239项覆盖本批Go行为。
 
-**尚未完成**：受限restore HTTP/客户端、会话父链与新branch/workspace联合接线、恢复中的Task原预算与取消、恢复引用保护/清理预览/受控forget-prune、真实存储异常/仓库锁、同条件性能及完整V2矩阵。Go工作区元数据中的branchId不等于已经创建Python会话分支；本组件不加载Session引用，也不重放模型/工具。
+**本节当时尚未完成**（HTTP/客户端后续见§11）：会话父链与新branch/workspace联合接线、恢复中的Task原预算与取消、恢复引用保护/清理预览/受控forget-prune、真实存储异常/仓库锁、同条件性能及完整V2矩阵。Go工作区元数据中的branchId不等于已经创建Python会话分支；本组件不加载Session引用，也不重放模型/工具。
 
-## 11. 官方参考与版本
+## 11. 受限恢复 HTTP 与 Python 客户端
+
+可信文件恢复已通过 Python 客户端接入实际 Go HTTP。仅在受信任备份配置完整时启用，沿用 Agent Token；Operator Token 不授予此接口权限。它不是 LLM 工具，也尚未接入历史会话分支 API。
+
+- `GET /api/v1/workspaces/{workspace}/restore` 读取该目标的恢复屏障。
+- `POST /api/v1/workspaces/{workspace}/restore/{action}` 只接受 reserve/start/wait/abort/finish/fail。输入绑定目标 session/branch、UUIDv4 checkpoint、固定 restore job 和完整 snapshot/manifest/repository/image 身份，不接受 argv、仓库地址、Secret、执行镜像或 success 自报。
+- Python 校验固定字段和有界超时，不自动重试可能已执行的请求；Go 独立拒绝未知字段和身份不一致。客户端校验不是可信边界。
+- wait 超时保留屏障；abort/finish/fail 使用独立30秒清理窗口，HTTP断连不撤销必要清理。finish 必须先有 stopped 证明，不在清理窗口等待仍执行中的恢复任务，避免绕过上层截止时间。
+- fail 只释放全局维护占用，失败目标继续隔离；finish 再次核验真实结果及持久证明，成功才放行。重复 finish 幂等。
+
+### 真实验收与复现
+
+`phase9-v2-restore-http-component.json` 两场景通过：正常来源恢复到新空NFS目录，Python文件RPC与NFS服务端hash一致、来源业务imageID一致、实际维护/业务runsc；错误期望仓库在写入前拒绝，目录仍为空，调用方请求finish不能提升为成功，claim仍拒绝。无Token读取401、绕过Python提交success字段400、错误branch清理409、成功finish重试均在真实HTTP链路核查。没有测试真实连接中断；取消请求context后的清理由单元测试覆盖，两种证据分开。
+
+前提与§10相同：固定v2维护镜像已载入kind，NFS/专属MinIO与Secret可用。新环境先按§10生成自己的`.cache/restore-source.json`，不要复用公开报告中的旧snapshot ID。确认10880空闲后执行：
+
+```bash
+export GOMODCACHE=/tmp/sandboxd-workspace-go-mod GOCACHE=/tmp/sandboxd-workspace-go-build
+export PATH="$HOME/.local/bin:$PATH"
+go build -o .cache/workspace-sandboxd-restore-http ./cmd/sandboxd
+agentd/.venv/bin/python -m agentd.workspace_restore_http_demo \
+  --source-report .cache/restore-source.json \
+  --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" \
+  --output .cache/restore-http-new.json
+```
+
+夹具生成独立原生Linux控制目录，拒绝覆盖报告；仅对自身已登记目标进行终止核查/清理，保留文件、快照、Secret及控制记录。现有管理Go夹具和旧默认v1备份夹具行为保持兼容。
+
+客户端/备份客户端/远程文件14项本地测试通过（MockTransport，0.634秒）；Go全项目与最后API/sandbox race原文分别见 `phase9-v2-restore-http-full-go-tests.txt`、`phase9-v2-restore-http-final-v2-go-tests.txt`。最后新增断连context单测由后者覆盖，早先全项目运行不冒称包含它。完整Python243/243、352.315秒通过，原文 `phase9-v2-restore-http-full-python-tests.txt`；此前14项与全量有重叠，不相加。
+
+**下一步**：精确Session父链、新branch/workspace和持久恢复请求联合接线，先保护活动恢复源；恢复后的预算/取消/不重放、引用清理、真实存储异常与同条件性能仍需验收。当前真实成绩仅证明文件恢复HTTP组件，不能宣布V2完整完成。
+
+## 12. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

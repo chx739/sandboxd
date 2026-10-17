@@ -1,0 +1,1 @@
+{"passed": true, "scope": "actual limited HTTP/client file restore only; no Session branch, model or GC"}

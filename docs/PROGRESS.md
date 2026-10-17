@@ -18,6 +18,15 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：恢复HTTP与Python客户端真实链路通过
+
+- 起点531b358，当前codex/workspace-restic-v2，草稿PR#3仍OPEN且base=codex/workspace-nfs-v1；依赖PR#2→PR#1、不合并。用户docs32/docs34不修改、不暂存。
+- 新受限restore GET与六种POST动作接入可信执行器；Agent Token、目标scope/完整来源固定、未知字段拒绝，客户端有界且不自动重试。不增加LLM工具或执行配置入口。finish先要求stopped，再核验真实结果，不将30秒独立清理窗口用于等待执行中的restore；取消请求context后的abort/fail单测通过。
+- phase9-v2-restore-http-component.json真实两场景通过：Python客户端→实际Go HTTP→runsc/NFS/restic/MinIO。正常新空目录文件hash/manifest及原业务镜像匹配；错误期望repo写入前失败，目录仍为空、成功自报和claim拒绝、清理后目标仍隔离。实际401/400/409、重复finish均核查。不是Session历史分支、模型调用或真实连接中断实验。
+- Go全项目通过；最后API/sandbox race通过phase9-v2-restore-http-final-v2-go-tests.txt，含最终断连context测试（早先full不冒称包含它）。Python客户端相关14/14、0.634秒通过；完整Python243/243、352.315秒通过phase9-v2-restore-http-full-python-tests.txt，包含本批客户端测试。证据见文档47 §11。外部模型0，原目录/卷/快照/Secret保留。
+- **第一项下一步**：提交本模块；随后实现精确Session父链、持久历史恢复与活动来源引用保护，再做真实存储异常、清理及性能。当前文件恢复HTTP已通，V2十项完整验收仍未完成，Goal active。
+
+
 ### 2026-10-18：可信恢复执行器与真实组件通过
 
 - 本批有效实现a1eaab9已推送至草稿PR#3（基线7f2f911，依赖PR#2→PR#1，不合并），用户docs32/docs34保留。复用BackupRuntime维护Pod/终止证明，新增ReserveRestore/StartRestore/FinishRestore；没有restore HTTP/模型工具。helper四参数restore绑定完整repo crypto ID，config匹配在写入前；旧三参数管理组件保留兼容。

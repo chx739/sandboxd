@@ -19,6 +19,13 @@ func (s RestoreSource) valid() bool {
 	return backupHash.MatchString(s.SnapshotID) && backupHash.MatchString(s.ManifestSHA256) && backupHash.MatchString(s.RepositoryCryptoID) && restoreImageRef.MatchString(s.ImageRef) && restoreImageID.MatchString(s.ImageID)
 }
 
+func (s RestoreSource) Validate() error {
+	if !s.valid() {
+		return ErrWorkspaceConflict
+	}
+	return nil
+}
+
 func (r *WorkspaceRegistry) reserveRestore(workspaceID, checkpointID, jobID string, job BackupJobConfig, source RestoreSource) (WorkspaceBarrier, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
