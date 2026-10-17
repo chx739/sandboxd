@@ -20,6 +20,8 @@ Phase 9 允许增加本项目沙箱专属工作区的受限文件 RPC、NFS 挂�
 
 工作区性能与流量的基线见文档46与phase9-nfs-fixed-workload-serial.json；并行探索报告单列。V2比较复用固定seed/文件规模/缓存/并发，计入同步检查点等待；容器网络计数不等于公网流量，端点内存不等于峰值，不把本机小样本外推生产QPS。
 
+V2续作先读文档47：Go Reserve只冻结，Session引用/PREPARING持久化后才Start；DATA_READY不等于可恢复，COMMITTED同条日志投影head/revision。最终提交与Task取消共用短锁，不能将网络备份放进取消锁；当前提交模块的本地测试不代替真实Agent联合验收。
+
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。

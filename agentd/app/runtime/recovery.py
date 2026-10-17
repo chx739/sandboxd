@@ -6,13 +6,16 @@ import re
 import threading
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
 from uuid import uuid4
 
 from ..redaction import redact_text
 from ..models import AgentTrace, AgentEvent, ModelUsage, sum_model_usage
 from .durable import DurableJournal, JournalCorrupt
 from .call_audit import normalize_audit
+
+if TYPE_CHECKING:
+    from .checkpoints import CheckpointLedger
 
 TERMINAL = frozenset({"succeeded", "failed", "cancelled", "limit_exceeded"})
 _IDENTITY = re.compile(r"[a-z][a-z0-9-]{0,95}\Z")
@@ -624,6 +627,34 @@ class RecoveryLedger:
             active = state["attempts"] and not state["attempts"][-1]["ownerStopped"]
             state["status"] = "cancelling" if active else "cancelled"
             return self._save(state)
+
+    def commit_checkpoint(self, checkpoints: CheckpointLedger, checkpoint_id: str,
+                          workspace_record: dict[str, Any], now: datetime) -> dict[str, Any]:
+        """与cancel共用短同步锁；网络备份和Session复制均不得放入这把锁。
+
+        workspace_record须来自可信Go查询。协调器仍须保持Go写屏障并核对
+        job归属；本方法只解决Task取消接受与本地COMMITTED的先后次序。
+        """
+        with self._mutex:
+            checkpoint = checkpoints.get(checkpoint_id)
+            if checkpoint["status"] == "COMMITTED":
+                return checkpoints.commit(checkpoint_id)
+            identity = checkpoint["identity"]
+            state = self.get(identity["taskId"])
+            self._eligible(state, now)
+            attempt = self._active(state, identity["attemptId"])
+            if (state["status"] != "running" or state["completeNodeId"] != identity["sessionNodeId"]
+                    or any(state[k] != identity[k] for k in ("sessionId", "branchId", "workspaceId"))
+                    or attempt["sandboxId"] != identity["sandboxId"] or attempt["podUid"] != identity["podUid"]):
+                raise RecoveryConflict("checkpoint task boundary/owner changed")
+            if (workspace_record.get("phase") != "bound"
+                    or any(workspace_record.get(k) != identity[k] for k in ("workspaceId", "sessionId", "branchId", "generation", "imageRef", "imageId"))):
+                raise RecoveryConflict("checkpoint workspace binding changed")
+            owner = workspace_record.get("owner", {})
+            if (owner.get("stopConfirmed") is not False or not owner.get("createSubmitted")
+                    or any(owner.get(k) != identity[k] for k in ("taskId", "attemptId", "sandboxId", "podUid"))):
+                raise RecoveryConflict("checkpoint runtime owner changed")
+            return checkpoints.commit(checkpoint_id)
 
     def finish(self, task_id: str, status: str) -> dict[str, Any]:
         if status not in TERMINAL:

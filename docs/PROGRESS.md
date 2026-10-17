@@ -18,6 +18,10 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+- e8443ff后新增CheckpointLedger与不可变SessionReferences：所选完整父链复制/hash/私有权限，PREPARING→DATA_READY→COMMITTED/FAILED，单条COMMITTED投影head/revision，幂等与边界ID查询、断尾/坏行检查。RecoveryLedger.commit_checkpoint与cancel共用短锁，核对原Task截止时间、节点、attempt和Go owner/generation/image，不修改预算。初始12项本地测试通过；完整Python214/214、285.135秒通过phase9-v2-checkpoint-full-regression-tests.txt，含线程取消/提交顺序与兄弟分支检查。随后镜像格式/作用域硬化由最终34项定向（2.140秒）覆盖，phase9-v2-checkpoint-final-boundary-tests.txt；不将214冒称包含后改动或把测试数相加。
+- 引用发布最终修正：初稿link发布在崩溃后可能残留第二个硬链接导致拒读，改为单写入者下fsync临时文件→原子rename→fsync目录；目标已存在只验证，不用副本掩盖损坏。新增发布/目录fsync中断重试测试与相关回归35/35、2.401秒通过phase9-v2-checkpoint-publication-final-tests.txt；先前214/34批次不冒称含此后改动。
+- Go BackupRuntime新增Reserve：只fsync冻结、不创建Pod，再由后续协调器保存Session引用/PREPARING；sandbox/API race通过phase9-v2-checkpoint-reserve-go-tests.txt。新检查点模块尚未接HTTP/Runner，所有十项V2正式验收仍pending；本批未新增真实存储/外部模型调用。
+
 - 当前有效实现提交1448c82（V2草稿PR#3；以下说明承接e74aacc）。接入BackupRuntime可信备份执行器：维护配置持久固定，submitted先落盘、精确Pod/UID/spec/finalizer核对、终止+节点健康证明、Wait保留屏障、Abort有界、Finish幂等；源备份仍只读，尚未接restore/HTTP/Agent。执行器7项顶层逻辑测试（含子用例）、六包race及Go全项目通过；最后Finish幂等改动由sandbox/API race单列覆盖，不冒称先前全量包含后改动。
 - 实际维护执行器探测：首轮备份成功但即时读取失败，原失败与同job后续对账保留；第二轮通过但事后CRI已回收；第三轮phase9-v2-executor-component-v3.json整体成功且清理前实际runtimeType=io.containerd.runsc.v1。注册表重开后写/认领仍拒绝、等待结果后仍冻结、显式Finish后内容/hash一致，业务owner和维护Pod已正常清理。不是进程SIGKILL或Session联合提交；原数据/快照/Secret/卷保留，外部模型0。
 
@@ -76,7 +80,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 固定负载serial基线9/9通过、267次读写，phase9-nfs-fixed-workload-serial.json；NFS容器收发合计3462282字节（约3.30MiB，含挂载/元数据/协议，非公网）。文件读写P50约199–201ms，Go/NFS/控制器端点CPU与内存已记录，不是峰值。首次并行探索另存phase9-nfs-fixed-workload.json，不混算。学习/硬件/数据/完整表见文档46。
 - 最终全量Python201/201、288.476秒通过，phase9-python-benchmark-final-regression-tests.txt；此前200/280.764秒与负载夹具3项原文保留，不相加。统一joint入口3/3通过，phase9-entry-joint-replay.json，实际Milvus2.5.10/OpenSearch+缓存E5/BGE，脚本模型/Fake路由与生命周期；4个已有服务临时启动后全部停回原状态，ES未启动，未导入/重建索引，外部模型0。
 - 当前V1的14项验收及迁移/安装启动/小规模性能有证据，M3可交付审查；verify all本批次未整套重跑，首次联网安装未重复，现有各场景原始证据与缓存安装分开。V2未开始，完整Goal保持active。上一有效HEAD=cd871aa，仍更新draft PR#2（依赖PR#1），不合并；用户docs32/docs34未纳入。
-- 第一项下一步：实现checkpoint日志与Session不可变父链引用，接Go可信执行器和完整边界自动保存；提交前校验owner/head/取消并将COMMITTED+head前移写成同一fsync记录。随后接restore新空工作区屏障、历史分支与引用保护。V2分支已创建，不重复M0或重跑已终止组件。V2继续在NFS运行，十项完整验收均pending，完整Goal active。
+- 第一项下一步：检查点日志和Session引用模块已实现，接Go Reserve/Start/Wait/Abort/Finish的受限HTTP与Python客户端，再接完整边界自动保存/取消/启动对账；必须先冻结再复制Session/PREPARING，保持原Task预算。随后接restore新空工作区屏障、历史分支与引用保护。V2分支已创建，不重复M0或重跑已终止组件。V2继续在NFS运行，十项完整验收均pending，完整Goal active。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移与当前状态见本节后续记录/文档45 §7，原始数据保留。

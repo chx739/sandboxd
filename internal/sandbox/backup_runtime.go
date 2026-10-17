@@ -75,6 +75,17 @@ func (b *BackupRuntime) current(expected WorkspaceBarrier) (WorkspaceBarrier, er
 	return got, nil
 }
 
+// Reserve先冻结工作区，供协调器随后固定Session引用并写PREPARING。
+// 此步骤不创建Pod、不启动restic；Start复用同一checkpoint/job才可继续。
+func (b *BackupRuntime) Reserve(ctx context.Context, access WorkspaceAccess, checkpointID, jobID string) (WorkspaceBarrier, error) {
+	w := b.workspace
+	if err := w.enter(ctx); err != nil {
+		return WorkspaceBarrier{}, err
+	}
+	defer func() { <-w.gate }()
+	return w.registry.reserveConfiguredBarrier(access.WorkspaceID, checkpointID, jobID, "backup", access, b.job)
+}
+
 // Start在创建Pod前先fsync submitted；创建结果不明时只核对原名称/spec/UID，
 // 不能把超时当作未创建，再启动另一个执行者。
 func (b *BackupRuntime) Start(ctx context.Context, access WorkspaceAccess, checkpointID, jobID string) (WorkspaceBarrier, error) {

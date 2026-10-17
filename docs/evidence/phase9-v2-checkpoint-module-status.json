@@ -1,0 +1,31 @@
+{
+  "mode": "local-durable-checkpoint-protocol-tests",
+  "externalModelCalls": 0,
+  "realStorageCallsThisBatch": 0,
+  "scope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
+  "fullRegression": {
+    "count": 214,
+    "seconds": 285.135,
+    "passed": true,
+    "evidence": "phase9-v2-checkpoint-full-regression-tests.txt",
+    "limitation": "before final image/scope validation hardening"
+  },
+  "finalTargeted": {
+    "count": 34,
+    "seconds": 2.14,
+    "passed": true,
+    "evidence": "phase9-v2-checkpoint-final-boundary-tests.txt",
+    "limitation": "before final reference publication fix"
+  },
+  "goReserve": "sandbox/API race passed phase9-v2-checkpoint-reserve-go-tests.txt",
+  "storageIdentities": "synthetic only in these Python tests; never claimed real snapshot verification",
+  "formalV2AcceptanceComplete": false,
+  "next": "restricted Go backup HTTP and Python client, live complete-boundary coordinator and startup/cancellation reconciliation",
+  "publicationFinal": {
+    "count": 35,
+    "seconds": 2.401,
+    "passed": true,
+    "evidence": "phase9-v2-checkpoint-publication-final-tests.txt",
+    "scope": "latest checkpoint code, RecoveryLedger and multi-attempt Session"
+  }
+}

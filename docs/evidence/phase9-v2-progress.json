@@ -59,8 +59,8 @@
     }
   ],
   "remaining": [
-    "checkpoint journal / immutable Session reference / trusted execution HTTP and Agent integration; restore write barrier still pending",
-    "PREPARING / DATA_READY / atomic COMMITTED branch head journal",
+    "trusted Go backup HTTP/Python client and Agent complete-boundary coordinator; restore write barrier pending",
+    "wire tested PREPARING / DATA_READY / COMMITTED ledger and immutable Session reference into live Agent flow",
     "readable immutable Session prefix reference and complete-boundary hook",
     "cancellation ordering, original budget/deadline and recovery reconciliation",
     "historical branch / new empty workspace restoration and image identity checks",
@@ -103,6 +103,30 @@
     {
       "path": "docs/evidence/phase9-v2-barrier-regression-tests.txt",
       "sha256": "fcdd4f6ac9ac811e3905c7385c09b59df0ed9090ceefbdbc153707bf6135e458"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-final-boundary-tests.txt",
+      "sha256": "47d5b1733e785cc6cf3d1ca724a4c1d772ad8e204b77d1ad22436f46ce3850bc"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-full-regression-tests.txt",
+      "sha256": "7254635c705b1101f3a946381a90c7219f26098c5b0fe028035f08b22632c570"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-initial-tests.txt",
+      "sha256": "9cc4184bd0e32b57e16c95f08e2b6e21fb78f8d74dfbbf97eaa562ceeb2e15fc"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-module-status.json",
+      "sha256": "fd6164a97c9d9832cdd1dd3421035ef723f8c451755710c37cab77afc20e3616"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-publication-final-tests.txt",
+      "sha256": "98bd503c0ce19dba48ba7301059c89965341c8dced868d7d4bd0a851ee4a6508"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-reserve-go-tests.txt",
+      "sha256": "153345752e8fbfe96fa623f6fdddb3b30ebe9220123ed31c6729d8b2d851a8c9"
     },
     {
       "path": "docs/evidence/phase9-v2-component-v2-postfailure.json",
@@ -176,5 +200,6 @@
       "path": "docs/evidence/phase9-v2-restic-tool.json",
       "sha256": "ae0acfa865c44bd26a4b890f3bfb21495d36e62cec4005069d9f95c68b897950"
     }
-  ]
+  ],
+  "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired"
 }

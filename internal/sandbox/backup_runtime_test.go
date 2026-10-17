@@ -50,6 +50,16 @@ func completedBackupFixture(t *testing.T, b *BackupRuntime, client *fake.Clients
 
 func TestBackupRuntimeKeepsBarrierUntilExplicitFinish(t *testing.T) {
 	b, client, a := backupRuntimeFixture(t)
+	reserved, err := b.Reserve(context.Background(), a, testCheckpointID, "backup-a")
+	if err != nil || reserved.Phase != "reserved" {
+		t.Fatal(reserved, err)
+	}
+	if pods, err := client.CoreV1().Pods(StorageNamespace).List(context.Background(), metav1.ListOptions{}); err != nil || len(pods.Items) != 0 {
+		t.Fatal("Reserve started execution before PREPARING", err)
+	}
+	if err := b.workspace.registry.WithOwner(context.Background(), a, func(WorkspaceRecord) error { t.Fatal("Reserve allowed file RPC"); return nil }); err == nil {
+		t.Fatal("Reserve did not freeze source")
+	}
 	barrier, err := b.Start(context.Background(), a, testCheckpointID, "backup-a")
 	if err != nil {
 		t.Fatal(err)

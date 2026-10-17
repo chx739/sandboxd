@@ -100,7 +100,53 @@ go build -o .cache/workspace-backup-runtime-smoke ./hack/workspace-backup-runtim
 
 目前仅接可信Go备份路径，未接HTTP/Agent联合检查点、restore写屏障、Session父链引用或COMMITTED日志；不能把组件本地backend-result文件当成联合检查点提交。V2十项完整验收与性能比较均保持pending。
 
-## 5. 官方参考与版本
+## 5. 联合检查点控制模块（本地逻辑，尚未接真实Agent）
+
+新增`runtime/checkpoints.py`、`runtime/session_refs.py`与`SessionJournal.checkpoint_prefix`。这不是另一套Agent Loop：它们只负责存储和校验，真实维护Pod仍由Go执行；Task/Session/记忆留在沙箱外。
+
+### 提交顺序与数据归属
+
+```text
+Go Reserve：fsync屏障，不创建维护Pod
+    ↓
+Session完整节点 → 导出所选父链 → 不可变Session引用文件fsync
+    ↓
+Python checkpoints.jsonl：PREPARING（首次UUIDv4、绑定、父检查点）
+    ↓
+Go Start / Wait：实际restic，停止证明已落盘，屏障仍保持
+    ↓
+Python DATA_READY：固定仓库逻辑ID/crypto ID/完整snapshot ID/manifest
+    ↓
+协调器核对Go owner、job和Task取消/截止时间
+    ↓
+RecoveryLedger.commit_checkpoint：在与cancel相同的短锁内提交
+    ↓
+一条COMMITTED日志同时表达checkpoint成立、branch head前移、revision+1
+    ↓
+Go Finish解除屏障
+```
+
+上述是目标接线顺序。当前Go新增Reserve入口并通过逻辑回归：只冻结，不运行restic，为后续协调器严格实现“先冻结、再PREPARING”提供接口；尚未暴露HTTP，也没有将上述顺序宣称为真实联合验收。
+
+### Session引用为何要复制
+
+只保存nodeId不能证明未来可恢复。`session-refs/<sha256>.json`包含sessionId、所选完整节点、告警和按父链排序的节点消息。父子关系、工具调用配对、节点/字节预算均核对；先写0600临时文件并fsync；单写入者核对目标不存在后原子rename发布，再fsync父目录。目标已存在时校验原件，不覆盖损坏引用。引用保存固定相对路径、内容hash、字节数和作用域；读取拒绝路径逃逸、symlink、硬链接、权限/内容/作用域变化。源会话继续追加或出现兄弟分支，都不会改变旧引用。原JSONL不删改。初稿使用link发布，审查发现崩溃后可能残留第二个硬链接而拒读；已改为rename，发布前中断不暴露不完整对象，rename后/fsync目录前中断可验证完整原件后重试。
+
+该文件上限2MiB、2048节点；超过时明确失败，不偷偷截掉工具消息。它是恢复所需的公开消息副本，不备份Task调用预算、隐藏思维或Secret。引用损坏/丢失时restore_point拒绝，不回退到最新Session或相邻检查点。
+
+### 提交日志与取消顺序
+
+每条状态使用DurableJournal的独占文件锁、校验和、fsync和断尾处理。PREPARING/DATA_READY可查询但不能作为restore_point，FAILED不改变旧head；COMMITTED才投影分支头。分支revision只在成功提交时递增；相同请求确认丢失不追加记录，不按最大UUID或时间猜head。boundary查询可在重启后按task/attempt/node找回原checkpoint ID，避免重新分配。
+
+RecoveryLedger新增同步commit_checkpoint，在与cancel共用的RLock内核对：Task仍运行、未取消/未过期、完整节点一致、当前attempt/Pod UID及Go工作区generation/image一致。该方法不改Task额度、deadline或调用审计。取消先落盘则拒绝提交；提交已成立后再取消，不撤销历史检查点。网络备份和Session复制不能放入这把短锁。协调器仍须从可信Go取得最新owner和有效job/屏障，不能拿模型自报字典替代查询；该网络接线尚未实现。
+
+### 当前验证边界
+
+首次12项检查点单测通过，原文`phase9-v2-checkpoint-initial-tests.txt`；随后完整Python214/214、285.135秒通过`phase9-v2-checkpoint-full-regression-tests.txt`，包含线程取消/提交顺序与兄弟分支断言。后续镜像身份/作用域校验及新增第14个检查点用例由34项定向回归（2.140秒）覆盖，见`phase9-v2-checkpoint-final-boundary-tests.txt`；不把此前214项冒称包含后改动，也不将重叠测试数相加。最后引用发布窗口修复由35项定向回归（2.401秒）覆盖，见`phase9-v2-checkpoint-publication-final-tests.txt`；先前214/34批次不是最后改动的完整重跑。Go Reserve及相关API的race结果见`phase9-v2-checkpoint-reserve-go-tests.txt`。
+
+测试中的仓库/snapshot身份明确为合成，owner字典是固定夹具；不能当真实Go/restic联合证据。未完成：HTTP与Python客户端、完整轮次自动检查点、真实服务中的取消/崩溃对账、restore新目录/历史分支、引用GC及V2十项完整验收。Goal保持active。
+
+## 6. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

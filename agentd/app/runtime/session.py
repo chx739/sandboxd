@@ -496,6 +496,28 @@ class SessionJournal:
             raise ValueError("Session 尚无完整 Turn")
         return _path_nodes(nodes, head_id)
 
+    async def checkpoint_prefix(self, node_id: str) -> dict[str, Any]:
+        """只导出已落盘的完整父链；不改变活动head，不复制兄弟分支。"""
+        if not isinstance(node_id, str) or not _NODE_ID.fullmatch(node_id):
+            raise ValueError("非法检查点Session节点")
+        async with self._lock:
+            entries = self._read_entries_unlocked()
+            nodes = self._nodes(entries)
+            if node_id not in nodes or nodes[node_id].get("branchable") is not True:
+                raise ValueError("检查点需要已持久化的完整交互边界")
+            header = next((e for e in entries if e.get("type") == "session.header"), None)
+            if header is None:
+                raise ValueError("检查点缺少Session header")
+            chain = _path_nodes(nodes, node_id)
+            messages = [n["message"] for n in chain]
+            if not messages or not _branchable_flags(messages)[-1]:
+                raise ValueError("检查点父链包含不完整工具调用")
+            # 只保留恢复所需字段；原JSONL和中断审计不删改。
+            return {"schemaVersion": 1, "sessionId": self.session_id, "nodeId": node_id,
+                    "alert": header["alert"], "nodes": [
+                        {k: n[k] for k in ("nodeId", "parentId", "message", "taskId", "attemptId", "timestamp") if k in n}
+                        for n in chain]}
+
     @staticmethod
     def _nodes(entries: Sequence[dict[str, Any]]) -> dict[str, dict[str, Any]]:
         return {
