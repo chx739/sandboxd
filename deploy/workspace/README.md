@@ -1,6 +1,6 @@
 # NFS V1 部署候选配置
 
-当前状态：M0/M1，真实 NFSv4.1 + 非 root gVisor 文件 helper 组件探测已通过；Agent RPC 与自动恢复尚未接通。原始证据：docs/evidence/phase9-nfs-component.json。
+当前状态：M1，真实NFS/gVisor、Go生命周期与HTTP文件接口组件探测已通过；Python默认Runner和自动恢复仍待接通。原始证据：docs/evidence/phase9-nfs-component.json、phase9-go-runtime-component.json、phase9-go-http-component.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -23,6 +23,31 @@ Ganesha VFS 的文件句柄访问需要额外 `CAP_DAC_READ_SEARCH`。该权限�
 4. 按已确认的存储服务权限，实际测试 mount、锁、非 root 权限及持久化；失败就记录事实，不用本地 bind mount 代替 NFS 验收。
 
 后续统一启动脚本在 M2 完成。不要执行 `docker compose down -v`；Pod 删除与业务数据删除必须分开。
+
+## Go 生命周期与 HTTP 探测
+
+使用下文构建流程生成带两个helper的镜像，并加载到kind；新固定 `--check` 探测由 Go 绑定前使用。执行前核对本项目集群、当前NFS IP和可用内存。
+
+```bash
+go run ./hack/workspace-runtime-smoke -http \
+  -nfs-server "$SANDBOXD_NFS_SERVER" \
+  -image sandboxd-workspace:runtime-v1 \
+  -control-dir "$HOME/.local/share/sandboxd/workspace-runtime-smoke" \
+  -output .cache/workspace-http-rerun.json
+```
+
+实际运行记录使用的 runtime-v1 与 probe-v1 同源Dockerfile；请在构建和kind load两处使用相同tag。该探测创建固定结构的合成内容，正常停止两个业务Pod和初始化Pod；保留工作区/PV/PVC。它验证Go账本重开和换Pod，不是强杀agentd自动恢复。
+
+独立服务模式（预先按现有项目方式配置两个不同Token，Operator Token不传agentd）：
+
+```bash
+go run ./cmd/sandboxd -pool-size 0 \
+  -workspace-nfs-server "$SANDBOXD_NFS_SERVER" \
+  -workspace-image sandboxd-workspace:runtime-v1 \
+  -workspace-control-dir "$HOME/.local/share/sandboxd/workspace-control"
+```
+
+可信维护命名空间/PV/PVC由Prepare创建，发现同名资源归属或NFS配置不匹配时拒绝，不覆盖其他资源。普通工作区Pod保留终止确认finalizer，正常回收必须经过工作区release接口；不要直接清空finalizer绕过终止证明。
 
 ## 组件探测复现
 

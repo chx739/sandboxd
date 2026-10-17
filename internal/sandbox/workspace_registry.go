@@ -48,6 +48,16 @@ type WorkspaceAccess struct {
 	Generation  uint64 `json:"generation"`
 }
 
+func (a WorkspaceAccess) Validate() error {
+	if err := (WorkspaceMount{WorkspaceID: a.WorkspaceID, TaskID: a.TaskID, AttemptID: a.AttemptID, Generation: a.Generation}).Validate(); err != nil {
+		return err
+	}
+	if !runtimeIDPattern.MatchString(a.SandboxID) {
+		return errors.New("invalid workspace sandbox identity")
+	}
+	return nil
+}
+
 type WorkspaceRegistry struct {
 	mu      sync.Mutex
 	journal *control.Journal
@@ -267,6 +277,23 @@ func (r *WorkspaceRegistry) Bind(access WorkspaceAccess, podUID, nodeName, image
 		record.Owner.NodeName = nodeName
 		record.ImageID = imageID
 		record.Phase = "bound"
+		return nil
+	})
+}
+
+// Identify 在 Ready 之前也保存 API 已确认的 UID；创建/挂载中断后才能精确清理。
+func (r *WorkspaceRegistry) Identify(access WorkspaceAccess, podUID, nodeName string) (WorkspaceRecord, error) {
+	return r.update(access, func(record *WorkspaceRecord) error {
+		if record.Phase != "starting" || !record.Owner.CreateSubmitted || !runtimeIDPattern.MatchString(podUID) || (nodeName != "" && !runtimeIDPattern.MatchString(nodeName)) {
+			return ErrWorkspaceConflict
+		}
+		if record.Owner.PodUID != "" && record.Owner.PodUID != podUID {
+			return ErrWorkspaceConflict
+		}
+		record.Owner.PodUID = podUID
+		if nodeName != "" {
+			record.Owner.NodeName = nodeName
+		}
 		return nil
 	})
 }

@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M0/M1：工具/集群已创建，持久账本与文件 helper 单测通过；尚未接通默认运行；Goal active
+    Phase 9 M1：真实Go生命周期/HTTP文件接口通过，Python远程适配器已测；默认Runner与自动恢复仍待接线；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -29,8 +29,11 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 第二批：Go独立JSONL与WorkspaceRegistry、固定workspace-init、工作区通用exec/释放拒绝与预热池隔离已实现，相关Go/race通过；仍未接真实生命周期和受限RPC。必须由Go采集真实容器终止证明后才能ConfirmStopped，不能把状态机方法当fencing。
 - 完整Python离线回归110/110通过，295.970秒，原始输出 phase9-python-regression-native-tests.txt。第一次受限执行器因asyncio.to_thread线程唤醒无法退出而主动中断，部分输出phase9-python-regression-tests.txt保留为环境问题，非通过成绩；不改应用逻辑规避。
 - Git交付：第一批dbc02d2已推送，草稿 [PR #2](https://github.com/chx739/sandboxd/pull/2) base=codex/agent-memory-rag-plan，依赖PR#1，已附到当前聊天；不合并。用户docs32/docs34原修改仍保留。
-- 第一项下一步：Go物理停止/finalizer、可信目录初始化维护Pod/文件RPC，再接 TaskStore/Runner/Session 多attempt自动接续。Runner接线须补原claim/loop/cleanup独立时钟锚点；当前账本的通用deadline测试不是完整Runner预算验收。V1验收前不推进V2主链路。
+- 2026-10-18续作：新增WorkspaceRuntime，真实维护Pod初始化/NFS读写检查/Pod UID绑定/终止状态+NodeReady+近期Lease/finalizer释放；GoHTTP工作区接口和启动配置已接入。真实Go组件与HTTP组件各通过一轮：新attempt/Pod UID/代次变化、同workspace文件hash一致、旧attempt拒绝、Go账本关闭重开，见phase9-go-runtime-component.json与phase9-go-http-component.json；不是Python自动恢复成绩。
+- 新Python RemoteFileWorkspace与Client/Plugin适配器已接，未知写入不重试，Loop退出当前attempt；定向17/17通过，phase9-remote-files-tests-final.txt。新增后完整Python118/118通过，276.228秒，phase9-python-remote-regression-tests.txt；默认Runner仍尚未选择Remote。
+- 第一项下一步：TaskStore/Runner/Session多attempt与持久预算、原claim/loop/cleanup时钟、取消/控制游标、未知写入hash核查、完整轮次恢复及V1旧节点限制；之后默认文件路径迁移和14项真实验收。V1验收前不推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
+- Go新镜像sandboxd-workspace:runtime-v1已载入kind，包含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，两个组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 
 ## 2026-10-17 工作区持久化与恢复规格（实施授权前记录）
 

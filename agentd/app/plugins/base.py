@@ -5,6 +5,7 @@ from typing import Any, Protocol, Sequence
 
 from ..clients import HTTPResult, LinuxHostClient, PrometheusClient, SandboxdClient
 from ..tools.files import FileWorkspace
+from ..tools.remote_files import RemoteFileWorkspace
 
 
 @dataclass(frozen=True)
@@ -33,7 +34,7 @@ class PluginContext:
     prometheus: PrometheusClient
     sandboxd: SandboxdClient
     linux_hosts: LinuxHostClient
-    workspace: FileWorkspace
+    workspace: FileWorkspace | RemoteFileWorkspace
     memory_scope: dict[str, str] | None = None
 
 

@@ -35,6 +35,7 @@ from ..policy import (
     validate_tool_call,
 )
 from ..redaction import public_error, safe_tool_arguments
+from ..tools.remote_files import WorkspaceExecutionError
 from ..working_memory import (
     available_evidence_ids, evidence_id, project_working_memory,
     prometheus_sample_info, resource_uid_from_tool_body, stale_state_evidence, validate_update,
@@ -470,6 +471,12 @@ class PiStyleAgentLoop:
                         ):
                             denied = True
                             deny_layer = str(result.body["denyLayer"])
+                except WorkspaceExecutionError as exc:
+                    # 执行环境失效必须退出当前 attempt，不能让模型直接重发不明写入。
+                    append_event(self.state.events, "tool.interrupted", tool=name,
+                                 details={"recoverable": exc.recoverable,
+                                          "outcomeUncertain": exc.outcome_uncertain})
+                    raise
                 except Exception as exc:
                     payload = {
                         "ok": False,

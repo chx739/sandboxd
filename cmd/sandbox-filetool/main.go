@@ -1,7 +1,7 @@
 //go:build linux
 
-// sandbox-filetool accepts one bounded JSON request on stdin and exits. The
-// workspace root and operations cannot be changed by command-line arguments.
+// sandbox-filetool accepts bounded JSON, or the trusted startup-only --check
+// probe. There is no free command, workspace root or path command-line option.
 package main
 
 import (
@@ -12,6 +12,13 @@ import (
 )
 
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "--check" {
+		if err := workspace.Check("/workspace"); err != nil {
+			fail(err.Error())
+		}
+		json.NewEncoder(os.Stdout).Encode(map[string]bool{"writable": true})
+		return
+	}
 	if len(os.Args) != 1 {
 		fail("arguments are not supported")
 	}

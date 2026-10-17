@@ -14,10 +14,13 @@ import (
 )
 
 const (
-	LabelWorkspace       = "sandbox.io/workspace"
-	LabelTask            = "sandbox.io/task"
-	LabelAttempt         = "sandbox.io/attempt"
-	AnnotationGeneration = "sandbox.io/workspace-generation"
+	LabelWorkspace           = "sandbox.io/workspace"
+	LabelTask                = "sandbox.io/task"
+	LabelAttempt             = "sandbox.io/attempt"
+	AnnotationGeneration     = "sandbox.io/workspace-generation"
+	WorkspaceWriterFinalizer = "sandbox.io/workspace-writer"
+	StorageNamespace         = "sandboxd-storage"
+	StorageRootClaim         = "sandboxd-workspace-root"
 )
 
 var workspaceIDPattern = regexp.MustCompile(`^workspace-[a-f0-9]{32}$`)
@@ -54,6 +57,8 @@ func BuildWorkspacePod(cfg Config, id string, mount WorkspaceMount) (*corev1.Pod
 		return nil, errors.New("invalid sandbox id")
 	}
 	pod := BuildPod(cfg, id)
+	// 保留对象直到可信 Runtime 已记录容器终止；NotFound 不能单独证明停止。
+	pod.Finalizers = []string{WorkspaceWriterFinalizer}
 	pod.Labels[LabelState] = string(StateBusy)
 	pod.Labels[LabelSource] = "workspace"
 	pod.Labels[LabelWorkspace] = mount.WorkspaceID
@@ -66,6 +71,46 @@ func BuildWorkspacePod(cfg Config, id string, mount WorkspaceMount) (*corev1.Pod
 		}
 	}
 	return pod, nil
+}
+
+// BuildWorkspaceInitPod 是固定维护入口，永远不能使用 Agent 提交的 PodSpec。
+func BuildWorkspaceInitPod(cfg Config, id, workspaceID string) (*corev1.Pod, error) {
+	if !workspaceIDPattern.MatchString(workspaceID) || !runtimeIDPattern.MatchString(id) || cfg.RuntimeClass == "" || cfg.Image == "" {
+		return nil, errors.New("invalid workspace initialization input")
+	}
+	cfg.Namespace = StorageNamespace
+	pod := BuildPod(cfg, id)
+	pod.Name = "workspace-init-" + id
+	pod.Labels = map[string]string{LabelManagedBy: "sandboxd-storage", LabelWorkspace: workspaceID}
+	pod.Spec.ServiceAccountName = "default"
+	pod.Spec.Containers[0].Command = []string{"/usr/local/bin/sandbox-workspace-init", workspaceID}
+	pod.Spec.Containers[0].VolumeMounts = []corev1.VolumeMount{{Name: "workspace-root", MountPath: "/workspace-root"}, {Name: "tmp", MountPath: "/tmp"}}
+	pod.Spec.Volumes = []corev1.Volume{
+		{Name: "workspace-root", VolumeSource: corev1.VolumeSource{PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{ClaimName: StorageRootClaim}}},
+		pod.Spec.Volumes[2],
+	}
+	deadline := int64(60)
+	pod.Spec.ActiveDeadlineSeconds = &deadline
+	return pod, nil
+}
+
+func BuildStorageRootVolume(server string) (*corev1.PersistentVolume, *corev1.PersistentVolumeClaim, error) {
+	if net.ParseIP(server) == nil {
+		return nil, nil, errors.New("invalid trusted NFS server")
+	}
+	// Reuse mount flags/Retain and replace only trusted administrative identity.
+	pv, pvc, err := BuildWorkspaceVolume(StorageNamespace, server, "/workspaces", "workspace-00000000000000000000000000000000")
+	if err != nil {
+		return nil, nil, err
+	}
+	pv.Name = StorageRootClaim
+	pv.Labels = map[string]string{LabelManagedBy: "sandboxd-storage"}
+	pv.Spec.NFS.Path = "/workspaces"
+	pv.Spec.ClaimRef.Name = StorageRootClaim
+	pvc.Name = StorageRootClaim
+	pvc.Labels = map[string]string{LabelManagedBy: "sandboxd-storage"}
+	pvc.Spec.VolumeName = StorageRootClaim
+	return pv, pvc, nil
 }
 
 // BuildWorkspaceVolume uses a trusted server/export setting and a generated ID;

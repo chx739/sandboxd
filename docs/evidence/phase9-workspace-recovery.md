@@ -13,6 +13,9 @@
 | Go 全仓库回归 | 通过 | phase9-go-regression-tests.txt |
 | Go 持久 JSONL、归属状态机、初始化 helper、旧路径隔离及相关回归/race | 通过 | phase9-go-authority-tests.txt |
 | Python 完整离线回归 | 110/110通过，295.970s | phase9-python-regression-native-tests.txt |
+| Go生命周期、物理终止条件、文件/HTTP/配置相关race与回归 | 通过 | phase9-go-workspace-http-final-tests.txt、phase9-go-lifecycle-regression-tests.txt |
+| Python远程文件、未知写入停止、旧文件/Loop/Replay定向 | 17/17通过，0.557s | phase9-remote-files-tests-final.txt |
+| 第三批完整Python离线回归 | 118/118通过，276.228s | phase9-python-remote-regression-tests.txt |
 
 这些是原生 Linux 临时目录与构造函数测试，不是真实 NFS、真实 Pod 故障或真实模型验证。20/20 包含前述 8 项，不可累加为 28 项。
 
@@ -47,9 +50,9 @@
 
 文档43的 V1-01～V1-14、V2-01～V2-10 **全部尚未验收**。纯逻辑测试只作为相关不变量的先行证据，不能提前勾选真实集成项目。
 
-当前尚未接通默认运行：远程文件 RPC、Go 持久归属、TaskStore/Runner/Session 接续、真实 NFS 接管。V2 主链路未启动。
+Go持久归属、受限HTTP文件接口和正常释放后换Pod的组件路径已经真实通过；当前默认Python Runner仍未迁移，TaskStore/Session自动接续与完整预算仍待接线，14项V1正式验收未通过。V2主链路未启动。
 
-## 第二批实现与测试执行环境
+## 第二批实现与测试执行环境（7b244bf时）
 
 - Go 独立日志与 WorkspaceRegistry 已补注册/初始化/认领/绑定/停止/释放状态、代次、镜像身份约束和互斥；仍待接真实 Kubernetes 生命周期及公开受限接口。
 - 新可信 workspace-init 二进制只初始化固定 ID 的私有目录，尚未部署维护 Pod；其单测使用本地 Linux 临时目录。
@@ -59,6 +62,17 @@
 - 最小无网络 asyncio线程复现也在受限环境无法退出，而允许本机socket的执行环境0.002秒结束；改在后者运行纯离线测试，110/110通过。未为测试修改应用逻辑或放宽业务沙箱配置。
 - 当前草稿 [PR #2](https://github.com/chx739/sandboxd/pull/2) 依赖 PR #1，未合并；第一批提交 dbc02d2 已推送。后续继续追加小提交。
 
+## 2026-10-18 第三批：真实Go生命周期和文件HTTP
+
+- WorkspaceRuntime已连接可信维护Pod、专属PV/PVC、创建请求预留、早期Pod UID保存、Ready后实际写入/fsync健康检查、当前UID/代次文件访问及释放。
+- 释放先持久化stopping；只在全部容器Terminated、RestartPolicyNever、NodeReady和近期Node Lease成立时保存终止证明，再精确删除/移除finalizer并released。对象消失、租约失效、调用超时都不冒充停止；确认后崩溃在移除finalizer窗口的重入也有单测。
+- `phase9-go-runtime-component.json`：真实Go方法链、NFS/gVisor、初始化/写入/停止/账本重开/换Pod/读回/旧attempt拒绝通过，23.597秒。
+- `phase9-go-http-component.json`：相同路线通过实际鉴权HTTP处理器（本机fixture服务）验证，18.400秒；包含真实Kubernetes/gVisor/NFS。两轮合成工作区与PV/PVC保留，业务/维护Pod正常清理。
+- 上述耗时是整条组件流程单次耗时，不是Agent自动恢复RTO、P50/P95或生产性能结论；账本重开不是强杀agentd，生成的session/branch标签也不代表已经写入Python Session树。
+- 新Go启动参数已接main，控制目录拒绝/tmp等临时路径。工作区接口Agent Token保护；文件请求中的绑定与操作分开解码，Go/执行侧双重校验。后端失败与权限拒绝不混为同一种deny。
+- Python适配器只访问Go接口，不创建本地目录；未知写入不重试，Loop中断当前attempt。仍需Runner/Store实际注入，当前默认仍为旧后端。
+- 第三批完整Python回归118/118通过，276.228秒，`phase9-python-remote-regression-tests.txt`；不是把上一轮110项成绩改名。耗时主要仍为Windows挂载盘上CLI子进程启动，不是在线文件接口延迟。
+
 ## 下一步
 
-将 Go 权威绑定接入物理终止证明、可信维护 Pod 和文件 RPC，再接 Python 生命周期及自动恢复。Runner接线时须保留原claim/loop/cleanup独立预算语义，不能简单用enqueue时间+120秒替代。持续保存失败记录与真实结果，不使用已消费的模型预算。
+接Python TaskStore/Runner/Session的持久Task/attempt与自动恢复，原claim/loop/cleanup独立时钟、预算预留/Replay游标、取消与控制命令游标、未知写入hash核查及旧节点限制。之后迁移默认文件后端并执行14项V1完整验收，再启动V2。持续保存失败记录与真实结果，不使用已消费的模型预算。

@@ -14,6 +14,7 @@ import (
 const maxRequestBodyBytes = 16 << 10
 
 type Server struct {
+	workspaces          *sandbox.WorkspaceRuntime
 	manager             *sandbox.Manager
 	pool                *sandbox.Pool
 	plans               *approval.Service
@@ -58,6 +59,9 @@ func (s *Server) Handler() http.Handler {
 	return s.mux
 }
 
+// EnableWorkspaces 只在开始监听前由可信启动配置调用；不接受HTTP动态后端切换。
+func (s *Server) EnableWorkspaces(runtime *sandbox.WorkspaceRuntime) { s.workspaces = runtime }
+
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", textOK)
 	// healthz 只说明进程活着；readyz 必须回答依赖是否可用。
@@ -71,6 +75,11 @@ func (s *Server) routes() {
 	s.mux.Handle("POST /api/v1/sandboxes/{id}/exec", s.requireAgent(http.HandlerFunc(s.execSandbox)))
 	s.mux.Handle("POST /api/v1/sandboxes/{id}/diagnostics/kubernetes", s.requireAgent(http.HandlerFunc(s.kubernetesDiagnostic)))
 	s.mux.Handle("POST /api/v1/plans", s.requireAgent(http.HandlerFunc(s.proposePlan)))
+	s.mux.Handle("POST /api/v1/workspaces", s.requireAgent(http.HandlerFunc(s.prepareWorkspace)))
+	s.mux.Handle("GET /api/v1/workspaces/{workspace}", s.requireAgent(http.HandlerFunc(s.getWorkspace)))
+	s.mux.Handle("POST /api/v1/workspaces/{workspace}/claim", s.requireAgent(http.HandlerFunc(s.claimWorkspace)))
+	s.mux.Handle("POST /api/v1/workspaces/{workspace}/release", s.requireAgent(http.HandlerFunc(s.releaseWorkspace)))
+	s.mux.Handle("POST /api/v1/workspaces/{workspace}/files", s.requireAgent(http.HandlerFunc(s.workspaceFiles)))
 
 	// Operator 需要先读取 Plan 再决策，所以 list 同时允许两种角色。
 	s.mux.Handle("GET /api/v1/plans", s.requireEither(http.HandlerFunc(s.listPlans)))
