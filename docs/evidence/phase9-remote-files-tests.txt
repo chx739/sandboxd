@@ -1,0 +1,22 @@
+test_backend_and_stale_owner_failures_are_distinct (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_backend_and_stale_owner_failures_are_distinct) ... Executing <Task finished name='Task-2' coro=<RemoteWorkspaceTests.test_backend_and_stale_owner_failures_are_distinct() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_remote_files.py:58> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.444 seconds
+ok
+test_binding_cannot_choose_free_endpoint_or_zero_generation (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_binding_cannot_choose_free_endpoint_or_zero_generation) ... ok
+test_file_plugin_uses_remote_binding_without_local_workspace (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_file_plugin_uses_remote_binding_without_local_workspace) ... ok
+test_file_response_has_its_own_bounded_limit (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_file_response_has_its_own_bounded_limit) ... ok
+test_go_policy_rejection_is_preserved (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_go_policy_rejection_is_preserved) ... ok
+test_operation_cannot_be_replaced_by_model_arguments (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_operation_cannot_be_replaced_by_model_arguments) ... ok
+test_transport_loss_does_not_retry_or_claim_write_did_not_happen (agentd.tests.test_remote_files.RemoteWorkspaceTests.test_transport_loss_does_not_retry_or_claim_write_did_not_happen) ... ok
+test_each_task_has_an_independent_root (agentd.tests.test_files.FileWorkspaceTest.test_each_task_has_an_independent_root) ... ok
+test_rejects_escape_symlink_duplicate_edit_and_large_file (agentd.tests.test_files.FileWorkspaceTest.test_rejects_escape_symlink_duplicate_edit_and_large_file) ... ok
+test_write_read_search_edit_and_cas (agentd.tests.test_files.FileWorkspaceTest.test_write_read_search_edit_and_cas) ... ok
+test_follow_up_runs_only_after_natural_stop (agentd.tests.test_runtime_loop.PiStyleLoopTest.test_follow_up_runs_only_after_natural_stop) ... ok
+test_steer_is_applied_after_current_turn (agentd.tests.test_runtime_loop.PiStyleLoopTest.test_steer_is_applied_after_current_turn) ... ok
+test_cancel_releases_claimed_sandbox_once (agentd.tests.test_replay.ReplayGraphTest.test_cancel_releases_claimed_sandbox_once) ... ok
+test_injection_is_denied_and_plan_stays_pending (agentd.tests.test_replay.ReplayGraphTest.test_injection_is_denied_and_plan_stays_pending) ... ok
+test_phase4_linux_and_file_tools_keep_content_out_of_trace (agentd.tests.test_replay.ReplayGraphTest.test_phase4_linux_and_file_tools_keep_content_out_of_trace) ... ok
+test_slow_claim_is_bounded_by_claim_budget (agentd.tests.test_replay.ReplayGraphTest.test_slow_claim_is_bounded_by_claim_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.695s
+
+OK

@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 1,
+  "timestamp": "2026-10-17T20:32:50.473078+00:00",
+  "scope": "NFS V1 single-node MVP implementation,14-case acceptance,migration,startup and fixed-workload baseline delivered for review; all V2 remains; Goal active",
+  "externalModelCalls": 0,
+  "passedV1": 14,
+  "totalV1": 14,
+  "pendingV2": 10,
+  "cases": [
+    {
+      "id": "V1-01",
+      "status": "passed",
+      "qualification": "Real Go/gVisor/NFS, Replay Agent; normal file write/read and release. Latest runtime-v1.5 Agent file and Pod-recovery path rechecked.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-workspace-smoke-v2.json",
+          "sha256": "5a8d4c3b76ff65089a1372b730355aaede1551a0f453f1c5b6306013dad8f544"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-pod-descriptor-recovery.json",
+          "sha256": "3a6b277c5d7e4f3f2149ae451de7129b43dec5d2b481976f7081c1fb6c919d55"
+        }
+      ]
+    },
+    {
+      "id": "V1-02",
+      "status": "passed",
+      "qualification": "Administrative normal Pod deletion after a complete turn; no node partition. Latest runtime-v1.5 Agent file and Pod-recovery path rechecked.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-pod-recovery-v2.json",
+          "sha256": "355e61ac2d6d93414d10a35fed283dd971f3ae411fddac32bf1c898a0136c616"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-pod-descriptor-recovery.json",
+          "sha256": "3a6b277c5d7e4f3f2149ae451de7129b43dec5d2b481976f7081c1fb6c919d55"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-pod-recovery-timing.json",
+          "sha256": "9c03dc1de3148f67dcdcaeb25ede4c8b8fcf2b3f87ac4921d99a41d826376825"
+        }
+      ]
+    },
+    {
+      "id": "V1-03",
+      "status": "passed",
+      "qualification": "Real agentd SIGKILL -9 and same-directory restart; Replay in-flight response.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-process-recovery.json",
+          "sha256": "5c2091e86c93ae9dc95b6490233186c6c7166dcc4428078924bf91c7d9de296b"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-unified-entry-final.json",
+          "sha256": "79b13b8e4c78c77626507a48ed041052c2b27fa4eaae12adefa8576c4226a07f"
+        }
+      ]
+    },
+    {
+      "id": "V1-04",
+      "status": "passed",
+      "qualification": "Actual SIGKILL after final model slot reservation and actual downtime beyond original deadline; unchanged budgets/timing, no new calls or Pod claims.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-budget-restart.json",
+          "sha256": "2d9436ea2bb488bce2e02c9b1bd0f376cfc511443cb7e9e7251808a23e93846c"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-expired-restart.json",
+          "sha256": "2f3614a07de8271e9434a334957da3e3dcf382f4210fa266ca9e859f9d761bde"
+        }
+      ]
+    },
+    {
+      "id": "V1-05",
+      "status": "passed",
+      "qualification": "Four actual terminal statuses; service restart leaves task/session/Go journals unchanged.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-terminal-restart.json",
+          "sha256": "4cd7035660d93bb9d06908db28672d0b9cefcf0db1cb70ccd0a75a063f80e5a9"
+        }
+      ]
+    },
+    {
+      "id": "V1-06",
+      "status": "passed",
+      "qualification": "Real duplicate agentd uses a different port and fails on journal lock; stale release409 preserves new Pod read; duplicate resume409/cancel202; cancellation observed during actual Go starting prevents binding/model call.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-concurrency-v2.json",
+          "sha256": "971b9051a7e5296deaa6bbe36f5301884aa0478b22c4b5f1cb717c0c5043f4d0"
+        }
+      ]
+    },
+    {
+      "id": "V1-07",
+      "status": "passed",
+      "qualification": "Real service write, client-side discarded acknowledgment; not TCP packet-loss testing.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-write-ack-recovery.json",
+          "sha256": "50c118930b6343006f085bf92eefa178eca3ae1f4c0005c99e34277554f30fc6"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-audited-write-inspection.json",
+          "sha256": "dfd4e03b9d9d0a85d02d83f00e350f8abde5c5305cb140fb911f0d851d948cd3"
+        }
+      ]
+    },
+    {
+      "id": "V1-08",
+      "status": "passed",
+      "qualification": "Retained raw Session/call reservations audited for actual Pod-tool interruption and SIGKILL.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-interruption-cleanup-audit.json",
+          "sha256": "3bf1a09ab2d4746ef3ba9a16496bdda9d391b3210394163dd76b8e4af9a9eb0f"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-command-recovery-final.json",
+          "sha256": "f01ba6d8af6f27e054ede30550f12b6f8a8e46dab46525268c01910a83f6bca6"
+        }
+      ]
+    },
+    {
+      "id": "V1-09",
+      "status": "passed",
+      "qualification": "Actual agentd old-node HTTP409 and historical path HTTP200; no workspace rollback.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-process-recovery.json",
+          "sha256": "5c2091e86c93ae9dc95b6490233186c6c7166dcc4428078924bf91c7d9de296b"
+        }
+      ]
+    },
+    {
+      "id": "V1-10",
+      "status": "passed",
+      "qualification": "Real raw Go HTTP bypasses Python Policy: 20 denials, valid CAS control, actual gVisor/NFS, unchanged guard hashes and symlinks; fourth run on runtime-v1.5. Prior failed experiments retained.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-workspace-file-boundary-v4.json",
+          "sha256": "72d325b0e4f6595d8c66e5617d78d60bf4eda5b84c5f070f1e7866df9588f655"
+        }
+      ]
+    },
+    {
+      "id": "V1-11",
+      "status": "passed",
+      "qualification": "Actual project NFS container pause, uncached file RPC fails with503 after30s; Go lacks stop proof and rejects new claim409 with unchanged generation. After unpause, trusted old stop precedes replacement Pod/hash read. Backend integration, not full Python Agent outage or partition HA.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-nfs-unavailable-v2.json",
+          "sha256": "037b577e51612e613215d646f7648fb6aa6f3be0afb85f4e630a2dcfb4c3b962"
+        }
+      ]
+    },
+    {
+      "id": "V1-12",
+      "status": "passed",
+      "qualification": "Actual normal/cancel/failure/limit release, retained private NFS directory/PV/PVC/control logs.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-interruption-cleanup-audit.json",
+          "sha256": "3bf1a09ab2d4746ef3ba9a16496bdda9d391b3210394163dd76b8e4af9a9eb0f"
+        }
+      ]
+    },
+    {
+      "id": "V1-13",
+      "status": "passed",
+      "qualification": "Final Python201/201 passes. Latest unified joint replay3/3 uses actual Milvus2.5.10/OpenSearch and cached models; scripted model/Fake routing/lifecycle, external model0. Services restored stopped, no reindex. Host clock guard unchanged.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-joint-ops-replay.json",
+          "sha256": "ca60a5c79fc0e6d8eefe311f2eadff6da86baf610aace974aebebf475acb05ee"
+        },
+        {
+          "path": "docs/evidence/phase9-python-process-regression-tests.txt",
+          "sha256": "fadd2f83ed1b8b8536891db698f8758838379b2b21d5adcb4fb5f2047a71c95e"
+        },
+        {
+          "path": "docs/evidence/phase9-joint-ops-concurrency-replay.json",
+          "sha256": "a2381f025e2408e460435233f4acc0c847f88e466c28d8ca4a0a7690e5207b86"
+        },
+        {
+          "path": "docs/evidence/phase9-python-concurrency-final-regression-tests.txt",
+          "sha256": "0de65182c1f6acbf0a3a8aeeee6fe4b6c776325e2bd01285954bffb8397f8aed"
+        },
+        {
+          "path": "docs/evidence/phase9-python-call-audit-final-regression-tests.txt",
+          "sha256": "d12cf9738026313a70140960f607565fd5e7c4eee32dd858105ef32845362fae"
+        },
+        {
+          "path": "docs/evidence/phase9-python-migration-regression-tests.txt",
+          "sha256": "a6adf0678218b8407d44ec74a550dcdb28d3792ceae65728802aa6be98decd86"
+        },
+        {
+          "path": "docs/evidence/phase9-python-benchmark-final-regression-tests.txt",
+          "sha256": "9914451da08dc21b47848312813e24d4698d176392100979e632358b20100d15"
+        },
+        {
+          "path": "docs/evidence/phase9-entry-joint-replay.json",
+          "sha256": "7229f58d337ee9bb4c44893c985b578cd78ac37f649abc52bd9d9ae06dcad380"
+        },
+        {
+          "path": "docs/evidence/phase9-entry-joint-services.json",
+          "sha256": "4d6a7156c2721bc966135df615e53f19043d23b4b2879ca827383db582411d5e"
+        }
+      ]
+    },
+    {
+      "id": "V1-14",
+      "status": "passed",
+      "qualification": "Actual HTTP steer/follow-up202, SIGKILL -9 and same-task restart; commands each injected once, durable old tool evidence/partial usage, third terminal restart unchanged. Final code real rerun plus explicitly Fake cross-journal crash-window tests.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-command-recovery-final.json",
+          "sha256": "f01ba6d8af6f27e054ede30550f12b6f8a8e46dab46525268c01910a83f6bca6"
+        },
+        {
+          "path": "docs/evidence/phase9-call-audit-final-boundary-tests.txt",
+          "sha256": "8f7b2e86ce26b504ece65254c3022f1ae5bae79d67a369fe7ebfdc3bef5a7bac"
+        }
+      ]
+    }
+  ],
+  "additionalDeliverablesPending": [
+    "All restic/MinIO V2 implementation and acceptance; including V2 performance and same-condition comparison"
+  ],
+  "failedExperiments": [
+    {
+      "path": "docs/evidence/phase9-workspace-file-boundary.json",
+      "sha256": "5b7ea8c0b4b79c2f06988fa0d1df9a3a344b23a3e7c8127224f48105811e1466",
+      "qualification": "First real run: leaf symlink write replaced link, not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-file-boundary-v2.json",
+      "sha256": "5c493315150017bde29e5ef7357cd851ddb7edb9d14d0b5c4ba387936ed35f04",
+      "qualification": "Second run: parent symlink read succeeded, not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-file-boundary-v3.json",
+      "sha256": "5f7c81c65e651c75ddbf3985e4a3e5dd8f3c949725cf8333aba0cfbd2c9b0396",
+      "qualification": "Third run: openat2 unsupported in actual gVisor; ordinary creation refused, not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-agent-concurrency.json",
+      "sha256": "426f164f1e9455332f0525ac42fd0b30d7096aa095c53af0e9de12376664c23a",
+      "qualification": "Duplicate cancel interrupts cleanup; real first run failed and was administratively reconciled."
+    },
+    {
+      "path": "docs/evidence/phase9-nfs-unavailable.json",
+      "sha256": "9a6af4a8e8537f82b042d8e33c8f25778617079c157bc55d23a62f59c77b0780",
+      "qualification": "First fixture incorrectly reuses Pod that timeout has requested to delete; NFS restored and old owner normally stopped. Not a full pass."
+    },
+    {
+      "path": "docs/evidence/phase9-python-concurrency-regression-tests.txt",
+      "sha256": "552d5ea78531619645ac8c720be08ab60a140b0a8b174ea5e6a573bd1f091b2b",
+      "qualification": "Original full175 has one shutdown recovery failure on backwards host wall clock; not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-shutdown-clock-reproduction-tests.txt",
+      "sha256": "c22dad7070d811901ccde762d2383775607dc9b56951b8e25a7613eaa128231f",
+      "qualification": "20 shutdown repetitions reproduce one backwards-clock failure; original reservations are not refunded."
+    },
+    {
+      "path": "docs/evidence/phase9-migration-initial-tests.txt",
+      "sha256": "4a0085070b79aa4b1e58b9f939e797500ecce2c37b1d11d341b9a1da40cc49fd",
+      "qualification": "First migration batch has3 errors from wrong write-response hash field; corrected to actual Go newSha256. Original failed output retained; final197 regression and two actual integrations pass."
+    }
+  ],
+  "diagnostics": [
+    {
+      "path": "docs/evidence/phase9-host-clock-observation.json",
+      "sha256": "1810360bee16c7a7437c85812b2e4af19bef5223206eda37f15cceedd9cc3e93",
+      "qualification": "Actual read-only host clock observation; backwards clock remains fail closed, not a performance or acceptance score."
+    },
+    {
+      "path": "docs/evidence/phase9-cancel-clock-final-tests.txt",
+      "sha256": "78840011b96bf79758bb6acb4db5b0a256fdb4d51402c03515aec6bf1e8daf54",
+      "qualification": "39 targeted logic regressions, including fixed-clock Fake Store and unchanged explicit clock rollback guards."
+    }
+  ],
+  "additionalDeliverablesCompleted": [
+    {
+      "name": "Explicit legacy workspace migration and Session/workspace/hash mapping",
+      "qualification": "Two real Go/gVisor/NFS runs with synthetic legacy linear Session, discarded write confirmation, no repeated write, manual new Task reading imported files. Source preserved; limited UTF-8 text migration, not generic filesystem metadata migration.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-workspace-migration.json",
+          "sha256": "723e8998f394560b49435c492b64564132227e19f6f5445904fd5afa60bc025f"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-workspace-migration-entry.json",
+          "sha256": "318015ad9318290cb12651b14c21ae5bf2c3ce1f739fe34653109fc7a388fd7e"
+        },
+        {
+          "path": "docs/evidence/phase9-migration-boundary-tests.txt",
+          "sha256": "c0abb0ce3c5289ca4e226d4552a4766e46bcefc58bb7d8468d51a58c711af56f"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-check.txt",
+          "sha256": "10661427f0f9faa489c97bd1d5ca43504dde4593fbd663fc7998402447c83193"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-migration-tests.txt",
+          "sha256": "e65ba66c771790df789c4b9794d257bdf39f57a1024db7df073d584619e6a0b8"
+        }
+      ]
+    },
+    {
+      "name": "Unified install/startup/test/replay entry",
+      "qualification": "Actual cached install with checksum verification and frozen all-extras sync; Go build, NFS no-recreate same container, real go/agent restart, shell guards, test201 and joint3/3. Fresh network install and verify all not rerun as a single batch; individual gates retain prior actual evidence.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-workspace-entry-install-tests.txt",
+          "sha256": "398d7f4b57c5da38b54ad0a7d6d3f031fcc1eb8c18f906b42a34fac6f8fe4f8b"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-build-tests.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-nfs-tests.txt",
+          "sha256": "707cc706bf98f92bc5e7a850b2698215abdaf2f1ebc292796e75d0e5431da076"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-nfs-reuse.json",
+          "sha256": "23fb237cc662d8202d3a755259aa2ac431597cf3b2ae802aa3a678c257200223"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-unified-entry-final.json",
+          "sha256": "79b13b8e4c78c77626507a48ed041052c2b27fa4eaae12adefa8576c4226a07f"
+        },
+        {
+          "path": "docs/evidence/phase9-workspace-entry-guards.json",
+          "sha256": "7800a76c274de8744dd6ca420e41d24592f791cb19aca82a29d12c7cd6eafdbb"
+        },
+        {
+          "path": "docs/evidence/phase9-entry-joint-replay.json",
+          "sha256": "7229f58d337ee9bb4c44893c985b578cd78ac37f649abc52bd9d9ae06dcad380"
+        }
+      ]
+    },
+    {
+      "name": "Fixed workload latency/resource/network and segmented recovery samples",
+      "qualification": "Serial single-client3workloads x3trials,267timed file operations, hash-verified; Go/controller and NFS endpoint resource counters; NFS container-wide traffic includes protocol. Pod/agentd recovery single samples, not production SLA; parallel exploratory batch retained separately.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-nfs-fixed-workload-serial.json",
+          "sha256": "0975519007e08e8f66ee421c06e7d01387034d6e9ec9137c39b547f5ef117753"
+        },
+        {
+          "path": "docs/evidence/phase9-nfs-fixed-workload-serial-tests.txt",
+          "sha256": "919773ef3b361e5ebceaa16ee55a9c0c2a0aad7bbe7b65eb4370a2dbd19cba6e"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-pod-recovery-timing.json",
+          "sha256": "9c03dc1de3148f67dcdcaeb25ede4c8b8fcf2b3f87ac4921d99a41d826376825"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-unified-entry-final.json",
+          "sha256": "79b13b8e4c78c77626507a48ed041052c2b27fa4eaae12adefa8576c4226a07f"
+        },
+        {
+          "path": "docs/evidence/phase9-nfs-fixed-workload.json",
+          "sha256": "aa603383491e70394cc46f618980b044acb4b49b7057d0c2628830e1a4d85b13"
+        },
+        {
+          "path": "docs/evidence/phase9-python-benchmark-final-regression-tests.txt",
+          "sha256": "9914451da08dc21b47848312813e24d4698d176392100979e632358b20100d15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+{"stage": "own-nfs-paused", "workspaceId": "workspace-4a731ca924934960ab17227c69a0c00e", "watchdogPid": 139039}
+{"passed": true, "output": "docs/evidence/phase9-nfs-unavailable-v2.json"}

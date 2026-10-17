@@ -207,7 +207,9 @@ SANDBOXD_OPERATOR_TOKEN="${operator_token}" \
 sandboxd_pid="$!"
 wait_http "${sandboxd_pid}" "${base_url}/readyz" "${evidence_dir}/sandboxd.log"
 
+# 历史无状态沙箱回归明确选择local；NFS验收使用agentd.workspace_demo。
 AGENTD_TOKEN="${agentd_token}" \
+AGENTD_WORKSPACE_BACKEND="local" \
 AGENTD_ALERT_TOKEN="${alert_token}" \
 AGENTD_PROMETHEUS_URL="http://127.0.0.1:9090" \
 AGENTD_SANDBOXD_URL="${base_url}" \

@@ -1,0 +1,1818 @@
+{
+  "mode": "real-agentd-command-sigkill-replay",
+  "scope": "V1-14 accepted pending commands, old audit Trace and terminal restart",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/3d85a52804cb474e8e9ecd7d34737cdf",
+  "externalModelCalls": 0,
+  "apiRequests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604/steer",
+      "statusCode": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604/follow-up",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/sessions/session-fe1e671a6cd0fe94/tree",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/sessions/session-fe1e671a6cd0fe94/path/node-b6262e3b4d43988f",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604/traces",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-ce136e4d18a06604/traces",
+      "statusCode": 200
+    }
+  ],
+  "replaySha256": "4a899e798fcb5d53c92254daafa9dbfeda8a4f20f31a075a2584a5e598803eb6",
+  "passed": true,
+  "stateBeforeKill": {
+    "alert": {
+      "annotations": {
+        "summary": "Synthetic acknowledged command recovery"
+      },
+      "fingerprint": "54dacefe24f5500d3f0d27aeb43206c1",
+      "labels": {
+        "case": "commands",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "46dd34ef-f997-4308-b87d-7c0ba867ff33",
+        "sandboxId": "1fcb73fcc5c62331",
+        "startedAt": "2026-10-17T19:43:23.065356+00:00"
+      }
+    ],
+    "branchId": "branch-48d8402296364d288ca8e5da5294d328",
+    "calls": {
+      "call-113a6ba3df414ad595ee6d0f4817a31e": {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "expectedNewSha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "guard.md",
+        "state": "finished"
+      },
+      "call-22ee9761922342a98a2830b348e6fb12": {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "reserved"
+      },
+      "call-7cf56151a5364d488e92546caf364baf": {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [
+      {
+        "appliedNodeId": null,
+        "commandId": "command-c8461e3aedae4e5b8225272cd998bcff",
+        "content": "Only inspect the saved guard; keep scope unchanged.",
+        "kind": "steer"
+      },
+      {
+        "appliedNodeId": null,
+        "commandId": "command-15da0751e57f46a9ae5d1454419f6c19",
+        "content": "Explain which saved evidence supports the answer.",
+        "kind": "follow-up"
+      }
+    ],
+    "completeNodeId": "node-cf7ede96f2ace032",
+    "deadline": "2026-10-17T19:45:28.791767+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "4a899e798fcb5d53c92254daafa9dbfeda8a4f20f31a075a2584a5e598803eb6",
+      "model": "workspace-command-recovery",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-fe1e671a6cd0fe94",
+    "status": "running",
+    "taskId": "task-ce136e4d18a06604",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T19:43:23.065356+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T19:43:28.791767+00:00"
+    },
+    "workspaceId": "workspace-521e4cc7e5964cd8a0204135bd6fa7c2"
+  },
+  "podBeforeKill": {
+    "workspaceId": "workspace-521e4cc7e5964cd8a0204135bd6fa7c2",
+    "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+    "podUid": "46dd34ef-f997-4308-b87d-7c0ba867ff33",
+    "sandboxId": "1fcb73fcc5c62331",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-521e4cc7e5964cd8a0204135bd6fa7c2",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "auditsBeforeKill": [
+    {
+      "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+      "audit": {
+        "elapsedMs": 0,
+        "finishReason": "tool_calls",
+        "kind": "model",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "usageKnown": true
+      },
+      "auditId": "audit-6a2bb2ded5874ea0b0cea14cc844c675",
+      "callId": "call-7cf56151a5364d488e92546caf364baf",
+      "taskId": "task-ce136e4d18a06604"
+    },
+    {
+      "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+      "audit": {
+        "kind": "tool",
+        "outcomeKnown": true,
+        "step": {
+          "arguments": {
+            "content": {
+              "bytes": 33,
+              "redacted": true,
+              "sha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0"
+            },
+            "path": "guard.md"
+          },
+          "auditDetails": {
+            "body": {
+              "bytes": 33,
+              "created": true,
+              "diff": "--- guard.md:old\n+++ guard.md:new\n@@ -1,0 +1,2 @@\n+synthetic command recovery guard\n+\n",
+              "newSha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+              "oldSha256": null,
+              "path": "guard.md",
+              "redacted": false
+            },
+            "evidenceId": "ev-e76796e9f8f40fd941cc",
+            "observedAt": "2026-10-17T19:43:28.972504+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 134,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":33,\"created\":true,\"diff\":\"--- guard.md:old\\n+++ guard.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic command recovery guard\\n+\\n\",\"newSha256\":\"47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0\",\"oldSha256\":null,\"path\":\"guard.md\",\"redacted\":false},\"evidenceId\":\"ev-e76796e9f8f40fd941cc\",\"observedAt\":\"2026-10-17T19:43:28.972504+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "write_file"
+        }
+      },
+      "auditId": "audit-1b1b55c33d714e2dac6b1caf0587ec13",
+      "callId": "call-113a6ba3df414ad595ee6d0f4817a31e",
+      "taskId": "task-ce136e4d18a06604"
+    }
+  ],
+  "kill": {
+    "pid": 149317,
+    "signal": "SIGKILL",
+    "returnCode": -9
+  },
+  "stateAfterRestart": {
+    "alert": {
+      "annotations": {
+        "summary": "Synthetic acknowledged command recovery"
+      },
+      "fingerprint": "54dacefe24f5500d3f0d27aeb43206c1",
+      "labels": {
+        "case": "commands",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "46dd34ef-f997-4308-b87d-7c0ba867ff33",
+        "sandboxId": "1fcb73fcc5c62331",
+        "startedAt": "2026-10-17T19:43:23.065356+00:00",
+        "stopReason": "containers-terminated"
+      },
+      {
+        "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "dd15e784-97ba-4041-891f-bd3a81359010",
+        "sandboxId": "db81c767bb3e5d2e",
+        "startedAt": "2026-10-17T19:44:21.482248+00:00",
+        "stopReason": "containers-terminated"
+      }
+    ],
+    "branchId": "branch-48d8402296364d288ca8e5da5294d328",
+    "calls": {
+      "call-113a6ba3df414ad595ee6d0f4817a31e": {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "expectedNewSha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "guard.md",
+        "state": "finished"
+      },
+      "call-15c2920492614f5d9fbea09177c7b764": {
+        "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "read_file",
+        "path": "guard.md",
+        "state": "finished"
+      },
+      "call-22ee9761922342a98a2830b348e6fb12": {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "uncertain"
+      },
+      "call-3f4c6c7444e34f099915b2efc037570c": {
+        "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-5a1d23b1bb2c4ae5810a57cb9372417e": {
+        "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-7cf56151a5364d488e92546caf364baf": {
+        "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-cf35c5eb98c1415098b39fc3be2e04dd": {
+        "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [
+      {
+        "appliedNodeId": "node-9fa02bca8b849691",
+        "commandId": "command-c8461e3aedae4e5b8225272cd998bcff",
+        "content": "Only inspect the saved guard; keep scope unchanged.",
+        "kind": "steer"
+      },
+      {
+        "appliedNodeId": "node-b6262e3b4d43988f",
+        "commandId": "command-15da0751e57f46a9ae5d1454419f6c19",
+        "content": "Explain which saved evidence supports the answer.",
+        "kind": "follow-up"
+      }
+    ],
+    "completeNodeId": "node-b6262e3b4d43988f",
+    "deadline": "2026-10-17T19:45:28.791767+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "4a899e798fcb5d53c92254daafa9dbfeda8a4f20f31a075a2584a5e598803eb6",
+      "model": "workspace-command-recovery",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-fe1e671a6cd0fe94",
+    "status": "succeeded",
+    "taskId": "task-ce136e4d18a06604",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T19:43:23.065356+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T19:43:28.791767+00:00"
+    },
+    "workspaceId": "workspace-521e4cc7e5964cd8a0204135bd6fa7c2"
+  },
+  "podAfterRestart": {
+    "workspaceId": "workspace-521e4cc7e5964cd8a0204135bd6fa7c2",
+    "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+    "podUid": "dd15e784-97ba-4041-891f-bd3a81359010",
+    "sandboxId": "db81c767bb3e5d2e",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-521e4cc7e5964cd8a0204135bd6fa7c2",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "traces": [
+    {
+      "alertFingerprint": "",
+      "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+      "capabilities": {},
+      "elapsedMs": 0,
+      "events": [
+        {
+          "details": {
+            "auditIds": [
+              "audit-6a2bb2ded5874ea0b0cea14cc844c675",
+              "audit-1b1b55c33d714e2dac6b1caf0587ec13"
+            ],
+            "completeNodeId": "node-cf7ede96f2ace032",
+            "modelReservations": 2,
+            "modelResponsesRecorded": 1,
+            "provenance": "durable-call-audit; missing metadata remains unknown; legacy logs may have no audit",
+            "reason": "prior attempt had no persisted completion trace",
+            "uncertainReservations": [
+              "call-22ee9761922342a98a2830b348e6fb12"
+            ],
+            "usageKnown": false
+          },
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "attempt.recovered"
+        }
+      ],
+      "final": null,
+      "injectedVia": [],
+      "mode": "recovery",
+      "model": "workspace-command-recovery",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [],
+      "provider": "replay",
+      "routing": {},
+      "sandboxId": "1fcb73fcc5c62331",
+      "status": "interrupted",
+      "steps": [
+        {
+          "arguments": {
+            "content": {
+              "bytes": 33,
+              "redacted": true,
+              "sha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0"
+            },
+            "path": "guard.md"
+          },
+          "auditDetails": {
+            "body": {
+              "bytes": 33,
+              "created": true,
+              "diff": "--- guard.md:old\n+++ guard.md:new\n@@ -1,0 +1,2 @@\n+synthetic command recovery guard\n+\n",
+              "newSha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+              "oldSha256": null,
+              "path": "guard.md",
+              "redacted": false
+            },
+            "evidenceId": "ev-e76796e9f8f40fd941cc",
+            "observedAt": "2026-10-17T19:43:28.972504+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 134,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":33,\"created\":true,\"diff\":\"--- guard.md:old\\n+++ guard.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic command recovery guard\\n+\\n\",\"newSha256\":\"47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0\",\"oldSha256\":null,\"path\":\"guard.md\",\"redacted\":false},\"evidenceId\":\"ev-e76796e9f8f40fd941cc\",\"observedAt\":\"2026-10-17T19:43:28.972504+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "write_file"
+        }
+      ],
+      "taskId": "task-ce136e4d18a06604",
+      "verdict": "process-interrupted",
+      "workspaceId": "workspace-521e4cc7e5964cd8a0204135bd6fa7c2"
+    },
+    {
+      "alertFingerprint": "54dacefe24f5500d3f0d27aeb43206c1",
+      "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+      "capabilities": {
+        "deterministic": true,
+        "toolCalling": true
+      },
+      "elapsedMs": 10317,
+      "events": [
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.started"
+        },
+        {
+          "details": {
+            "effectiveTier": null,
+            "restored": true
+          },
+          "elapsedMs": 0,
+          "index": 2,
+          "iteration": null,
+          "tool": "",
+          "type": "model.route.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 3,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 1574,
+          "index": 4,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.completed"
+        },
+        {
+          "details": {
+            "contentChars": 51
+          },
+          "elapsedMs": 0,
+          "index": 5,
+          "iteration": 3,
+          "tool": "",
+          "type": "steer.applied"
+        },
+        {
+          "details": {
+            "afterChars": 2985,
+            "afterMessages": 6,
+            "beforeChars": 2074,
+            "beforeMessages": 5,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 12447,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 6,
+          "iteration": 3,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 7,
+          "iteration": 3,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "tool_calls",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 0,
+          "index": 8,
+          "iteration": 3,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          },
+          "elapsedMs": 0,
+          "index": 9,
+          "iteration": 3,
+          "tool": "read_file",
+          "type": "tool.started"
+        },
+        {
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          },
+          "elapsedMs": 159,
+          "index": 10,
+          "iteration": 3,
+          "tool": "read_file",
+          "type": "tool.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 11,
+          "iteration": 3,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {
+            "afterChars": 4023,
+            "afterMessages": 8,
+            "beforeChars": 2512,
+            "beforeMessages": 7,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 13517,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 12,
+          "iteration": 4,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 13,
+          "iteration": 4,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "stop",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 8001,
+          "index": 14,
+          "iteration": 4,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 15,
+          "iteration": 4,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {
+            "contentChars": 49
+          },
+          "elapsedMs": 0,
+          "index": 16,
+          "iteration": 5,
+          "tool": "",
+          "type": "follow-up.applied"
+        },
+        {
+          "details": {
+            "afterChars": 4127,
+            "afterMessages": 10,
+            "beforeChars": 2616,
+            "beforeMessages": 9,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 13653,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 17,
+          "iteration": 5,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 18,
+          "iteration": 5,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "stop",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 0,
+          "index": 19,
+          "iteration": 5,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 20,
+          "iteration": 5,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 21,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 22,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 461,
+          "index": 23,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.completed"
+        }
+      ],
+      "final": {
+        "deniedActions": [],
+        "evidence": [
+          {
+            "source": "session-history:write_file",
+            "summary": "{\"historical\": true, \"toolCallId\": \"write-before-commands\", \"evidenceId\": \"ev-e76796e9f8f40fd941cc\", \"observedAt\": \"2026-10-17T19:43:28.972504+00:00\"}"
+          },
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic command recovery guard\\n\",\"offset\":0,\"path\":\"guard.md\",\"redacted\":false,\"sha256\":\"47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-d4ead943ed861e775de6\",\"observedAt\":\"2026-10-17T19:44:23.257362+00:00\"}"
+          }
+        ],
+        "injectionDetected": false,
+        "planId": null,
+        "recommendation": "",
+        "rootCause": "",
+        "severity": "warning",
+        "summary": "Follow-up explains saved evidence; Replay only"
+      },
+      "injectedVia": [],
+      "mode": "replay",
+      "model": "workspace-command-recovery",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [
+        {
+          "capabilities": [
+            "network:prometheus",
+            "metrics:read"
+          ],
+          "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+          "id": "prometheus",
+          "tools": [
+            "query_prometheus"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "sandbox:claim",
+            "kubernetes:read",
+            "deployment-scale:propose"
+          ],
+          "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+          "id": "kubernetes",
+          "tools": [
+            "kubernetes_read",
+            "propose_plan"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "network:ssh",
+            "linux:read"
+          ],
+          "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+          "id": "linux-host",
+          "tools": [
+            "linux_read"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "task-workspace:read",
+            "task-workspace:write"
+          ],
+          "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+          "id": "files",
+          "tools": [
+            "list_files",
+            "read_file",
+            "search_files",
+            "write_file",
+            "edit_file"
+          ],
+          "version": "1.0.0"
+        }
+      ],
+      "provider": "replay",
+      "routing": {
+        "effectiveTier": null,
+        "restored": true
+      },
+      "sandboxId": "db81c767bb3e5d2e",
+      "status": "succeeded",
+      "steps": [
+        {
+          "arguments": {
+            "path": "guard.md"
+          },
+          "auditDetails": {
+            "body": {
+              "content": "synthetic command recovery guard\n",
+              "offset": 0,
+              "path": "guard.md",
+              "redacted": false,
+              "sha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+              "totalChars": 33,
+              "truncated": false
+            },
+            "evidenceId": "ev-d4ead943ed861e775de6",
+            "observedAt": "2026-10-17T19:44:23.257362+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 159,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic command recovery guard\\n\",\"offset\":0,\"path\":\"guard.md\",\"redacted\":false,\"sha256\":\"47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-d4ead943ed861e775de6\",\"observedAt\":\"2026-10-17T19:44:23.257362+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "read_file"
+        }
+      ],
+      "taskId": "task-ce136e4d18a06604",
+      "verdict": "completed",
+      "workspaceId": "workspace-521e4cc7e5964cd8a0204135bd6fa7c2"
+    }
+  ],
+  "auditsAfterRestart": [
+    {
+      "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+      "audit": {
+        "elapsedMs": 0,
+        "finishReason": "tool_calls",
+        "kind": "model",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "usageKnown": true
+      },
+      "auditId": "audit-6a2bb2ded5874ea0b0cea14cc844c675",
+      "callId": "call-7cf56151a5364d488e92546caf364baf",
+      "taskId": "task-ce136e4d18a06604"
+    },
+    {
+      "attemptId": "attempt-bf9b8901df4c4dfaaa87432de8008006",
+      "audit": {
+        "kind": "tool",
+        "outcomeKnown": true,
+        "step": {
+          "arguments": {
+            "content": {
+              "bytes": 33,
+              "redacted": true,
+              "sha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0"
+            },
+            "path": "guard.md"
+          },
+          "auditDetails": {
+            "body": {
+              "bytes": 33,
+              "created": true,
+              "diff": "--- guard.md:old\n+++ guard.md:new\n@@ -1,0 +1,2 @@\n+synthetic command recovery guard\n+\n",
+              "newSha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+              "oldSha256": null,
+              "path": "guard.md",
+              "redacted": false
+            },
+            "evidenceId": "ev-e76796e9f8f40fd941cc",
+            "observedAt": "2026-10-17T19:43:28.972504+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 134,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":33,\"created\":true,\"diff\":\"--- guard.md:old\\n+++ guard.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic command recovery guard\\n+\\n\",\"newSha256\":\"47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0\",\"oldSha256\":null,\"path\":\"guard.md\",\"redacted\":false},\"evidenceId\":\"ev-e76796e9f8f40fd941cc\",\"observedAt\":\"2026-10-17T19:43:28.972504+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "write_file"
+        }
+      },
+      "auditId": "audit-1b1b55c33d714e2dac6b1caf0587ec13",
+      "callId": "call-113a6ba3df414ad595ee6d0f4817a31e",
+      "taskId": "task-ce136e4d18a06604"
+    },
+    {
+      "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+      "audit": {
+        "elapsedMs": 0,
+        "finishReason": "tool_calls",
+        "kind": "model",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "usageKnown": true
+      },
+      "auditId": "audit-bd04a26aae0543a5880296aa809cab3d",
+      "callId": "call-5a1d23b1bb2c4ae5810a57cb9372417e",
+      "taskId": "task-ce136e4d18a06604"
+    },
+    {
+      "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+      "audit": {
+        "kind": "tool",
+        "outcomeKnown": true,
+        "step": {
+          "arguments": {
+            "path": "guard.md"
+          },
+          "auditDetails": {
+            "body": {
+              "content": "synthetic command recovery guard\n",
+              "offset": 0,
+              "path": "guard.md",
+              "redacted": false,
+              "sha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+              "totalChars": 33,
+              "truncated": false
+            },
+            "evidenceId": "ev-d4ead943ed861e775de6",
+            "observedAt": "2026-10-17T19:44:23.257362+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 159,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic command recovery guard\\n\",\"offset\":0,\"path\":\"guard.md\",\"redacted\":false,\"sha256\":\"47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-d4ead943ed861e775de6\",\"observedAt\":\"2026-10-17T19:44:23.257362+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "read_file"
+        }
+      },
+      "auditId": "audit-00920ff1486a431eafafb22c2ae2047d",
+      "callId": "call-15c2920492614f5d9fbea09177c7b764",
+      "taskId": "task-ce136e4d18a06604"
+    },
+    {
+      "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+      "audit": {
+        "elapsedMs": 8001,
+        "finishReason": "stop",
+        "kind": "model",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "usageKnown": true
+      },
+      "auditId": "audit-4c83531d89ce48aeb33ec9a3ec478457",
+      "callId": "call-cf35c5eb98c1415098b39fc3be2e04dd",
+      "taskId": "task-ce136e4d18a06604"
+    },
+    {
+      "attemptId": "attempt-f08fc95da9364e46b11d87fc1e5b72d6",
+      "audit": {
+        "elapsedMs": 0,
+        "finishReason": "stop",
+        "kind": "model",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        },
+        "usageKnown": true
+      },
+      "auditId": "audit-3ac7328abb2d4b12a609a967e0c156a5",
+      "callId": "call-3f4c6c7444e34f099915b2efc037570c",
+      "taskId": "task-ce136e4d18a06604"
+    }
+  ],
+  "commandIds": [
+    "command-c8461e3aedae4e5b8225272cd998bcff",
+    "command-15da0751e57f46a9ae5d1454419f6c19"
+  ],
+  "commandNodeCounts": [
+    1,
+    1
+  ],
+  "oldToolEvidenceId": "ev-e76796e9f8f40fd941cc",
+  "serverSha256": "47a48815fa051f17624cd9267233628d2791aff2e3e3f4c63e96d7ebd86db3a0",
+  "killToTaskSucceededMs": 63470.299,
+  "sessionPrefixPreserved": true,
+  "terminalRestartUnchanged": true,
+  "verifiedCases": [
+    "V1-14"
+  ],
+  "timestamp": "2026-10-17T19:45:30.906749+00:00"
+}

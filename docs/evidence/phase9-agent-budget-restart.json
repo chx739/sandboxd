@@ -1,0 +1,521 @@
+{
+  "mode": "real-agentd-budget-restart-replay",
+  "scenario": "budget",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/32aa6b9acd7f40d9bfe65b4604946676",
+  "externalModelCalls": 0,
+  "manualResumeCalls": 0,
+  "replaySha256": "c13050579d062922883e2b20a1a50d0f2f50aa6dcebeb190d6c5895d84e6cea9",
+  "passed": true,
+  "podBeforeKill": {
+    "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830",
+    "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+    "podUid": "5f54eff6-ba03-40f3-9ff5-3eca40f848da",
+    "sandboxId": "03ba0b92bd8d6848",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+    "imageRef": "sandboxd-workspace:runtime-v1.2",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-5c442686b2ba427993f85f6daff92830",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "stateBeforeKill": {
+    "alert": {
+      "annotations": {
+        "summary": "Synthetic original budget budget"
+      },
+      "fingerprint": "78f77843d6f4e4861d7d4e44ecc40ac4",
+      "labels": {
+        "case": "budget",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "5f54eff6-ba03-40f3-9ff5-3eca40f848da",
+        "sandboxId": "03ba0b92bd8d6848",
+        "startedAt": "2026-10-17T18:14:12.017036+00:00"
+      }
+    ],
+    "branchId": "branch-fd69d60deca44aa8a52fb320c666b9fa",
+    "calls": {
+      "call-070a70363e684bae81586d492e3ba982": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-1055cd3c1828401da3e435bb263a4e86": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-162106a4a9484556a6172ddd1a48f0ff": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-247426c3d654492d885d2cfd2ce9ce29": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-60b9455b43a64633aaf4f6c0fff28338": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-6c3fd5b0f7164a2d90ef2cf6fd7b13b1": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-7d96b847fc0948b5900fe30fe6ba4950": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-8eb00079aa7040e0b1487b92d2fd79ef": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-ac20e39ebe3a42c68f65f3adf612ea84": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-cca0a33009dc4c9786aa3764611e4308": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-fc6e7b43fdde4135a678179033edc4e7": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "reserved"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-a6e7b1db577123f3",
+    "deadline": "2026-10-17T18:16:17.350693+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "c13050579d062922883e2b20a1a50d0f2f50aa6dcebeb190d6c5895d84e6cea9",
+      "model": "workspace-budget-budget",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-47ff0163b8f28b37",
+    "status": "running",
+    "taskId": "task-628bd5625227f11c",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T18:14:12.017036+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T18:14:17.350693+00:00"
+    },
+    "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830"
+  },
+  "kill": {
+    "signal": "SIGKILL",
+    "returnCode": -9,
+    "timestamp": "2026-10-17T18:14:18.771507+00:00"
+  },
+  "restartRequestedAt": "2026-10-17T18:14:18.771599+00:00",
+  "stateAfterRestart": {
+    "alert": {
+      "annotations": {
+        "summary": "Synthetic original budget budget"
+      },
+      "fingerprint": "78f77843d6f4e4861d7d4e44ecc40ac4",
+      "labels": {
+        "case": "budget",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "5f54eff6-ba03-40f3-9ff5-3eca40f848da",
+        "sandboxId": "03ba0b92bd8d6848",
+        "startedAt": "2026-10-17T18:14:12.017036+00:00",
+        "stopReason": "containers-terminated"
+      },
+      {
+        "attemptId": "attempt-a65c394a26074700a673f189fd88d950",
+        "claimRequested": false,
+        "ownerStopped": true,
+        "podUid": null,
+        "sandboxId": null,
+        "startedAt": "2026-10-17T18:15:16.165795+00:00",
+        "stopReason": "never-bound"
+      }
+    ],
+    "branchId": "branch-fd69d60deca44aa8a52fb320c666b9fa",
+    "calls": {
+      "call-070a70363e684bae81586d492e3ba982": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-1055cd3c1828401da3e435bb263a4e86": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-162106a4a9484556a6172ddd1a48f0ff": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-247426c3d654492d885d2cfd2ce9ce29": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-60b9455b43a64633aaf4f6c0fff28338": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-6c3fd5b0f7164a2d90ef2cf6fd7b13b1": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-7d96b847fc0948b5900fe30fe6ba4950": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-8eb00079aa7040e0b1487b92d2fd79ef": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-ac20e39ebe3a42c68f65f3adf612ea84": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-cca0a33009dc4c9786aa3764611e4308": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-fc6e7b43fdde4135a678179033edc4e7": {
+        "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "uncertain"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-a6e7b1db577123f3",
+    "deadline": "2026-10-17T18:16:17.350693+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "c13050579d062922883e2b20a1a50d0f2f50aa6dcebeb190d6c5895d84e6cea9",
+      "model": "workspace-budget-budget",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-47ff0163b8f28b37",
+    "status": "limit_exceeded",
+    "taskId": "task-628bd5625227f11c",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T18:14:12.017036+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T18:14:17.350693+00:00"
+    },
+    "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830"
+  },
+  "taskAfterRestart": {
+    "taskId": "task-628bd5625227f11c",
+    "status": "limit_exceeded",
+    "sessionId": "session-47ff0163b8f28b37",
+    "branchId": "branch-fd69d60deca44aa8a52fb320c666b9fa",
+    "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830",
+    "attemptId": "attempt-a65c394a26074700a673f189fd88d950",
+    "attemptCount": 2,
+    "alert": {
+      "status": "firing",
+      "labels": {
+        "case": "budget",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "annotations": {
+        "summary": "Synthetic original budget budget"
+      },
+      "startsAt": null,
+      "fingerprint": "78f77843d6f4e4861d7d4e44ecc40ac4"
+    },
+    "createdAt": "2026-10-17T18:14:12.010594Z",
+    "updatedAt": "2026-10-17T18:15:16.212940Z",
+    "result": null,
+    "error": "original model call budget is exhausted"
+  },
+  "goAfterRestart": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830",
+    "sessionId": "session-47ff0163b8f28b37",
+    "branchId": "branch-fd69d60deca44aa8a52fb320c666b9fa",
+    "generation": 1,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-628bd5625227f11c",
+      "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+      "sandboxId": "03ba0b92bd8d6848",
+      "podName": "sandbox-03ba0b92bd8d6848",
+      "podUid": "5f54eff6-ba03-40f3-9ff5-3eca40f848da",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.2",
+    "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+    "stopReason": "containers-terminated"
+  },
+  "traces": [
+    {
+      "alertFingerprint": "",
+      "attemptId": "attempt-fcbb6eb7291f4cb28729879b293a1540",
+      "capabilities": {},
+      "elapsedMs": 0,
+      "events": [
+        {
+          "details": {
+            "reason": "prior attempt had no persisted completion trace",
+            "usageKnown": false
+          },
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "attempt.recovered"
+        }
+      ],
+      "final": null,
+      "injectedVia": [],
+      "mode": "recovery",
+      "model": "workspace-budget-budget",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [],
+      "provider": "replay",
+      "routing": {},
+      "sandboxId": "03ba0b92bd8d6848",
+      "status": "interrupted",
+      "steps": [],
+      "taskId": "task-628bd5625227f11c",
+      "verdict": "process-interrupted",
+      "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830"
+    },
+    {
+      "alertFingerprint": "78f77843d6f4e4861d7d4e44ecc40ac4",
+      "attemptId": "attempt-a65c394a26074700a673f189fd88d950",
+      "capabilities": {
+        "deterministic": true,
+        "toolCalling": true
+      },
+      "elapsedMs": 28,
+      "events": [
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.started"
+        },
+        {
+          "details": {
+            "error": "original model call budget is exhausted",
+            "type": "RecoveryLimit"
+          },
+          "elapsedMs": 0,
+          "index": 2,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.interrupted"
+        }
+      ],
+      "final": null,
+      "injectedVia": [],
+      "mode": "replay",
+      "model": "workspace-budget-budget",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [
+        {
+          "capabilities": [
+            "network:prometheus",
+            "metrics:read"
+          ],
+          "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+          "id": "prometheus",
+          "tools": [
+            "query_prometheus"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "sandbox:claim",
+            "kubernetes:read",
+            "deployment-scale:propose"
+          ],
+          "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+          "id": "kubernetes",
+          "tools": [
+            "kubernetes_read",
+            "propose_plan"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "network:ssh",
+            "linux:read"
+          ],
+          "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+          "id": "linux-host",
+          "tools": [
+            "linux_read"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "task-workspace:read",
+            "task-workspace:write"
+          ],
+          "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+          "id": "files",
+          "tools": [
+            "list_files",
+            "read_file",
+            "search_files",
+            "write_file",
+            "edit_file"
+          ],
+          "version": "1.0.0"
+        }
+      ],
+      "provider": "replay",
+      "routing": {
+        "effectiveTier": null,
+        "restored": true
+      },
+      "sandboxId": null,
+      "status": "interrupted",
+      "steps": [],
+      "taskId": "task-628bd5625227f11c",
+      "verdict": "interrupted",
+      "workspaceId": "workspace-5c442686b2ba427993f85f6daff92830"
+    }
+  ],
+  "sessionPrefixPreserved": true,
+  "additionalCalls": 0,
+  "newPodClaims": 0,
+  "verifiedScope": "V1-04 budget",
+  "goJournalRecords": 9,
+  "timestamp": "2026-10-17T18:15:16.490117+00:00"
+}

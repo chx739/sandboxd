@@ -1,0 +1,10 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 116236}
+{"stage": "terminal-created", "status": "succeeded", "taskId": "task-f207370ea366004a"}
+{"stage": "agentd-process-started", "number": 2, "pid": 116413}
+{"stage": "terminal-created", "status": "failed", "taskId": "task-615116162b803699"}
+{"stage": "agentd-process-started", "number": 3, "pid": 116454}
+{"stage": "terminal-created", "status": "limit_exceeded", "taskId": "task-0ac06d4ad65e4a4a"}
+{"stage": "agentd-process-started", "number": 4, "pid": 116495}
+{"stage": "terminal-created", "status": "cancelled", "taskId": "task-1efb1c13ee7e865f"}
+{"stage": "agentd-process-started", "number": 5, "pid": 116742}
+{"passed": true, "verifiedCases": ["V1-05"], "output": "docs/evidence/phase9-agent-terminal-restart.json"}

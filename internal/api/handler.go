@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"regexp"
 	"time"
+
+	"github.com/chx739/sandboxd/internal/sandbox"
 )
 
 var sandboxIDPattern = regexp.MustCompile("^[a-z0-9-]{1,63}$")
@@ -69,6 +71,10 @@ func (s *Server) deleteSandbox(response http.ResponseWriter, request *http.Reque
 	ctx, cancel := context.WithTimeout(context.Background(), releaseTimeout)
 	defer cancel()
 	if err := s.pool.Release(ctx, id); err != nil {
+		if errors.Is(err, sandbox.ErrWorkspaceExecDenied) {
+			writeJSON(response, http.StatusForbidden, map[string]string{"error": "persistent workspaces require an owned release", "denyLayer": "workspace-policy"})
+			return
+		}
 		log.Printf("release sandbox %s: %v", id, err)
 		writeJSON(response, http.StatusInternalServerError, map[string]string{"error": "删除沙箱失败"})
 		return
@@ -92,8 +98,12 @@ func (s *Server) execSandbox(response http.ResponseWriter, request *http.Request
 		return
 	}
 
-	podName, err := s.manager.PodName(id)
+	podName, err := s.manager.GenericExecPodName(id)
 	if err != nil {
+		if errors.Is(err, sandbox.ErrWorkspaceExecDenied) {
+			writeJSON(response, http.StatusForbidden, map[string]string{"error": "persistent workspaces only allow restricted file operations", "denyLayer": "workspace-policy"})
+			return
+		}
 		writeJSON(response, http.StatusNotFound, map[string]string{"error": err.Error()})
 		return
 	}

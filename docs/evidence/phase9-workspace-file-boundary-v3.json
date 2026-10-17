@@ -1,0 +1,54 @@
+{
+  "mode": "real-go-gvisor-nfs-boundary",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/0d0a972daba14864bac020b132da2a9b",
+  "externalModelCalls": 0,
+  "pythonPolicyUsed": false,
+  "checks": [],
+  "pods": [
+    {
+      "workspaceId": "workspace-48c2a569cd3244a3acf72a79d5083acf",
+      "attemptId": "attempt-db0f8aac052d4b44a3def0a4471f661c",
+      "podUid": "a985293a-3001-4def-8edc-a1e9a937c1fa",
+      "sandboxId": "b2903342ddbb5546",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:c8523cb19e69df5e3bb4a8b8bf69bb9952a94b9741bd17e69c3c5f1a61550cff",
+      "imageRef": "sandboxd-workspace:runtime-v1.4",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-48c2a569cd3244a3acf72a79d5083acf",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    }
+  ],
+  "passed": false,
+  "failure": {
+    "type": "AssertionError",
+    "message": ""
+  },
+  "releases": [
+    {
+      "schemaVersion": 1,
+      "workspaceId": "workspace-48c2a569cd3244a3acf72a79d5083acf",
+      "sessionId": "session-boundary-a",
+      "branchId": "branch-boundary-a",
+      "generation": 1,
+      "phase": "released",
+      "owner": {
+        "taskId": "task-boundary-a",
+        "attemptId": "attempt-db0f8aac052d4b44a3def0a4471f661c",
+        "sandboxId": "b2903342ddbb5546",
+        "podName": "sandbox-b2903342ddbb5546",
+        "podUid": "a985293a-3001-4def-8edc-a1e9a937c1fa",
+        "nodeName": "sandboxd-control-plane",
+        "createSubmitted": true,
+        "stopConfirmed": true
+      },
+      "imageRef": "sandboxd-workspace:runtime-v1.4",
+      "imageId": "sha256:c8523cb19e69df5e3bb4a8b8bf69bb9952a94b9741bd17e69c3c5f1a61550cff",
+      "stopReason": "containers-terminated"
+    }
+  ],
+  "timestamp": "2026-10-17T18:33:19.699356+00:00"
+}

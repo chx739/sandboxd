@@ -169,6 +169,18 @@ class ModelRouter:
             return None
         return round(decision.router_input_tokens * self._router_input_price / 1_000_000, 8)
 
+    def restore(self, tier: str, provider: str, model: str, fingerprint: str) -> ModelGateway:
+        gateway = self._gateways.get(tier)
+        if (gateway is None or gateway.provider_name != provider or gateway.model_name != model
+                or getattr(gateway, "recovery_fingerprint", None) != fingerprint):
+            raise ValueError("persisted provider configuration no longer matches")
+        return gateway
+
+    def recovery_fallback(self) -> tuple[ModelGateway, RouteDecision]:
+        return self._gateways[self._default], RouteDecision(
+            None, self._default, None, "router_result_unknown", "recovery", 0,
+        )
+
     async def choose(self, summary: str) -> tuple[ModelGateway, RouteDecision]:
         started = time.monotonic()
         if not summary.strip():

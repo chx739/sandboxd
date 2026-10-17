@@ -1,0 +1,71 @@
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... Executing <Task pending name='Task-4' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:158> wait_for=<Future pending cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.101 seconds
+ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... Executing <Task pending name='Task-18' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:158> wait_for=<Future pending cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.106 seconds
+/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:104: RuntimeWarning: coroutine 'AgentRunner._claim_workspace' was never awaited
+Coroutine created at (most recent call last)
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/unittest/async_case.py", line 132, in run
+    return super().run(result)
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/unittest/case.py", line 634, in run
+    self._callTestMethod(testMethod)
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/unittest/async_case.py", line 91, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/unittest/async_case.py", line 113, in _callMaybeAsync
+    return self._asyncioRunner.run(
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 1991, in _run_once
+    handle._run()
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py", line 104, in run
+    binding = await asyncio.wait_for(self._claim_workspace(recovery), timeout=recovery.remaining())
+  binding = await asyncio.wait_for(self._claim_workspace(recovery), timeout=recovery.remaining())
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... Executing <Task pending name='Task-148' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:185> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.124 seconds
+ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... Executing <Task pending name='Task-158' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:158> wait_for=<Future pending cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.120 seconds
+ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+
+======================================================================
+FAIL: test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_recovery_store.py", line 184, in test_shutdown_does_not_become_user_cancellation
+    self.assertEqual(result.status, "succeeded", result.error)
+AssertionError: 'failed' != 'succeeded'
+- failed
++ succeeded
+ : wall clock precedes the persisted attempt start: observed=2026-10-17T19:03:42.938596+00:00, started=2026-10-17T19:03:43.735467+00:00
+
+----------------------------------------------------------------------
+Ran 20 tests in 6.051s
+
+FAILED (failures=1)
+REALTIME_SAMPLE {'samples': 100000, 'backwardsCount': 0, 'largestBackwardSeconds': 0}

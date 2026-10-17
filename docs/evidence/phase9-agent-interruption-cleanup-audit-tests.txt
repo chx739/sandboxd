@@ -1,0 +1,1 @@
+{"passed": true, "cases": ["V1-08", "V1-12"], "output": "docs/evidence/phase9-agent-interruption-cleanup-audit.json"}

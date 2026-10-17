@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "scope": "same NFS container as prior V1-11 report after no-recreate startup",
+  "priorEvidence": "docs/evidence/phase9-nfs-unavailable-v2.json",
+  "containerId": "497b2542b2227785b5c559ffe45c400df283a900d0bb2f4a17ac3e73498fd16b",
+  "startedAt": "2026-10-17T15:19:38.015392486Z",
+  "running": true,
+  "paused": false,
+  "imageId": "sha256:504f663c8f65a3fb88640b8c5523c82fb6275a0bf0a6ff3f7fed427384c8db61",
+  "kindIp": "172.23.0.3"
+}

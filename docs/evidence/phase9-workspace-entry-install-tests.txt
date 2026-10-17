@@ -1,0 +1,12 @@
+使用已有下载：/home/hx/.local/share/sandboxd-tools/downloads/go1.26.5.linux-amd64.tar.gz
+使用已有下载：/home/hx/.local/share/sandboxd-tools/downloads/kind-linux-amd64
+使用已有下载：/home/hx/.local/share/sandboxd-tools/downloads/gvisor-20260810.0.tar.bz2
+验证下载文件校验和……
+
+go version go1.26.5 linux/amd64
+kind v0.31.0 go1.25.5 linux/amd64
+runsc version release-20260810.0
+spec: 1.2.1
+
+安装完成。若命令仍不可见，请执行：export PATH="/home/hx/.local/bin:${PATH}"
+Checked 79 packages in 201ms

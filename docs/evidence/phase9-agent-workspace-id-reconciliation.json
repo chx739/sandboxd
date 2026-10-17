@@ -1,0 +1,53 @@
+{
+  "mode": "real-local-administrative-reconciliation",
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/90678c05fffc47d6b6c34cba53324fec",
+  "observations": [
+    {
+      "taskId": "task-84d781c224fedfaf",
+      "before": {
+        "schemaVersion": 1,
+        "workspaceId": "workspace-047527b8fd1b4c57a3fdc0918ba763ff",
+        "sessionId": "session-ee5406cdb5f64c3a",
+        "branchId": "branch-45001b8604434769bd705d8d53a15356",
+        "generation": 1,
+        "phase": "bound",
+        "owner": {
+          "taskId": "task-84d781c224fedfaf",
+          "attemptId": "attempt-38fb52734dd64be4a5d2c9c5cd1d5c69",
+          "sandboxId": "6a8f99367d2bbb89",
+          "podName": "sandbox-6a8f99367d2bbb89",
+          "podUid": "4f2d285b-0325-4759-aa3f-f726c0f7dc8e",
+          "nodeName": "sandboxd-control-plane",
+          "createSubmitted": true,
+          "stopConfirmed": false
+        },
+        "imageRef": "sandboxd-workspace:runtime-v1.2",
+        "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98"
+      },
+      "after": {
+        "schemaVersion": 1,
+        "workspaceId": "workspace-047527b8fd1b4c57a3fdc0918ba763ff",
+        "sessionId": "session-ee5406cdb5f64c3a",
+        "branchId": "branch-45001b8604434769bd705d8d53a15356",
+        "generation": 1,
+        "phase": "released",
+        "owner": {
+          "taskId": "task-84d781c224fedfaf",
+          "attemptId": "attempt-38fb52734dd64be4a5d2c9c5cd1d5c69",
+          "sandboxId": "6a8f99367d2bbb89",
+          "podName": "sandbox-6a8f99367d2bbb89",
+          "podUid": "4f2d285b-0325-4759-aa3f-f726c0f7dc8e",
+          "nodeName": "sandboxd-control-plane",
+          "createSubmitted": true,
+          "stopConfirmed": true
+        },
+        "imageRef": "sandboxd-workspace:runtime-v1.2",
+        "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+        "stopReason": "containers-terminated"
+      },
+      "ownerStopped": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,1698 @@
+{
+  "mode": "real-agentd-terminal-restart-replay",
+  "scope": "V1-05 success/cancel/failure/limit survive actual service restart without execution",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/9101bb5769ed45c3af80e4421d5c747d",
+  "externalModelCalls": 0,
+  "scenarios": [
+    {
+      "expectedStatus": "succeeded",
+      "taskId": "task-f207370ea366004a",
+      "state": {
+        "alert": {
+          "annotations": {
+            "summary": "Synthetic terminal succeeded"
+          },
+          "fingerprint": "4c7f6885806b3ddf9a60c892df3b08dd",
+          "labels": {
+            "case": "succeeded",
+            "source": "manual"
+          },
+          "status": "firing"
+        },
+        "attempts": [
+          {
+            "attemptId": "attempt-a02a216fe087417f9e36eff7f6821e6b",
+            "claimRequested": true,
+            "ownerStopped": true,
+            "podUid": "3876c433-049f-489b-a055-7f3a3295d5e6",
+            "sandboxId": "ea6eaa614bda5cf4",
+            "startedAt": "2026-10-17T17:44:11.722007+00:00",
+            "stopReason": "containers-terminated"
+          }
+        ],
+        "branchId": "branch-7a428151ce6a4ac5aa79a25fb7c3a4c8",
+        "calls": {
+          "call-d46836b7f93a49bda719ab785aeb8ca2": {
+            "attemptId": "attempt-a02a216fe087417f9e36eff7f6821e6b",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          }
+        },
+        "cancelRequested": false,
+        "commands": [],
+        "completeNodeId": "node-dca1104424ac2352",
+        "deadline": "2026-10-17T17:46:17.420917+00:00",
+        "limits": {
+          "model": 6,
+          "router": 1,
+          "tool": 8
+        },
+        "maxRecoveries": 2,
+        "provider": {
+          "fingerprint": "07af0b33d5e20f2f5e55aac3a67f79a398fd12346ef255f99b9648721978f0a6",
+          "model": "terminal-succeeded",
+          "provider": "replay"
+        },
+        "schemaVersion": 2,
+        "sessionId": "session-aa852ff7fd0bec8b",
+        "status": "succeeded",
+        "taskId": "task-f207370ea366004a",
+        "timing": {
+          "claimSeconds": 190,
+          "claimStartedAt": "2026-10-17T17:44:11.722007+00:00",
+          "loopSeconds": 120,
+          "loopStartedAt": "2026-10-17T17:44:17.420917+00:00"
+        },
+        "workspaceId": "workspace-63b3d652ac2040c185aaca01e1ca41b9"
+      },
+      "replaySha256": "07af0b33d5e20f2f5e55aac3a67f79a398fd12346ef255f99b9648721978f0a6",
+      "workspace": {
+        "schemaVersion": 1,
+        "workspaceId": "workspace-63b3d652ac2040c185aaca01e1ca41b9",
+        "sessionId": "session-aa852ff7fd0bec8b",
+        "branchId": "branch-7a428151ce6a4ac5aa79a25fb7c3a4c8",
+        "generation": 1,
+        "phase": "released",
+        "owner": {
+          "taskId": "task-f207370ea366004a",
+          "attemptId": "attempt-a02a216fe087417f9e36eff7f6821e6b",
+          "sandboxId": "ea6eaa614bda5cf4",
+          "podName": "sandbox-ea6eaa614bda5cf4",
+          "podUid": "3876c433-049f-489b-a055-7f3a3295d5e6",
+          "nodeName": "sandboxd-control-plane",
+          "createSubmitted": true,
+          "stopConfirmed": true
+        },
+        "imageRef": "sandboxd-workspace:runtime-v1.2",
+        "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+        "stopReason": "containers-terminated"
+      },
+      "traces": [
+        {
+          "alertFingerprint": "4c7f6885806b3ddf9a60c892df3b08dd",
+          "attemptId": "attempt-a02a216fe087417f9e36eff7f6821e6b",
+          "capabilities": {
+            "deterministic": true,
+            "toolCalling": true
+          },
+          "elapsedMs": 8446,
+          "events": [
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 1,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 2,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 5891,
+              "index": 3,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.completed"
+            },
+            {
+              "details": {
+                "afterChars": 1378,
+                "afterMessages": 2,
+                "beforeChars": 1378,
+                "beforeMessages": 2,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 10776,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 4,
+              "iteration": 1,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 5,
+              "iteration": 1,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "stop",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 6,
+              "iteration": 1,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 7,
+              "iteration": 1,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 8,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 9,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.release.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 2526,
+              "index": 10,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.release.completed"
+            }
+          ],
+          "final": {
+            "deniedActions": [],
+            "evidence": [],
+            "injectionDetected": false,
+            "planId": null,
+            "recommendation": "local Replay evidence only",
+            "rootCause": "",
+            "severity": "warning",
+            "summary": "terminal fixture completed"
+          },
+          "injectedVia": [],
+          "mode": "replay",
+          "model": "terminal-succeeded",
+          "modelUsage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          },
+          "plugins": [
+            {
+              "capabilities": [
+                "network:prometheus",
+                "metrics:read"
+              ],
+              "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+              "id": "prometheus",
+              "tools": [
+                "query_prometheus"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "sandbox:claim",
+                "kubernetes:read",
+                "deployment-scale:propose"
+              ],
+              "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+              "id": "kubernetes",
+              "tools": [
+                "kubernetes_read",
+                "propose_plan"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "network:ssh",
+                "linux:read"
+              ],
+              "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+              "id": "linux-host",
+              "tools": [
+                "linux_read"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "task-workspace:read",
+                "task-workspace:write"
+              ],
+              "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+              "id": "files",
+              "tools": [
+                "list_files",
+                "read_file",
+                "search_files",
+                "write_file",
+                "edit_file"
+              ],
+              "version": "1.0.0"
+            }
+          ],
+          "provider": "replay",
+          "routing": {},
+          "sandboxId": "ea6eaa614bda5cf4",
+          "status": "succeeded",
+          "steps": [],
+          "taskId": "task-f207370ea366004a",
+          "verdict": "completed",
+          "workspaceId": "workspace-63b3d652ac2040c185aaca01e1ca41b9"
+        }
+      ]
+    },
+    {
+      "expectedStatus": "failed",
+      "taskId": "task-615116162b803699",
+      "state": {
+        "alert": {
+          "annotations": {
+            "summary": "Synthetic terminal failed"
+          },
+          "fingerprint": "7b6c0a52c692ae9eb9a90b6ea34a7874",
+          "labels": {
+            "case": "failed",
+            "source": "manual"
+          },
+          "status": "firing"
+        },
+        "attempts": [
+          {
+            "attemptId": "attempt-12959b2f672346519b4050c07ec7b170",
+            "claimRequested": true,
+            "ownerStopped": true,
+            "podUid": "66baed26-3f0f-427c-9760-43442aaf4805",
+            "sandboxId": "7ce66f8cd261b7c9",
+            "startedAt": "2026-10-17T17:45:14.617712+00:00",
+            "stopReason": "containers-terminated"
+          }
+        ],
+        "branchId": "branch-107586f03e6b45dab8f556560a9fdb69",
+        "calls": {
+          "call-26f9048ac95e4513bb3045ccbc8ade89": {
+            "attemptId": "attempt-12959b2f672346519b4050c07ec7b170",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "uncertain"
+          }
+        },
+        "cancelRequested": false,
+        "commands": [],
+        "completeNodeId": "node-bc37d4d21635ba12",
+        "deadline": "2026-10-17T17:47:20.507347+00:00",
+        "limits": {
+          "model": 6,
+          "router": 1,
+          "tool": 8
+        },
+        "maxRecoveries": 2,
+        "provider": {
+          "fingerprint": "5d63b9d911aa1130248a47aea2606017db21bc74fa293597a6f280b2ade2f6ef",
+          "model": "terminal-failed",
+          "provider": "replay"
+        },
+        "schemaVersion": 2,
+        "sessionId": "session-dfaa54313addd379",
+        "status": "failed",
+        "taskId": "task-615116162b803699",
+        "timing": {
+          "claimSeconds": 190,
+          "claimStartedAt": "2026-10-17T17:45:14.617712+00:00",
+          "loopSeconds": 120,
+          "loopStartedAt": "2026-10-17T17:45:20.507347+00:00"
+        },
+        "workspaceId": "workspace-d417c7492de14eb9b95ed09c921dfed7"
+      },
+      "replaySha256": "5d63b9d911aa1130248a47aea2606017db21bc74fa293597a6f280b2ade2f6ef",
+      "workspace": {
+        "schemaVersion": 1,
+        "workspaceId": "workspace-d417c7492de14eb9b95ed09c921dfed7",
+        "sessionId": "session-dfaa54313addd379",
+        "branchId": "branch-107586f03e6b45dab8f556560a9fdb69",
+        "generation": 1,
+        "phase": "released",
+        "owner": {
+          "taskId": "task-615116162b803699",
+          "attemptId": "attempt-12959b2f672346519b4050c07ec7b170",
+          "sandboxId": "7ce66f8cd261b7c9",
+          "podName": "sandbox-7ce66f8cd261b7c9",
+          "podUid": "66baed26-3f0f-427c-9760-43442aaf4805",
+          "nodeName": "sandboxd-control-plane",
+          "createSubmitted": true,
+          "stopConfirmed": true
+        },
+        "imageRef": "sandboxd-workspace:runtime-v1.2",
+        "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+        "stopReason": "containers-terminated"
+      },
+      "traces": [
+        {
+          "alertFingerprint": "7b6c0a52c692ae9eb9a90b6ea34a7874",
+          "attemptId": "attempt-12959b2f672346519b4050c07ec7b170",
+          "capabilities": {
+            "deterministic": true,
+            "toolCalling": true
+          },
+          "elapsedMs": 8643,
+          "events": [
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 1,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 2,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 5881,
+              "index": 3,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.completed"
+            },
+            {
+              "details": {
+                "afterChars": 1372,
+                "afterMessages": 2,
+                "beforeChars": 1372,
+                "beforeMessages": 2,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 10770,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 4,
+              "iteration": 1,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 5,
+              "iteration": 1,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "error": "'int' object is not iterable",
+                "type": "TypeError"
+              },
+              "elapsedMs": 0,
+              "index": 6,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.interrupted"
+            }
+          ],
+          "final": null,
+          "injectedVia": [],
+          "mode": "replay",
+          "model": "terminal-failed",
+          "modelUsage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          },
+          "plugins": [
+            {
+              "capabilities": [
+                "network:prometheus",
+                "metrics:read"
+              ],
+              "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+              "id": "prometheus",
+              "tools": [
+                "query_prometheus"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "sandbox:claim",
+                "kubernetes:read",
+                "deployment-scale:propose"
+              ],
+              "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+              "id": "kubernetes",
+              "tools": [
+                "kubernetes_read",
+                "propose_plan"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "network:ssh",
+                "linux:read"
+              ],
+              "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+              "id": "linux-host",
+              "tools": [
+                "linux_read"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "task-workspace:read",
+                "task-workspace:write"
+              ],
+              "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+              "id": "files",
+              "tools": [
+                "list_files",
+                "read_file",
+                "search_files",
+                "write_file",
+                "edit_file"
+              ],
+              "version": "1.0.0"
+            }
+          ],
+          "provider": "replay",
+          "routing": {},
+          "sandboxId": "7ce66f8cd261b7c9",
+          "status": "interrupted",
+          "steps": [],
+          "taskId": "task-615116162b803699",
+          "verdict": "interrupted",
+          "workspaceId": "workspace-d417c7492de14eb9b95ed09c921dfed7"
+        }
+      ]
+    },
+    {
+      "expectedStatus": "limit_exceeded",
+      "taskId": "task-0ac06d4ad65e4a4a",
+      "state": {
+        "alert": {
+          "annotations": {
+            "summary": "Synthetic terminal limit_exceeded"
+          },
+          "fingerprint": "33808b132b6708f1648ce56d755915c6",
+          "labels": {
+            "case": "limit_exceeded",
+            "source": "manual"
+          },
+          "status": "firing"
+        },
+        "attempts": [
+          {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "claimRequested": true,
+            "ownerStopped": true,
+            "podUid": "e725bbfe-6ffc-4ced-bf5c-85321d02c2e7",
+            "sandboxId": "6e22d7de2d9df76e",
+            "startedAt": "2026-10-17T17:46:18.118546+00:00",
+            "stopReason": "containers-terminated"
+          }
+        ],
+        "branchId": "branch-2db669ec253249bd86f164db7fc8ea80",
+        "calls": {
+          "call-164c48e33fe6483789f2b625c9791999": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "tool",
+            "operation": "list_files",
+            "path": ".",
+            "state": "finished"
+          },
+          "call-2b86de1a6b2e453584e855a3118a2f2e": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "tool",
+            "operation": "list_files",
+            "path": ".",
+            "state": "finished"
+          },
+          "call-2e4e94be0ced44cbb021703b26b0129f": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          },
+          "call-39c70d1a91554005ab9e93d8205d8ff5": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          },
+          "call-607557f8c83c43bc8263441f54a6e904": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "tool",
+            "operation": "list_files",
+            "path": ".",
+            "state": "finished"
+          },
+          "call-6c480ad4573749c493a6ff00e9159da8": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "tool",
+            "operation": "list_files",
+            "path": ".",
+            "state": "finished"
+          },
+          "call-8d2d7182dddf4e7eab1d0f1e10c4b62a": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "tool",
+            "operation": "list_files",
+            "path": ".",
+            "state": "finished"
+          },
+          "call-8fa1781b3ffc42debabf0ebdc8db4dc6": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          },
+          "call-9034f7d246064351a079abb699b924c2": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          },
+          "call-b44ad5d226154c9eb05f346248e7bae7": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          },
+          "call-b696142015a14bc5847b1a728381e2ef": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "tool",
+            "operation": "list_files",
+            "path": ".",
+            "state": "finished"
+          },
+          "call-f9910da146914fb39c08b33eb09360b4": {
+            "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "finished"
+          }
+        },
+        "cancelRequested": false,
+        "commands": [],
+        "completeNodeId": "node-cc2908b03640cb21",
+        "deadline": "2026-10-17T17:48:22.609743+00:00",
+        "limits": {
+          "model": 6,
+          "router": 1,
+          "tool": 8
+        },
+        "maxRecoveries": 2,
+        "provider": {
+          "fingerprint": "7dff8f0ed74563766237c58830839c24528994fdf8b8096c0351d2e74327a9e0",
+          "model": "terminal-limit_exceeded",
+          "provider": "replay"
+        },
+        "schemaVersion": 2,
+        "sessionId": "session-943687e7af8e66a8",
+        "status": "limit_exceeded",
+        "taskId": "task-0ac06d4ad65e4a4a",
+        "timing": {
+          "claimSeconds": 190,
+          "claimStartedAt": "2026-10-17T17:46:18.118546+00:00",
+          "loopSeconds": 120,
+          "loopStartedAt": "2026-10-17T17:46:22.609743+00:00"
+        },
+        "workspaceId": "workspace-bd84833d00484a488c4ef23bb1fc6aab"
+      },
+      "replaySha256": "7dff8f0ed74563766237c58830839c24528994fdf8b8096c0351d2e74327a9e0",
+      "workspace": {
+        "schemaVersion": 1,
+        "workspaceId": "workspace-bd84833d00484a488c4ef23bb1fc6aab",
+        "sessionId": "session-943687e7af8e66a8",
+        "branchId": "branch-2db669ec253249bd86f164db7fc8ea80",
+        "generation": 1,
+        "phase": "released",
+        "owner": {
+          "taskId": "task-0ac06d4ad65e4a4a",
+          "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+          "sandboxId": "6e22d7de2d9df76e",
+          "podName": "sandbox-6e22d7de2d9df76e",
+          "podUid": "e725bbfe-6ffc-4ced-bf5c-85321d02c2e7",
+          "nodeName": "sandboxd-control-plane",
+          "createSubmitted": true,
+          "stopConfirmed": true
+        },
+        "imageRef": "sandboxd-workspace:runtime-v1.2",
+        "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+        "stopReason": "containers-terminated"
+      },
+      "traces": [
+        {
+          "alertFingerprint": "33808b132b6708f1648ce56d755915c6",
+          "attemptId": "attempt-5a74e6088ef44f8782596fa2ab0efcfe",
+          "capabilities": {
+            "deterministic": true,
+            "toolCalling": true
+          },
+          "elapsedMs": 7244,
+          "events": [
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 1,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 2,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 4482,
+              "index": 3,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.completed"
+            },
+            {
+              "details": {
+                "afterChars": 1388,
+                "afterMessages": 2,
+                "beforeChars": 1388,
+                "beforeMessages": 2,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 10786,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 4,
+              "iteration": 1,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 5,
+              "iteration": 1,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "tool_calls",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 6,
+              "iteration": 1,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {
+                "pluginId": "files",
+                "pluginVersion": "1.0.0"
+              },
+              "elapsedMs": 0,
+              "index": 7,
+              "iteration": 1,
+              "tool": "list_files",
+              "type": "tool.started"
+            },
+            {
+              "details": {
+                "denied": false,
+                "denyLayer": "",
+                "pluginId": "files",
+                "pluginVersion": "1.0.0",
+                "statusCode": 200
+              },
+              "elapsedMs": 172,
+              "index": 8,
+              "iteration": 1,
+              "tool": "list_files",
+              "type": "tool.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 9,
+              "iteration": 1,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {
+                "afterChars": 2303,
+                "afterMessages": 5,
+                "beforeChars": 1638,
+                "beforeMessages": 4,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 11749,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 10,
+              "iteration": 2,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 11,
+              "iteration": 2,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "tool_calls",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 12,
+              "iteration": 2,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {
+                "pluginId": "files",
+                "pluginVersion": "1.0.0"
+              },
+              "elapsedMs": 0,
+              "index": 13,
+              "iteration": 2,
+              "tool": "list_files",
+              "type": "tool.started"
+            },
+            {
+              "details": {
+                "denied": false,
+                "denyLayer": "",
+                "pluginId": "files",
+                "pluginVersion": "1.0.0",
+                "statusCode": 200
+              },
+              "elapsedMs": 199,
+              "index": 14,
+              "iteration": 2,
+              "tool": "list_files",
+              "type": "tool.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 15,
+              "iteration": 2,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {
+                "afterChars": 2985,
+                "afterMessages": 7,
+                "beforeChars": 1888,
+                "beforeMessages": 6,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 12463,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 16,
+              "iteration": 3,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 17,
+              "iteration": 3,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "tool_calls",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 18,
+              "iteration": 3,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {
+                "pluginId": "files",
+                "pluginVersion": "1.0.0"
+              },
+              "elapsedMs": 0,
+              "index": 19,
+              "iteration": 3,
+              "tool": "list_files",
+              "type": "tool.started"
+            },
+            {
+              "details": {
+                "denied": false,
+                "denyLayer": "",
+                "pluginId": "files",
+                "pluginVersion": "1.0.0",
+                "statusCode": 200
+              },
+              "elapsedMs": 177,
+              "index": 20,
+              "iteration": 3,
+              "tool": "list_files",
+              "type": "tool.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 21,
+              "iteration": 3,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {
+                "afterChars": 3667,
+                "afterMessages": 9,
+                "beforeChars": 2138,
+                "beforeMessages": 8,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 13177,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 22,
+              "iteration": 4,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 23,
+              "iteration": 4,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "tool_calls",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 24,
+              "iteration": 4,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {
+                "pluginId": "files",
+                "pluginVersion": "1.0.0"
+              },
+              "elapsedMs": 0,
+              "index": 25,
+              "iteration": 4,
+              "tool": "list_files",
+              "type": "tool.started"
+            },
+            {
+              "details": {
+                "denied": false,
+                "denyLayer": "",
+                "pluginId": "files",
+                "pluginVersion": "1.0.0",
+                "statusCode": 200
+              },
+              "elapsedMs": 191,
+              "index": 26,
+              "iteration": 4,
+              "tool": "list_files",
+              "type": "tool.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 27,
+              "iteration": 4,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {
+                "afterChars": 4349,
+                "afterMessages": 11,
+                "beforeChars": 2388,
+                "beforeMessages": 10,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 13891,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 28,
+              "iteration": 5,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 29,
+              "iteration": 5,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "tool_calls",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 30,
+              "iteration": 5,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {
+                "pluginId": "files",
+                "pluginVersion": "1.0.0"
+              },
+              "elapsedMs": 0,
+              "index": 31,
+              "iteration": 5,
+              "tool": "list_files",
+              "type": "tool.started"
+            },
+            {
+              "details": {
+                "denied": false,
+                "denyLayer": "",
+                "pluginId": "files",
+                "pluginVersion": "1.0.0",
+                "statusCode": 200
+              },
+              "elapsedMs": 181,
+              "index": 32,
+              "iteration": 5,
+              "tool": "list_files",
+              "type": "tool.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 33,
+              "iteration": 5,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {
+                "afterChars": 5031,
+                "afterMessages": 13,
+                "beforeChars": 2638,
+                "beforeMessages": 12,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 14605,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 34,
+              "iteration": 6,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 35,
+              "iteration": 6,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "finishReason": "tool_calls",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0,
+                  "totalTokens": 0
+                }
+              },
+              "elapsedMs": 0,
+              "index": 36,
+              "iteration": 6,
+              "tool": "",
+              "type": "model.completed"
+            },
+            {
+              "details": {
+                "pluginId": "files",
+                "pluginVersion": "1.0.0"
+              },
+              "elapsedMs": 0,
+              "index": 37,
+              "iteration": 6,
+              "tool": "list_files",
+              "type": "tool.started"
+            },
+            {
+              "details": {
+                "denied": false,
+                "denyLayer": "",
+                "pluginId": "files",
+                "pluginVersion": "1.0.0",
+                "statusCode": 200
+              },
+              "elapsedMs": 188,
+              "index": 38,
+              "iteration": 6,
+              "tool": "list_files",
+              "type": "tool.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 39,
+              "iteration": 6,
+              "tool": "",
+              "type": "turn.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 40,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.completed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 41,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.release.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 1556,
+              "index": 42,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.release.completed"
+            }
+          ],
+          "final": {
+            "deniedActions": [],
+            "evidence": [
+              {
+                "source": "list_files",
+                "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-e1db81d15abea3820c55\",\"observedAt\":\"2026-10-17T17:46:22.796263+00:00\"}"
+              },
+              {
+                "source": "list_files",
+                "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-2192262312f8de0d3937\",\"observedAt\":\"2026-10-17T17:46:23.006101+00:00\"}"
+              },
+              {
+                "source": "list_files",
+                "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-bbb046d5619cb3b0f208\",\"observedAt\":\"2026-10-17T17:46:23.194682+00:00\"}"
+              },
+              {
+                "source": "list_files",
+                "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-e4a54ed1b9ed49f6b757\",\"observedAt\":\"2026-10-17T17:46:23.397507+00:00\"}"
+              },
+              {
+                "source": "list_files",
+                "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-38d6c49a1d3dbec429b6\",\"observedAt\":\"2026-10-17T17:46:23.593433+00:00\"}"
+              },
+              {
+                "source": "list_files",
+                "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-4283da4ae2f2fd9b1e42\",\"observedAt\":\"2026-10-17T17:46:23.794056+00:00\"}"
+              }
+            ],
+            "injectionDetected": false,
+            "planId": null,
+            "recommendation": "人工查看 Trace 和工具证据",
+            "rootCause": "未在有限轮次内得到最终诊断",
+            "severity": "warning",
+            "summary": "Agent 达到最大模型轮次，已安全停止"
+          },
+          "injectedVia": [],
+          "mode": "replay",
+          "model": "terminal-limit_exceeded",
+          "modelUsage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          },
+          "plugins": [
+            {
+              "capabilities": [
+                "network:prometheus",
+                "metrics:read"
+              ],
+              "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+              "id": "prometheus",
+              "tools": [
+                "query_prometheus"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "sandbox:claim",
+                "kubernetes:read",
+                "deployment-scale:propose"
+              ],
+              "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+              "id": "kubernetes",
+              "tools": [
+                "kubernetes_read",
+                "propose_plan"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "network:ssh",
+                "linux:read"
+              ],
+              "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+              "id": "linux-host",
+              "tools": [
+                "linux_read"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "task-workspace:read",
+                "task-workspace:write"
+              ],
+              "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+              "id": "files",
+              "tools": [
+                "list_files",
+                "read_file",
+                "search_files",
+                "write_file",
+                "edit_file"
+              ],
+              "version": "1.0.0"
+            }
+          ],
+          "provider": "replay",
+          "routing": {},
+          "sandboxId": "6e22d7de2d9df76e",
+          "status": "limit_exceeded",
+          "steps": [
+            {
+              "arguments": {
+                "path": "."
+              },
+              "auditDetails": {
+                "body": {
+                  "entries": [],
+                  "path": ".",
+                  "truncated": false
+                },
+                "evidenceId": "ev-e1db81d15abea3820c55",
+                "observedAt": "2026-10-17T17:46:22.796263+00:00",
+                "ok": true,
+                "statusCode": 200
+              },
+              "denied": false,
+              "denyLayer": "",
+              "elapsedMs": 172,
+              "index": 1,
+              "node": "execute_tool",
+              "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-e1db81d15abea3820c55\",\"observedAt\":\"2026-10-17T17:46:22.796263+00:00\"}",
+              "pluginId": "files",
+              "pluginVersion": "1.0.0",
+              "tool": "list_files"
+            },
+            {
+              "arguments": {
+                "path": "."
+              },
+              "auditDetails": {
+                "body": {
+                  "entries": [],
+                  "path": ".",
+                  "truncated": false
+                },
+                "evidenceId": "ev-2192262312f8de0d3937",
+                "observedAt": "2026-10-17T17:46:23.006101+00:00",
+                "ok": true,
+                "statusCode": 200
+              },
+              "denied": false,
+              "denyLayer": "",
+              "elapsedMs": 199,
+              "index": 2,
+              "node": "execute_tool",
+              "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-2192262312f8de0d3937\",\"observedAt\":\"2026-10-17T17:46:23.006101+00:00\"}",
+              "pluginId": "files",
+              "pluginVersion": "1.0.0",
+              "tool": "list_files"
+            },
+            {
+              "arguments": {
+                "path": "."
+              },
+              "auditDetails": {
+                "body": {
+                  "entries": [],
+                  "path": ".",
+                  "truncated": false
+                },
+                "evidenceId": "ev-bbb046d5619cb3b0f208",
+                "observedAt": "2026-10-17T17:46:23.194682+00:00",
+                "ok": true,
+                "statusCode": 200
+              },
+              "denied": false,
+              "denyLayer": "",
+              "elapsedMs": 177,
+              "index": 3,
+              "node": "execute_tool",
+              "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-bbb046d5619cb3b0f208\",\"observedAt\":\"2026-10-17T17:46:23.194682+00:00\"}",
+              "pluginId": "files",
+              "pluginVersion": "1.0.0",
+              "tool": "list_files"
+            },
+            {
+              "arguments": {
+                "path": "."
+              },
+              "auditDetails": {
+                "body": {
+                  "entries": [],
+                  "path": ".",
+                  "truncated": false
+                },
+                "evidenceId": "ev-e4a54ed1b9ed49f6b757",
+                "observedAt": "2026-10-17T17:46:23.397507+00:00",
+                "ok": true,
+                "statusCode": 200
+              },
+              "denied": false,
+              "denyLayer": "",
+              "elapsedMs": 191,
+              "index": 4,
+              "node": "execute_tool",
+              "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-e4a54ed1b9ed49f6b757\",\"observedAt\":\"2026-10-17T17:46:23.397507+00:00\"}",
+              "pluginId": "files",
+              "pluginVersion": "1.0.0",
+              "tool": "list_files"
+            },
+            {
+              "arguments": {
+                "path": "."
+              },
+              "auditDetails": {
+                "body": {
+                  "entries": [],
+                  "path": ".",
+                  "truncated": false
+                },
+                "evidenceId": "ev-38d6c49a1d3dbec429b6",
+                "observedAt": "2026-10-17T17:46:23.593433+00:00",
+                "ok": true,
+                "statusCode": 200
+              },
+              "denied": false,
+              "denyLayer": "",
+              "elapsedMs": 181,
+              "index": 5,
+              "node": "execute_tool",
+              "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-38d6c49a1d3dbec429b6\",\"observedAt\":\"2026-10-17T17:46:23.593433+00:00\"}",
+              "pluginId": "files",
+              "pluginVersion": "1.0.0",
+              "tool": "list_files"
+            },
+            {
+              "arguments": {
+                "path": "."
+              },
+              "auditDetails": {
+                "body": {
+                  "entries": [],
+                  "path": ".",
+                  "truncated": false
+                },
+                "evidenceId": "ev-4283da4ae2f2fd9b1e42",
+                "observedAt": "2026-10-17T17:46:23.794056+00:00",
+                "ok": true,
+                "statusCode": 200
+              },
+              "denied": false,
+              "denyLayer": "",
+              "elapsedMs": 188,
+              "index": 6,
+              "node": "execute_tool",
+              "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"entries\":[],\"path\":\".\",\"truncated\":false},\"evidenceId\":\"ev-4283da4ae2f2fd9b1e42\",\"observedAt\":\"2026-10-17T17:46:23.794056+00:00\"}",
+              "pluginId": "files",
+              "pluginVersion": "1.0.0",
+              "tool": "list_files"
+            }
+          ],
+          "taskId": "task-0ac06d4ad65e4a4a",
+          "verdict": "completed",
+          "workspaceId": "workspace-bd84833d00484a488c4ef23bb1fc6aab"
+        }
+      ]
+    },
+    {
+      "expectedStatus": "cancelled",
+      "taskId": "task-1efb1c13ee7e865f",
+      "state": {
+        "alert": {
+          "annotations": {
+            "summary": "Synthetic terminal cancelled"
+          },
+          "fingerprint": "b590eab7f09623a10ee45e457eed4651",
+          "labels": {
+            "case": "cancelled",
+            "source": "manual"
+          },
+          "status": "firing"
+        },
+        "attempts": [
+          {
+            "attemptId": "attempt-d4f093a49d7842c89f7fb3f68d734d26",
+            "claimRequested": true,
+            "ownerStopped": true,
+            "podUid": "a781d2e9-6ab9-46fe-ad93-2ea17c29ecd7",
+            "sandboxId": "e5a0f381eed49b1e",
+            "startedAt": "2026-10-17T17:47:21.071504+00:00",
+            "stopReason": "containers-terminated"
+          }
+        ],
+        "branchId": "branch-87b7877c907446f88ede5a19f9775820",
+        "calls": {
+          "call-8a926e9a80e54a85a1dea6fd22895679": {
+            "attemptId": "attempt-d4f093a49d7842c89f7fb3f68d734d26",
+            "expectedNewSha256": null,
+            "kind": "model",
+            "operation": "",
+            "path": "",
+            "state": "uncertain"
+          }
+        },
+        "cancelRequested": true,
+        "commands": [],
+        "completeNodeId": "node-285b767c9c585058",
+        "deadline": "2026-10-17T17:49:26.761702+00:00",
+        "limits": {
+          "model": 6,
+          "router": 1,
+          "tool": 8
+        },
+        "maxRecoveries": 2,
+        "provider": {
+          "fingerprint": "92ca15d9b6d6b9d026d6a87ee4e893a432b7575ca77adb7540fd03b637d822a2",
+          "model": "terminal-cancelled",
+          "provider": "replay"
+        },
+        "schemaVersion": 2,
+        "sessionId": "session-799249382296197c",
+        "status": "cancelled",
+        "taskId": "task-1efb1c13ee7e865f",
+        "timing": {
+          "claimSeconds": 190,
+          "claimStartedAt": "2026-10-17T17:47:21.071504+00:00",
+          "loopSeconds": 120,
+          "loopStartedAt": "2026-10-17T17:47:26.761702+00:00"
+        },
+        "workspaceId": "workspace-7c7d9694a5074f14812bbe236860a5bf"
+      },
+      "replaySha256": "92ca15d9b6d6b9d026d6a87ee4e893a432b7575ca77adb7540fd03b637d822a2",
+      "workspace": {
+        "schemaVersion": 1,
+        "workspaceId": "workspace-7c7d9694a5074f14812bbe236860a5bf",
+        "sessionId": "session-799249382296197c",
+        "branchId": "branch-87b7877c907446f88ede5a19f9775820",
+        "generation": 1,
+        "phase": "released",
+        "owner": {
+          "taskId": "task-1efb1c13ee7e865f",
+          "attemptId": "attempt-d4f093a49d7842c89f7fb3f68d734d26",
+          "sandboxId": "e5a0f381eed49b1e",
+          "podName": "sandbox-e5a0f381eed49b1e",
+          "podUid": "a781d2e9-6ab9-46fe-ad93-2ea17c29ecd7",
+          "nodeName": "sandboxd-control-plane",
+          "createSubmitted": true,
+          "stopConfirmed": true
+        },
+        "imageRef": "sandboxd-workspace:runtime-v1.2",
+        "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+        "stopReason": "containers-terminated"
+      },
+      "traces": [
+        {
+          "alertFingerprint": "b590eab7f09623a10ee45e457eed4651",
+          "attemptId": "attempt-d4f093a49d7842c89f7fb3f68d734d26",
+          "capabilities": {
+            "deterministic": true,
+            "toolCalling": true
+          },
+          "elapsedMs": 8243,
+          "events": [
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 1,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 2,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.started"
+            },
+            {
+              "details": {},
+              "elapsedMs": 5681,
+              "index": 3,
+              "iteration": null,
+              "tool": "",
+              "type": "sandbox.claim.completed"
+            },
+            {
+              "details": {
+                "afterChars": 1378,
+                "afterMessages": 2,
+                "beforeChars": 1378,
+                "beforeMessages": 2,
+                "compactedGroups": 0,
+                "estimatedTokensWithOutputReserve": 10776,
+                "toolSchemaEstimatedTokens": 4152,
+                "trimmed": false
+              },
+              "elapsedMs": 0,
+              "index": 4,
+              "iteration": 1,
+              "tool": "",
+              "type": "context.transformed"
+            },
+            {
+              "details": {},
+              "elapsedMs": 0,
+              "index": 5,
+              "iteration": 1,
+              "tool": "",
+              "type": "turn.started"
+            },
+            {
+              "details": {
+                "error": "",
+                "type": "CancelledError"
+              },
+              "elapsedMs": 0,
+              "index": 6,
+              "iteration": null,
+              "tool": "",
+              "type": "agent.interrupted"
+            }
+          ],
+          "final": null,
+          "injectedVia": [],
+          "mode": "replay",
+          "model": "terminal-cancelled",
+          "modelUsage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          },
+          "plugins": [
+            {
+              "capabilities": [
+                "network:prometheus",
+                "metrics:read"
+              ],
+              "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+              "id": "prometheus",
+              "tools": [
+                "query_prometheus"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "sandbox:claim",
+                "kubernetes:read",
+                "deployment-scale:propose"
+              ],
+              "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+              "id": "kubernetes",
+              "tools": [
+                "kubernetes_read",
+                "propose_plan"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "network:ssh",
+                "linux:read"
+              ],
+              "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+              "id": "linux-host",
+              "tools": [
+                "linux_read"
+              ],
+              "version": "1.0.0"
+            },
+            {
+              "capabilities": [
+                "task-workspace:read",
+                "task-workspace:write"
+              ],
+              "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+              "id": "files",
+              "tools": [
+                "list_files",
+                "read_file",
+                "search_files",
+                "write_file",
+                "edit_file"
+              ],
+              "version": "1.0.0"
+            }
+          ],
+          "provider": "replay",
+          "routing": {},
+          "sandboxId": "e5a0f381eed49b1e",
+          "status": "interrupted",
+          "steps": [],
+          "taskId": "task-1efb1c13ee7e865f",
+          "verdict": "interrupted",
+          "workspaceId": "workspace-7c7d9694a5074f14812bbe236860a5bf"
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "verifiedCases": [
+    "V1-05"
+  ],
+  "journalUnchanged": true,
+  "sessionHashes": {
+    "session-799249382296197c.jsonl": "1042df8619891144539671f149b08c041e189e93f8b73c53eeae992963e1e1cf",
+    "session-943687e7af8e66a8.jsonl": "f822707e6cb28c78bc720b1790763e7d1477ce354b4d1f669f61024bbce947ac",
+    "session-aa852ff7fd0bec8b.jsonl": "9eb723da0e6437c556c50b066a3330a268f200437a6473b6195354c58c2278d2",
+    "session-dfaa54313addd379.jsonl": "89fcdd6abc12f74e0f8615689a4491c251d42a2c4fe57c41a99efcb60802d4c3"
+  },
+  "goJournalUnchanged": true,
+  "taskJournalSha256": "df80923c8aee56e1eff411c64b64addbff7a8b32182412bb58a57cc2416fdfd5",
+  "timestamp": "2026-10-17T17:48:25.629531+00:00"
+}

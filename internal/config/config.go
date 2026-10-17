@@ -4,6 +4,8 @@ import (
 	"errors"
 	"flag"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"k8s.io/client-go/tools/clientcmd"
@@ -21,6 +23,9 @@ type Config struct {
 	CreateTimeout       time.Duration
 	ExecTimeout         time.Duration
 	PoolSize            int
+	WorkspaceNFSServer  string
+	WorkspaceImage      string
+	WorkspaceControlDir string
 }
 
 func Parse(args []string) (Config, error) {
@@ -36,6 +41,9 @@ func Parse(args []string) (Config, error) {
 	flags.DurationVar(&cfg.CreateTimeout, "create-timeout", 3*time.Minute, "创建沙箱超时")
 	flags.DurationVar(&cfg.ExecTimeout, "exec-timeout", 30*time.Second, "单次命令最长执行时间")
 	flags.IntVar(&cfg.PoolSize, "pool-size", 2, "预热池 idle Pod 数量")
+	flags.StringVar(&cfg.WorkspaceNFSServer, "workspace-nfs-server", "", "可信NFS服务器IP；配置后启用持久工作区")
+	flags.StringVar(&cfg.WorkspaceImage, "workspace-image", "", "包含固定文件/初始化helper的工作区镜像")
+	flags.StringVar(&cfg.WorkspaceControlDir, "workspace-control-dir", "", "Go专属原生Linux持久控制目录")
 
 	if err := flags.Parse(args); err != nil {
 		return Config{}, err
@@ -61,6 +69,17 @@ func Parse(args []string) (Config, error) {
 	}
 	if cfg.PoolSize < 0 {
 		return Config{}, errors.New("pool-size 不能小于 0")
+	}
+	if cfg.WorkspaceNFSServer != "" || cfg.WorkspaceImage != "" || cfg.WorkspaceControlDir != "" {
+		if cfg.WorkspaceNFSServer == "" || cfg.WorkspaceImage == "" || !filepath.IsAbs(cfg.WorkspaceControlDir) || cfg.RuntimeClass == "" {
+			return Config{}, errors.New("工作区模式必须同时配置NFS、镜像、绝对控制目录和RuntimeClass")
+		}
+		for _, root := range []string{"/tmp", "/var/tmp", "/run", "/dev/shm"} {
+			clean := filepath.Clean(cfg.WorkspaceControlDir)
+			if clean == root || strings.HasPrefix(clean, root+"/") {
+				return Config{}, errors.New("工作区控制目录必须持久化，不能放临时目录")
+			}
+		}
 	}
 	return cfg, nil
 }

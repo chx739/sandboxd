@@ -1,0 +1,32 @@
+{
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/0d0a972daba14864bac020b132da2a9b",
+  "scope": "fixed openat2 initial write diagnostic",
+  "externalModelCalls": 0,
+  "writeStatus": 403,
+  "writeBody": {
+    "denyLayer": "workspace-policy",
+    "error": "existing file unreadable or CAS target missing"
+  },
+  "releaseStatus": 200,
+  "release": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-48c2a569cd3244a3acf72a79d5083acf",
+    "sessionId": "session-boundary-a",
+    "branchId": "branch-boundary-a",
+    "generation": 2,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-openat2-probe",
+      "attemptId": "attempt-openat2-probe",
+      "sandboxId": "2c77dc392bef1224",
+      "podName": "sandbox-2c77dc392bef1224",
+      "podUid": "46cbfc64-880a-4c1d-bccc-2b559c94afb8",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.4",
+    "imageId": "sha256:c8523cb19e69df5e3bb4a8b8bf69bb9952a94b9741bd17e69c3c5f1a61550cff",
+    "stopReason": "containers-terminated"
+  }
+}

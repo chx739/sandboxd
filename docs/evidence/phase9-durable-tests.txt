@@ -1,0 +1,13 @@
+test_append_reopen_and_independent_projection (agentd.tests.test_durable.DurableJournalTests.test_append_reopen_and_independent_projection) ... ok
+test_complete_corrupt_line_is_not_skipped (agentd.tests.test_durable.DurableJournalTests.test_complete_corrupt_line_is_not_skipped) ... ok
+test_duplicate_owner_is_rejected_until_close (agentd.tests.test_durable.DurableJournalTests.test_duplicate_owner_is_rejected_until_close) ... ok
+test_fsync_failure_poisons_writer (agentd.tests.test_durable.DurableJournalTests.test_fsync_failure_poisons_writer) ... ok
+test_invalid_or_large_event_does_not_change_file (agentd.tests.test_durable.DurableJournalTests.test_invalid_or_large_event_does_not_change_file) ... ok
+test_partial_tail_is_not_a_record_and_is_repaired_before_append (agentd.tests.test_durable.DurableJournalTests.test_partial_tail_is_not_a_record_and_is_repaired_before_append) ... ok
+test_sequence_tamper_is_rejected_even_with_recomputed_checksum (agentd.tests.test_durable.DurableJournalTests.test_sequence_tamper_is_rejected_even_with_recomputed_checksum) ... ok
+test_symlink_journal_is_rejected (agentd.tests.test_durable.DurableJournalTests.test_symlink_journal_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.042s
+
+OK

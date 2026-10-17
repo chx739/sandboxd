@@ -4,6 +4,7 @@ from typing import Any, Sequence
 
 from ..clients import HTTPResult
 from ..redaction import public_error
+from ..tools.remote_files import RemoteFileWorkspace
 from .base import PluginContext, PluginManifest
 
 
@@ -112,6 +113,8 @@ class FileToolsPlugin:
     ) -> HTTPResult:
         workspace = context.workspace
         try:
+            if isinstance(workspace, RemoteFileWorkspace):
+                return await workspace.execute(tool_name, arguments)
             if tool_name == "list_files":
                 body = workspace.list_files(str(arguments.get("path", ".")))
             elif tool_name == "read_file":

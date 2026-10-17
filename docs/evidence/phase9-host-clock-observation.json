@@ -1,0 +1,27 @@
+{
+  "scope": "read-only host realtime versus monotonic diagnostic, no clock modification",
+  "requestedSeconds": 30,
+  "samples": 2942,
+  "backwardsCount": 2,
+  "offsetJumps": [
+    {
+      "previousUTC": "2026-10-17T19:06:24.036506+00:00",
+      "observedUTC": "2026-10-17T19:06:22.794415+00:00",
+      "realtimeDeltaSeconds": -1.242091275,
+      "monotonicDeltaSeconds": 0.010114419
+    },
+    {
+      "previousUTC": "2026-10-17T19:06:37.310156+00:00",
+      "observedUTC": "2026-10-17T19:06:37.639166+00:00",
+      "realtimeDeltaSeconds": 0.329009936,
+      "monotonicDeltaSeconds": 0.010114037
+    },
+    {
+      "previousUTC": "2026-10-17T19:06:37.888106+00:00",
+      "observedUTC": "2026-10-17T19:06:37.075309+00:00",
+      "realtimeDeltaSeconds": -0.812796498,
+      "monotonicDeltaSeconds": 0.010131443
+    }
+  ],
+  "elapsedMonotonicSeconds": 30.009426404
+}

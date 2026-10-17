@@ -1,0 +1,21 @@
+test_alert_webhook_requires_its_own_token (agentd.tests.test_api.AgentAPIAuthTest.test_alert_webhook_requires_its_own_token) ... Executing <Task finished name='Task-2' coro=<AgentAPIAuthTest.test_alert_webhook_requires_its_own_token() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_api.py:17> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.305 seconds
+ok
+test_claim_recovery_uses_original_190_seconds (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_claim_recovery_uses_original_190_seconds) ... ok
+test_clock_anchor_or_derived_deadline_cannot_be_rewritten (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_clock_anchor_or_derived_deadline_cannot_be_rewritten) ... ok
+test_clock_configuration_is_bounded_and_immutable (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_clock_configuration_is_bounded_and_immutable) ... ok
+test_clock_rollback_stops_instead_of_refunding_time (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_clock_rollback_stops_instead_of_refunding_time) ... ok
+test_expired_claim_cannot_start_a_fresh_loop (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_expired_claim_cannot_start_a_fresh_loop) ... ok
+test_expired_loop_allows_cleanup_but_never_new_calls (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_expired_loop_allows_cleanup_but_never_new_calls) ... ok
+test_legacy_deadline_is_read_without_rewriting_or_extending (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_legacy_deadline_is_read_without_rewriting_or_extending) ... ok
+test_loop_has_separate_budget_and_downtime_is_not_refunded (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_loop_has_separate_budget_and_downtime_is_not_refunded) ... ok
+test_loop_requires_a_bound_current_attempt_and_cancel_wins (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_loop_requires_a_bound_current_attempt_and_cancel_wins) ... ok
+test_model_and_tool_cannot_run_before_loop_clock_is_committed (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_model_and_tool_cannot_run_before_loop_clock_is_committed) ... ok
+test_queued_time_does_not_consume_unstarted_claim_window (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_queued_time_does_not_consume_unstarted_claim_window) ... ok
+test_real_kubernetes_uid_can_start_with_a_digit_and_binding_is_immutable (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_real_kubernetes_uid_can_start_with_a_digit_and_binding_is_immutable) ... ok
+test_recovery_cannot_use_existing_loop_clock_before_new_binding (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_recovery_cannot_use_existing_loop_clock_before_new_binding) ... ok
+test_startup_scan_includes_expired_and_cancelled_owners_for_cleanup (agentd.tests.test_recovery_timing.RecoveryTimingTests.test_startup_scan_includes_expired_and_cancelled_owners_for_cleanup) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.797s
+
+OK

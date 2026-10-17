@@ -6,7 +6,11 @@
 
 ## 一句话目标
 
-> **2026-10-17 工作区恢复规划**：用户要求先编写 [NFS V1 → restic + MinIO V2 实施约束](docs/43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md)，用于防止后续实施偏移。V1 仅 NFS 最新状态，自动接续 Pod 故障及 agentd 重启后的未完成任务；保留 task_id、新增 attempt、继承预算和截止时间。V2 保留 NFS 运行并增加 restic/MinIO 历史快照。本次仅授权文档，未开始实现。后续实施须先核对明确授权，并将新增范围与历史限制的关系同步到本文件；本规划不取消 Phase 8 的未完成项或重新授权付费调用。
+> **2026-10-17 当前实施目标：Phase 9 工作区恢复。** 用户已明确要求按 [43 NFS V1 → restic + MinIO V2 实施约束](docs/43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md) 开始实现并进入目标模式，[完整目标 Prompt](docs/44-工作区恢复目标模式Prompt.md) 已保存。先完成 V1 的 14 项验收，再完成 V2 的 10 项验收。V1 只维护 NFS 最新文件状态，Pod 故障及 agentd 重启后自动接续未完成 Task；保留 task_id、新增 attempt、继承预算与截止时间。V2 保留 NFS 运行，增加 restic/MinIO 联合检查点及历史分支文件恢复。本轮允许必要的本地测试、项目专用服务与可控故障实验，不运行外部付费模型。
+
+当前实现快照（2026-10-18）：V1矩阵14/14与显式旧文件迁移已有真实证据；统一缓存安装/启动、三类联合回放和固定负载性能已有真实证据，V1单节点MVP具备交付条件；全部V2仍待完成。目标保持完整，当前进度与原始证据以PROGRESS和文档45为准。
+
+Phase 9 只解除与本轮直接相关的历史限制：文件工具经 Go 受限接口访问本项目 Pod 专属工作区；新增 NFS、任务/attempt 持久化与 restic/MinIO；自动故障接续保留原 Task，手动 resume 继续创建新 Task。仍禁止任意 Shell、外部主机任意写入、自动审批、新数据库、消息队列、多租户及生产级 HA。原安全边界与用户数据保留；Phase 8 未完成的 Live/人工审核待办保留，其旧预算不自动授权本轮调用。
 
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
 

@@ -64,6 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             cfg.llm_model,
             cfg.llm_api_key,
             cfg.llm_thinking,
+            max_retries=0,
         )
     else:
         gateway = ReplayModelGateway(cfg.replay_file)
@@ -73,10 +74,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "economy": LiveModelGateway(
                 cfg.llm_base_url, cfg.router_economy_model,
                 cfg.llm_api_key, cfg.llm_thinking,
+                max_retries=0,
             ),
             "strong": LiveModelGateway(
                 cfg.llm_base_url, cfg.router_strong_model,
                 cfg.llm_api_key, cfg.llm_thinking,
+                max_retries=0,
             ),
         }
         model_router = ModelRouter(
@@ -109,7 +112,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         memory_store=memory_store,
         model_router=model_router,
     )
-    store = TaskStore(cfg.trace_dir)
+    if cfg.workspace_backend == "nfs" and cfg.recovery_dir is None:
+        raise ValueError("NFS mode requires a durable recovery directory")
+    store = TaskStore(cfg.trace_dir, recovery_dir=cfg.recovery_dir if cfg.workspace_backend == "nfs" else None)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
@@ -122,6 +127,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 await worker
             except asyncio.CancelledError:
                 pass
+            store.close()
             await prometheus.close()
             await sandboxd.close()
             if knowledge_plugin is not None:
@@ -241,6 +247,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             )
         )
 
+    @app.get("/api/v1/tasks/{task_id}/traces")
+    async def get_attempt_traces(task_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse({"taskId": task_id, "attempts": await store.get_task_traces(task_id)})
+        except TaskNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
     @app.get("/api/v1/tasks/{task_id}/trace")
     async def get_trace(task_id: str, request: Request) -> JSONResponse:
         _authorized(request, cfg.api_token)
@@ -359,7 +373,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             task = await store.resume(session_id, node_id)
         except TaskNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
-        except ValueError as exc:
+        except (ValueError, TaskConflictError) as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         except QueueFullError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc

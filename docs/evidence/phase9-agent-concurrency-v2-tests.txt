@@ -1,0 +1,6 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 137405}
+{"stage": "agentd-process-started", "number": 2, "pid": 137547}
+{"stage": "duplicate-service-rejected-by-lock"}
+{"stage": "agentd-process-started", "number": 3, "pid": 137631}
+{"stage": "stale-cleanup-and-duplicate-requests-verified", "taskId": "task-5e1f4dbecbd7d724"}
+{"passed": true, "output": "docs/evidence/phase9-agent-concurrency-v2.json"}

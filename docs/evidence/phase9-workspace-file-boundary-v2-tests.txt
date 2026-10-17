@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_boundary_demo.py", line 149, in <module>
+    main()
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_boundary_demo.py", line 142, in main
+    result = asyncio.run(run(args.output, args.binary.resolve(), args.nfs_server))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_boundary_demo.py", line 101, in run
+    await denied(name, a, operation, 403)
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_boundary_demo.py", line 72, in denied
+    assert response.status_code == expected, (name, response.status_code, body)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('parent-symlink', 200, {'content': 'synthetic guard a\n', 'offset': 0, 'path': 'dirlink/guard.md', 'redacted': False, 'sha256': '5d0fb090e35fcd66487663fe33bf7fb37a45dbdeb4ff188dee8d9e3da122c820', 'totalChars': 18, 'truncated': False})

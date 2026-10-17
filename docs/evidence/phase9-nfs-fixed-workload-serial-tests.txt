@@ -1,0 +1,19 @@
+CPU: 12
+可用内存: 20849 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   26G  931G   3% /
+C:\             932G  803G  130G  87% /mnt/c
+运行中的 Docker 容器: 2
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+{"scenario": "few-files", "repeat": 0, "passed": true}
+{"scenario": "many-small-files", "repeat": 0, "passed": true}
+{"scenario": "partial-change", "repeat": 0, "passed": true}
+{"scenario": "few-files", "repeat": 1, "passed": true}
+{"scenario": "many-small-files", "repeat": 1, "passed": true}
+{"scenario": "partial-change", "repeat": 1, "passed": true}
+{"scenario": "few-files", "repeat": 2, "passed": true}
+{"scenario": "many-small-files", "repeat": 2, "passed": true}
+{"scenario": "partial-change", "repeat": 2, "passed": true}
+{"passed": true, "output": "docs/evidence/phase9-nfs-fixed-workload-serial.json"}

@@ -1,0 +1,127 @@
+=== RUN   TestStorageCheckPreservesBusinessFilesAndCleansProbe
+--- PASS: TestStorageCheckPreservesBusinessFilesAndCleansProbe (0.04s)
+=== RUN   TestWriteReadEditAndCAS
+--- PASS: TestWriteReadEditAndCAS (0.03s)
+=== RUN   TestPathsAndSymlinks
+--- PASS: TestPathsAndSymlinks (0.00s)
+=== RUN   TestSpecialFilesDoNotBlock
+=== RUN   TestSpecialFilesDoNotBlock/fifo
+=== RUN   TestSpecialFilesDoNotBlock/symlink
+=== RUN   TestSpecialFilesDoNotBlock/hardlink
+--- PASS: TestSpecialFilesDoNotBlock (0.00s)
+    --- PASS: TestSpecialFilesDoNotBlock/fifo (0.00s)
+    --- PASS: TestSpecialFilesDoNotBlock/symlink (0.00s)
+    --- PASS: TestSpecialFilesDoNotBlock/hardlink (0.00s)
+=== RUN   TestSizeUTF8AndUniqueEdit
+--- PASS: TestSizeUTF8AndUniqueEdit (0.03s)
+=== RUN   TestListSearchRedactionAndLimits
+--- PASS: TestListSearchRedactionAndLimits (0.02s)
+=== RUN   TestStrictProtocol
+--- PASS: TestStrictProtocol (0.07s)
+=== RUN   TestFileProtocolDistinguishesMissingNullAndEmptyContent
+--- PASS: TestFileProtocolDistinguishesMissingNullAndEmptyContent (0.02s)
+=== RUN   TestSingleWriterCAS
+--- PASS: TestSingleWriterCAS (0.02s)
+=== RUN   TestInterruptedTemporaryFileIsNotAUserFile
+--- PASS: TestInterruptedTemporaryFileIsNotAUserFile (0.01s)
+=== RUN   TestEntryQuotaCountsEmptyDirectories
+--- PASS: TestEntryQuotaCountsEmptyDirectories (0.08s)
+=== RUN   TestInitializePrivateWorkspaceIsIdempotent
+--- PASS: TestInitializePrivateWorkspaceIsIdempotent (0.02s)
+=== RUN   TestInitializeRejectsPathsLinksAndUnexpectedPermissions
+--- PASS: TestInitializeRejectsPathsLinksAndUnexpectedPermissions (0.00s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/workspace	1.356s
+=== RUN   TestWaitReadyRequiresReadyCondition
+--- PASS: TestWaitReadyRequiresReadyCondition (0.02s)
+=== RUN   TestRandomIDIsDNSLabelFriendly
+--- PASS: TestRandomIDIsDNSLabelFriendly (0.00s)
+=== RUN   TestPoolCannotCleanClaimOrReleasePersistentWorkspace
+--- PASS: TestPoolCannotCleanClaimOrReleasePersistentWorkspace (0.00s)
+=== RUN   TestConcurrentClaimReturnsDifferentPods
+--- PASS: TestConcurrentClaimReturnsDifferentPods (0.01s)
+=== RUN   TestReconcileCreateIdleIsBounded
+--- PASS: TestReconcileCreateIdleIsBounded (0.10s)
+=== RUN   TestClaimPatchPathMatchesStateLabel
+--- PASS: TestClaimPatchPathMatchesStateLabel (0.00s)
+=== RUN   TestIsClaimConflict
+=== RUN   TestIsClaimConflict/json_patch_test_失败返回_422_invalid
+=== RUN   TestIsClaimConflict/版本冲突返回_409
+=== RUN   TestIsClaimConflict/错误文本包含_test_failed_时兜底放行
+=== RUN   TestIsClaimConflict/权限与网络类错误必须中止_Claim
+=== RUN   TestIsClaimConflict/普通基础设施错误
+--- PASS: TestIsClaimConflict (0.00s)
+    --- PASS: TestIsClaimConflict/json_patch_test_失败返回_422_invalid (0.00s)
+    --- PASS: TestIsClaimConflict/版本冲突返回_409 (0.00s)
+    --- PASS: TestIsClaimConflict/错误文本包含_test_failed_时兜底放行 (0.00s)
+    --- PASS: TestIsClaimConflict/权限与网络类错误必须中止_Claim (0.00s)
+    --- PASS: TestIsClaimConflict/普通基础设施错误 (0.00s)
+=== RUN   TestBuildPodUsesControlledTokenAndBoundedWritableVolumes
+--- PASS: TestBuildPodUsesControlledTokenAndBoundedWritableVolumes (0.00s)
+=== RUN   TestBuildPodSecurityBaseline
+--- PASS: TestBuildPodSecurityBaseline (0.00s)
+=== RUN   TestBuildPodRuntimeClassCanBeDisabled
+--- PASS: TestBuildPodRuntimeClassCanBeDisabled (0.00s)
+=== RUN   TestWorkspaceRegistryLifecycleAndRestart
+--- PASS: TestWorkspaceRegistryLifecycleAndRestart (0.08s)
+=== RUN   TestWorkspaceRegistryScopeAndUnreadyClaims
+--- PASS: TestWorkspaceRegistryScopeAndUnreadyClaims (0.03s)
+=== RUN   TestWorkspaceRegistryRequiresPositiveStopEvidence
+--- PASS: TestWorkspaceRegistryRequiresPositiveStopEvidence (0.04s)
+=== RUN   TestWorkspaceCreateOutcomeUnknownIsNotNeverCreated
+--- PASS: TestWorkspaceCreateOutcomeUnknownIsNotNeverCreated (0.04s)
+=== RUN   TestWorkspaceAbortedBeforeCreateCanRelease
+--- PASS: TestWorkspaceAbortedBeforeCreateCanRelease (0.04s)
+=== RUN   TestWorkspaceRPCIsSerializedAgainstRelease
+--- PASS: TestWorkspaceRPCIsSerializedAgainstRelease (0.06s)
+=== RUN   TestAutomaticRecoveryCannotChangeImageIdentity
+--- PASS: TestAutomaticRecoveryCannotChangeImageIdentity (0.07s)
+=== RUN   TestWorkspaceStopPersistsTerminationBeforeReleasing
+--- PASS: TestWorkspaceStopPersistsTerminationBeforeReleasing (0.06s)
+=== RUN   TestWorkspaceMissingPodIsNotPhysicalStopProof
+--- PASS: TestWorkspaceMissingPodIsNotPhysicalStopProof (0.04s)
+=== RUN   TestWorkspaceCanFinishReleaseAfterFinalizerWasAlreadyRemoved
+--- PASS: TestWorkspaceCanFinishReleaseAfterFinalizerWasAlreadyRemoved (0.06s)
+=== RUN   TestWorkspaceLeaseExpiredOrNodeNotReadyBlocksStop
+=== RUN   TestWorkspaceLeaseExpiredOrNodeNotReadyBlocksStop/expired
+=== RUN   TestWorkspaceLeaseExpiredOrNodeNotReadyBlocksStop/not-ready
+--- PASS: TestWorkspaceLeaseExpiredOrNodeNotReadyBlocksStop (0.09s)
+    --- PASS: TestWorkspaceLeaseExpiredOrNodeNotReadyBlocksStop/expired (0.04s)
+    --- PASS: TestWorkspaceLeaseExpiredOrNodeNotReadyBlocksStop/not-ready (0.04s)
+=== RUN   TestWorkspaceStopRejectsReusedPodUID
+--- PASS: TestWorkspaceStopRejectsReusedPodUID (0.05s)
+=== RUN   TestWorkspaceRunningWriterCannotBeReleasedOnTimeout
+--- PASS: TestWorkspaceRunningWriterCannotBeReleasedOnTimeout (0.04s)
+=== RUN   TestWorkspaceOutputLimitCannotBeBypassedByReaderFrom
+--- PASS: TestWorkspaceOutputLimitCannotBeBypassedByReaderFrom (0.00s)
+=== RUN   TestWorkspaceInitializationPodHasNoAPICredentials
+--- PASS: TestWorkspaceInitializationPodHasNoAPICredentials (0.00s)
+=== RUN   TestWorkspacePodPreservesSecurityAndDedicatedVolume
+--- PASS: TestWorkspacePodPreservesSecurityAndDedicatedVolume (0.00s)
+=== RUN   TestWorkspaceBindingCannotChooseFreePaths
+--- PASS: TestWorkspaceBindingCannotChooseFreePaths (0.00s)
+=== RUN   TestNFSVolumePinsVersionAndRetainsWorkspace
+--- PASS: TestNFSVolumePinsVersionAndRetainsWorkspace (0.00s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/sandbox	1.874s
+=== RUN   TestKubernetesDiagnosticRejectsBeforeExec
+=== RUN   TestKubernetesDiagnosticRejectsBeforeExec/requires_agent_authentication
+=== RUN   TestKubernetesDiagnosticRejectsBeforeExec/write_operation_is_policy_denied
+=== RUN   TestKubernetesDiagnosticRejectsBeforeExec/other_namespace_is_policy_denied
+=== RUN   TestKubernetesDiagnosticRejectsBeforeExec/unknown_JSON_field_is_rejected
+--- PASS: TestKubernetesDiagnosticRejectsBeforeExec (0.00s)
+    --- PASS: TestKubernetesDiagnosticRejectsBeforeExec/requires_agent_authentication (0.00s)
+    --- PASS: TestKubernetesDiagnosticRejectsBeforeExec/write_operation_is_policy_denied (0.00s)
+    --- PASS: TestKubernetesDiagnosticRejectsBeforeExec/other_namespace_is_policy_denied (0.00s)
+    --- PASS: TestKubernetesDiagnosticRejectsBeforeExec/unknown_JSON_field_is_rejected (0.00s)
+=== RUN   TestReadyzReflectsReadiness
+--- PASS: TestReadyzReflectsReadiness (0.00s)
+=== RUN   TestPersistentWorkspaceCannotUseGenericExec
+--- PASS: TestPersistentWorkspaceCannotUseGenericExec (0.00s)
+=== RUN   TestWorkspaceRoutesRequireTokenAndConfiguredBackend
+--- PASS: TestWorkspaceRoutesRequireTokenAndConfiguredBackend (0.00s)
+=== RUN   TestWorkspaceFilesRejectBypassingPythonPolicy
+2026/10/18 00:19:50 workspace operation failed: workspace ownership conflict
+--- PASS: TestWorkspaceFilesRejectBypassingPythonPolicy (0.02s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/api	1.048s

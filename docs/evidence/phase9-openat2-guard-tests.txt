@@ -1,0 +1,8 @@
+--- FAIL: TestOpenNoSymlinksRejectsDirectoryLinkAndLeafAtomically (0.00s)
+    files_linux_test.go:65: expected explicit symlink refusal for dirlink: not a directory
+FAIL
+FAIL	github.com/chx739/sandboxd/internal/workspace	0.373s
+ok  	github.com/chx739/sandboxd/cmd/sandbox-filetool	1.009s
+ok  	github.com/chx739/sandboxd/internal/api	1.041s
+ok  	github.com/chx739/sandboxd/internal/sandbox	1.892s
+FAIL

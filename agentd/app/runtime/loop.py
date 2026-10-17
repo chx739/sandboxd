@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+import httpx
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
@@ -35,12 +36,14 @@ from ..policy import (
     validate_tool_call,
 )
 from ..redaction import public_error, safe_tool_arguments
+from ..tools.remote_files import WorkspaceExecutionError
 from ..working_memory import (
     available_evidence_ids, evidence_id, project_working_memory,
     prometheus_sample_info, resource_uid_from_tool_body, stale_state_evidence, validate_update,
 )
 from .control import AgentControl, QueuedMessage
 from .session import SessionJournal
+from .execution import RecoveryAttempt
 
 SYSTEM_PROMPT = """
 你是一个只做证据驱动诊断的 Kubernetes 运维 Agent。
@@ -196,6 +199,7 @@ class PiStyleAgentLoop:
         memory_summary: str = "",
         journal: SessionJournal | None = None,
         tool_schemas: list[dict[str, Any]] | None = None,
+        recovery: RecoveryAttempt | None = None,
     ) -> None:
         self._session = session
         self._plugins = plugins
@@ -205,6 +209,11 @@ class PiStyleAgentLoop:
         self._memory_summary = memory_summary
         self._journal = journal
         self._tool_schemas = tool_schemas or []
+        self._recovery = recovery
+        if recovery is not None:
+            state.iteration_count = max(state.iteration_count, recovery.used("model"))
+            state.tool_call_count = max(state.tool_call_count, recovery.used("tool"))
+            state.prometheus_call_count = max(state.prometheus_call_count, recovery.prometheus_used())
         self._history_evidence: list[Evidence] = []
         self._history_denied: list[DeniedAction] = []
         calls: dict[str, dict[str, Any]] = {}
@@ -243,7 +252,7 @@ class PiStyleAgentLoop:
         if not self.state.messages:
             self._prepare_context()
             if self._journal is not None:
-                await self._journal.append_transcript(self.state.task_id, self.state.messages)
+                await self._checkpoint()
 
         pending = self._control.drain_steering()
         limit_reached = False
@@ -310,7 +319,13 @@ class PiStyleAgentLoop:
 
     def _apply_queued_messages(self, items: list[QueuedMessage]) -> None:
         for item in items:
-            self.state.messages.append(item.message)
+            if item.command_id is not None and any(
+                isinstance(m, HumanMessage) and m.additional_kwargs.get("sandboxdCommandId") == item.command_id
+                for m in self.state.messages
+            ):
+                continue
+            message = item.message.model_copy(update={"additional_kwargs": {"sandboxdCommandId": item.command_id}}) if item.command_id else item.message
+            self.state.messages.append(message)
             append_event(
                 self.state.events,
                 "%s.applied" % item.kind,
@@ -348,7 +363,13 @@ class PiStyleAgentLoop:
         )
         append_event(self.state.events, "turn.started", iteration=iteration)
 
+        reservation = self._recovery.reserve("model") if self._recovery is not None else None
         invocation = await self._session.invoke(transformed.messages)
+        if reservation is not None:
+            self._recovery.audit({"kind": "model", "usage": invocation.usage.model_dump(by_alias=True),
+                                  "usageKnown": invocation.usage_known, "elapsedMs": invocation.elapsed_ms,
+                                  "finishReason": invocation.finish_reason}, reservation)
+            self._recovery.finish(reservation)
         self.state.messages.append(invocation.message)
         self.state.iteration_count = iteration
         self.state.model_usages.append(invocation.usage)
@@ -360,6 +381,7 @@ class PiStyleAgentLoop:
             details={
                 "finishReason": invocation.finish_reason,
                 "usage": invocation.usage.model_dump(by_alias=True),
+                "usageKnown": invocation.usage_known,
             },
         )
         return invocation.message
@@ -415,6 +437,11 @@ class PiStyleAgentLoop:
             )
             denied = not bool(call["allowed"])
             deny_layer = str(call.get("denyLayer", "")) if denied else ""
+            reservation = (
+                self._recovery.reserve("tool", name=name, arguments=arguments)
+                if self._recovery is not None and not denied else None
+            )
+            outcome_known = denied
 
             append_event(
                 self.state.events,
@@ -439,13 +466,18 @@ class PiStyleAgentLoop:
                     if name == "update_working_memory":
                         refs = available_evidence_ids(self.state.messages)
                         payload = {"ok": True, "acceptedUpdate": validate_update(arguments, refs)}
+                        outcome_known = True
                     else:
                         result = await self._plugins.execute(
                             name,
                             arguments,
                             self._plugin_context,
                         )
+                        if (self._recovery is not None and name == "kubernetes_read"
+                                and (result.status_code >= 500 or result.status_code == 404)):
+                            raise WorkspaceExecutionError("Kubernetes executor is unavailable", recoverable=True)
                         body = result.body
+                        outcome_known = True
                         diagnostic_ok = not (
                             name == "kubernetes_read" and isinstance(body, dict) and (
                                 body.get("exitCode", 0) != 0 or body.get("error")
@@ -470,7 +502,18 @@ class PiStyleAgentLoop:
                         ):
                             denied = True
                             deny_layer = str(result.body["denyLayer"])
+                except WorkspaceExecutionError as exc:
+                    # 执行环境失效必须退出当前 attempt，不能让模型直接重发不明写入。
+                    append_event(self.state.events, "tool.interrupted", tool=name,
+                                 details={"recoverable": exc.recoverable,
+                                          "outcomeUncertain": exc.outcome_uncertain})
+                    raise
                 except Exception as exc:
+                    if self._recovery is not None and name == "propose_plan":
+                        raise WorkspaceExecutionError("plan submission outcome is unknown; automatic resubmission is blocked",
+                                                      recoverable=False, outcome_uncertain=True) from exc
+                    if self._recovery is not None and name == "kubernetes_read" and isinstance(exc, httpx.HTTPError):
+                        raise WorkspaceExecutionError("Kubernetes executor transport failed", recoverable=True) from exc
                     payload = {
                         "ok": False,
                         "error": "%s: %s"
@@ -580,6 +623,13 @@ class PiStyleAgentLoop:
                     elapsedMs=elapsed,
                 )
             )
+            if self._recovery is not None:
+                # 审计先fsync，随后确认额度。崩溃夹在两者间仍保守占用预留；
+                # 不把审计结果写回模型上下文或当作完整Session边界。
+                self._recovery.audit({"kind": "tool", "step": self.state.trace_steps[-1].model_dump(mode="json", by_alias=True),
+                                      "outcomeKnown": bool(outcome_known or denied)}, reservation)
+                if reservation is not None and outcome_known:
+                    self._recovery.finish(reservation)
 
         append_event(
             self.state.events,
@@ -588,7 +638,13 @@ class PiStyleAgentLoop:
         )
         if self._journal is not None:
             # 只在整组 ToolMessage 已写入内存后 checkpoint，不留下可恢复的半组调用。
-            await self._journal.append_transcript(self.state.task_id, self.state.messages)
+            await self._checkpoint()
+
+    async def _checkpoint(self) -> None:
+        if self._journal is not None:
+            node_id = await self._journal.append_transcript(self.state.task_id, self.state.messages)
+            if self._recovery is not None:
+                self._recovery.boundary(node_id, self.state.messages)
 
     def _finalize(self) -> None:
         last = self.state.messages[-1]

@@ -53,7 +53,7 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
     POST /api/v1/sessions/{sessionId}/resume
     GET  /api/v1/plugins
 
-`taskId` 代表一次运行，`sessionId` 代表可分支的树形事故上下文；resume 会创建新 Task 和新 Sandbox。Session 写在 `AGENTD_TRACE_DIR/sessions/*.jsonl`，正文与 Tool 参数会脱敏，不保存 Header、API Key、Provider 私有字段或隐藏思维。运行目录必须使用 WSL 原生 Linux 文件系统；未启用 metadata 的 `/mnt/c` 不能依赖 0700/0600 权限。
+`taskId`代表一次逻辑运行，自动故障接续保留Task、增加attempt；手动resume新建Task。部署默认`AGENTD_WORKSPACE_BACKEND=nfs`，Session与任务/attempt账本位于`AGENTD_RECOVERY_DIR`（默认`~/.local/share/sandboxd/agent-control`）；旧local模式的Session仍在`AGENTD_TRACE_DIR/sessions`。内容脱敏，不保存Header、Key或隐藏思维。目录须使用原生Linux持久盘。全部attempt Trace可通过`GET /api/v1/tasks/{taskId}/traces`查询，沿用Agent Token保护。
 
 详细学习顺序见 `../docs/18-Pi-style-Agent-Runtime学习手册.md`。
 
@@ -61,7 +61,7 @@ agentd 是 sandboxd 的极简、安全、可插拔运维 Agent 控制面：
 
 `linux_read` 只接受静态 `targetId` 和四个只读 operation。目标配置由 `AGENTD_LINUX_TARGETS_FILE` 指向仓库外 0600 JSON；模型看不到地址、用户、端口和 Key。SSH 路径不经过 gVisor，边界是 strict host key、低权限账号、固定 argv 与远端 forced-command。
 
-`list_files`、`read_file`、`search_files`、`write_file`、`edit_file` 只访问 `AGENTD_WORKSPACE_DIR/<taskId>`。默认工作区位于 WSL 原生 `/tmp/sandboxd-agent-workspaces`，不要改到无法提供 POSIX 权限语义的普通 `/mnt/c`。
+`list_files`、`read_file`、`search_files`、`write_file`、`edit_file`默认经Go受限接口访问Pod专属NFS工作区。Go服务须配置NFS、固定helper镜像与独立持久控制目录，见[部署说明](../deploy/workspace/README.md)。`AGENTD_WORKSPACE_DIR/<taskId>`仅保留给显式`AGENTD_WORKSPACE_BACKEND=local`的旧离线流程；旧目录不删除、不自动双写。当前V1只有最新文件状态，从旧会话节点携带工作区恢复会拒绝；V2历史快照仍待实现。
 
 完整真实 Replay：
 

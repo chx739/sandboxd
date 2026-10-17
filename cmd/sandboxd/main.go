@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -97,6 +98,18 @@ func main() {
 		// readyz 必须回答“informer 缓存是否同步”，而不是复用 healthz 的常量 ok。
 		sharedPodInformer.HasSynced,
 	)
+	if cfg.WorkspaceNFSServer != "" {
+		registry, err := sandbox.OpenWorkspaceRegistry(filepath.Join(cfg.WorkspaceControlDir, "workspaces.jsonl"))
+		if err != nil {
+			log.Fatalf("打开工作区控制账本: %v", err)
+		}
+		defer registry.Close()
+		workspaces, err := sandbox.NewWorkspaceRuntime(manager, registry, cfg.WorkspaceNFSServer, cfg.WorkspaceImage)
+		if err != nil {
+			log.Fatalf("配置持久工作区: %v", err)
+		}
+		apiServer.EnableWorkspaces(workspaces)
+	}
 	httpServer := &http.Server{
 		Addr:              cfg.Listen,
 		Handler:           apiServer.Handler(),

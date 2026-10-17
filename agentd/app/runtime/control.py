@@ -13,6 +13,7 @@ QueueKind = Literal["steer", "follow-up"]
 class QueuedMessage:
     kind: QueueKind
     message: HumanMessage
+    command_id: str | None = None
 
 
 class _MessageQueue:
@@ -52,14 +53,14 @@ class AgentControl:
         self._steering = _MessageQueue()
         self._follow_ups = _MessageQueue()
 
-    def steer(self, content: str) -> None:
+    def steer(self, content: str, command_id: str | None = None) -> None:
         self._steering.enqueue(
-            QueuedMessage("steer", HumanMessage(content=content))
+            QueuedMessage("steer", HumanMessage(content=content), command_id)
         )
 
-    def follow_up(self, content: str) -> None:
+    def follow_up(self, content: str, command_id: str | None = None) -> None:
         self._follow_ups.enqueue(
-            QueuedMessage("follow-up", HumanMessage(content=content))
+            QueuedMessage("follow-up", HumanMessage(content=content), command_id)
         )
 
     def drain_steering(self) -> list[QueuedMessage]:

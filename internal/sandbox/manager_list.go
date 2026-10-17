@@ -1,13 +1,38 @@
 package sandbox
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 )
 
 const LabelSource = "sandbox.io/source"
+
+var ErrWorkspaceExecDenied = errors.New("persistent workspace Pods require the restricted file interface")
+
+func isPersistentWorkspace(pod *corev1.Pod) bool {
+	return pod.Labels[LabelWorkspace] != "" || pod.Labels[LabelSource] == "workspace"
+}
+
+// GenericExecPodName preserves the legacy stateless demo endpoint while closing
+// that bypass for persistent files. Diagnostics keep their fixed command route.
+func (m *Manager) GenericExecPodName(id string) (string, error) {
+	name, err := m.PodName(id)
+	if err != nil {
+		return "", err
+	}
+	pod, err := m.podLister.Pods(m.config.Namespace).Get(name)
+	if err != nil {
+		return "", err
+	}
+	if isPersistentWorkspace(pod) {
+		return "", ErrWorkspaceExecDenied
+	}
+	return name, nil
+}
 
 func (m *Manager) List() ([]Sandbox, error) {
 	pods, err := m.podLister.Pods(m.config.Namespace).List(labels.SelectorFromSet(labels.Set{

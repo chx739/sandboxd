@@ -1,0 +1,21 @@
+test_cancelled_inflight_replay_slot_is_not_returned_again (agentd.tests.test_process_replay.ProcessReplayTests.test_cancelled_inflight_replay_slot_is_not_returned_again) ... ok
+test_go_reader_uses_original_struct_order_and_raw_data (agentd.tests.test_process_replay.ProcessReplayTests.test_go_reader_uses_original_struct_order_and_raw_data) ... ok
+test_read_only_monitor_checks_python_checksum_and_ignores_torn_tail (agentd.tests.test_process_replay.ProcessReplayTests.test_read_only_monitor_checks_python_checksum_and_ignores_torn_tail) ... ok
+test_replay_delay_is_bounded_and_does_not_enable_live_calls (agentd.tests.test_process_replay.ProcessReplayTests.test_replay_delay_is_bounded_and_does_not_enable_live_calls) ... ok
+test_accepted_queued_task_is_automatically_discovered_after_reopen (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_accepted_queued_task_is_automatically_discovered_after_reopen) ... ok
+test_acknowledged_commands_survive_reopen_and_have_complete_boundaries (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_acknowledged_commands_survive_reopen_and_have_complete_boundaries) ... ok
+test_cancel_reconciles_blocked_owner_even_with_a_stale_done_handle (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_cancel_reconciles_blocked_owner_even_with_a_stale_done_handle) ... ok
+test_queued_cancellation_is_persisted_before_restart (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_queued_cancellation_is_persisted_before_restart) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_terminal_tasks_are_not_restarted (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_terminal_tasks_are_not_restarted) ... ok
+test_v1_old_node_resume_rejected_but_latest_uses_same_workspace (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_v1_old_node_resume_rejected_but_latest_uses_same_workspace) ... ok
+test_worker_automatically_continues_same_task_after_unknown_write (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_worker_automatically_continues_same_task_after_unknown_write) ... ok
+test_cancel_releases_claimed_sandbox_once (agentd.tests.test_replay.ReplayGraphTest.test_cancel_releases_claimed_sandbox_once) ... ok
+test_injection_is_denied_and_plan_stays_pending (agentd.tests.test_replay.ReplayGraphTest.test_injection_is_denied_and_plan_stays_pending) ... ok
+test_phase4_linux_and_file_tools_keep_content_out_of_trace (agentd.tests.test_replay.ReplayGraphTest.test_phase4_linux_and_file_tools_keep_content_out_of_trace) ... ok
+test_slow_claim_is_bounded_by_claim_budget (agentd.tests.test_replay.ReplayGraphTest.test_slow_claim_is_bounded_by_claim_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.995s
+
+OK

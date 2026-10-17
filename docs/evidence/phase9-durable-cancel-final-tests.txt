@@ -1,0 +1,15 @@
+test_accepted_queued_task_is_automatically_discovered_after_reopen (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_accepted_queued_task_is_automatically_discovered_after_reopen) ... ok
+test_acknowledged_commands_survive_reopen_and_have_complete_boundaries (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_acknowledged_commands_survive_reopen_and_have_complete_boundaries) ... ok
+test_cancel_reconciles_blocked_owner_even_with_a_stale_done_handle (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_cancel_reconciles_blocked_owner_even_with_a_stale_done_handle) ... ok
+test_queued_cancellation_is_persisted_before_restart (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_queued_cancellation_is_persisted_before_restart) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_terminal_tasks_are_not_restarted (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_terminal_tasks_are_not_restarted) ... ok
+test_v1_old_node_resume_rejected_but_latest_uses_same_workspace (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_v1_old_node_resume_rejected_but_latest_uses_same_workspace) ... ok
+test_worker_automatically_continues_same_task_after_unknown_write (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_worker_automatically_continues_same_task_after_unknown_write) ... ok
+test_alert_webhook_requires_its_own_token (agentd.tests.test_api.AgentAPIAuthTest.test_alert_webhook_requires_its_own_token) ... Executing <Task finished name='Task-84' coro=<AgentAPIAuthTest.test_alert_webhook_requires_its_own_token() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_api.py:17> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.318 seconds
+ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.151s
+
+OK

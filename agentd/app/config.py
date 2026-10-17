@@ -40,6 +40,9 @@ class Settings:
     router_jev_input_usd_per_million: float | None = None
     router_jev_ipv4_only: bool = False
     logs_file: Path | None = None
+    # 手工构造Settings的旧离线夹具保留local；部署入口load_settings默认nfs。
+    workspace_backend: str = "local"
+    recovery_dir: Path | None = None
 
 
 def _required(name: str) -> str:
@@ -67,6 +70,16 @@ def _http_url(name: str, default: str | None = None) -> str:
 
 def load_settings() -> Settings:
     project_dir = Path(__file__).resolve().parents[1]
+    workspace_backend = os.getenv("AGENTD_WORKSPACE_BACKEND", "nfs")
+    if workspace_backend not in {"nfs", "local"}:
+        raise ValueError("AGENTD_WORKSPACE_BACKEND 只能是 nfs 或 local（离线兼容）")
+    recovery_dir = Path(os.getenv("AGENTD_RECOVERY_DIR", str(Path.home() / ".local/share/sandboxd/agent-control")))
+    if workspace_backend == "nfs":
+        if not recovery_dir.is_absolute():
+            raise ValueError("AGENTD_RECOVERY_DIR 必须是绝对持久目录")
+        resolved = recovery_dir.resolve()
+        if any(resolved == root or root in resolved.parents for root in map(Path, ("/tmp", "/var/tmp", "/run", "/dev/shm"))):
+            raise ValueError("AGENTD_RECOVERY_DIR 不能使用临时目录")
     mode = os.getenv("AGENTD_LLM_MODE", "replay")
     if mode not in {"live", "replay"}:
         raise ValueError("AGENTD_LLM_MODE 只能是 live 或 replay")
@@ -145,6 +158,8 @@ def load_settings() -> Settings:
         raise ValueError("Jev 输入单价必须是非负有限数字")
 
     return Settings(
+        workspace_backend=workspace_backend,
+        recovery_dir=recovery_dir if workspace_backend == "nfs" else None,
         listen_host=os.getenv("AGENTD_LISTEN_HOST", "127.0.0.1"),
         listen_port=int(os.getenv("AGENTD_LISTEN_PORT", "8090")),
         api_token=api_token,

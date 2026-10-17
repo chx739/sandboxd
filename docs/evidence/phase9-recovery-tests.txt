@@ -1,0 +1,25 @@
+test_append_reopen_and_independent_projection (agentd.tests.test_durable.DurableJournalTests.test_append_reopen_and_independent_projection) ... ok
+test_complete_corrupt_line_is_not_skipped (agentd.tests.test_durable.DurableJournalTests.test_complete_corrupt_line_is_not_skipped) ... ok
+test_duplicate_owner_is_rejected_until_close (agentd.tests.test_durable.DurableJournalTests.test_duplicate_owner_is_rejected_until_close) ... ok
+test_fsync_failure_poisons_writer (agentd.tests.test_durable.DurableJournalTests.test_fsync_failure_poisons_writer) ... ok
+test_invalid_or_large_event_does_not_change_file (agentd.tests.test_durable.DurableJournalTests.test_invalid_or_large_event_does_not_change_file) ... ok
+test_partial_tail_is_not_a_record_and_is_repaired_before_append (agentd.tests.test_durable.DurableJournalTests.test_partial_tail_is_not_a_record_and_is_repaired_before_append) ... ok
+test_sequence_tamper_is_rejected_even_with_recomputed_checksum (agentd.tests.test_durable.DurableJournalTests.test_sequence_tamper_is_rejected_even_with_recomputed_checksum) ... ok
+test_symlink_journal_is_rejected (agentd.tests.test_durable.DurableJournalTests.test_symlink_journal_is_rejected) ... ok
+test_cancel_is_durable_and_precedes_rebind (agentd.tests.test_recovery.RecoveryLedgerTests.test_cancel_is_durable_and_precedes_rebind) ... ok
+test_commands_have_durable_ids_and_consumption_boundary (agentd.tests.test_recovery.RecoveryLedgerTests.test_commands_have_durable_ids_and_consumption_boundary) ... ok
+test_deadline_includes_downtime (agentd.tests.test_recovery.RecoveryLedgerTests.test_deadline_includes_downtime) ... ok
+test_failed_fsync_does_not_publish_state (agentd.tests.test_recovery.RecoveryLedgerTests.test_failed_fsync_does_not_publish_state) ... ok
+test_recovery_is_bounded (agentd.tests.test_recovery.RecoveryLedgerTests.test_recovery_is_bounded) ... ok
+test_redaction_and_unconfirmed_write_metadata (agentd.tests.test_recovery.RecoveryLedgerTests.test_redaction_and_unconfirmed_write_metadata) ... ok
+test_restart_preserves_identity_deadline_and_reservations (agentd.tests.test_recovery.RecoveryLedgerTests.test_restart_preserves_identity_deadline_and_reservations) ... ok
+test_stale_attempt_and_rerouting_are_rejected (agentd.tests.test_recovery.RecoveryLedgerTests.test_stale_attempt_and_rerouting_are_rejected) ... ok
+test_terminal_tasks_do_not_resurrect (agentd.tests.test_recovery.RecoveryLedgerTests.test_terminal_tasks_do_not_resurrect) ... ok
+test_termination_evidence_cannot_be_a_lease_or_deleted_object (agentd.tests.test_recovery.RecoveryLedgerTests.test_termination_evidence_cannot_be_a_lease_or_deleted_object) ... ok
+test_uncertain_reservation_consumes_budget (agentd.tests.test_recovery.RecoveryLedgerTests.test_uncertain_reservation_consumes_budget) ... ok
+test_workspace_ownership_is_not_just_task_identity (agentd.tests.test_recovery.RecoveryLedgerTests.test_workspace_ownership_is_not_just_task_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.594s
+
+OK

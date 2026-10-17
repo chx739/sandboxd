@@ -1,0 +1,10 @@
+{"scenario": "few-files", "repeat": 0, "passed": true}
+{"scenario": "many-small-files", "repeat": 0, "passed": true}
+{"scenario": "partial-change", "repeat": 0, "passed": true}
+{"scenario": "few-files", "repeat": 1, "passed": true}
+{"scenario": "many-small-files", "repeat": 1, "passed": true}
+{"scenario": "partial-change", "repeat": 1, "passed": true}
+{"scenario": "few-files", "repeat": 2, "passed": true}
+{"scenario": "many-small-files", "repeat": 2, "passed": true}
+{"scenario": "partial-change", "repeat": 2, "passed": true}
+{"passed": true, "output": "docs/evidence/phase9-nfs-fixed-workload.json"}

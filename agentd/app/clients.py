@@ -39,13 +39,15 @@ async def _bounded_request(
     client: httpx.AsyncClient,
     method: str,
     url: str,
+    *,
+    max_body_bytes: int = MAX_HTTP_BODY_BYTES,
     **kwargs: Any,
 ) -> HTTPResult:
     async with client.stream(method, url, **kwargs) as response:
         body = bytearray()
         async for chunk in response.aiter_bytes():
-            if len(body) + len(chunk) > MAX_HTTP_BODY_BYTES:
-                raise ValueError("HTTP 响应超过 64 KiB 上限")
+            if len(body) + len(chunk) > max_body_bytes:
+                raise ValueError("HTTP 响应超过 %d bytes 上限" % max_body_bytes)
             body.extend(chunk)
 
         if not body:
@@ -126,6 +128,39 @@ class SandboxdClient:
             self._base_url + "/api/v1/plans",
             headers=self._headers,
             json=arguments,
+        )
+
+    async def prepare_workspace(self, workspace_id: str, session_id: str, branch_id: str) -> HTTPResult:
+        return await _bounded_request(
+            self._client, "POST", self._base_url + "/api/v1/workspaces",
+            headers=self._headers, timeout=190.0,
+            json={"workspaceId": workspace_id, "sessionId": session_id, "branchId": branch_id},
+        )
+
+    async def get_workspace(self, workspace_id: str) -> HTTPResult:
+        return await _bounded_request(
+            self._client, "GET", self._base_url + "/api/v1/workspaces/" + workspace_id,
+            headers=self._headers,
+        )
+
+    async def claim_workspace(self, workspace_id: str, task_id: str, attempt_id: str) -> HTTPResult:
+        return await _bounded_request(
+            self._client, "POST", self._base_url + "/api/v1/workspaces/" + workspace_id + "/claim",
+            headers=self._headers, timeout=190.0,
+            json={"taskId": task_id, "attemptId": attempt_id},
+        )
+
+    async def release_workspace(self, binding: dict[str, Any]) -> HTTPResult:
+        return await _bounded_request(
+            self._client, "POST", self._base_url + "/api/v1/workspaces/" + binding["workspaceId"] + "/release",
+            headers=self._headers, json=binding,
+        )
+
+    async def workspace_files(self, binding: dict[str, Any], operation: dict[str, Any]) -> HTTPResult:
+        return await _bounded_request(
+            self._client, "POST", self._base_url + "/api/v1/workspaces/" + binding["workspaceId"] + "/files",
+            headers=self._headers, json={"binding": binding, "request": operation},
+            max_body_bytes=(2 << 20) + 1024,
         )
 
     async def close(self) -> None:

@@ -1,0 +1,87 @@
+{
+  "elapsedMs": 23597,
+  "externalModelCalls": 0,
+  "first": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-5536dc7c831b4f6f9555bf60d4520519",
+    "sessionId": "session-e791c716c5df4a20bb9754ad22446a0e",
+    "branchId": "branch-7321d9e9253c4d64a231b0ab79ad9f09",
+    "generation": 1,
+    "phase": "bound",
+    "owner": {
+      "taskId": "task-76a1f94f87764d2596aac0626248bcbb",
+      "attemptId": "attempt-d81e7ff978374ead991eda9e8bdce0fd",
+      "sandboxId": "f1c5638b3c70ea6c",
+      "podName": "sandbox-f1c5638b3c70ea6c",
+      "podUid": "537f5e3b-8271-4e5d-93ef-4eff033bf9a8",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": false
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1",
+    "imageId": "sha256:f0ab446658b4bccbe9827aebc3fba19eebab5d262e456a2229be35706c5cf595"
+  },
+  "mode": "real-go-lifecycle-component",
+  "oldAttemptDenied": true,
+  "passed": true,
+  "read": {
+    "content": "real Go NFS lifecycle synthetic fixture\n",
+    "offset": 0,
+    "path": "report.md",
+    "redacted": false,
+    "sha256": "2e243f0643428f71d1ede6fb25035a490bcd93dc2b84cc896b423c3118effa13",
+    "totalChars": 40,
+    "truncated": false
+  },
+  "released": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-5536dc7c831b4f6f9555bf60d4520519",
+    "sessionId": "session-e791c716c5df4a20bb9754ad22446a0e",
+    "branchId": "branch-7321d9e9253c4d64a231b0ab79ad9f09",
+    "generation": 2,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-76a1f94f87764d2596aac0626248bcbb",
+      "attemptId": "attempt-ce56f291cc8b49f5bd4db6295e1bd528",
+      "sandboxId": "276604c99a7815a7",
+      "podName": "sandbox-276604c99a7815a7",
+      "podUid": "5230f46e-6ec8-4847-95c7-9af313a7a5dd",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1",
+    "imageId": "sha256:f0ab446658b4bccbe9827aebc3fba19eebab5d262e456a2229be35706c5cf595",
+    "stopReason": "containers-terminated"
+  },
+  "scope": "Go Prepare/Claim/Files/Stop and journal reopen; not Python automatic Task continuation",
+  "second": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-5536dc7c831b4f6f9555bf60d4520519",
+    "sessionId": "session-e791c716c5df4a20bb9754ad22446a0e",
+    "branchId": "branch-7321d9e9253c4d64a231b0ab79ad9f09",
+    "generation": 2,
+    "phase": "bound",
+    "owner": {
+      "taskId": "task-76a1f94f87764d2596aac0626248bcbb",
+      "attemptId": "attempt-ce56f291cc8b49f5bd4db6295e1bd528",
+      "sandboxId": "276604c99a7815a7",
+      "podName": "sandbox-276604c99a7815a7",
+      "podUid": "5230f46e-6ec8-4847-95c7-9af313a7a5dd",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": false
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1",
+    "imageId": "sha256:f0ab446658b4bccbe9827aebc3fba19eebab5d262e456a2229be35706c5cf595"
+  },
+  "write": {
+    "bytes": 40,
+    "created": true,
+    "diff": "--- report.md:old\n+++ report.md:new\n@@ -1,0 +1,2 @@\n+real Go NFS lifecycle synthetic fixture\n+\n",
+    "newSha256": "2e243f0643428f71d1ede6fb25035a490bcd93dc2b84cc896b423c3118effa13",
+    "oldSha256": null,
+    "path": "report.md",
+    "redacted": false
+  }
+}

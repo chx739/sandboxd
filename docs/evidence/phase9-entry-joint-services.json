@@ -1,0 +1,43 @@
+{
+  "scope": "existing dedicated stores temporarily started for unified joint replay; no ingest/rebuild",
+  "passed": true,
+  "externalModelCalls": 0,
+  "services": [
+    {
+      "name": "sandboxd-rag-minio-1",
+      "image": "minio/minio:RELEASE.2023-03-20T20-16-18Z",
+      "imageId": "sha256:6d770d7f255cda1f18d841ffc4365cb7e0d237f6af6a15fcdb587480cd7c3b93",
+      "initialRunning": false,
+      "project": "sandboxd-rag"
+    },
+    {
+      "name": "sandboxd-rag-etcd-1",
+      "image": "quay.io/coreos/etcd:v3.5.18",
+      "imageId": "sha256:d0a641d5fbcc89678c931a61b7de7b8a1cf097149f135c9c73bc81d076a1494b",
+      "initialRunning": false,
+      "project": "sandboxd-rag"
+    },
+    {
+      "name": "sandboxd-rag-milvus-1",
+      "image": "milvusdb/milvus:v2.5.10",
+      "imageId": "sha256:02e1d60d71ab60f435c60076f4fed2abe59602ecd5e18dcfe229c8c558c4379d",
+      "initialRunning": false,
+      "project": "sandboxd-rag"
+    },
+    {
+      "name": "sandboxd-logs-opensearch-1",
+      "image": "opensearchproject/opensearch:2.19.6",
+      "imageId": "sha256:e321cb03c643874c42240458a618db56bc1e4fc143b10c41bec653542bc6851b",
+      "initialRunning": false,
+      "project": "sandboxd-logs"
+    }
+  ],
+  "exitCode": 0,
+  "finalRunning": {
+    "sandboxd-rag-minio-1": "false",
+    "sandboxd-rag-etcd-1": "false",
+    "sandboxd-rag-milvus-1": "false",
+    "sandboxd-logs-opensearch-1": "false"
+  },
+  "timestamp": "2026-10-17T20:24:40.181089+00:00"
+}

@@ -69,6 +69,7 @@ TaskStatus = Literal[
     "succeeded",
     "failed",
     "limit_exceeded",
+    "interrupted",
 ]
 
 class ToolResult(BaseModel):
@@ -125,6 +126,9 @@ class AgentTrace(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     task_id: str = Field(alias="taskId")
+    attempt_id: str | None = Field(default=None, alias="attemptId")
+    workspace_id: str | None = Field(default=None, alias="workspaceId")
+    status: str | None = None
     mode: str
     model: str
     provider: str = ""
@@ -148,6 +152,10 @@ class AgentTask(BaseModel):
     task_id: str = Field(alias="taskId")
     status: TaskStatus
     session_id: str = Field(alias="sessionId")
+    branch_id: str | None = Field(default=None, alias="branchId")
+    workspace_id: str | None = Field(default=None, alias="workspaceId")
+    attempt_id: str | None = Field(default=None, alias="attemptId")
+    attempt_count: int = Field(default=0, alias="attemptCount")
     alert: AlertEvent
     created_at: datetime = Field(default_factory=utc_now, alias="createdAt")
     updated_at: datetime = Field(default_factory=utc_now, alias="updatedAt")

@@ -1,0 +1,78 @@
+test_changed_preview_and_foreign_target_fail_without_mapping (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_changed_preview_and_foreign_target_fail_without_mapping) ... ok
+test_committed_import_cannot_be_rebound_or_mutated (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_committed_import_cannot_be_rebound_or_mutated) ... ERROR
+test_import_is_idempotent_and_resume_uses_same_workspace (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_import_is_idempotent_and_resume_uses_same_workspace) ... ERROR
+test_legacy_linear_copy_migrates_without_touching_source (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_legacy_linear_copy_migrates_without_touching_source) ... ERROR
+test_preview_has_no_control_or_source_mutation (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_preview_has_no_control_or_source_mutation) ... ok
+test_symlink_hardlink_fifo_empty_dir_and_binary_are_rejected (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_symlink_hardlink_fifo_empty_dir_and_binary_are_rejected) ... ok
+test_unknown_write_retry_verifies_hash_and_does_not_write_twice (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_unknown_write_retry_verifies_hash_and_does_not_write_twice) ... ok
+test_accepted_queued_task_is_automatically_discovered_after_reopen (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_accepted_queued_task_is_automatically_discovered_after_reopen) ... ok
+test_acknowledged_commands_survive_reopen_and_have_complete_boundaries (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_acknowledged_commands_survive_reopen_and_have_complete_boundaries) ... ok
+test_cancel_reconciles_blocked_owner_even_with_a_stale_done_handle (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_cancel_reconciles_blocked_owner_even_with_a_stale_done_handle) ... ok
+test_queued_cancellation_is_persisted_before_restart (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_queued_cancellation_is_persisted_before_restart) ... ok
+test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_repeated_cancel_does_not_interrupt_inflight_owner_cleanup) ... ok
+test_session_fsync_before_command_cursor_is_reconciled_without_reinjection (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_session_fsync_before_command_cursor_is_reconciled_without_reinjection) ... ok
+test_shutdown_does_not_become_user_cancellation (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_stopped_owner_without_final_trace_is_reconstructed_before_next_attempt (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_stopped_owner_without_final_trace_is_reconstructed_before_next_attempt) ... ok
+test_terminal_tasks_are_not_restarted (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_terminal_tasks_are_not_restarted) ... ok
+test_unconfirmed_owner_has_read_only_partial_audit_not_completion (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_unconfirmed_owner_has_read_only_partial_audit_not_completion) ... ok
+test_v1_old_node_resume_rejected_but_latest_uses_same_workspace (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_v1_old_node_resume_rejected_but_latest_uses_same_workspace) ... ok
+test_worker_automatically_continues_same_task_after_unknown_write (agentd.tests.test_recovery_store.DurableTaskStoreTests.test_worker_automatically_continues_same_task_after_unknown_write) ... ok
+
+======================================================================
+ERROR: test_committed_import_cannot_be_rebound_or_mutated (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_committed_import_cannot_be_rebound_or_mutated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_workspace_migrate.py", line 142, in test_committed_import_cannot_be_rebound_or_mutated
+    path.rmdir() if path.is_dir() else path.unlink()
+    ^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_workspace_migrate.py", line 60, in apply
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_migrate.py", line 220, in migrate
+    raise ValueError("import write hash mismatch")
+ValueError: import write hash mismatch
+
+======================================================================
+ERROR: test_import_is_idempotent_and_resume_uses_same_workspace (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_import_is_idempotent_and_resume_uses_same_workspace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_workspace_migrate.py", line 72, in test_import_is_idempotent_and_resume_uses_same_workspace
+    self.assertEqual(self.client.claims, 0)
+               ^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_workspace_migrate.py", line 60, in apply
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_migrate.py", line 220, in migrate
+    raise ValueError("import write hash mismatch")
+ValueError: import write hash mismatch
+
+======================================================================
+ERROR: test_legacy_linear_copy_migrates_without_touching_source (agentd.tests.test_workspace_migrate.WorkspaceMigrationTests.test_legacy_linear_copy_migrates_without_touching_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_workspace_migrate.py", line 118, in test_legacy_linear_copy_migrates_without_touching_source
+    entries = [json.loads(line) for line in self.original.splitlines()]
+               ^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_workspace_migrate.py", line 60, in apply
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_migrate.py", line 220, in migrate
+    raise ValueError("import write hash mismatch")
+ValueError: import write hash mismatch
+
+----------------------------------------------------------------------
+Ran 19 tests in 1.519s
+
+FAILED (errors=3)

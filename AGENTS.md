@@ -12,7 +12,13 @@
 
 Phase 8 开发还必须完整阅读 `docs/37-Kubernetes运维Agent目标与验收.md`。Goal 工具中的短句仅是状态摘要，不能代替该文档。
 
-工作区持久化、Pod 接管或 agentd 重启恢复相关工作，必须先完整阅读 [NFS V1 与 restic + MinIO V2 实施约束](docs/43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md)。2026-10-17 用户目前授权编写该需求文档，关键路线已经确认，尚未授权功能实现或部署。后续须先核对新授权，再按该文档执行；不能把旧 Goal 自动续跑或旧模型预算作为授权。
+工作区持久化、Pod 接管或 agentd 重启恢复相关工作，必须先完整阅读 [NFS V1 与 restic + MinIO V2 实施约束](docs/43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md) 和 [目标模式 Prompt](docs/44-工作区恢复目标模式Prompt.md)。2026-10-17 用户已明确授权按文档 43 开始实现并进入目标模式，覆盖此前“仅文档”状态。当前为 Phase 9，先 V1 后 V2，允许必要的本地测试、项目专用服务与可控故障验收；不使用外部付费模型或旧预算。
+
+Phase 9 允许增加本项目沙箱专属工作区的受限文件 RPC、NFS 挂载、持久任务/attempt 日志及 restic/MinIO 检查点。它只替代默认 agentd 本地 task 文件路径，不授权外部主机任意写入、任意 Shell、生产级 HA 或数据库。历史 Phase 4“仅本地文件”、Phase 7“恢复创建新 Task”不限制本轮明确授权的工作区迁移和同 Task 自动接续；手动 resume 仍创建新 Task。
+
+旧工作区迁移使用显式管理CLI，先停源写入者并持部署Task账本锁；PREPARING不算可恢复映射，只有Go停止确认、文件清单/hash和Session副本校验后COMMITTED才可接续。保留源文件/原JSONL/失败目录，不把迁移能力暴露为LLM工具。统一入口见hack/workspace.sh；分发代码与实际执行成绩必须分开记录。
+
+工作区性能与流量的基线见文档46与phase9-nfs-fixed-workload-serial.json；并行探索报告单列。V2比较复用固定seed/文件规模/缓存/并发，计入同步检查点等待；容器网络计数不等于公网流量，端点内存不等于峰值，不把本机小样本外推生产QPS。
 
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 
