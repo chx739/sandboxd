@@ -2,6 +2,8 @@
 
 > 这是 Phase 3 当前实现的主学习文档。项目借鉴 Pi 的 Transcript、双层循环、steer、follow-up、Session 和 Extension 分层思想，但没有引入 Pi、Node.js 或完整 Coding Agent 能力。
 
+> Phase 7 已将下文第 7 节的历史线性 Session 扩展为追加式树。当前节点、分支与恢复行为以 [33 树形 Session](33-树形Session与分支恢复学习手册.md) 和代码为准；本节保留 Phase 3 原实现的学习脉络。
+
 ## 1. 先记住一句话
 
 模型负责提出候选动作，Runtime 负责循环和协议，插件负责把工具意图接到窄客户端，Go sandboxd/RBAC/gVisor/审批门才负责真正授权与隔离。

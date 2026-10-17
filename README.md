@@ -6,6 +6,17 @@ Go sandboxd 保留通用 Exec API 用于沙箱机制验证，但当前 Python ag
 
 核心命题：**不能用 prompt 防御 prompt injection，只能用执行层边界。** 所以本项目的重点不在 Agent 的能力，而在它的执行边界——即使模型被诱导生成了破坏性命令，那条命令在权限、网络和运行时三层都执行不了。
 
+## 当前运维 MVP（Phase 8）
+
+- 会话树与分层记忆：分支/恢复、完整工具组、来源/冲突/遗忘；参考固定 Pi/Codex 源码，未完整复刻。
+- 知识：Milvus **2.5.10 原生 BM25 + E5 Dense + RRF + BGE Reranker**，40 篇固定运维文档，默认不依赖 ES。
+- 日志：OpenSearch 2.19.6，720 条合成日志/40 个独立 oracle 用例通过，另有小规模 Benchmark。
+- 联合回放：内存、Service、readiness 三类，真实本地存储、脚本模型、Fake Sandbox，未连接真实生产集群。
+- 60 题候选 RAG 集与四组原始消融已保存；题目待人工审核，Live/Ragas 分数尚未验收。
+- Jev 最小路由已加入当前目标；新 Key 只读鉴权通过，付费最小验证等待独立预算确认。
+
+开始学习与运行见 [运维 Agent 学习手册](docs/38-运维Agent与测评学习手册.md)、[源码对照](docs/39-Pi与Codex源码对照.md)、[当前进度与缺口](docs/PROGRESS.md)。
+
 ```mermaid
 graph LR
     AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>Pi-style 双层 Loop<br/>Session + Plugins"]
@@ -100,6 +111,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | Linux Host：静态 Target、strict host key、低权限双 forced-command | Phase 4 真实 SSH Replay 已实测 |
 | 原生文件：task 工作区、路径/symlink、CAS、原子写、脱敏 Trace | Phase 4 真实 Replay 与单测已实测 |
 | Prompt Injection Eval：40 条场景、覆盖标签、行为/执行边界分层 | 来源隔离后 88 Task：ASR 1/72、Containment 1/1、副作用 0/72 |
+| Phase 7 Session 树、分层记忆、混合检索、Jev 路由 | Session/Memory 本地测评；Milvus 2.5.10 + ES/BGE 真实本机集成与 SciFact 30 条固定子集消融；Jev 官方 SDK 与 Fake/Replay 通过，Live 首题回退后受 TypeSafe 401 阻塞，见 [phase21](docs/evidence/phase21-jev-live-first-case.md) |
 
 关键实测输出：
 
@@ -242,7 +254,7 @@ Agentd 在 Phase 2.1 新增 ToolResult 模型/审计双通道、生命周期事�
 
 ## Phase 3 Pi-style Runtime
 
-当前 agentd 不再依赖 LangGraph：`runtime/loop.py` 用内层 Tool/steer、外层 follow-up 的双层循环显式表达控制流；静态受信任 Plugin Registry 暴露 Prometheus 与 Kubernetes/Plan；线性 Session-lite 用 append-only JSONL 支持最小 resume。每次 resume 都创建新 Task 和新 gVisor Sandbox，不恢复旧进程。
+当前 agentd 不再依赖 LangGraph：`runtime/loop.py` 用内层 Tool/steer、外层 follow-up 的双层循环显式表达控制流；静态受信任 Plugin Registry 暴露 Prometheus 与 Kubernetes/Plan。Phase 3 的线性 Session-lite 后来在 Phase 7 扩展为 append-only JSONL 树；每次 resume/branch 都创建新 Task 和新 gVisor Sandbox，不恢复旧进程。
 
 控制接口只接受 API Token，Alert Token 仍只能提交告警：
 
@@ -252,10 +264,17 @@ POST /api/v1/tasks/{taskId}/follow-up
 POST /api/v1/tasks/{taskId}/cancel
 GET  /api/v1/sessions/{sessionId}
 POST /api/v1/sessions/{sessionId}/resume
+GET  /api/v1/sessions/{sessionId}/tree
+GET  /api/v1/sessions/{sessionId}/path/{nodeId}
+POST /api/v1/sessions/{sessionId}/branch/{nodeId}
 GET  /api/v1/plugins
 ```
 
-插件只扩展模型可见的结构化工具，不扩展 sandboxd/RBAC 允许的能力。当前不做动态插件、任意 Shell、Session 树、多进程 Worker 或生产级多租户身份。
+插件只扩展模型可见的结构化工具，不扩展 sandboxd/RBAC 允许的能力。当前不做动态插件、任意 Shell、多进程 Worker 或生产级多租户身份。
+
+## Phase 7 会话树、记忆、检索与路由
+
+树形 Session 的 `nodeId/parentId`、完整 Turn 分支、旧线性文件迁移和语义恢复已落地；运行与本地确定性证据见 [33 树形 Session 学习手册](docs/33-树形Session与分支恢复学习手册.md)。分层记忆的显式提取、跨会话整理、有界读取与遗忘已完成本地合成 Replay，见 [34 分层记忆学习手册](docs/34-Codex风格分层记忆学习手册.md)。[35 混合检索](docs/35-Milvus-ES-BGE混合检索学习手册.md)已在本机 Milvus 2.5.10 + ES/BGE 上对公开 SciFact 固定 30 条子集消融；[36 Jev 路由](docs/36-Jev模型路由学习手册.md)已完成 SDK 形状与 Fake/Replay 测评。四模块联合 Replay 已通过；真实 Jev/双模型横评仍待新的服务、样本与费用授权，见 [无网络预检协议](docs/evidence/phase20-jev-live-preflight.md)。
 
 ## Phase 4 Linux Host 与原生文件工具
 

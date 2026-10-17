@@ -1,0 +1,47 @@
+{
+  "kind": "reviewable-generation-plan-no-network",
+  "sampleIds": [
+    "ops01",
+    "ops18",
+    "ops36",
+    "ops41",
+    "ops53",
+    "ops55"
+  ],
+  "caseSetSha256": "c3aea3b2932de4042c1a63258733d39676976ee947c7bc76533f0718063862c4",
+  "models": {
+    "generator": "deepseek-flash",
+    "judge": "deepseek-v4-pro"
+  },
+  "ragasVersion": "0.4.3",
+  "maximumCalls": 96,
+  "expectedMaximumCallsWithoutFailure": 84,
+  "retries": 0,
+  "maxOutputTokens": 1024,
+  "maxInputBytes": 32768,
+  "conservativeWholeRunReservationUSD": 4.671406,
+  "pricesUSDPerMillion": {
+    "deepseek-flash": [
+      0.3,
+      1.2
+    ],
+    "deepseek-v4-pro": [
+      1.32,
+      3.96
+    ]
+  },
+  "priceSource": "https://api-docs.deepseek.com/quick_start/pricing/",
+  "priceVerifiedDate": "2026-09-29",
+  "budgetCaveat": "peak/cache-miss estimate; provider billing authoritative",
+  "data": "fixed public documentation snippets and synthetic questions only",
+  "reviewStatus": "candidate references; pending-human-review",
+  "metrics": [
+    "ragas_factual_f1_both_modes",
+    "ragas_faithfulness_rag_only",
+    "step_coverage",
+    "citation_support",
+    "applicability",
+    "unsupported_certainty",
+    "insufficient_evidence"
+  ]
+}

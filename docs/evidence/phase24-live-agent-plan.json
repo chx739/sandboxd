@@ -1,0 +1,25 @@
+{
+  "kind": "reviewable-live-agent-plan-no-network",
+  "model": "deepseek-v4-pro",
+  "scenarioIds": [
+    "payments-memory",
+    "checkout-service",
+    "catalog-readiness"
+  ],
+  "caseSetSha256": "d9e495cacc8e6ec9ef76ae253328db6455214d92ba2394bd7c9e1834b1d2f2e7",
+  "maximumModelCalls": 18,
+  "maxCallsPerTask": 6,
+  "maxTaskSeconds": 120,
+  "maxOutputTokens": 1024,
+  "retries": 0,
+  "conservativeWholeRunReservationUSD": 0.875889,
+  "tools": [
+    "search_logs",
+    "aggregate_logs",
+    "search_knowledge"
+  ],
+  "sandbox": "fake lifecycle; no cluster operations",
+  "data": "fixed synthetic logs and public knowledge snippets; no live production data",
+  "jev": "off; evaluated separately",
+  "usageReporting": "per-request ledger authoritative; Runtime ModelUsage not populated by this minimal JSON adapter"
+}

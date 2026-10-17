@@ -34,6 +34,7 @@ class PluginContext:
     sandboxd: SandboxdClient
     linux_hosts: LinuxHostClient
     workspace: FileWorkspace
+    memory_scope: dict[str, str] | None = None
 
 
 class ToolPlugin(Protocol):

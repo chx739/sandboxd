@@ -1,0 +1,27 @@
+{
+  "kind": "local-query-only-performance",
+  "benchmarkVersion": "2.4.0",
+  "serverVersion": "2.19.6",
+  "cpu": {
+    "Model name:": "AMD Ryzen 5 9600X 6-Core Processor",
+    "CPU(s):": "12",
+    "Thread(s) per core:": "2"
+  },
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "indexDocCount": 720,
+  "data": "720 synthetic logs; other system indices retained",
+  "warning": "CSV Doc count=748 is cluster-wide telemetry, not the workload index count",
+  "clients": 1,
+  "targetThroughputPerOperation": 20,
+  "warmupIterations": 20,
+  "measuredIterations": 100,
+  "operations": 3,
+  "workloadSha256": "ad37134e194028c7f6234d27efd8b497c71544030e0c111c679e370076bf57c2",
+  "containerLimit": {
+    "memoryGiB": 2,
+    "cpus": 2,
+    "jvmHeapMiB": 512
+  },
+  "otherServices": "existing Milvus/ES/etcd/MinIO remained running; no concurrent retrieval eval",
+  "scope": "warmed tiny in-memory working set; not saturation throughput or production prediction"
+}

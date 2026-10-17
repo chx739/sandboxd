@@ -42,7 +42,7 @@ class LiveModelSession:
     def __init__(self, model: ChatOpenAI, tool_schemas: Sequence[dict[str, Any]]) -> None:
         # Tool Schema 来自受信任 Plugin Registry。Provider 只负责绑定工具，
         # 不决定哪些插件可加载，也不承担安全授权。
-        self._bound_model = model.bind_tools(list(tool_schemas))
+        self._bound_model = model.bind_tools(list(tool_schemas)) if tool_schemas else model
 
     async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation:
         started = time.monotonic()
@@ -74,19 +74,27 @@ class LiveModelGateway:
         model: str,
         api_key: str,
         thinking: str = "default",
+        max_tokens: int | None = None,
+        max_retries: int = 1,
     ) -> None:
         self.model_name = model
+        if max_tokens is not None and max_tokens <= 0:
+            raise ValueError("max_tokens 必须为正数")
+        if max_retries < 0:
+            raise ValueError("max_retries 不能为负数")
         provider_options: dict[str, Any] = {}
         if thinking != "default":
             # DeepSeek V4 默认返回 reasoning_content；关闭后无需保存或回传隐藏 CoT。
             provider_options["extra_body"] = {"thinking": {"type": thinking}}
+        if max_tokens is not None:
+            provider_options["max_tokens"] = max_tokens
         self._model = ChatOpenAI(
             model=model,
             base_url=base_url,
             api_key=api_key,
             temperature=0,
             timeout=30,
-            max_retries=1,
+            max_retries=max_retries,
             **provider_options,
         )
 

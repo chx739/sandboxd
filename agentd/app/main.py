@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from .clients import LinuxHostClient, PrometheusClient, SandboxdClient
 from .config import Settings, load_settings
 from .graph import AgentRunner
+from .memory import MemoryStore
 from .model_gateway import LiveModelGateway, ReplayModelGateway
 from .models import (
     AlertEvent,
@@ -18,6 +19,9 @@ from .models import (
     ManualTaskRequest,
 )
 from .plugins import build_builtin_registry
+from .plugins.knowledge import KnowledgePlugin
+from .plugins.logs import LogsPlugin
+from .router import JevChoiceSource, ModelPrice, ModelRouter
 from .store import (
     ControlKind,
     QueueFullError,
@@ -63,8 +67,38 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
     else:
         gateway = ReplayModelGateway(cfg.replay_file)
+    model_router = None
+    if cfg.router_mode == "jev":
+        gateways = {
+            "economy": LiveModelGateway(
+                cfg.llm_base_url, cfg.router_economy_model,
+                cfg.llm_api_key, cfg.llm_thinking,
+            ),
+            "strong": LiveModelGateway(
+                cfg.llm_base_url, cfg.router_strong_model,
+                cfg.llm_api_key, cfg.llm_thinking,
+            ),
+        }
+        model_router = ModelRouter(
+            gateways, JevChoiceSource(cfg.router_jev_api_key, ipv4_only=cfg.router_jev_ipv4_only),
+            prices={tier: ModelPrice(
+                item["inputUsdPerMillion"], item["outputUsdPerMillion"]
+            ) for tier, item in cfg.router_prices.items()},
+            router_input_usd_per_million=cfg.router_jev_input_usd_per_million,
+        )
 
-    plugins = build_builtin_registry()
+    memory_store = (
+        MemoryStore(cfg.memory_root, cfg.memory_project)
+        if cfg.memory_root is not None else None
+    )
+    knowledge_plugin = (
+        KnowledgePlugin(
+            cfg.retrieval_corpus, cfg.retrieval_queries,
+            cfg.retrieval_embedding_dir, cfg.retrieval_reranker_dir,
+        ) if cfg.retrieval_corpus is not None else None
+    )
+    logs_plugin = LogsPlugin(cfg.logs_file) if cfg.logs_file is not None else None
+    plugins = build_builtin_registry(memory_store, knowledge_plugin, logs_plugin)
     runner = AgentRunner(
         prometheus,
         sandboxd,
@@ -72,6 +106,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         plugins,
         linux_hosts=linux_hosts,
         workspace_root=cfg.workspace_dir,
+        memory_store=memory_store,
+        model_router=model_router,
     )
     store = TaskStore(cfg.trace_dir)
 
@@ -88,6 +124,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 pass
             await prometheus.close()
             await sandboxd.close()
+            if knowledge_plugin is not None:
+                knowledge_plugin.close()
+            if logs_plugin is not None:
+                logs_plugin.close()
 
     app = FastAPI(
         title="sandboxd agentd",
@@ -283,11 +323,40 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except (TaskNotFoundError, ValueError) as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    @app.post("/api/v1/sessions/{session_id}/resume", status_code=202)
-    async def resume_session(session_id: str, request: Request) -> JSONResponse:
+    @app.get("/api/v1/sessions/{session_id}/tree")
+    async def get_session_tree(session_id: str, request: Request) -> JSONResponse:
         _authorized(request, cfg.api_token)
         try:
-            task = await store.resume(session_id)
+            return JSONResponse(await store.get_session_tree(session_id))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.get("/api/v1/sessions/{session_id}/path/{node_id}")
+    async def get_session_path(session_id: str, node_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(await store.get_session_path(session_id, node_id))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.get("/api/v1/sessions/{session_id}/working-memory")
+    async def get_session_working_memory(
+        session_id: str, request: Request, nodeId: str | None = None,
+    ) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(await store.get_session_working_memory(session_id, nodeId))
+        except (TaskNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    async def start_session_branch(
+        session_id: str,
+        node_id: str | None,
+        request: Request,
+    ) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            task = await store.resume(session_id, node_id)
         except TaskNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
         except ValueError as exc:
@@ -300,7 +369,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "taskId": task.task_id,
                 "sessionId": task.session_id,
                 "status": task.status,
+                "branchedFrom": node_id,
             },
         )
+
+    @app.post("/api/v1/sessions/{session_id}/resume", status_code=202)
+    async def resume_session(session_id: str, request: Request) -> JSONResponse:
+        return await start_session_branch(session_id, None, request)
+
+    @app.post("/api/v1/sessions/{session_id}/branch/{node_id}", status_code=202)
+    async def branch_session(session_id: str, node_id: str, request: Request) -> JSONResponse:
+        return await start_session_branch(session_id, node_id, request)
 
     return app

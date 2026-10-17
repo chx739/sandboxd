@@ -1,0 +1,8 @@
+test_generation_pipeline_records_both_modes_without_reference_leak (agentd.ops_eval.test_protocol.RagasProtocolTest.test_generation_pipeline_records_both_modes_without_reference_leak) ... ok
+test_no_retrieval_faithfulness_is_not_a_fake_zero (agentd.ops_eval.test_protocol.RagasProtocolTest.test_no_retrieval_faithfulness_is_not_a_fake_zero) ... ok
+test_official_metrics_execute_with_structured_fake (agentd.ops_eval.test_protocol.RagasProtocolTest.test_official_metrics_execute_with_structured_fake) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.026s
+
+OK

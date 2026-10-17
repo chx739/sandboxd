@@ -1,0 +1,100 @@
+test_alert_webhook_requires_its_own_token (test_api.AgentAPIAuthTest.test_alert_webhook_requires_its_own_token) ... Executing <Task finished name='Task-2' coro=<AgentAPIAuthTest.test_alert_webhook_requires_its_own_token() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_api.py:15> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.368 seconds
+ok
+test_keeps_system_and_complete_latest_tool_protocol (test_context.ContextTransformTest.test_keeps_system_and_complete_latest_tool_protocol) ... ok
+test_authorized_diagnosis_canary_echo_is_not_external_leak (test_eval.PromptInjectionDatasetTest.test_authorized_diagnosis_canary_echo_is_not_external_leak) ... ok
+test_live_no_attack_does_not_require_a_deny_layer (test_eval.PromptInjectionDatasetTest.test_live_no_attack_does_not_require_a_deny_layer) ... ok
+test_loader_rejects_inconsistent_injection_sources (test_eval.PromptInjectionDatasetTest.test_loader_rejects_inconsistent_injection_sources) ... ok
+test_loader_rejects_wrong_source_channel (test_eval.PromptInjectionDatasetTest.test_loader_rejects_wrong_source_channel) ... ok
+test_scorer_does_not_confuse_attempt_with_real_side_effect (test_eval.PromptInjectionDatasetTest.test_scorer_does_not_confuse_attempt_with_real_side_effect) ... ok
+test_unexpected_injection_source_is_a_contract_error (test_eval.PromptInjectionDatasetTest.test_unexpected_injection_source_is_a_contract_error) ... ok
+test_v1_dataset_shape_and_semantics (test_eval.PromptInjectionDatasetTest.test_v1_dataset_shape_and_semantics) ... ok
+test_v2_dataset_shape_and_coverage (test_eval.PromptInjectionDatasetTest.test_v2_dataset_shape_and_coverage) ... ok
+test_all_v2_cases_hit_real_runtime_boundaries (test_eval.PromptInjectionReplayTest.test_all_v2_cases_hit_real_runtime_boundaries) ... ok
+test_replay_baseline_matches_golden (test_eval_golden.EvalReplayGoldenTest.test_replay_baseline_matches_golden) ... ok
+test_each_task_has_an_independent_root (test_files.FileWorkspaceTest.test_each_task_has_an_independent_root) ... ok
+test_rejects_escape_symlink_duplicate_edit_and_large_file (test_files.FileWorkspaceTest.test_rejects_escape_symlink_duplicate_edit_and_large_file) ... ok
+test_write_read_search_edit_and_cas (test_files.FileWorkspaceTest.test_write_read_search_edit_and_cas) ... ok
+test_extracts_fenced_json_after_prose (test_final_output.FinalOutputTest.test_extracts_fenced_json_after_prose) ... ok
+test_nested_evidence_does_not_replace_outer_diagnosis (test_final_output.FinalOutputTest.test_nested_evidence_does_not_replace_outer_diagnosis) ... ok
+test_prefers_last_valid_diagnosis_object (test_final_output.FinalOutputTest.test_prefers_last_valid_diagnosis_object) ... ok
+test_rejects_text_without_diagnosis_json (test_final_output.FinalOutputTest.test_rejects_text_without_diagnosis_json) ... ok
+test_config_and_key_permissions_fail_closed (test_linux_host.LinuxHostClientTest.test_config_and_key_permissions_fail_closed) ... ok
+test_fixed_argv_and_connector_policy (test_linux_host.LinuxHostClientTest.test_fixed_argv_and_connector_policy) ... ok
+test_agent_reads_summary_as_data_and_detail_via_policy_tool (test_memory.MemoryStoreTest.test_agent_reads_summary_as_data_and_detail_via_policy_tool) ... ok
+test_cross_session_update_conflict_forget_and_budget (test_memory.MemoryStoreTest.test_cross_session_update_conflict_forget_and_budget) ... Executing <Task finished name='Task-114' coro=<MemoryStoreTest.test_cross_session_update_conflict_forget_and_budget() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_memory.py:84> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.114 seconds
+ok
+test_fake_gateway_rejects_tool_node_source (test_memory.MemoryStoreTest.test_fake_gateway_rejects_tool_node_source) ... ok
+test_memory_cli_extract_rebuild_summary_forget (test_memory.MemoryStoreTest.test_memory_cli_extract_rebuild_summary_forget) ... Executing <Task finished name='Task-124' coro=<MemoryStoreTest.test_memory_cli_extract_rebuild_summary_forget() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_memory.py:281> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 276.298 seconds
+ok
+test_only_succeeded_and_active_branch_are_extracted (test_memory.MemoryStoreTest.test_only_succeeded_and_active_branch_are_extracted) ... ok
+test_scoped_auto_read_and_legacy_on_demand (test_memory.MemoryStoreTest.test_scoped_auto_read_and_legacy_on_demand) ... Executing <Task finished name='Task-134' coro=<MemoryStoreTest.test_scoped_auto_read_and_legacy_on_demand() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_memory.py:132> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.252 seconds
+ok
+test_first_incomplete_turn_recovers_initial_alert (test_memory_boundaries.MemoryBoundaryTest.test_first_incomplete_turn_recovers_initial_alert) ... ok
+test_omitted_pending_checks_are_preserved_and_oversized_update_rejected (test_memory_boundaries.MemoryBoundaryTest.test_omitted_pending_checks_are_preserved_and_oversized_update_rejected) ... ok
+test_prometheus_old_sample_cannot_become_current_fact (test_memory_boundaries.MemoryBoundaryTest.test_prometheus_old_sample_cannot_become_current_fact) ... ok
+test_real_stdout_uid_survives_runtime_truncation (test_memory_boundaries.MemoryBoundaryTest.test_real_stdout_uid_survives_runtime_truncation) ... ok
+test_resumed_branch_preserves_denial (test_memory_boundaries.MemoryBoundaryTest.test_resumed_branch_preserves_denial) ... ok
+test_snapshot_document_replace_delete_and_original_preserved (test_ops_dataset.OpsDatasetTest.test_snapshot_document_replace_delete_and_original_preserved) ... ok
+test_sources_questions_and_split_contract (test_ops_dataset.OpsDatasetTest.test_sources_questions_and_split_contract) ... ok
+test_unanswerable_is_not_zero_recall (test_ops_dataset.OpsDatasetTest.test_unanswerable_is_not_zero_recall) ... ok
+test_budget_counts_calls_before_network_and_never_logs_key (test_ops_eval.OpsEvalTest.test_budget_counts_calls_before_network_and_never_logs_key) ... ok
+test_failure_latches_stop_and_retains_reservation (test_ops_eval.OpsEvalTest.test_failure_latches_stop_and_retains_reservation) ... ok
+test_generation_plan_fixed_inputs_and_hash (test_ops_eval.OpsEvalTest.test_generation_plan_fixed_inputs_and_hash) ... ok
+test_live_action_adapter_uses_registered_tools_only (test_ops_eval.OpsEvalTest.test_live_action_adapter_uses_registered_tools_only) ... ok
+test_connector_rejects_partial_results_and_preserves_literal_values (test_ops_logs.OpsLogsTest.test_connector_rejects_partial_results_and_preserves_literal_values) ... ok
+test_independent_oracle_boundary_timezone_and_incorrect_result (test_ops_logs.OpsLogsTest.test_independent_oracle_boundary_timezone_and_incorrect_result) ... ok
+test_milvus_model_identity_and_filter_escaping (test_ops_logs.OpsLogsTest.test_milvus_model_identity_and_filter_escaping) ... ok
+test_plugin_rejects_oversized_payload_before_runtime_truncates_json (test_ops_logs.OpsLogsTest.test_plugin_rejects_oversized_payload_before_runtime_truncates_json) ... ok
+test_policy_rejects_dsl_unbounded_and_naive_time (test_ops_logs.OpsLogsTest.test_policy_rejects_dsl_unbounded_and_naive_time) ... ok
+test_builtin_registry_exposes_only_expected_tools (test_plugins.PluginRegistryTest.test_builtin_registry_exposes_only_expected_tools) ... ok
+test_tool_schemas_are_defensive_copies (test_plugins.PluginRegistryTest.test_tool_schemas_are_defensive_copies) ... ok
+test_unknown_tool_does_not_resolve (test_plugins.PluginRegistryTest.test_unknown_tool_does_not_resolve) ... ok
+test_redacts_bearer_header_and_bounds_output (test_redaction.PublicErrorTest.test_redacts_bearer_header_and_bounds_output) ... ok
+test_redacts_raw_and_masked_api_keys (test_redaction.PublicErrorTest.test_redacts_raw_and_masked_api_keys) ... ok
+test_cancel_releases_claimed_sandbox_once (test_replay.ReplayGraphTest.test_cancel_releases_claimed_sandbox_once) ... ok
+test_injection_is_denied_and_plan_stays_pending (test_replay.ReplayGraphTest.test_injection_is_denied_and_plan_stays_pending) ... ok
+test_phase4_linux_and_file_tools_keep_content_out_of_trace (test_replay.ReplayGraphTest.test_phase4_linux_and_file_tools_keep_content_out_of_trace) ... ok
+test_slow_claim_is_bounded_by_claim_budget (test_replay.ReplayGraphTest.test_slow_claim_is_bounded_by_claim_budget) ... ok
+test_recall_mrr_ndcg_and_latency (test_retrieval_core.RetrievalCoreTest.test_recall_mrr_ndcg_and_latency) ... ok
+test_rejects_unknown_qrel_and_duplicate_chunk (test_retrieval_core.RetrievalCoreTest.test_rejects_unknown_qrel_and_duplicate_chunk) ... ok
+test_rrf_uses_rank_not_raw_score_and_stable_ties (test_retrieval_core.RetrievalCoreTest.test_rrf_uses_rank_not_raw_score_and_stable_ties) ... ok
+test_versioned_runbook_and_hash_do_not_depend_on_line_order (test_retrieval_core.RetrievalCoreTest.test_versioned_runbook_and_hash_do_not_depend_on_line_order) ... ok
+test_official_zip_converter_checks_digest_and_test_qrels (test_retrieval_pipeline.RetrievalPipelineTest.test_official_zip_converter_checks_digest_and_test_qrels) ... ok
+test_rejects_foreign_index_id (test_retrieval_pipeline.RetrievalPipelineTest.test_rejects_foreign_index_id) ... ok
+test_rrf_then_rerank_and_untrusted_evidence (test_retrieval_pipeline.RetrievalPipelineTest.test_rrf_then_rerank_and_untrusted_evidence) ... ok
+test_static_agent_tool_keeps_source_and_policy_boundary (test_retrieval_pipeline.RetrievalPipelineTest.test_static_agent_tool_keeps_source_and_policy_boundary) ... ok
+test_deterministic_fixture_is_labeled (test_router.RouterTest.test_deterministic_fixture_is_labeled) ... ok
+test_fallbacks_and_cost (test_router.RouterTest.test_fallbacks_and_cost) ... ok
+test_runner_uses_chosen_gateway_once_and_records_cost (test_router.RouterTest.test_runner_uses_chosen_gateway_once_and_records_cost) ... ok
+test_sdk_choice_shape_without_network (test_router.RouterTest.test_sdk_choice_shape_without_network) ... Executing <Task finished name='Task-226' coro=<RouterTest.test_sdk_choice_shape_without_network() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_router.py:53> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.234 seconds
+ok
+test_budget_rejects_before_any_external_call (test_router_live_eval.RouterLiveEvalTest.test_budget_rejects_before_any_external_call) ... ok
+test_dry_plan_and_same_cases_three_modes (test_router_live_eval.RouterLiveEvalTest.test_dry_plan_and_same_cases_three_modes) ... ok
+test_execute_requires_reviewed_case_digest_before_client (test_router_live_eval.RouterLiveEvalTest.test_execute_requires_reviewed_case_digest_before_client) ... ok
+test_first_case_provider_failure_stops_remaining_cases (test_router_live_eval.RouterLiveEvalTest.test_first_case_provider_failure_stops_remaining_cases) ... ok
+test_gateway_without_tools_keeps_plain_model (test_router_live_eval.RouterLiveEvalTest.test_gateway_without_tools_keeps_plain_model) ... ok
+test_follow_up_runs_only_after_natural_stop (test_runtime_loop.PiStyleLoopTest.test_follow_up_runs_only_after_natural_stop) ... ok
+test_steer_is_applied_after_current_turn (test_runtime_loop.PiStyleLoopTest.test_steer_is_applied_after_current_turn) ... ok
+test_branch_keeps_old_path_and_survives_restart (test_session.SessionJournalTest.test_branch_keeps_old_path_and_survives_restart) ... ok
+test_incomplete_tool_call_is_not_branchable (test_session.SessionJournalTest.test_incomplete_tool_call_is_not_branchable) ... ok
+test_jsonl_is_private_redacted_and_resumable (test_session.SessionJournalTest.test_jsonl_is_private_redacted_and_resumable) ... ok
+test_old_linear_snapshot_is_migrated (test_session.SessionJournalTest.test_old_linear_snapshot_is_migrated) ... ok
+test_tool_group_can_branch_only_after_result (test_session.SessionJournalTest.test_tool_group_can_branch_only_after_result) ... ok
+test_truncated_tail_is_ignored_and_repaired (test_session.SessionJournalTest.test_truncated_tail_is_ignored_and_repaired) ... ok
+test_queued_control_cancel_and_resume_identity (test_session.TaskStoreSessionTest.test_queued_control_cancel_and_resume_identity) ... ok
+test_resume_from_selected_node_creates_new_task (test_session.TaskStoreSessionTest.test_resume_from_selected_node_creates_new_task) ... ok
+test_branch_projection_and_incremental_restart (test_working_memory.WorkingMemoryTest.test_branch_projection_and_incremental_restart) ... ok
+test_context_keeps_note_and_tool_protocol_with_budget (test_working_memory.WorkingMemoryTest.test_context_keeps_note_and_tool_protocol_with_budget) ... ok
+test_current_state_requires_matching_resource_identity (test_working_memory.WorkingMemoryTest.test_current_state_requires_matching_resource_identity) ... ok
+test_expired_state_and_invalid_evidence (test_working_memory.WorkingMemoryTest.test_expired_state_and_invalid_evidence) ... ok
+test_fenced_final_answer_can_propose_pending_check (test_working_memory.WorkingMemoryTest.test_fenced_final_answer_can_propose_pending_check) ... ok
+test_long_dialogue_keeps_early_pointer_and_latest_denial (test_working_memory.WorkingMemoryTest.test_long_dialogue_keeps_early_pointer_and_latest_denial) ... ok
+test_loop_accepts_same_round_model_proposal_without_summary_call (test_working_memory.WorkingMemoryTest.test_loop_accepts_same_round_model_proposal_without_summary_call) ... ok
+test_loop_rejects_unreturned_evidence_id (test_working_memory.WorkingMemoryTest.test_loop_rejects_unreturned_evidence_id) ... ok
+test_old_branch_evidence_can_still_be_referenced (test_working_memory.WorkingMemoryTest.test_old_branch_evidence_can_still_be_referenced) ... ok
+test_old_denial_cannot_evict_latest_user_input (test_working_memory.WorkingMemoryTest.test_old_denial_cannot_evict_latest_user_input) ... ok
+
+----------------------------------------------------------------------
+Ran 90 tests in 279.476s
+
+OK

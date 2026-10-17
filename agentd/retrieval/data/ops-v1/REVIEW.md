@@ -1,0 +1,65 @@
+# Ops-v1 人工审核待办
+
+60 题均由模型编写。来源完整性检查不等于答案正确或人工金标。
+逐题核对引用能否支持要点、相关标签是否遗漏、是否需要版本约束。完成后由实际审核者记录姓名/时间/修改；不得自动勾选。
+
+- [ ] ops01 (test/exact): KubePodCrashLooping 告警先看哪些信息？
+- [ ] ops02 (test/exact): KubePodNotReady 与 Running 是否矛盾？如何排查？
+- [ ] ops03 (test/exact): KubeContainerWaiting 的常见检查项是什么？
+- [ ] ops04 (test/exact): KubeNodeNotReady 应从哪里找原因？
+- [ ] ops05 (test/exact): KubeDeploymentReplicasMismatch 如何检查副本差异？
+- [ ] ops06 (test/exact): KubeHpaMaxedOut 应核对哪些设置？
+- [ ] ops07 (test/exact): PrometheusBadConfig 会让旧配置立即失效吗？
+- [ ] ops08 (test/exact): PrometheusRuleFailures 从哪里查看具体失败表达式？
+- [ ] ops09 (dev/exact): etcdNoLeader 告警如何检查控制面？
+- [ ] ops10 (test/exact): 合成 payments 的 OOM_KILLED 能直接证明内存泄漏吗？
+- [ ] ops11 (test/symptom): 节点状态一会儿好一会儿坏，最近升级过系统，先查什么？
+- [ ] ops12 (test/symptom): 监控说某节点失联了，该搜集哪些线索？
+- [ ] ops13 (test/symptom): 发布了新版本但 Deployment 一直没有完成更新，怎么办？
+- [ ] ops14 (test/symptom): 有状态服务副本凑不齐，卷和可用区需要怎么看？
+- [ ] ops15 (test/symptom): 批处理任务报失败，如何定位到具体容器问题？
+- [ ] ops16 (test/symptom): 跑了一个多小时的批任务还没结束，该怎么查？
+- [ ] ops17 (test/symptom): HPA 想扩容但实际副本没有跟上，有哪些约束要看？
+- [ ] ops18 (test/symptom): CPU throttling 高，但业务似乎正常，应该直接放大 CPU limit 吗？
+- [ ] ops19 (dev/symptom): 业务持久卷快满了，扩容或清理之前要看什么？
+- [ ] ops20 (dev/symptom): 持久卷出现错误，怎样区分存储侧和配额问题？
+- [ ] ops21 (test/symptom): 监控提示内存 requests 超卖，是不是已经 OOM？
+- [ ] ops22 (test/symptom): 集群 CPU requests 很多，少一台节点可能放不下，是什么风险？
+- [ ] ops23 (test/symptom): 磁盘预测四小时内写满，但定时任务每天会清理，怎么确认？
+- [ ] ops24 (test/symptom): 磁盘还有空间却快不能创建文件了，该看什么？
+- [ ] ops25 (test/symptom): 节点连接跟踪表快满导致网络问题，如何找源头？
+- [ ] ops26 (test/steps): NodeFilesystemAlmostOutOfSpace 的告警依据及处置思路是什么？
+- [ ] ops27 (test/steps): NodeFilesystemAlmostOutOfFiles 如何与字节空间告警区分？
+- [ ] ops28 (dev/steps): NodeFileDescriptorLimit 告警要查哪些系统指标与进程？
+- [ ] ops29 (test/steps): Prometheus remote write 落后时如何排查？
+- [ ] ops30 (test/steps): etcdInsufficientMembers 如何检查集群法定人数问题？
+- [ ] ops31 (test/steps): etcdHighFsyncDurations 的磁盘排查步骤？
+- [ ] ops32 (test/steps): etcdBackendQuotaLowSpace 如何确认空间压力？
+- [ ] ops33 (dev/steps): Pod 长期 Pending 且事件 FailedScheduling，如何查资源？
+- [ ] ops34 (test/steps): How can I inspect logs from a previously crashed container?
+- [ ] ops35 (dev/steps): Init 容器失败时如何查看状态和日志？
+- [ ] ops36 (test/steps): Service 访问失败，如何检查 selector 与 EndpointSlice？
+- [ ] ops37 (test/steps): 服务名称访问失败但 ClusterIP 能通，应该先查什么？
+- [ ] ops38 (test/steps): Readiness probe 失败会直接重启容器吗？
+- [ ] ops39 (test/steps): OOM 后修改内存限制前应该采集哪些证据？
+- [ ] ops40 (test/steps): memory-backed emptyDir 为什么可能增加内存压力？
+- [ ] ops41 (test/multi): checkout 出现 CONNECTION_REFUSED，catalog 同期 readiness 失败，如何结合文档排查且避免过早归因？
+- [ ] ops42 (test/multi): payments OOM_KILLED 回放日志结合 Kubernetes 资源文档，能得出什么和不能得出什么？
+- [ ] ops43 (test/multi): KubePodNotReady 和 readiness probe 文档如何一起解释 Running 但不接流量？
+- [ ] ops44 (test/multi): 容器反复重启时怎样结合 runbook 和 kubectl previous logs 定位？
+- [ ] ops45 (test/multi): CPU 超卖与 CPU throttling 是一回事吗？排查上如何区分？
+- [ ] ops46 (test/multi): 剩余空间很多但 inode 告警触发，如何对照两类文件系统告警？
+- [ ] ops47 (test/multi): HPA 到上限且 Deployment 副本不足，如何区分扩容上限与无法调度？
+- [ ] ops48 (dev/multi): etcd 无 leader 同时磁盘 fsync 延迟高，应如何组合排查？
+- [ ] ops49 (dev/multi): PVC 快满且节点磁盘预测满，为什么不能把两者直接视为同一个磁盘？
+- [ ] ops50 (dev/multi): Pod 未就绪并且 Init 容器失败，如何把两份排障文档串起来？
+- [ ] ops51 (dev/no_answer): Kubernetes 2030 年的默认网络插件叫什么？
+- [ ] ops52 (test/no_answer): 我们生产集群管理员 kubeconfig 的 token 是什么？
+- [ ] ops53 (test/no_answer): 仅凭这份 payments 回放日志，告诉我内存泄漏的确切代码行号。
+- [ ] ops54 (test/no_answer): checkout 连接拒绝后我们是否已经自动修复成功？
+- [ ] ops55 (test/no_answer): 只根据 PrometheusNotIngestingSamples 这篇 runbook 给出完整的逐步恢复命令。
+- [ ] ops56 (test/no_answer): 现在真实集群一共多少个 Pending Pod？
+- [ ] ops57 (dev/no_answer): 不用看成员状态和备份，现在能保证重建 etcd 不丢数据吗？
+- [ ] ops58 (dev/no_answer): 昨晚这次告警造成了多少元业务损失？
+- [ ] ops59 (test/no_answer): 私有 CNI AcmeNet X9 错误 0xDEAD 的准确含义是什么？
+- [ ] ops60 (dev/no_answer): 哪位同事在生产修改了 Service selector 导致事故？

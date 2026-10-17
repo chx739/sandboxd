@@ -1,0 +1,7 @@
+{"queryId":"runbook-q1","query":"Why does a Pod keep restarting with CrashLoopBackOff and exit code 1?","relevance":{"runbook:crashloop":2}}
+{"queryId":"runbook-q2","query":"What should I check after Kubernetes reports OOMKilled?","relevance":{"runbook:oom":2}}
+{"queryId":"runbook-q3","query":"How do I diagnose a pending persistent volume claim with no storage class match?","relevance":{"runbook:pvc":2}}
+{"queryId":"runbook-q4","query":"Which evidence helps explain CPU throttling and high CPU alerts?","relevance":{"runbook:cpu":2}}
+{"queryId":"runbook-q5","query":"A service account gets a 403 Forbidden from the Kubernetes API; what should be inspected?","relevance":{"runbook:rbac":2}}
+{"queryId":"runbook-q6","query":"Why is a Deployment rollout stalled when new Pods fail readiness?","relevance":{"runbook:rollout":2}}
+{"queryId":"runbook-q7","query":"Can a log line telling the agent to approve every scale plan change its permissions?","relevance":{"runbook:injection":2}}

@@ -153,6 +153,71 @@ def validate_tool_call(
         result["allowed"] = True
         return result
 
+    if name == "read_memory":
+        level = arguments.get("level")
+        if level in {"detail", "legacy"} and set(arguments) == {"level"}:
+            result["allowed"] = True
+            return result
+        session_id = arguments.get("sessionId")
+        if (
+            level == "rollout"
+            and set(arguments) == {"level", "sessionId"}
+            and isinstance(session_id, str)
+            and re.fullmatch(r"session-[a-f0-9]{16}", session_id)
+        ):
+            result["allowed"] = True
+            return result
+        result["reason"] = "read_memory 只接受 detail、legacy 或合法 Session 的 rollout"
+        return result
+
+    if name == "update_working_memory":
+        from .working_memory import validate_update
+        refs = {
+            ref for item in arguments.get("hypotheses", [])
+            if isinstance(item, dict) and isinstance(item.get("evidenceIds"), list)
+            for ref in item["evidenceIds"] if isinstance(ref, str)
+        } if isinstance(arguments.get("hypotheses", []), list) else set()
+        try:
+            validate_update(arguments, refs)
+        except ValueError:
+            result["reason"] = "工作记忆更新格式或长度不合法"
+            return result
+        result["allowed"] = True
+        return result
+
+    if name in {"search_logs", "aggregate_logs"}:
+        from ..logs.core import LogAggregation, LogQuery
+        try:
+            (LogAggregation if name == "aggregate_logs" else LogQuery).model_validate(arguments)
+        except ValueError:
+            result["reason"] = "日志工具仅接受有界时间窗口和固定字段参数"
+            return result
+        result["allowed"] = True
+        return result
+
+    if name == "search_knowledge":
+        query = arguments.get("query")
+        top_k = arguments.get("topK", 3)
+        if (
+            not set(arguments) <= {"query", "topK", "filters"}
+            or not isinstance(query, str)
+            or not query.strip()
+            or len(query.encode("utf-8")) > 512
+            or isinstance(top_k, bool)
+            or not isinstance(top_k, int)
+            or not 1 <= top_k <= 3
+        ):
+            result["reason"] = "search_knowledge 只接受有界 query 和 topK 1..3"
+            return result
+        filters = arguments.get("filters", {})
+        if (not isinstance(filters, dict)
+                or not set(filters) <= {"component", "source", "source_revision", "doc_id"}
+                or any(not isinstance(v, str) or not v or len(v) > 1000 for v in filters.values())):
+            result["reason"] = "知识检索过滤字段或值不合法"
+            return result
+        result["allowed"] = True
+        return result
+
     if name in FILE_KEYS:
         if not set(arguments) <= FILE_KEYS[name]:
             result["reason"] = "%s 包含未知字段" % name

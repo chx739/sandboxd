@@ -1,0 +1,23 @@
+{
+  "kind": "reviewable-live-eval-plan-no-network",
+  "services": [
+    "TypeSafe Jev",
+    "DeepSeek API"
+  ],
+  "modelNames": {
+    "economy": "deepseek-flash",
+    "strong": "deepseek-v4-pro"
+  },
+  "sampleCount": 2,
+  "maximumJevRequests": 2,
+  "maximumDownstreamRequests": 6,
+  "maxOutputTokensPerDownstreamRequest": 128,
+  "reservedInputTokensPerRequest": 4096,
+  "worstCaseReservationUsd": 0.026763,
+  "data": "repository synthetic fixture only; no live cluster, logs, secrets or user content",
+  "caseIds": [
+    "l01",
+    "l02"
+  ],
+  "caseSetSha256": "197bc3a3a49c82684f43e04dd2ddf8a5a9c7d1728b30ed0438a4526744a408fe"
+}

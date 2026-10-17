@@ -131,6 +131,7 @@ class AgentTrace(BaseModel):
     capabilities: dict[str, Any] = Field(default_factory=dict)
     plugins: list[dict[str, Any]] = Field(default_factory=list)
     model_usage: ModelUsage = Field(default_factory=ModelUsage, alias="modelUsage")
+    routing: dict[str, Any] = Field(default_factory=dict)
     sandbox_id: str | None = Field(default=None, alias="sandboxId")
     alert_fingerprint: str = Field(default="", alias="alertFingerprint")
     injected_via: list[str] = Field(default_factory=list, alias="injectedVia")

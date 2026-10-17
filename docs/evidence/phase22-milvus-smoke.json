@@ -1,0 +1,55 @@
+{
+  "kind": "docker-integration-local-model",
+  "backend": "milvus",
+  "corpusVersion": "runbook-v1",
+  "corpusHash": "be1ddb6e642b55a1412c392412e18ae5891fc8553edb7551d144fe78b8979190",
+  "chunkCount": 9,
+  "queryCount": 7,
+  "models": {
+    "embedding": "/home/hx/.local/share/sandboxd/models/bge-small-en-v1.5-5c38ec7",
+    "reranker": "/home/hx/.local/share/sandboxd/models/bge-reranker-base-2cfc18c"
+  },
+  "results": {
+    "bm25": {
+      "queryCount": 7,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "p50Ms": 218.18,
+      "p95Ms": 479.57
+    },
+    "dense": {
+      "queryCount": 7,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "p50Ms": 399.58,
+      "p95Ms": 400.4
+    },
+    "rrf": {
+      "queryCount": 7,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "p50Ms": 617.79,
+      "p95Ms": 774.17
+    },
+    "rerank": {
+      "queryCount": 7,
+      "recall@1": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "p50Ms": 1101.83,
+      "p95Ms": 2319.72
+    }
+  },
+  "processMaxRssMB": 1230.71
+}

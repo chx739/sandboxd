@@ -1,0 +1,118 @@
+{
+  "kind": "live-synthetic-operations-model-choice-eval",
+  "plan": {
+    "kind": "reviewable-live-eval-plan-no-network",
+    "services": [
+      "TypeSafe Jev",
+      "DeepSeek API"
+    ],
+    "modelNames": {
+      "economy": "deepseek-flash",
+      "strong": "deepseek-v4-pro"
+    },
+    "sampleCount": 8,
+    "maximumJevRequests": 8,
+    "maximumDownstreamRequests": 24,
+    "maxOutputTokensPerDownstreamRequest": 128,
+    "reservedInputTokensPerRequest": 4096,
+    "worstCaseReservationUsd": 0.107053,
+    "data": "repository synthetic fixture only; no live cluster, logs, secrets or user content",
+    "caseIds": [
+      "l01",
+      "l02",
+      "l03",
+      "l04",
+      "l05",
+      "l06",
+      "l07",
+      "l08"
+    ],
+    "caseSetSha256": "5c7c0cb67643663c3ee794af69625f2a6651654cbbff3ebfd4f2d23730848a75"
+  },
+  "maxUsd": 1.0,
+  "completedCases": 1,
+  "jevAttempts": 1,
+  "downstreamAttempts": 3,
+  "stoppedReason": "first_case_provider_error",
+  "accountedCostUsd": 0.00046489,
+  "routingTierAccuracy": 0,
+  "results": {
+    "fixedEconomy": {
+      "correct": 1,
+      "accuracy": 1,
+      "errors": 0,
+      "accountedCostUsd": 3.15e-05,
+      "routerAccountedCostUsd": 0.0,
+      "p50LatencyMs": 689.0,
+      "p95LatencyMs": 689.0
+    },
+    "fixedStrong": {
+      "correct": 1,
+      "accuracy": 1,
+      "errors": 0,
+      "accountedCostUsd": 0.00013068,
+      "routerAccountedCostUsd": 0.0,
+      "p50LatencyMs": 978.0,
+      "p95LatencyMs": 978.0
+    },
+    "routed": {
+      "correct": 1,
+      "accuracy": 1,
+      "errors": 0,
+      "accountedCostUsd": 0.00030271,
+      "routerAccountedCostUsd": 0.00017203,
+      "p50LatencyMs": 1530.0,
+      "p95LatencyMs": 1530.0
+    }
+  },
+  "cases": [
+    {
+      "id": "l01",
+      "goldTier": "economy",
+      "modes": {
+        "fixedEconomy": {
+          "tier": "economy",
+          "model": "deepseek-flash",
+          "correct": true,
+          "parsed": true,
+          "errorType": null,
+          "latencyMs": 689,
+          "accountedCostUsd": 3.15e-05,
+          "routerAccountedCostUsd": 0.0,
+          "route": null
+        },
+        "fixedStrong": {
+          "tier": "strong",
+          "model": "deepseek-v4-pro",
+          "correct": true,
+          "parsed": true,
+          "errorType": null,
+          "latencyMs": 978,
+          "accountedCostUsd": 0.00013068,
+          "routerAccountedCostUsd": 0.0,
+          "route": null
+        },
+        "routed": {
+          "tier": "strong",
+          "model": "deepseek-v4-pro",
+          "correct": true,
+          "parsed": true,
+          "errorType": null,
+          "latencyMs": 1530,
+          "accountedCostUsd": 0.00030271,
+          "routerAccountedCostUsd": 0.00017203,
+          "route": {
+            "requestedTier": null,
+            "effectiveTier": "strong",
+            "confidence": null,
+            "fallbackReason": "router_error",
+            "source": "jev",
+            "elapsedMs": 599,
+            "routerInputTokens": null
+          }
+        }
+      }
+    }
+  ],
+  "costCaveat": "Token usage and configured peak prices are estimates; failed calls reserve a worst-case amount. Provider billing is authoritative."
+}
