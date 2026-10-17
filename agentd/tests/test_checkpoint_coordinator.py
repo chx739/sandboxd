@@ -325,4 +325,3 @@ class CoordinatorTests(unittest.IsolatedAsyncioTestCase):
         finally:
             worker.cancel();await asyncio.gather(worker,return_exceptions=True)
             coordinator.close();store.close()
-

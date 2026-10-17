@@ -101,8 +101,12 @@
       "sha256": "1a945894bd69d7647d0002e79e0f78d831166a8d97f317f41568a8cd8157f7bc"
     },
     {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-latest-full-tests.txt",
+      "sha256": "4ab634ca3fcb3bf333d47619d283b4fad0ef6e761d8ef5e95830fab0222fbb91"
+    },
+    {
       "path": "docs/evidence/phase9-v2-agent-checkpoint-module-status.json",
-      "sha256": "c270a33b2627f93cd4b1b68af97368f308895676a61753e5a31168199f2f3950"
+      "sha256": "580970be99b7b87e5cebe87ca7d08e9d7eda670be68ef9857309a1d08409ca28"
     },
     {
       "path": "docs/evidence/phase9-v2-agent-checkpoint-preflight-final-tests.txt",

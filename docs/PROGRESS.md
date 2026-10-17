@@ -20,12 +20,12 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：Agent联合保存接线与最终诊断恢复
 
-- 本批从有效HEAD d85aa2d继续，当前仍为codex/workspace-restic-v2/草稿PR#3，base为未合并V1 PR#2；后者依赖PR#1。用户docs32/docs34原有修改保留，不暂存。
+- 本批实现fb426a7已提交并推送（前置有效HEAD d85aa2d），当前仍为codex/workspace-restic-v2/草稿PR#3，base为未合并V1 PR#2；后者依赖PR#1。用户docs32/docs34原有修改保留，不暂存。
 - 新CheckpointCoordinator按Reserve→Session引用/PREPARING→Start/Wait→DATA_READY→核对Go停止屏障/owner→短锁COMMITTED→Finish执行；Runner/Loop只挂完整工具组和已持久化最终诊断，初始化告警不备份。设置AGENTD_CHECKPOINT_MODE=restic选择，默认off；禁用后端在claim/模型调用前失败。main生命周期关闭检查点账本；统一shell入口已加模式和配置检查，但restic shell分支尚未整套执行。
 - 最终公开诊断独立于模型原文，保存在Runtime来源元数据+原Task ID的节点。Provider伪造标记被剥离；同Task最终备份中断接续可不重调模型，手动新Task仍真实进入Loop。恢复时及备份后复核60秒状态时效，过期追加历史诊断，最多一次额外检查点，原预算/deadline不变。独立128Ki字符结构化诊断持久化预算避免半个JSON，不扩大模型上下文或Session引用上限。
 - 最终备份窗口已接受的steer/follow-up与成功提交在同一接受锁排序；有未注入命令就同Task新attempt接续，不吞命令、不重放写入。仍受原额度、deadline及恢复次数上限，取消优先。
 - 三轮真实正常路径均成功：phase9-v2-agent-joint-checkpoint.json、-v2.json、-v3.json；最后一轮27,881.23ms，实际TaskStore/Runner/Go HTTP/gVisor/NFS/restic/专属MinIO，3个COMMITTED点、完整Session引用/父链/revision/snapshot及文件hash一致，3模型槽/2工具槽，维护Pod实际CRI均runsc；外部模型0。前两轮对应先前代码，第三轮覆盖最终时效修复。业务/维护Pod经Go清理，原生控制目录、工作区、PV/PVC、snapshot和Secret保留。
-- 回归分批：最初完整223/223；随后完整231/231、288.359s通过（启动后增加的预检/诊断预算/时效不冒称由它覆盖）；最新定向52/52、9.409s通过，含恢复过期、备份等待过期、Provider标记、手动新Task、late follow-up和大诊断。首次late-control命令误写不存在的test_runtime模块，原始FAILED留存；修正后33/33通过。完整最终代码回归另存phase9-v2-agent-checkpoint-latest-full-tests.txt，以真实结束结果为准。
+- 回归分批：最初完整223/223；随后完整231/231、288.359s通过（启动后增加的预检/诊断预算/时效不冒称由它覆盖）；最新定向52/52、9.409s通过，含恢复过期、备份等待过期、Provider标记、手动新Task、late follow-up和大诊断。首次late-control命令误写不存在的test_runtime模块，原始FAILED留存；修正后33/33通过。最终代码完整回归235/235、295.378s通过，原文phase9-v2-agent-checkpoint-latest-full-tests.txt；本批还检查Python编译、shell语法、9份Markdown链接/围栏及diff，最终测试文件仅去掉末尾多余空行，无逻辑改动。
 - 环境再核对：Docker仅kind控制节点、项目NFS、专属MinIO运行；可用内存20,536MiB，swap总6,144MiB/已用0，Linux根盘约931GiB可用。NFS/MinIO地址仍172.23.0.3/.4，仅本次观察，后续重新核对。真实夹具使用.cache/workspace-sandboxd-v2，不覆盖旧Go二进制；使用既有专用仓库Secret名称，不输出凭据。
 - 流量分析写入文档46 §6：manifest前后各全读一次，restic去重不消除源扫描；当前配额64MiB/512项，单文件256KiB。本机容器网络不等于公网流量。V2同条件流量/性能尚未实测，不宣称提速。
 - **第一项下一步**：串行补真实V2进程切点/取消/MinIO故障及原预算对账；再实现可信restore屏障、新空NFS工作区与不可变镜像校验、精确历史分支、引用保护/清理预览/受控forget-prune，最后同条件V1/V2性能与十项完整验收。正常联合保存和Fake故障测试不能替代这些证据；Goal保持active。

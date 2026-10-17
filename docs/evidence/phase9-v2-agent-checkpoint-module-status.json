@@ -42,7 +42,13 @@
       "tests": 52,
       "seconds": 9.409
     },
-    "failedLauncher": "phase9-v2-agent-checkpoint-late-control-tests.txt"
+    "failedLauncher": "phase9-v2-agent-checkpoint-late-control-tests.txt",
+    "latestFull": {
+      "path": "phase9-v2-agent-checkpoint-latest-full-tests.txt",
+      "passed": true,
+      "tests": 235,
+      "seconds": 295.378
+    }
   },
   "environment": {
     "nfs": "NFSv4.1 runtime remains authoritative",
@@ -58,5 +64,13 @@
     "ten complete V2 acceptance cases",
     "same-workload V1/V2 performance and actual traffic comparison",
     "new restic mode of unified shell startup"
-  ]
+  ],
+  "implementationCommit": "fb426a7b49fd840b44a4276fdacce1d804094cf5",
+  "staticChecks": [
+    "Python py_compile",
+    "bash -n hack/workspace.sh",
+    "9 Markdown files local links/code fences",
+    "git diff --check"
+  ],
+  "postRunPods": "sandboxd-demo and sandboxd-storage both empty; NFS/MinIO/control-plane retained"
 }

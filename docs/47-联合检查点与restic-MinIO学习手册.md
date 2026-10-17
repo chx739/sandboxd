@@ -236,7 +236,7 @@ agentd/.venv/bin/python -m agentd.workspace_checkpoint_demo \
 
 ### 当前证据与待办
 
-`phase9-v2-agent-joint-checkpoint.json`和`-v2.json`均为实际正常路径成功；第二轮包含Runtime来源元数据及原Task标记断言。最终代码第三轮`phase9-v2-agent-joint-checkpoint-v3.json`通过，27,881.23ms，仍为3个COMMITTED点/3模型槽/2工具槽；没有伪造故障、删数据或外部模型调用。后续回归结果见PROGRESS及机器可读索引。早期全量223/223，随后全量231/231（288.359秒）；后者启动之后新增的预检/诊断预算/状态时效不能用该批全量冒称覆盖。最终时效定向52/52、9.409秒通过，含两项过期降级与额外调用为0断言。首次late-control命令误引用不存在的test_runtime模块，原始FAILED输出保留；修正后33/33通过，不改写失败记录。
+`phase9-v2-agent-joint-checkpoint.json`和`-v2.json`均为实际正常路径成功；第二轮包含Runtime来源元数据及原Task标记断言。最终代码第三轮`phase9-v2-agent-joint-checkpoint-v3.json`通过，27,881.23ms，仍为3个COMMITTED点/3模型槽/2工具槽；没有伪造故障、删数据或外部模型调用。后续回归结果见PROGRESS及机器可读索引。早期全量223/223，随后全量231/231（288.359秒）；后者启动之后新增的预检/诊断预算/状态时效不能用该批全量冒称覆盖。最终时效定向52/52、9.409秒通过，含两项过期降级与额外调用为0断言。最终代码完整Python235/235、295.378秒通过，见`phase9-v2-agent-checkpoint-latest-full-tests.txt`；各批有重叠，不累加成绩。首次late-control命令误引用不存在的test_runtime模块，原始FAILED输出保留；修正后33/33通过，不改写失败记录。
 
 尚未完成：真实进程在PREPARING/DATA_READY/COMMITTED前后中断、真实取消/MinIO异常/仓库锁、restore新空工作区屏障及镜像校验、精确历史分支、引用保护/清理预览/受控forget/prune、十项V2完整验收、同条件V1/V2性能与流量测量。正常联合保存不是上述故障和恢复的替代证据，Goal仍active。
 
