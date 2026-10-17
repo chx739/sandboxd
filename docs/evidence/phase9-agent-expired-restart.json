@@ -1,0 +1,278 @@
+{
+  "mode": "real-agentd-budget-restart-replay",
+  "scenario": "expired",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/5fe4807e792c474ea7bc52faa89205f4",
+  "externalModelCalls": 0,
+  "manualResumeCalls": 0,
+  "replaySha256": "08eec5a9a52b5fc3493ff0c601241399dd38c4d4720f792919ecc1805d0f7655",
+  "passed": true,
+  "podBeforeKill": {
+    "workspaceId": "workspace-d146ea817c68494d8834785f2ca75bcd",
+    "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+    "podUid": "7cc0f44e-0ba0-4937-b2be-e4ae71d5e3d6",
+    "sandboxId": "dc30abd0c358d53e",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+    "imageRef": "sandboxd-workspace:runtime-v1.2",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-d146ea817c68494d8834785f2ca75bcd",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "stateBeforeKill": {
+    "alert": {
+      "annotations": {
+        "summary": "Synthetic original budget expired"
+      },
+      "fingerprint": "c5ad11f39001fa11bad212bcd5521880",
+      "labels": {
+        "case": "expired",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "7cc0f44e-0ba0-4937-b2be-e4ae71d5e3d6",
+        "sandboxId": "dc30abd0c358d53e",
+        "startedAt": "2026-10-17T18:17:30.535881+00:00"
+      }
+    ],
+    "branchId": "branch-7c1a47aa0dfa4a91b23bc5af1c0e9a8d",
+    "calls": {
+      "call-1d29ab596a3443ecabd5e96ab94afc19": {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "reserved"
+      },
+      "call-80689a3a4c1249cfbfb21eae5a5ea1a1": {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-8c8e922d64204e81ab1a31c1cbfacf22": {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-b2cdfd60cdf279f3",
+    "deadline": "2026-10-17T18:19:49.267215+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "08eec5a9a52b5fc3493ff0c601241399dd38c4d4720f792919ecc1805d0f7655",
+      "model": "workspace-budget-expired",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-14eb247eb7e75b9a",
+    "status": "running",
+    "taskId": "task-81ed0291dc01fd15",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T18:17:30.535881+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T18:17:49.267215+00:00"
+    },
+    "workspaceId": "workspace-d146ea817c68494d8834785f2ca75bcd"
+  },
+  "kill": {
+    "signal": "SIGKILL",
+    "returnCode": -9,
+    "timestamp": "2026-10-17T18:17:49.754516+00:00"
+  },
+  "restartRequestedAt": "2026-10-17T18:19:49.468755+00:00",
+  "stateAfterRestart": {
+    "alert": {
+      "annotations": {
+        "summary": "Synthetic original budget expired"
+      },
+      "fingerprint": "c5ad11f39001fa11bad212bcd5521880",
+      "labels": {
+        "case": "expired",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "7cc0f44e-0ba0-4937-b2be-e4ae71d5e3d6",
+        "sandboxId": "dc30abd0c358d53e",
+        "startedAt": "2026-10-17T18:17:30.535881+00:00",
+        "stopReason": "containers-terminated"
+      }
+    ],
+    "branchId": "branch-7c1a47aa0dfa4a91b23bc5af1c0e9a8d",
+    "calls": {
+      "call-1d29ab596a3443ecabd5e96ab94afc19": {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "uncertain"
+      },
+      "call-80689a3a4c1249cfbfb21eae5a5ea1a1": {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "list_files",
+        "path": ".",
+        "state": "finished"
+      },
+      "call-8c8e922d64204e81ab1a31c1cbfacf22": {
+        "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-b2cdfd60cdf279f3",
+    "deadline": "2026-10-17T18:19:49.267215+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "08eec5a9a52b5fc3493ff0c601241399dd38c4d4720f792919ecc1805d0f7655",
+      "model": "workspace-budget-expired",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-14eb247eb7e75b9a",
+    "status": "limit_exceeded",
+    "taskId": "task-81ed0291dc01fd15",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T18:17:30.535881+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T18:17:49.267215+00:00"
+    },
+    "workspaceId": "workspace-d146ea817c68494d8834785f2ca75bcd"
+  },
+  "taskAfterRestart": {
+    "taskId": "task-81ed0291dc01fd15",
+    "status": "limit_exceeded",
+    "sessionId": "session-14eb247eb7e75b9a",
+    "branchId": "branch-7c1a47aa0dfa4a91b23bc5af1c0e9a8d",
+    "workspaceId": "workspace-d146ea817c68494d8834785f2ca75bcd",
+    "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+    "attemptCount": 1,
+    "alert": {
+      "status": "firing",
+      "labels": {
+        "case": "expired",
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "annotations": {
+        "summary": "Synthetic original budget expired"
+      },
+      "startsAt": null,
+      "fingerprint": "c5ad11f39001fa11bad212bcd5521880"
+    },
+    "createdAt": "2026-10-17T18:17:30.529118Z",
+    "updatedAt": "2026-10-17T18:20:45.548621Z",
+    "result": null,
+    "error": "original task deadline has expired"
+  },
+  "goAfterRestart": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-d146ea817c68494d8834785f2ca75bcd",
+    "sessionId": "session-14eb247eb7e75b9a",
+    "branchId": "branch-7c1a47aa0dfa4a91b23bc5af1c0e9a8d",
+    "generation": 1,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-81ed0291dc01fd15",
+      "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+      "sandboxId": "dc30abd0c358d53e",
+      "podName": "sandbox-dc30abd0c358d53e",
+      "podUid": "7cc0f44e-0ba0-4937-b2be-e4ae71d5e3d6",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.2",
+    "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+    "stopReason": "containers-terminated"
+  },
+  "traces": [
+    {
+      "alertFingerprint": "",
+      "attemptId": "attempt-81c8ca70785141d38aac756217b73896",
+      "capabilities": {},
+      "elapsedMs": 0,
+      "events": [
+        {
+          "details": {
+            "reason": "prior attempt had no persisted completion trace",
+            "usageKnown": false
+          },
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "attempt.recovered"
+        }
+      ],
+      "final": null,
+      "injectedVia": [],
+      "mode": "recovery",
+      "model": "workspace-budget-expired",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [],
+      "provider": "replay",
+      "routing": {},
+      "sandboxId": "dc30abd0c358d53e",
+      "status": "interrupted",
+      "steps": [],
+      "taskId": "task-81ed0291dc01fd15",
+      "verdict": "process-interrupted",
+      "workspaceId": "workspace-d146ea817c68494d8834785f2ca75bcd"
+    }
+  ],
+  "sessionPrefixPreserved": true,
+  "additionalCalls": 0,
+  "newPodClaims": 0,
+  "verifiedScope": "V1-04 expired",
+  "goJournalRecords": 9,
+  "timestamp": "2026-10-17T18:20:45.810589+00:00"
+}

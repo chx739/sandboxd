@@ -1,6 +1,6 @@
 # Phase 9 工作区恢复实施记录
 
-日期：2026-10-17。基线：281111d；V1 分支：codex/workspace-nfs-v1。当前为 M0/M1，完整目标 active，未完成。
+日期：2026-10-17起。基线：281111d；V1分支：codex/workspace-nfs-v1。当前M3，完整目标active，未完成；以下按批次保留历史过程。
 
 ## 已执行的纯逻辑验证
 
@@ -50,7 +50,7 @@
 
 ## 正式验收矩阵
 
-文档43当前正式通过 **V1-01/02/03/05/07/08/09/12/13，共9/14**；04/06/10/11/14及全部V2尚未完成。机器可读证据清单见`phase9-v1-acceptance-progress.json`。纯逻辑/Fake证据不能提前勾选真实集成项目。
+文档43当前正式通过 **V1-01/02/03/04/05/07/08/09/10/12/13，共11/14**；06/11/14及全部V2尚未完成。机器可读证据清单见`phase9-v1-acceptance-progress.json`。纯逻辑/Fake证据不能提前勾选真实集成项目。
 
 默认Python TaskStore/Runner已接持久预算、Session多attempt及真实远程文件路径。真实SIGKILL、终态重启和确认丢失等证据见下面新批次；尚缺的场景不能由Go账本重开或Fake测试替代。V2主链路未启动。
 
@@ -85,7 +85,7 @@
 
 ## 下一步
 
-完成V1-04/06/10/11/14，以及显式旧工作区迁移、统一入口和性能统计。三类回放与当前回归已过，后续改动继续相关验证。全部V1完成后再启动V2，保留完整范围，不使用已消费的模型预算。
+完成V1-06/11/14，以及显式旧工作区迁移、统一入口和性能统计。三类回放与当前回归已过，后续改动继续相关验证。全部V1完成后再启动V2，保留完整范围，不使用已消费的模型预算。
 
 ## 2026-10-18 TaskStore/Runner接线与真实Agent验收
 
@@ -125,7 +125,7 @@
 - `phase9-agent-interruption-cleanup-audit.json`：对真实V1-02、SIGKILL与终态报告关联原始日志逐项复查；旧半组读工具AI节点留在审计、不进入当前完整父链，模型与工具槽保留；正常/取消/失败/超限工作区目录65532:65532:700、Retain PV/PVC和Session仍在、对应Pod已消失。覆盖V1-08/12，只读审计未再次执行工具。
 - `phase9-joint-ops-replay.json`：实际Milvus2.5.10/OpenSearch和缓存E5/BGE，memory/Service/readiness三类3/3。模型/Jev/沙箱生命周期仍为脚本/Fake，不评自然语言能力或语义引用蕴含；设置HF/Transformers离线及OMP=2，不下载模型、不重建索引。四个项目服务经资源检查临时启动后停回初始状态，ES及其他项目未启动，覆盖V1-13回放部分。
 - 完整Python165/165、290.536秒，`phase9-python-process-regression-tests.txt`；Replay延迟/只读监测与恢复定向16/16、0.995秒，`phase9-process-replay-tests.txt`。两份覆盖重叠，不相加。所有外部模型调用0。
-- 尚缺04/06/10/11/14真实验收、显式旧工作区迁移、统一入口、小负载性能及全部V2。SIGKILL旧Trace为控制面补录并注明usageKnown=false，后续14仍需检查命令窗口与崩溃证据可追溯，不能把未知用量当已知零。
+- 尚缺06/11/14真实验收、显式旧工作区迁移、统一入口、小负载性能及全部V2。SIGKILL旧Trace为控制面补录并注明usageKnown=false，后续14仍需检查命令窗口与崩溃证据可追溯，不能把未知用量当已知零。
 
 ## 2026-10-18 分阶段时钟与Session多attempt
 
@@ -135,3 +135,26 @@
 - SessionJournal.for_attempt共用文件和锁；消息增量按task+attempt组织，半组工具调用留在旧attempt审计，新的父链只继承完整head。重复边界幂等，旧attempt不能继续写，旧线性快照的迁移节点仍归legacy，历史字节保持前缀不变。
 - `phase9-attempt-clock-final-tests.txt`为50/50、1.537秒；不等同强杀agentd、真实Pod故障或V1历史节点HTTP限制验收。默认TaskStore/Runner未接这些新接口，正式矩阵保持未完成。
 - `phase9-python-attempt-clock-regression-tests.txt`完整批次为137/137、270.335秒；该进程启动后追加的时钟回拨、新绑定前禁止调用和legacy线性视图边界，由最终50项定向覆盖。两份用例有重叠，不合计为187项，也不把早期完整批次标成后来全部用例的完整重跑。
+
+## 2026-10-18 原预算/时钟与真实文件边界
+
+**V1-04通过，两条实际进程路径：**
+
+- `phase9-agent-budget-restart.json`与同名`-tests.txt`：Task `task-628bd5625227f11c`，完成5个真实NFS目录工具轮次，第6次模型预留后SIGKILL。重启继承原6个模型槽、5个工具槽、deadline/timing/limits/provider，最终limit_exceeded，错误为original model call budget is exhausted；仍在原deadline之前，无新调用或Pod认领。第二attempt仅执行预算判断，never-bound停止。
+- `phase9-agent-expired-restart.json`与同名`-tests.txt`：Task `task-81ed0291dc01fd15`，第2模型预留后SIGKILL，按真实墙钟等待原loop截止。原deadline为UTC18:19:49.267215，重启请求UTC18:19:49.468755；第二服务清理原owner后limit_exceeded，仍仅1个attempt、2个模型槽/1个工具槽，错误为original task deadline has expired。没有缩短时钟、写入伪造状态或手动resume。
+- 两轮均核对Session原字节前缀、旧预留转uncertain、Go原代次/stopConfirmed及原身份；均是本地真实服务+固定Replay，外部模型调用0。
+
+**V1-10第四轮通过，前三轮保留：**
+
+1. `phase9-workspace-file-boundary.json`首轮发现write_file把新symlink误判为不存在并替换，未通过。修复只允许明确ENOENT创建，不以目录枚举“没看到”证明不存在。
+2. `phase9-workspace-file-boundary-v2.json`确认叶子写入拒绝，但父目录symlink读取成功，未通过。额外管理员诊断认领的健康检查失败后，使用原Go账本正常清理，见`phase9-symlink-probe-cleanup.json`。`phase9-symlink-runtime-probe.json`的空observations来自该认领失败，不是验证通过。
+3. `phase9-workspace-file-boundary-v3.json`采用openat2候选，正常文件创建即失败。`phase9-openat2-write-probe.json`补实际403；`phase9-path-syscall-probe.json`及源代码`.go.txt`确证当前gVisor的openat2返回ENOSYS，而O_PATH|O_NOFOLLOW能取得链接本身。所有额外诊断Pod均有Go正常释放证明，不使用force。
+4. `phase9-workspace-file-boundary-v4.json`与同名`-tests.txt`，runtime-v1.5最终通过。标准库目录描述符取得→fstat类型确认→基于该描述符打开“.”，不重新解析原路径，不添加依赖/权限。真实Go HTTP绕过Python Policy，20项路径/归属/额外参数/大小/叶子及父级链接/CAS拒绝，正确CAS写入对照成功；两个guard hash及NFS服务端hash一致，链接仍为原链接，两个owner停止确认。suffix v2/v3/v4仅表示重跑次数，均属NFS V1，不是restic V2。
+
+固定Docker镜像runtime-v1.5的inspect Id为`sha256:8e1abdb6e17c11c98fb04f7ad707d748a35c199c9fc80fabbec300a60c7fb465`；真实Pod CRI imageID为`sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1`，不把两者混称registry manifest digest。旧镜像、工作区、PV/PVC、原始日志全部保留。该结果不宣称多租户认证或网络分区HA。
+
+**回归：** 最终`phase9-directory-descriptor-tests.txt`相关Go race通过、`phase9-go-directory-descriptor-regression-tests.txt`全Go回归通过；含目录路径被替换后仍使用原目录句柄及fsync。`phase9-budget-boundary-final-regression-tests.txt`22/22、0.699秒，覆盖夹具/原阶段时钟/Replay监测。此前165全Python结果仍是前一批次，没有冒称本次全量重跑；各批次重叠不相加。openat2候选和ENOTDIR断言的失败输出保留。
+
+当前正式11/14；剩余06/11/14、旧文件迁移、统一入口、固定负载性能及全部V2仍待完成，Goal active。
+
+- 最新runtime-v1.5真实Agent文件写读及完整边界Pod故障接管复验通过：`phase9-agent-pod-descriptor-recovery.json`，23.491742秒单轮，原Task/工作区、2个attempt/不同Pod UID、模型4槽/工具3槽、服务端hash保持。该项是路径修复后的集成复查，不是额外生产RTO或模型能力成绩。

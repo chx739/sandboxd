@@ -1,0 +1,41 @@
+{
+  "before": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-731b447c282848fba4ea7e18eed55adf",
+    "sessionId": "session-boundary-a",
+    "branchId": "branch-boundary-a",
+    "generation": 2,
+    "phase": "starting",
+    "owner": {
+      "taskId": "task-symlink-probe",
+      "attemptId": "attempt-symlink-probe",
+      "sandboxId": "835d8dbacabdf11d",
+      "podName": "sandbox-835d8dbacabdf11d",
+      "podUid": "7699afa2-bf00-499f-9d36-0d4c11a0563d",
+      "createSubmitted": true,
+      "stopConfirmed": false
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.3"
+  },
+  "after": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-731b447c282848fba4ea7e18eed55adf",
+    "sessionId": "session-boundary-a",
+    "branchId": "branch-boundary-a",
+    "generation": 2,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-symlink-probe",
+      "attemptId": "attempt-symlink-probe",
+      "sandboxId": "835d8dbacabdf11d",
+      "podName": "sandbox-835d8dbacabdf11d",
+      "podUid": "7699afa2-bf00-499f-9d36-0d4c11a0563d",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.3",
+    "stopReason": "containers-terminated"
+  },
+  "passed": true,
+  "scope": "administrative cleanup of own failed readiness probe, not V1-10 pass"
+}

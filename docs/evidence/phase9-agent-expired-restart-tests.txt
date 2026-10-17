@@ -1,0 +1,12 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 124291}
+{"stage": "budget-sigkill", "scenario": "expired", "taskId": "task-81ed0291dc01fd15", "modelSlots": 2}
+{"stage": "waiting-original-deadline", "remainingSeconds": 119.51}
+{"stage": "waiting-original-deadline", "remainingSeconds": 100.27}
+{"stage": "waiting-original-deadline", "remainingSeconds": 81.2}
+{"stage": "waiting-original-deadline", "remainingSeconds": 61.22}
+{"stage": "waiting-original-deadline", "remainingSeconds": 41.22}
+{"stage": "waiting-original-deadline", "remainingSeconds": 21.98}
+{"stage": "waiting-original-deadline", "remainingSeconds": 1.93}
+{"stage": "waiting-original-deadline", "remainingSeconds": 0.58}
+{"stage": "agentd-process-started", "number": 2, "pid": 125223}
+{"passed": true, "scenario": "expired", "output": "docs/evidence/phase9-agent-expired-restart.json"}

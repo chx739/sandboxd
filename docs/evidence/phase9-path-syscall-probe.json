@@ -1,0 +1,54 @@
+{
+  "scope": "administrator fixed syscall diagnostic; not Agent tool",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/0d0a972daba14864bac020b132da2a9b",
+  "externalModelCalls": 0,
+  "syscalls": {
+    ".": {
+      "oldDirectory": "drwx------",
+      "openat2dir": "function not implemented",
+      "openat2read": "function not implemented",
+      "pathDescriptor": "drwx------"
+    },
+    "dirlink": {
+      "oldDirectory": "drwx------",
+      "openat2dir": "function not implemented",
+      "openat2read": "function not implemented",
+      "pathDescriptor": "Lrwxrwxrwx"
+    },
+    "dirlink/guard.md": {
+      "oldDirectory": "not a directory",
+      "openat2dir": "function not implemented",
+      "openat2read": "function not implemented",
+      "pathDescriptor": "-rw-r--r--"
+    },
+    "missing": {
+      "oldDirectory": "no such file or directory",
+      "openat2dir": "function not implemented",
+      "openat2read": "function not implemented",
+      "pathDescriptor": "no such file or directory"
+    }
+  },
+  "podUid": "529c3c74-67a6-4cc5-b3f5-e2ae33d8e056",
+  "imageId": "sha256:c8523cb19e69df5e3bb4a8b8bf69bb9952a94b9741bd17e69c3c5f1a61550cff",
+  "release": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-48c2a569cd3244a3acf72a79d5083acf",
+    "sessionId": "session-boundary-a",
+    "branchId": "branch-boundary-a",
+    "generation": 3,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-path-probe",
+      "attemptId": "attempt-path-probe",
+      "sandboxId": "e97059d719c8c271",
+      "podName": "sandbox-e97059d719c8c271",
+      "podUid": "529c3c74-67a6-4cc5-b3f5-e2ae33d8e056",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.4",
+    "imageId": "sha256:c8523cb19e69df5e3bb4a8b8bf69bb9952a94b9741bd17e69c3c5f1a61550cff",
+    "stopReason": "containers-terminated"
+  }
+}

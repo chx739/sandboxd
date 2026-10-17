@@ -1,0 +1,4 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 123229}
+{"stage": "budget-sigkill", "scenario": "budget", "taskId": "task-628bd5625227f11c", "modelSlots": 6}
+{"stage": "agentd-process-started", "number": 2, "pid": 123670}
+{"passed": true, "scenario": "budget", "output": "docs/evidence/phase9-agent-budget-restart.json"}

@@ -84,7 +84,7 @@ def start_go(root: Path, binary: Path, nfs_server: str):
     log = log_path.open("a")
     log_path.chmod(0o600)
     process = subprocess.Popen([str(binary), "-listen", "127.0.0.1:10880", "-pool-size", "0",
-                                "-workspace-nfs-server", nfs_server, "-workspace-image", "sandboxd-workspace:runtime-v1.2",
+                                "-workspace-nfs-server", nfs_server, "-workspace-image", "sandboxd-workspace:runtime-v1.5",
                                 "-workspace-control-dir", str(root / "go-control")],
                                env=child_env, stdout=log, stderr=subprocess.STDOUT)
     return process, log, agent_token

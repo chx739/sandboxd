@@ -1,0 +1,13 @@
+ok  	github.com/chx739/sandboxd/cmd/sandbox-filetool	0.012s
+?   	github.com/chx739/sandboxd/cmd/sandbox-workspace-init	[no test files]
+?   	github.com/chx739/sandboxd/cmd/sandboxd	[no test files]
+?   	github.com/chx739/sandboxd/hack	[no test files]
+?   	github.com/chx739/sandboxd/hack/workspace-runtime-smoke	[no test files]
+ok  	github.com/chx739/sandboxd/internal/api	0.054s
+ok  	github.com/chx739/sandboxd/internal/approval	(cached)
+ok  	github.com/chx739/sandboxd/internal/config	(cached)
+ok  	github.com/chx739/sandboxd/internal/control	(cached)
+ok  	github.com/chx739/sandboxd/internal/diagnostic	(cached)
+?   	github.com/chx739/sandboxd/internal/metrics	[no test files]
+ok  	github.com/chx739/sandboxd/internal/sandbox	0.964s
+ok  	github.com/chx739/sandboxd/internal/workspace	0.301s

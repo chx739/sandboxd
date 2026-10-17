@@ -1,31 +1,39 @@
 {
   "schemaVersion": 1,
-  "timestamp": "2026-10-17T17:59:38.642288+00:00",
+  "timestamp": "2026-10-17T18:41:27.964893+00:00",
   "scope": "Partial V1 acceptance, not completion of docs43 or the active Goal",
   "externalModelCalls": 0,
-  "passedV1": 9,
+  "passedV1": 11,
   "totalV1": 14,
   "pendingV2": 10,
   "cases": [
     {
       "id": "V1-01",
       "status": "passed",
-      "qualification": "Real Go/gVisor/NFS, Replay Agent; normal file write/read and release.",
+      "qualification": "Real Go/gVisor/NFS, Replay Agent; normal file write/read and release. Latest runtime-v1.5 Agent file and Pod-recovery path rechecked.",
       "evidence": [
         {
           "path": "docs/evidence/phase9-agent-workspace-smoke-v2.json",
           "sha256": "5a8d4c3b76ff65089a1372b730355aaede1551a0f453f1c5b6306013dad8f544"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-pod-descriptor-recovery.json",
+          "sha256": "3a6b277c5d7e4f3f2149ae451de7129b43dec5d2b481976f7081c1fb6c919d55"
         }
       ]
     },
     {
       "id": "V1-02",
       "status": "passed",
-      "qualification": "Administrative normal Pod deletion after a complete turn; no node partition.",
+      "qualification": "Administrative normal Pod deletion after a complete turn; no node partition. Latest runtime-v1.5 Agent file and Pod-recovery path rechecked.",
       "evidence": [
         {
           "path": "docs/evidence/phase9-agent-pod-recovery-v2.json",
           "sha256": "355e61ac2d6d93414d10a35fed283dd971f3ae411fddac32bf1c898a0136c616"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-pod-descriptor-recovery.json",
+          "sha256": "3a6b277c5d7e4f3f2149ae451de7129b43dec5d2b481976f7081c1fb6c919d55"
         }
       ]
     },
@@ -42,9 +50,18 @@
     },
     {
       "id": "V1-04",
-      "status": "pending",
-      "qualification": "Formal real-service acceptance remains incomplete.",
-      "evidence": []
+      "status": "passed",
+      "qualification": "Actual SIGKILL after final model slot reservation and actual downtime beyond original deadline; unchanged budgets/timing, no new calls or Pod claims.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-budget-restart.json",
+          "sha256": "2d9436ea2bb488bce2e02c9b1bd0f376cfc511443cb7e9e7251808a23e93846c"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-expired-restart.json",
+          "sha256": "2f3614a07de8271e9434a334957da3e3dcf382f4210fa266ca9e859f9d761bde"
+        }
+      ]
     },
     {
       "id": "V1-05",
@@ -98,9 +115,14 @@
     },
     {
       "id": "V1-10",
-      "status": "pending",
-      "qualification": "Formal real-service acceptance remains incomplete.",
-      "evidence": []
+      "status": "passed",
+      "qualification": "Real raw Go HTTP bypasses Python Policy: 20 denials, valid CAS control, actual gVisor/NFS, unchanged guard hashes and symlinks; fourth run on runtime-v1.5. Prior failed experiments retained.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-workspace-file-boundary-v4.json",
+          "sha256": "72d325b0e4f6595d8c66e5617d78d60bf4eda5b84c5f070f1e7866df9588f655"
+        }
+      ]
     },
     {
       "id": "V1-11",
@@ -147,5 +169,22 @@
     "Fixed-workload latency/resource measurements",
     "Remaining concurrency/unavailable-state/command and Trace recovery cases",
     "All restic/MinIO V2 implementation and acceptance"
+  ],
+  "failedExperiments": [
+    {
+      "path": "docs/evidence/phase9-workspace-file-boundary.json",
+      "sha256": "5b7ea8c0b4b79c2f06988fa0d1df9a3a344b23a3e7c8127224f48105811e1466",
+      "qualification": "First real run: leaf symlink write replaced link, not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-file-boundary-v2.json",
+      "sha256": "5c493315150017bde29e5ef7357cd851ddb7edb9d14d0b5c4ba387936ed35f04",
+      "qualification": "Second run: parent symlink read succeeded, not a pass."
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-file-boundary-v3.json",
+      "sha256": "5f7c81c65e651c75ddbf3985e4a3e5dd8f3c949725cf8333aba0cfbd2c9b0396",
+      "qualification": "Third run: openat2 unsupported in actual gVisor; ordinary creation refused, not a pass."
+    }
   ]
 }

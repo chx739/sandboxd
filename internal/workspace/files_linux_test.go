@@ -4,6 +4,7 @@ package workspace
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,6 +12,78 @@ import (
 	"syscall"
 	"testing"
 )
+
+func TestReadPathDistinguishesMissingFromUnsafe(t *testing.T) {
+	rootPath := t.TempDir()
+	root, err := os.Open(rootPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer root.Close()
+	for _, path := range []string{"missing", "missing-parent/file"} {
+		if _, err := readPath(root, path); !errors.Is(err, syscall.ENOENT) {
+			t.Fatalf("missing path lost ENOENT: %s: %v", path, err)
+		}
+	}
+	if err := os.Symlink("missing", filepath.Join(rootPath, "link")); err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{"link", "link/file"} {
+		if _, err := readPath(root, path); err == nil || errors.Is(err, syscall.ENOENT) {
+			t.Fatalf("unsafe path treated as absent: %s: %v", path, err)
+		}
+	}
+}
+
+func TestDirectoryDescriptorsRejectLinksAndAnchorRenames(t *testing.T) {
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "file"), []byte("guard"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(".", filepath.Join(root, "dirlink")); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink("file", filepath.Join(root, "leaflink")); err != nil {
+		t.Fatal(err)
+	}
+	dir, err := os.Open(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer dir.Close()
+	for _, path := range []string{"dirlink", "dirlink/file", "leaflink", "file", ".."} {
+		fd, err := openDirectoryAt(int(dir.Fd()), path)
+		if err == nil {
+			syscall.Close(fd)
+			t.Fatal("symlink resolution allowed", path)
+		}
+	}
+	if err := os.Mkdir(filepath.Join(root, "real"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "real", "guard"), []byte("original"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	fd, err := openDirectoryAt(int(dir.Fd()), "real")
+	if err != nil {
+		t.Fatal(err)
+	}
+	held := os.NewFile(uintptr(fd), "held-directory")
+	defer held.Close()
+	if err := os.Rename(filepath.Join(root, "real"), filepath.Join(root, "moved")); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(".", filepath.Join(root, "real")); err != nil {
+		t.Fatal(err)
+	}
+	data, err := readAt(held, "guard")
+	if err != nil || string(data) != "original" {
+		t.Fatalf("opened directory identity lost after path replacement: %s: %v", data, err)
+	}
+	if err := held.Sync(); err != nil {
+		t.Fatal("directory descriptor must support fsync", err)
+	}
+}
 
 func pointer(s string) *string { return &s }
 

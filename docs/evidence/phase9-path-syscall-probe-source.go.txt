@@ -1,0 +1,16 @@
+package main
+import("encoding/json";"os";"syscall";"golang.org/x/sys/unix")
+func main(){
+ root,e:=os.Open("/workspace");if e!=nil{panic(e)};defer root.Close(); result:=map[string]any{}
+ for _,name:=range []string{".","missing","dirlink","dirlink/guard.md"}{
+  row:=map[string]any{}
+  for label,flags:=range map[string]int{"openat2dir":syscall.O_RDONLY|syscall.O_DIRECTORY|syscall.O_CLOEXEC,"openat2read":syscall.O_RDONLY|syscall.O_NONBLOCK|syscall.O_NOFOLLOW|syscall.O_CLOEXEC}{
+   fd,err:=unix.Openat2(int(root.Fd()),name,&unix.OpenHow{Flags:uint64(flags),Resolve:unix.RESOLVE_BENEATH|unix.RESOLVE_NO_SYMLINKS});if err!=nil{row[label]=err.Error()}else{row[label]="opened";syscall.Close(fd)}
+  }
+  for label,flags:=range map[string]int{"oldDirectory":syscall.O_RDONLY|syscall.O_DIRECTORY|syscall.O_NOFOLLOW|syscall.O_CLOEXEC,"pathDescriptor":0x200000|syscall.O_NOFOLLOW|syscall.O_CLOEXEC}{
+   fd,err:=syscall.Openat(int(root.Fd()),name,flags,0);if err!=nil{row[label]=err.Error()}else{f:=os.NewFile(uintptr(fd),label);s,err:=f.Stat();if err!=nil{row[label]=err.Error()}else{row[label]=s.Mode().String()};f.Close()}
+  }
+  result[name]=row
+ }
+ json.NewEncoder(os.Stdout).Encode(result)
+}

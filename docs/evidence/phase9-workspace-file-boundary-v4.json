@@ -1,0 +1,290 @@
+{
+  "mode": "real-go-gvisor-nfs-boundary",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/2981be2befec40709697446d728aabf8",
+  "externalModelCalls": 0,
+  "pythonPolicyUsed": false,
+  "checks": [
+    {
+      "name": "parent-escape",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "absolute-path",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "reserved-lock",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "path-depth",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "oversize-text",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "arbitrary-operation",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "extra-argv",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "missing-content",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "null-content",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid file operation"
+      }
+    },
+    {
+      "name": "wrong-taskId",
+      "statusCode": 409,
+      "body": {
+        "denyLayer": "workspace-ownership",
+        "error": "workspace operation did not complete",
+        "sandboxRecovery": false
+      }
+    },
+    {
+      "name": "wrong-attemptId",
+      "statusCode": 409,
+      "body": {
+        "denyLayer": "workspace-ownership",
+        "error": "workspace operation did not complete",
+        "sandboxRecovery": false
+      }
+    },
+    {
+      "name": "wrong-sandboxId",
+      "statusCode": 409,
+      "body": {
+        "denyLayer": "workspace-ownership",
+        "error": "workspace operation did not complete",
+        "sandboxRecovery": false
+      }
+    },
+    {
+      "name": "wrong-generation",
+      "statusCode": 409,
+      "body": {
+        "denyLayer": "workspace-ownership",
+        "error": "workspace operation did not complete",
+        "sandboxRecovery": false
+      }
+    },
+    {
+      "name": "wrong-workspaceId",
+      "statusCode": 409,
+      "body": {
+        "denyLayer": "workspace-ownership",
+        "error": "workspace operation did not complete",
+        "sandboxRecovery": false
+      }
+    },
+    {
+      "name": "url-binding-mismatch",
+      "statusCode": 400,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "invalid workspace binding"
+      }
+    },
+    {
+      "name": "stale-cas-write",
+      "statusCode": 403,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "expectedSha256 mismatch or absent"
+      }
+    },
+    {
+      "name": "stale-cas-edit",
+      "statusCode": 403,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "expectedSha256 mismatch or absent"
+      }
+    },
+    {
+      "name": "read-symlink",
+      "statusCode": 403,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "file unavailable, unsupported, or symlink: too many levels of symbolic links"
+      }
+    },
+    {
+      "name": "write-symlink",
+      "statusCode": 403,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "existing file unreadable or CAS target missing"
+      }
+    },
+    {
+      "name": "parent-symlink",
+      "statusCode": 403,
+      "body": {
+        "denyLayer": "workspace-policy",
+        "error": "parent missing, not a directory, or symlink: parent is not a directory or is a symlink"
+      }
+    }
+  ],
+  "pods": [
+    {
+      "workspaceId": "workspace-9b320fe71fde49878279ed83350457f2",
+      "attemptId": "attempt-3c4674b3fc5649e98e91be96d78fb09a",
+      "podUid": "ea1dadc8-fa57-454c-b8f2-ef60b353feac",
+      "sandboxId": "99da6bb1b119be35",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-9b320fe71fde49878279ed83350457f2",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    {
+      "workspaceId": "workspace-199a389bfe214599871f57087eb07fe8",
+      "attemptId": "attempt-6c52c0070f7847fdb4f88e0c508c67d5",
+      "podUid": "e2075c1e-a92c-4668-970f-86adc6e0f4e4",
+      "sandboxId": "cbc4fd3f5e813d61",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-199a389bfe214599871f57087eb07fe8",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    }
+  ],
+  "passed": true,
+  "validCasControl": {
+    "bytes": 18,
+    "created": false,
+    "diff": "",
+    "newSha256": "5d0fb090e35fcd66487663fe33bf7fb37a45dbdeb4ff188dee8d9e3da122c820",
+    "oldSha256": "5d0fb090e35fcd66487663fe33bf7fb37a45dbdeb4ff188dee8d9e3da122c820",
+    "path": "guard.md",
+    "redacted": false
+  },
+  "filesAfterDenials": [
+    {
+      "workspaceId": "workspace-9b320fe71fde49878279ed83350457f2",
+      "guardSha256": "5d0fb090e35fcd66487663fe33bf7fb37a45dbdeb4ff188dee8d9e3da122c820",
+      "directoryEntries": [
+        ".sandboxd-lock",
+        "dirlink",
+        "guard.md",
+        "link.md"
+      ]
+    },
+    {
+      "workspaceId": "workspace-199a389bfe214599871f57087eb07fe8",
+      "guardSha256": "b98b695a0549ae0cb3048efee7993d85c4d26b00b3c8c65874372b5ae6a975b6",
+      "directoryEntries": [
+        ".sandboxd-lock",
+        "guard.md"
+      ]
+    }
+  ],
+  "denialCount": 20,
+  "verifiedCases": [
+    "V1-10"
+  ],
+  "linksAfterDenials": {
+    "link.md": "guard.md",
+    "dirlink": "."
+  },
+  "releases": [
+    {
+      "schemaVersion": 1,
+      "workspaceId": "workspace-199a389bfe214599871f57087eb07fe8",
+      "sessionId": "session-boundary-b",
+      "branchId": "branch-boundary-b",
+      "generation": 1,
+      "phase": "released",
+      "owner": {
+        "taskId": "task-boundary-b",
+        "attemptId": "attempt-6c52c0070f7847fdb4f88e0c508c67d5",
+        "sandboxId": "cbc4fd3f5e813d61",
+        "podName": "sandbox-cbc4fd3f5e813d61",
+        "podUid": "e2075c1e-a92c-4668-970f-86adc6e0f4e4",
+        "nodeName": "sandboxd-control-plane",
+        "createSubmitted": true,
+        "stopConfirmed": true
+      },
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "stopReason": "containers-terminated"
+    },
+    {
+      "schemaVersion": 1,
+      "workspaceId": "workspace-9b320fe71fde49878279ed83350457f2",
+      "sessionId": "session-boundary-a",
+      "branchId": "branch-boundary-a",
+      "generation": 1,
+      "phase": "released",
+      "owner": {
+        "taskId": "task-boundary-a",
+        "attemptId": "attempt-3c4674b3fc5649e98e91be96d78fb09a",
+        "sandboxId": "99da6bb1b119be35",
+        "podName": "sandbox-99da6bb1b119be35",
+        "podUid": "ea1dadc8-fa57-454c-b8f2-ef60b353feac",
+        "nodeName": "sandboxd-control-plane",
+        "createSubmitted": true,
+        "stopConfirmed": true
+      },
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "stopReason": "containers-terminated"
+    }
+  ],
+  "timestamp": "2026-10-17T18:39:04.895520+00:00"
+}

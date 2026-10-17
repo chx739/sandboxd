@@ -212,7 +212,7 @@ func parent(root *os.File, path string, create bool) (*os.File, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
-	fd, err := syscall.Openat(int(root.Fd()), ".", syscall.O_RDONLY|syscall.O_DIRECTORY|syscall.O_CLOEXEC, 0)
+	fd, err := openDirectoryAt(int(root.Fd()), ".")
 	if err != nil {
 		return nil, "", err
 	}
@@ -231,14 +231,38 @@ func parent(root *os.File, path string, create bool) (*os.File, string, error) {
 				}
 			}
 		}
-		next, err := syscall.Openat(int(current.Fd()), name, syscall.O_RDONLY|syscall.O_DIRECTORY|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
+		next, err := openDirectoryAt(int(current.Fd()), name)
 		current.Close()
 		if err != nil {
-			return nil, "", errors.New("parent missing, not a directory, or symlink")
+			return nil, "", fmt.Errorf("parent missing, not a directory, or symlink: %w", err)
 		}
 		current = os.NewFile(uintptr(next), "parent")
 	}
 	return current, items[len(items)-1], nil
+}
+
+func openDirectoryAt(dirFD int, name string) (int, error) {
+	// 当前gVisor的O_DIRECTORY|O_NOFOLLOW仍解析父链接，openat2未实现。
+	// O_PATH|O_NOFOLLOW取得链接本身的描述符，fstat必须确认为目录；
+	// 再从该已打开的目录取"."，不重新解析原路径，避免检查/打开间替换。
+	const oPath = 0x200000
+	if name == "" || name == ".." || strings.ContainsAny(name, "/\\\x00") {
+		return -1, errors.New("directory lookup requires one safe component")
+	}
+	fd, err := syscall.Openat(dirFD, name, oPath|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
+	if err != nil {
+		return -1, err
+	}
+	file := os.NewFile(uintptr(fd), "directory-identity")
+	defer file.Close()
+	info, err := file.Stat()
+	if err != nil {
+		return -1, err
+	}
+	if !info.IsDir() {
+		return -1, errors.New("parent is not a directory or is a symlink")
+	}
+	return syscall.Openat(fd, ".", syscall.O_RDONLY|syscall.O_DIRECTORY|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
 }
 
 func readAt(dir *os.File, name string) ([]byte, error) {
@@ -267,7 +291,7 @@ func readPath(root *os.File, path string) ([]byte, error) {
 	defer dir.Close()
 	data, err := readAt(dir, leaf)
 	if err != nil {
-		return nil, errors.New("file unavailable, unsupported, or symlink")
+		return nil, fmt.Errorf("file unavailable, unsupported, or symlink: %w", err)
 	}
 	return data, nil
 }
@@ -334,7 +358,7 @@ func inventory(root *os.File) ([]entry, int64, int, error) {
 					if depth >= 8 {
 						return errors.New("workspace exceeds depth limit")
 					}
-					fd, e := syscall.Openat(int(dir.Fd()), name, syscall.O_RDONLY|syscall.O_DIRECTORY|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
+					fd, e := openDirectoryAt(int(dir.Fd()), name)
 					if e != nil {
 						return errors.New("unsafe workspace directory")
 					}
@@ -375,7 +399,7 @@ func inventory(root *os.File) ([]entry, int64, int, error) {
 }
 
 func write(root *os.File, req Request) (map[string]any, error) {
-	files, total, count, err := inventory(root)
+	_, total, count, err := inventory(root)
 	if err != nil {
 		return nil, err
 	}
@@ -383,13 +407,10 @@ func write(root *os.File, req Request) (map[string]any, error) {
 	old, err := readPath(root, req.Path)
 	created := false
 	if err != nil {
-		found := false
-		for _, file := range files {
-			if file.Path == req.Path {
-				found = true
-			}
-		}
-		if found || req.ExpectedSHA256 != nil || req.Operation == "edit_file" {
+		// NFS目录枚举可能晚于直接路径查询，不能用inventory里“没看到”证明
+		// 文件不存在。只有路径查询明确ENOENT才允许创建；ELOOP/ENOTDIR、
+		// 权限和读入失败都必须拒绝，避免把新出现的链接当作新文件替换。
+		if !errors.Is(err, syscall.ENOENT) || req.ExpectedSHA256 != nil || req.Operation == "edit_file" {
 			return nil, errors.New("existing file unreadable or CAS target missing")
 		}
 		created = true
