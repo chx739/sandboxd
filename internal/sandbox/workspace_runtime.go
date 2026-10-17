@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"slices"
 	"strconv"
-	"sync"
 	"time"
 
 	filetool "github.com/chx739/sandboxd/internal/workspace"
@@ -23,7 +22,7 @@ import (
 var ErrWorkspaceUnavailable = errors.New("workspace execution unavailable or outcome uncertain")
 
 type WorkspaceRuntime struct {
-	mu       sync.Mutex // single Worker MVP: serialize create/stop and maintenance jobs
+	gate     chan struct{} // 单Worker串行生命周期；等待期间仍响应context取消。
 	manager  *Manager
 	registry *WorkspaceRegistry
 	server   string
@@ -37,14 +36,28 @@ func NewWorkspaceRuntime(manager *Manager, registry *WorkspaceRegistry, server, 
 	if _, _, err := BuildStorageRootVolume(server); err != nil {
 		return nil, err
 	}
-	return &WorkspaceRuntime{manager: manager, registry: registry, server: server, image: image}, nil
+	return &WorkspaceRuntime{manager: manager, registry: registry, server: server, image: image, gate: make(chan struct{}, 1)}, nil
+}
+
+func (w *WorkspaceRuntime) enter(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	select {
+	case w.gate <- struct{}{}:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 }
 
 func (w *WorkspaceRuntime) Registry() *WorkspaceRegistry { return w.registry }
 
 func (w *WorkspaceRuntime) Prepare(ctx context.Context, workspaceID, sessionID, branchID string) (WorkspaceRecord, error) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
+	if err := w.enter(ctx); err != nil {
+		return WorkspaceRecord{}, err
+	}
+	defer func() { <-w.gate }()
 	record, err := w.registry.Register(workspaceID, sessionID, branchID)
 	if err != nil {
 		return record, err
@@ -159,8 +172,10 @@ func (w *WorkspaceRuntime) ensureVolume(ctx context.Context, pv *corev1.Persiste
 }
 
 func (w *WorkspaceRuntime) Claim(ctx context.Context, workspaceID, taskID, attemptID string) (WorkspaceRecord, error) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
+	if err := w.enter(ctx); err != nil {
+		return WorkspaceRecord{}, err
+	}
+	defer func() { <-w.gate }()
 	id, err := randomID()
 	if err != nil {
 		return WorkspaceRecord{}, err
@@ -258,8 +273,10 @@ func (w *WorkspaceRuntime) livePod(ctx context.Context, record WorkspaceRecord) 
 
 // Stop 把物理终止证明先落盘，再移除 finalizer。对象消失、租约过期都不算证明。
 func (w *WorkspaceRuntime) Stop(ctx context.Context, access WorkspaceAccess) (WorkspaceRecord, error) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
+	if err := w.enter(ctx); err != nil {
+		return WorkspaceRecord{}, err
+	}
+	defer func() { <-w.gate }()
 	record, err := w.registry.Get(access.WorkspaceID)
 	if err != nil || !matches(record, access) {
 		return record, ErrWorkspaceConflict
@@ -394,6 +411,10 @@ func (w *WorkspaceRuntime) Files(ctx context.Context, access WorkspaceAccess, re
 		result = WorkspaceFileResult{Status: 200, Body: bytes.Clone(out.Bytes())}
 		if code == 2 {
 			result.Status = 403
+			return nil
+		}
+		if code == 3 {
+			result.Status = 503
 			return nil
 		}
 		if execErr != nil || code != 0 {

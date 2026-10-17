@@ -31,19 +31,19 @@ Ganesha VFS 的文件句柄访问需要额外 `CAP_DAC_READ_SEARCH`。该权限�
 ```bash
 go run ./hack/workspace-runtime-smoke -http \
   -nfs-server "$SANDBOXD_NFS_SERVER" \
-  -image sandboxd-workspace:runtime-v1 \
+  -image sandboxd-workspace:runtime-v1.2 \
   -control-dir "$HOME/.local/share/sandboxd/workspace-runtime-smoke" \
   -output .cache/workspace-http-rerun.json
 ```
 
-实际运行记录使用的 runtime-v1 与 probe-v1 同源Dockerfile；请在构建和kind load两处使用相同tag。该探测创建固定结构的合成内容，正常停止两个业务Pod和初始化Pod；保留工作区/PV/PVC。它验证Go账本重开和换Pod，不是强杀agentd自动恢复。
+历史runtime-v1/probe-v1与当前runtime-v1.2来自同源Dockerfile，旧tag和证据保留；当前命令统一使用runtime-v1.2。该探测创建合成内容，正常停止两个业务Pod和初始化Pod，保留工作区/PV/PVC。它验证Go账本重开和换Pod，不是强杀agentd自动恢复。
 
 独立服务模式（预先按现有项目方式配置两个不同Token，Operator Token不传agentd）：
 
 ```bash
 go run ./cmd/sandboxd -pool-size 0 \
   -workspace-nfs-server "$SANDBOXD_NFS_SERVER" \
-  -workspace-image sandboxd-workspace:runtime-v1 \
+  -workspace-image sandboxd-workspace:runtime-v1.2 \
   -workspace-control-dir "$HOME/.local/share/sandboxd/workspace-control"
 ```
 
@@ -63,8 +63,8 @@ CGO_ENABLED=0 go build -trimpath -o .cache/sandbox-workspace-init ./cmd/sandbox-
 mkdir -p .cache/workspace-image
 install -m 0755 .cache/sandbox-filetool .cache/workspace-image/sandbox-filetool
 install -m 0755 .cache/sandbox-workspace-init .cache/workspace-image/sandbox-workspace-init
-docker build -f deploy/workspace/sandbox.Dockerfile -t sandboxd-workspace:probe-v1 .cache/workspace-image
-kind load docker-image sandboxd-workspace:probe-v1 --name sandboxd
+docker build -f deploy/workspace/sandbox.Dockerfile -t sandboxd-workspace:runtime-v1.2 .cache/workspace-image
+kind load docker-image sandboxd-workspace:runtime-v1.2 --name sandboxd
 ```
 
 M0 首次探测目录由管理员固定命令创建；这一步还不等于默认 Go 可信目录初始化已实现：
@@ -73,13 +73,13 @@ M0 首次探测目录由管理员固定命令创建；这一步还不等于默�
 docker exec --user 65532:65532 sandboxd-workspace-nfs-1 mkdir -m 0700 /export/workspaces/workspace-00000000000000000000000000000001
 export SANDBOXD_SMOKE_WORKSPACE_ID=workspace-00000000000000000000000000000001
 export SANDBOXD_NFS_SERVER="$(docker inspect sandboxd-workspace-nfs-1 --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')"
-export SANDBOXD_WORKSPACE_IMAGE=sandboxd-workspace:probe-v1
+export SANDBOXD_WORKSPACE_IMAGE=sandboxd-workspace:runtime-v1.2
 go run ./hack/workspace-fixture.go > .cache/phase9-workspace-fixture.json
 kubectl --context kind-sandboxd apply -f .cache/phase9-workspace-fixture.json
 kubectl --context kind-sandboxd -n sandboxd-demo wait --for=condition=Ready pod/sandbox-workspace-probe --timeout=60s
 python3 hack/verify-workspace-nfs.py --output .cache/phase9-nfs-component-rerun.json
 ```
 
-已存在的合成目录须先核对归属，不删除后重建；mkdir 因存在而报错时不要把所有错误都忽略。探测工具仅访问固定合成工作区，直接管理员 exec 用于组件验收，不能宣传为 Agent 文件 RPC 验收。
+已存在的合成目录须先核对归属，不删除后重建；mkdir 因存在而报错时不要把所有错误都忽略。此低层夹具不登记Go账本，也不启用生产writer finalizer；使用独立storage-probe标签排除预热池。直接管理员exec只用于组件验收，不能宣传为Agent文件RPC或fencing验收；完整路线使用上面的Go生命周期探测。
 
 依据：[Ganesha VFS](https://github.com/nfs-ganesha/nfs-ganesha/wiki/VFS)、[SIG Storage 服务端部署说明](https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/master/docs/deployment.md)。

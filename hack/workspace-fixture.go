@@ -25,6 +25,10 @@ func main() {
 		fatal(err)
 	}
 	pod.APIVersion, pod.Kind = "v1", "Pod"
+	// 这是没有Go归属账本的手动挂载夹具；不交给生产预热池或终止控制器。
+	// 完整生命周期/fencing验证必须运行 workspace-runtime-smoke。
+	pod.Finalizers = nil
+	pod.Labels[sandbox.LabelManagedBy] = "sandboxd-storage-probe"
 	if pod.Spec.Containers[0].Image == "" {
 		fatal(fmt.Errorf("SANDBOXD_WORKSPACE_IMAGE is required"))
 	}

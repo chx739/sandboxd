@@ -157,6 +157,23 @@ func TestWorkspaceRunningWriterCannotBeReleasedOnTimeout(t *testing.T) {
 	}
 }
 
+func TestWorkspaceLifecycleWaitHonorsCancellation(t *testing.T) {
+	w, _, access, _ := runtimeFixture(t, false)
+	if err := w.enter(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	defer func() { <-w.gate }()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
+	defer cancel()
+	if _, err := w.Stop(ctx, access); !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatal(err)
+	}
+	record, _ := w.registry.Get(testWorkspaceID)
+	if record.Phase != "bound" {
+		t.Fatal("cancelled waiter changed ownership")
+	}
+}
+
 func TestWorkspaceOutputLimitCannotBeBypassedByReaderFrom(t *testing.T) {
 	output := &boundedWorkspaceOutput{limit: 32}
 	if _, err := io.Copy(output, io.LimitReader(strings.NewReader(strings.Repeat("x", 1024)), 1024)); err != nil {

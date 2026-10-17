@@ -6,6 +6,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 
 	"github.com/chx739/sandboxd/internal/workspace"
@@ -28,13 +29,23 @@ func main() {
 	}
 	result, err := workspace.Execute("/workspace", req)
 	if err != nil {
-		fail(err.Error())
+		code, body := fileFailure(err)
+		json.NewEncoder(os.Stdout).Encode(body)
+		os.Exit(code)
 	}
 	data, err := json.Marshal(result)
 	if err != nil || len(data) > workspace.MaxResponseBytes {
 		fail("file response exceeds limit")
 	}
 	os.Stdout.Write(append(data, '\n'))
+}
+
+func fileFailure(err error) (int, map[string]any) {
+	var execution *workspace.ExecutionError
+	if errors.As(err, &execution) {
+		return 3, map[string]any{"error": execution.Error(), "errorType": "workspace-execution", "sandboxRecovery": true, "outcomeUncertain": execution.OutcomeUncertain}
+	}
+	return 2, map[string]any{"denyLayer": "workspace-policy", "error": err.Error()}
 }
 
 func fail(message string) {

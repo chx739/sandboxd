@@ -73,6 +73,14 @@ Go持久归属、受限HTTP文件接口和正常释放后换Pod的组件路径�
 - Python适配器只访问Go接口，不创建本地目录；未知写入不重试，Loop中断当前attempt。仍需Runner/Store实际注入，当前默认仍为旧后端。
 - 第三批完整Python回归118/118通过，276.228秒，`phase9-python-remote-regression-tests.txt`；不是把上一轮110项成绩改名。耗时主要仍为Windows挂载盘上CLI子进程启动，不是在线文件接口延迟。
 
+## 接口边界复查
+
+- `phase9-file-protocol-tests.txt` / `phase9-file-protocol-final-tests.txt`：缺参数、null、无效UTF-8与显式空字符串区分；空文件合法，显式limit=0拒绝。
+- helper的存储执行错误退出3→HTTP503，带sandboxRecovery及outcomeUncertain；CAS/路径拒绝仍退出2→403，不混报。分类测试见 `TestStorageFailureIsNotPolicyDenial`，并非真实磁盘故障注入。
+- `phase9-go-http-protocol-component.json`和`phase9-go-http-storage-errors-component.json`分别对应runtime-v1.1/v1.2的真实正常链路复验，旧镜像/报告保留；文件名表示实现版本，**没有在这两轮实际注入fsync故障**。
+- 生命周期门采用可响应context的串行等待，排队等待不会因普通Mutex而无视取消；测试与最终Go回归见phase9-protocol-cancellation-tests.txt及phase9-protocol-final-regression-tests.txt。
+- 原手动挂载夹具没有Go归属账本，显式排除生产预热池且不启用writer finalizer；它不是fencing/自动恢复验收入口。完整Go路径仍强制终止确认协议。
+
 ## 下一步
 
 接Python TaskStore/Runner/Session的持久Task/attempt与自动恢复，原claim/loop/cleanup独立时钟、预算预留/Replay游标、取消与控制命令游标、未知写入hash核查及旧节点限制。之后迁移默认文件后端并执行14项V1完整验收，再启动V2。持续保存失败记录与真实结果，不使用已消费的模型预算。

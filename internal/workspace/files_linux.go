@@ -5,6 +5,7 @@
 package workspace
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
@@ -33,9 +34,9 @@ type Request struct {
 	Operation      string  `json:"operation"`
 	Path           string  `json:"path"`
 	Query          string  `json:"query,omitempty"`
-	Content        string  `json:"content,omitempty"`
+	Content        string  `json:"content"`
 	OldText        string  `json:"oldText,omitempty"`
-	NewText        string  `json:"newText,omitempty"`
+	NewText        string  `json:"newText"`
 	ExpectedSHA256 *string `json:"expectedSha256,omitempty"`
 	Offset         int     `json:"offset,omitempty"`
 	Limit          int     `json:"limit,omitempty"`
@@ -48,6 +49,9 @@ func Decode(reader io.Reader) (Request, error) {
 	if err != nil || len(raw) > MaxRequestBytes {
 		return req, errors.New("request exceeds limit")
 	}
+	if !utf8.Valid(raw) {
+		return req, errors.New("request must be UTF-8")
+	}
 	decoder := json.NewDecoder(strings.NewReader(string(raw)))
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(&req); err != nil {
@@ -55,6 +59,40 @@ func Decode(reader io.Reader) (Request, error) {
 	}
 	if decoder.Decode(new(any)) != io.EOF {
 		return req, errors.New("multiple JSON values")
+	}
+	// encoding/json 会把字符串字段的 null 当零值；这里必须区别“缺参数”与
+	// 显式空文本，否则格式错误的写入可能静默变成清空文件。
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(raw, &fields) != nil || fields == nil {
+		return req, errors.New("file request must be an object")
+	}
+	for _, value := range fields {
+		if bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
+			return req, errors.New("null file arguments are not supported")
+		}
+	}
+	required := []string{"operation", "path"}
+	if req.Operation == "list_files" || req.Operation == "search_files" {
+		if _, ok := fields["path"]; !ok {
+			req.Path = "."
+		}
+		required = []string{"operation"}
+	}
+	switch req.Operation {
+	case "write_file":
+		required = append(required, "content")
+	case "edit_file":
+		required = append(required, "oldText", "newText", "expectedSha256")
+	case "search_files":
+		required = append(required, "query")
+	}
+	for _, key := range required {
+		if _, ok := fields[key]; !ok {
+			return req, errors.New("missing required file argument")
+		}
+	}
+	if _, ok := fields["limit"]; ok && req.Limit == 0 {
+		return req, errors.New("explicit read limit must be positive")
 	}
 	return req, req.Validate()
 }
@@ -91,6 +129,14 @@ func (r Request) Validate() error {
 }
 
 var hashPattern = regexp.MustCompile(`^[a-f0-9]{64}$`)
+
+// ExecutionError 表示存储执行失败；它不能伪装成路径/CAS策略拒绝。
+type ExecutionError struct {
+	Reason           string
+	OutcomeUncertain bool
+}
+
+func (e *ExecutionError) Error() string { return e.Reason }
 
 func parts(path string, allowRoot bool) ([]string, error) {
 	if allowRoot && path == "." {
@@ -395,13 +441,13 @@ func write(root *os.File, req Request) (map[string]any, error) {
 		err = closeErr
 	}
 	if err != nil {
-		return nil, errors.New("file write failed; outcome requires inspection")
+		return nil, &ExecutionError{Reason: "file write or sync failed", OutcomeUncertain: false}
 	}
 	if err := syscall.Renameat(int(dir.Fd()), temp, int(dir.Fd()), leaf); err != nil {
-		return nil, errors.New("atomic replace failed")
+		return nil, &ExecutionError{Reason: "atomic replace failed", OutcomeUncertain: true}
 	}
 	if err := dir.Sync(); err != nil {
-		return nil, errors.New("directory sync failed; outcome requires hash inspection")
+		return nil, &ExecutionError{Reason: "directory sync failed; outcome requires hash inspection", OutcomeUncertain: true}
 	}
 	diff, redacted := redact(boundedDiff(req.Path, string(old), content))
 	var oldHash any

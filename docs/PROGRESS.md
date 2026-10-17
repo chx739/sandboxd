@@ -31,9 +31,11 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - Git交付：第一批dbc02d2已推送，草稿 [PR #2](https://github.com/chx739/sandboxd/pull/2) base=codex/agent-memory-rag-plan，依赖PR#1，已附到当前聊天；不合并。用户docs32/docs34原修改仍保留。
 - 2026-10-18续作：新增WorkspaceRuntime，真实维护Pod初始化/NFS读写检查/Pod UID绑定/终止状态+NodeReady+近期Lease/finalizer释放；GoHTTP工作区接口和启动配置已接入。真实Go组件与HTTP组件各通过一轮：新attempt/Pod UID/代次变化、同workspace文件hash一致、旧attempt拒绝、Go账本关闭重开，见phase9-go-runtime-component.json与phase9-go-http-component.json；不是Python自动恢复成绩。
 - 新Python RemoteFileWorkspace与Client/Plugin适配器已接，未知写入不重试，Loop退出当前attempt；定向17/17通过，phase9-remote-files-tests-final.txt。新增后完整Python118/118通过，276.228秒，phase9-python-remote-regression-tests.txt；默认Runner仍尚未选择Remote。
+- 第三批d7bef93已推送至草稿PR#2。后续接口复查补缺失/null/空文本与UTF-8区分、存储执行错误通道、生命周期锁等待可取消；runtime-v1.1和runtime-v1.2分别以新tag保留镜像，正常真实HTTP组件复验通过。错误分类与取消等待为单测，未伪称已注入真实fsync故障。
 - 第一项下一步：TaskStore/Runner/Session多attempt与持久预算、原claim/loop/cleanup时钟、取消/控制游标、未知写入hash核查、完整轮次恢复及V1旧节点限制；之后默认文件路径迁移和14项真实验收。V1验收前不推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
-- Go新镜像sandboxd-workspace:runtime-v1已载入kind，包含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，两个组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
+- Go镜像最新sandboxd-workspace:runtime-v1.2已载入kind，旧runtime-v1/v1.1保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
+- 下一步接线注意：原claim开始、首次进入loop的时间锚点要持久化，恢复不能重新发190/120秒；没收到claim响应不等于从未发送，必须查Go元数据并确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写；默认后端迁移和强杀agentd证据仍未完成。
 
 ## 2026-10-17 工作区持久化与恢复规格（实施授权前记录）
 

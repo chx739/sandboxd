@@ -159,6 +159,35 @@ func TestStrictProtocol(t *testing.T) {
 	}
 }
 
+func TestFileProtocolDistinguishesMissingNullAndEmptyContent(t *testing.T) {
+	for _, input := range []string{
+		`{"operation":"write_file","path":"a"}`,
+		`{"operation":"write_file","path":"a","content":null}`,
+		`{"operation":"read_file","path":"a","limit":0}`,
+		`{"operation":"read_file","path":"a","offset":null}`,
+		"{\"operation\":\"write_file\",\"path\":\"a\",\"content\":\"" + string([]byte{255}) + "\"}",
+	} {
+		if _, err := Decode(strings.NewReader(input)); err == nil {
+			t.Fatal("malformed file request accepted")
+		}
+	}
+	raw, err := json.Marshal(Request{Operation: "write_file", Path: "empty", Content: ""})
+	if err != nil {
+		t.Fatal(err)
+	}
+	req, err := Decode(strings.NewReader(string(raw)))
+	if err != nil {
+		t.Fatal("explicit empty content must survive Go transport", err)
+	}
+	result := mustRun(t, t.TempDir(), req)
+	if result["bytes"] != 0 {
+		t.Fatal(result)
+	}
+	if req, err := Decode(strings.NewReader(`{"operation":"list_files"}`)); err != nil || req.Path != "." {
+		t.Fatal("default list path not applied", err)
+	}
+}
+
 func TestSingleWriterCAS(t *testing.T) {
 	root := t.TempDir()
 	r := mustRun(t, root, Request{Operation: "write_file", Path: "report", Content: "old"})
