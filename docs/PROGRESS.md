@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：六个提交切点已验证；恢复目标控制模块已测试
 
-- 起点c70251d，PR#3远端核对一致，用户docs32/docs34未暂存。已核对项目仅kind/NFS/专属MinIO，业务/维护Pod空闲，可用内存约20.7GiB/swap用量0/根盘931GiB。
+- 本批有效实现cb4ce37已推送至草稿PR#3（起点c70251d，依赖PR#2→PR#1，不合并），用户docs32/docs34未暂存。已核对项目仅kind/NFS/专属MinIO，业务/维护Pod空闲，可用内存约20.7GiB/swap用量0/根盘931GiB。
 - preparing和before-commit两轮真实SIGKILL均通过，原始报告phase9-v2-agent-cut-preparing.json、-before-commit.json；前者PREPARING→FAILED，后者DATA_READY→FAILED，最终head均revision2；原Task/预算/截止时间、文件hash及工具配对继续核验。没有更换Go服务二进制。
 - 审计发现仍需“备份已成功、DATA_READY未写入”的即时切点，新增before-data-ready管理夹具包装及测试，已真实通过phase9-v2-agent-cut-before-data-ready.json：备份结果完整但Python点仍为PREPARING/data=null；重启后FAILED、最终revision2，kill→API ready54,865.64ms、→核查72,153.67ms。父进程仅通过原job Wait只读核对实际备份结果，不启动新备份，不将快照自动当成恢复点；外部模型0。不能因为其他五个切点通过就提前勾选完整协议。
 - 新Go RestoreSource/目标隔离/恢复来源固定逻辑：专用新空目标的metadata预留、失败未核验目标禁止认领、全局维护可释放给其他工作区；成功路径先写restoredFrom再释放verified屏障，中间重开仍冻结；认领固定业务imageRef/实际imageID。保留旧零值JSON格式与旧日志读取，不修改旧目录。尚未接可信restic恢复执行器/HTTP/分支，纯逻辑测试不冒称真实恢复。
