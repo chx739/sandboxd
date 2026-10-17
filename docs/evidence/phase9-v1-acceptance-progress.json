@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "timestamp": "2026-10-17T17:59:38.642288+00:00",
+  "scope": "Partial V1 acceptance, not completion of docs43 or the active Goal",
+  "externalModelCalls": 0,
+  "passedV1": 9,
+  "totalV1": 14,
+  "pendingV2": 10,
+  "cases": [
+    {
+      "id": "V1-01",
+      "status": "passed",
+      "qualification": "Real Go/gVisor/NFS, Replay Agent; normal file write/read and release.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-workspace-smoke-v2.json",
+          "sha256": "5a8d4c3b76ff65089a1372b730355aaede1551a0f453f1c5b6306013dad8f544"
+        }
+      ]
+    },
+    {
+      "id": "V1-02",
+      "status": "passed",
+      "qualification": "Administrative normal Pod deletion after a complete turn; no node partition.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-pod-recovery-v2.json",
+          "sha256": "355e61ac2d6d93414d10a35fed283dd971f3ae411fddac32bf1c898a0136c616"
+        }
+      ]
+    },
+    {
+      "id": "V1-03",
+      "status": "passed",
+      "qualification": "Real agentd SIGKILL -9 and same-directory restart; Replay in-flight response.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-process-recovery.json",
+          "sha256": "5c2091e86c93ae9dc95b6490233186c6c7166dcc4428078924bf91c7d9de296b"
+        }
+      ]
+    },
+    {
+      "id": "V1-04",
+      "status": "pending",
+      "qualification": "Formal real-service acceptance remains incomplete.",
+      "evidence": []
+    },
+    {
+      "id": "V1-05",
+      "status": "passed",
+      "qualification": "Four actual terminal statuses; service restart leaves task/session/Go journals unchanged.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-terminal-restart.json",
+          "sha256": "4cd7035660d93bb9d06908db28672d0b9cefcf0db1cb70ccd0a75a063f80e5a9"
+        }
+      ]
+    },
+    {
+      "id": "V1-06",
+      "status": "pending",
+      "qualification": "Formal real-service acceptance remains incomplete.",
+      "evidence": []
+    },
+    {
+      "id": "V1-07",
+      "status": "passed",
+      "qualification": "Real service write, client-side discarded acknowledgment; not TCP packet-loss testing.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-write-ack-recovery.json",
+          "sha256": "50c118930b6343006f085bf92eefa178eca3ae1f4c0005c99e34277554f30fc6"
+        }
+      ]
+    },
+    {
+      "id": "V1-08",
+      "status": "passed",
+      "qualification": "Retained raw Session/call reservations audited for actual Pod-tool interruption and SIGKILL.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-interruption-cleanup-audit.json",
+          "sha256": "3bf1a09ab2d4746ef3ba9a16496bdda9d391b3210394163dd76b8e4af9a9eb0f"
+        }
+      ]
+    },
+    {
+      "id": "V1-09",
+      "status": "passed",
+      "qualification": "Actual agentd old-node HTTP409 and historical path HTTP200; no workspace rollback.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-process-recovery.json",
+          "sha256": "5c2091e86c93ae9dc95b6490233186c6c7166dcc4428078924bf91c7d9de296b"
+        }
+      ]
+    },
+    {
+      "id": "V1-10",
+      "status": "pending",
+      "qualification": "Formal real-service acceptance remains incomplete.",
+      "evidence": []
+    },
+    {
+      "id": "V1-11",
+      "status": "pending",
+      "qualification": "Formal real-service acceptance remains incomplete.",
+      "evidence": []
+    },
+    {
+      "id": "V1-12",
+      "status": "passed",
+      "qualification": "Actual normal/cancel/failure/limit release, retained private NFS directory/PV/PVC/control logs.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-agent-interruption-cleanup-audit.json",
+          "sha256": "3bf1a09ab2d4746ef3ba9a16496bdda9d391b3210394163dd76b8e4af9a9eb0f"
+        }
+      ]
+    },
+    {
+      "id": "V1-13",
+      "status": "passed",
+      "qualification": "Three actual local Milvus/OpenSearch replays with scripted model/Fake sandbox; 165 Python regressions.",
+      "evidence": [
+        {
+          "path": "docs/evidence/phase9-joint-ops-replay.json",
+          "sha256": "ca60a5c79fc0e6d8eefe311f2eadff6da86baf610aace974aebebf475acb05ee"
+        },
+        {
+          "path": "docs/evidence/phase9-python-process-regression-tests.txt",
+          "sha256": "fadd2f83ed1b8b8536891db698f8758838379b2b21d5adcb4fb5f2047a71c95e"
+        }
+      ]
+    },
+    {
+      "id": "V1-14",
+      "status": "pending",
+      "qualification": "Formal real-service acceptance remains incomplete.",
+      "evidence": []
+    }
+  ],
+  "additionalDeliverablesPending": [
+    "Explicit legacy workspace migration and hash mapping",
+    "Unified startup/acceptance command",
+    "Fixed-workload latency/resource measurements",
+    "Remaining concurrency/unavailable-state/command and Trace recovery cases",
+    "All restic/MinIO V2 implementation and acceptance"
+  ]
+}

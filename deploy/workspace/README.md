@@ -1,6 +1,6 @@
 # NFS V1 部署候选配置
 
-当前状态：M2/M3，Python持久TaskStore/Runner已接入。V1-01真实Agent文件链路、V1-02完整边界后正常删除Pod自动接管已通过；其余V1与V2仍待验收。原始证据见docs/evidence/phase9-agent-workspace-smoke-v2.json、phase9-agent-pod-recovery-v2.json。
+当前状态：M3，Python持久TaskStore/Runner已接入。V1正式9/14项已过，含真实SIGKILL接续、终态不复活及确认丢失；其余04/06/10/11/14与迁移/性能仍待完成，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -47,6 +47,19 @@ agentd/.venv/bin/python -m agentd.workspace_demo --nfs-server "$SANDBOXD_NFS_SER
 ```
 
 第二条场景在完整工具轮次落盘后由管理员正常删除本夹具的单个Pod，再由TaskStore自动接续；不force、不清空finalizer。文件读回、实际NFSv4.1、gVisor启动、UID/代次、停止证明及自然删除均验证。单次耗时不作为P50/P95/RTO结论；这不是强杀agentd测试。
+
+进一步的真实进程与终态实验使用实际Uvicorn agentd子进程，固定端口18090也需空闲：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_process_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/agentd-sigkill-recovery.json
+agentd/.venv/bin/python -m agentd.workspace_terminal_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/agentd-terminal-restart.json
+agentd/.venv/bin/python -m agentd.workspace_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --lose-write-ack --output .cache/workspace-write-ack.json
+```
+
+第一条只SIGKILL自己启动的agentd进程并验证OS退出码-9，用同一控制目录重启，无手动resume；第二条实际建立四类终态后重启。它们使用可选delayMs的固定Replay模拟在途模型响应，外部模型调用0；源码位于WSL挂载盘时启动时间较长，验收含这些等待，不能当生产SLA。第三条在真实写入成功后由夹具客户端丢弃确认，随后实际核查hash、不重放写入；不能将其描述为TCP断包实验。
 
 异常遗留时，核对报告中的controlRoot，只允许用本夹具原Go/Python账本恢复管理对账：
 

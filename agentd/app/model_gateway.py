@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import asyncio
 import hashlib
 import time
 from dataclasses import dataclass
@@ -120,6 +121,13 @@ class ReplayModelSession:
             raise RuntimeError("Replay 响应已耗尽但 Graph 仍在请求模型")
         item = self._responses[self._index]
         self._index += 1
+        delay_ms = item.get("delayMs", 0)
+        if type(delay_ms) is not int or not 0 <= delay_ms <= 60_000:
+            raise ValueError("Replay delayMs must be an integer in [0,60000]")
+        started = time.monotonic()
+        if delay_ms:
+            # 仅固定Replay夹具模拟在途响应，便于真实进程中断；不影响Live Provider。
+            await asyncio.sleep(delay_ms / 1000)
         tool_calls = [
             {
                 "id": str(call["id"]),
@@ -133,7 +141,7 @@ class ReplayModelSession:
             message=AIMessage(content=str(item.get("content", "")), tool_calls=tool_calls),
             usage=ModelUsage(),
             finish_reason="tool_calls" if tool_calls else "stop",
-            elapsed_ms=0,
+            elapsed_ms=int((time.monotonic() - started) * 1000) if delay_ms else 0,
         )
 
 

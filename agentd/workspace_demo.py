@@ -31,32 +31,49 @@ def checked(argv: list[str]) -> str:
     return subprocess.run(argv, check=True, capture_output=True, text=True, timeout=35).stdout
 
 
+def observe_pod(record: dict) -> dict:
+    """管理夹具验证真实Pod/NFS；不会向Agent暴露这些管理员命令。"""
+    workspace = record["workspaceId"]
+    pod_name = record["owner"]["podName"]
+    k = ["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-demo"]
+    pod = json.loads(checked([*k, "get", "pod", pod_name, "-o", "json"]))
+    assert pod["metadata"]["uid"] == record["owner"]["podUid"]
+    assert pod["spec"]["runtimeClassName"] == "gvisor"
+    assert pod["spec"]["securityContext"]["runAsUser"] == 65532
+    dmesg = checked([*k, "exec", pod_name, "--", "dmesg"])
+    assert "gVisor" in dmesg
+    mount_path = "/var/lib/kubelet/pods/" + pod["metadata"]["uid"] + "/volumes/kubernetes.io~nfs/sandboxd-" + workspace
+    mount = json.loads(checked(["docker", "exec", "sandboxd-control-plane", "findmnt", "--json", "--target", mount_path,
+                                "--output", "SOURCE,FSTYPE,OPTIONS"]))["filesystems"][0]
+    assert mount["fstype"] == "nfs4" and "vers=4.1" in mount["options"]
+    return {"workspaceId": workspace, "attemptId": record["owner"]["attemptId"], "podUid": pod["metadata"]["uid"],
+            "sandboxId": record["owner"]["sandboxId"], "runtimeClass": "gvisor", "runAsUser": 65532,
+            "imageId": record["imageId"], "imageRef": record["imageRef"], "nfsMount": mount,
+            "gvisorStartup": next(line for line in dmesg.splitlines() if "gVisor" in line)}
+
+
 class ObservedClient(SandboxdClient):
     """管理员侧采集组件证据；Agent 工具仍只走受限 HTTP，不得到 exec 能力。"""
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, *, lose_write_ack: bool = False) -> None:
         super().__init__("http://127.0.0.1:10880", token)
         self.observations = []
+        self.lose_write_ack = lose_write_ack
+        self.ack_losses = []
 
     async def claim_workspace(self, workspace, task, attempt):
         result = await super().claim_workspace(workspace, task, attempt)
         if 200 <= result.status_code < 300:
-            record = result.body
-            pod_name = record["owner"]["podName"]
-            k = ["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-demo"]
-            pod = json.loads(checked([*k, "get", "pod", pod_name, "-o", "json"]))
-            assert pod["metadata"]["uid"] == record["owner"]["podUid"]
-            assert pod["spec"]["runtimeClassName"] == "gvisor"
-            assert pod["spec"]["securityContext"]["runAsUser"] == 65532
-            dmesg = checked([*k, "exec", pod_name, "--", "dmesg"])
-            assert "gVisor" in dmesg
-            mount_path = "/var/lib/kubelet/pods/" + pod["metadata"]["uid"] + "/volumes/kubernetes.io~nfs/sandboxd-" + workspace
-            mount = json.loads(checked(["docker", "exec", "sandboxd-control-plane", "findmnt", "--json", "--target", mount_path,
-                                        "--output", "SOURCE,FSTYPE,OPTIONS"]))["filesystems"][0]
-            assert mount["fstype"] == "nfs4" and "vers=4.1" in mount["options"]
-            self.observations.append({"workspaceId": workspace, "attemptId": attempt, "podUid": pod["metadata"]["uid"],
-                                      "sandboxId": record["owner"]["sandboxId"], "runtimeClass": "gvisor", "runAsUser": 65532,
-                                      "imageId": record["imageId"], "imageRef": record["imageRef"], "nfsMount": mount,
-                                      "gvisorStartup": next(line for line in dmesg.splitlines() if "gVisor" in line)})
+            self.observations.append(observe_pod(result.body))
+        return result
+
+    async def workspace_files(self, binding, operation):
+        result = await super().workspace_files(binding, operation)
+        if self.lose_write_ack and operation["operation"] == "write_file" and 200 <= result.status_code < 300:
+            self.lose_write_ack = False
+            self.ack_losses.append({"kind": "discard-confirmation-after-real-RPC", "workspaceId": binding["workspaceId"],
+                                    "attemptId": binding["attemptId"], "path": operation["path"],
+                                    "returnedHash": result.body["newSha256"]})
+            raise httpx.ReadTimeout("fixture discarded confirmation after actual service write")
         return result
 
 
@@ -129,7 +146,7 @@ async def reconcile(root: Path, output: Path, binary: Path, nfs_server: str):
         stop_go(process, log)
 
 
-async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_turn: bool = False) -> dict:
+async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_turn: bool = False, lose_write_ack: bool = False) -> dict:
     assert checked(["kubectl", "config", "current-context"]).strip() == "kind-sandboxd"
     nodes = json.loads(checked(["kubectl", "--context", "kind-sandboxd", "get", "nodes", "-o", "json"]))["items"]
     assert len(nodes) == 1 and nodes[0]["metadata"]["name"] == "sandboxd-control-plane"
@@ -151,7 +168,7 @@ async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_tur
     script.chmod(0o600)
     # 仅管理夹具为Go子进程生成两个不同的临时合成Token；Runner只收到Agent Token。
     process, log, agent_token = start_go(root, binary, nfs_server)
-    client = ObservedClient(agent_token)
+    client = ObservedClient(agent_token, lose_write_ack=lose_write_ack)
     store = TaskStore(root / "legacy-traces", recovery_dir=root / "agent-control")
     faults = []
     if fault_after_first_turn:
@@ -189,10 +206,10 @@ async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_tur
                 await asyncio.sleep(0.1)
         assert task.status == "succeeded", task.error
         traces = await store.get_task_traces(task.task_id)
-        assert len(traces) == (2 if fault_after_first_turn else 1) and traces[-1]["status"] == "succeeded"
+        assert len(traces) == (2 if fault_after_first_turn or lose_write_ack else 1) and traces[-1]["status"] == "succeeded"
         steps = [step for trace in traces for step in trace["steps"]]
-        assert [s["tool"] for s in steps] == ["write_file", "read_file"]
-        read = json.loads(steps[1]["observation"])["body"]
+        assert [s["tool"] for s in steps] == (["read_file"] if lose_write_ack else ["write_file", "read_file"])
+        read = json.loads(steps[-1]["observation"])["body"]
         expected = hashlib.sha256(CONTENT.encode()).hexdigest()
         assert read["content"] == CONTENT and read["sha256"] == expected
         server_hash = checked(["docker", "exec", "--user", "65532:65532", "sandboxd-workspace-nfs-1", "sha256sum",
@@ -220,13 +237,23 @@ async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_tur
             assert all(o["workspaceId"] == task.workspace_id for o in client.observations)
             assert traces[0]["status"] == "interrupted"
             assert traces[0]["taskId"] == traces[1]["taskId"] == task.task_id
+        if lose_write_ack:
+            assert len(client.ack_losses) == 1 and client.ack_losses[0]["returnedHash"] == expected
+            assert len(state["attempts"]) == 2 and all(a["ownerStopped"] for a in state["attempts"])
+            assert sum(c["operation"] == "write_file" for c in state["calls"].values()) == 1
+            assert any(c["operation"] == "write_file" and c["state"] == "uncertain" for c in state["calls"].values())
+            assert any(e["type"] == "workspace.write.inspected" and e["details"]["matchesExpectedWrite"] for e in traces[-1]["events"])
+            visible = await store._journals[task.task_id].active_path()
+            assert not any(c["id"] == "write-report" for n in visible for c in n["message"].get("toolCalls", []))
         report = {"timestamp": datetime.now(timezone.utc).isoformat(), "mode": "real-local-services-replay-agent",
-                  "scope": ("V1-02 automatic same-Task continuation after normal Pod deletion at a complete tool boundary"
+                  "scope": ("V1-07 actual service write then discarded caller confirmation; client fault injection, not TCP fault"
+                            if lose_write_ack else "V1-02 automatic same-Task continuation after normal Pod deletion at a complete tool boundary"
                             if fault_after_first_turn else "V1-01 Agent file write/read via real Go/gVisor/NFS; not process-crash or Pod-fault acceptance"),
                   "passed": True, "externalModelCalls": 0, "runId": run_id,
                   "controlRoot": str(root), "task": task.model_dump(mode="json", by_alias=True, exclude={"trace"}),
                   "workspaceObservations": client.observations, "trace": traces[-1], "traces": traces,
                   "faults": faults, "calls": state["calls"], "timing": state.get("timing"), "deadline": state["deadline"],
+                  "acknowledgmentLosses": client.ack_losses,
                   "workspaceAfterRelease": metadata.body,
                   "podDisappearanceWaitMs": deletion_wait_ms,
                   "serverFileSha256AfterRelease": server_hash, "expectedSha256": expected,
@@ -249,12 +276,14 @@ def main():
     parser.add_argument("--binary", type=Path, default=REPO / ".cache/workspace-sandboxd")
     parser.add_argument("--nfs-server", required=True)
     parser.add_argument("--reconcile-control-root", type=Path)
-    parser.add_argument("--fault-after-first-turn", action="store_true")
+    fault = parser.add_mutually_exclusive_group()
+    fault.add_argument("--fault-after-first-turn", action="store_true")
+    fault.add_argument("--lose-write-ack", action="store_true")
     args = parser.parse_args()
     if args.reconcile_control_root is not None:
         result = asyncio.run(reconcile(args.reconcile_control_root, args.output, args.binary.resolve(), args.nfs_server))
     else:
-        result = asyncio.run(run(args.output, args.binary.resolve(), args.nfs_server, args.fault_after_first_turn))
+        result = asyncio.run(run(args.output, args.binary.resolve(), args.nfs_server, args.fault_after_first_turn, args.lose_write_ack))
     print(json.dumps({"passed": result["passed"], "output": str(args.output), "mode": result["mode"]}))
 
 

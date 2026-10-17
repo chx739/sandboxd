@@ -50,9 +50,9 @@
 
 ## 正式验收矩阵
 
-文档43当前正式通过 **V1-01、V1-02**；其他V1及全部V2尚未验收。纯逻辑/Fake证据不能提前勾选真实集成项目。
+文档43当前正式通过 **V1-01/02/03/05/07/08/09/12/13，共9/14**；04/06/10/11/14及全部V2尚未完成。机器可读证据清单见`phase9-v1-acceptance-progress.json`。纯逻辑/Fake证据不能提前勾选真实集成项目。
 
-默认Python TaskStore/Runner已接持久预算、Session多attempt及真实远程文件路径。V1-01文件链路和V1-02完整轮次后Pod删除自动接管已真实通过；强杀agentd等其余项目不能由Go账本重开或Fake测试替代。V2主链路未启动。
+默认Python TaskStore/Runner已接持久预算、Session多attempt及真实远程文件路径。真实SIGKILL、终态重启和确认丢失等证据见下面新批次；尚缺的场景不能由Go账本重开或Fake测试替代。V2主链路未启动。
 
 ## 第二批实现与测试执行环境（7b244bf时）
 
@@ -85,7 +85,7 @@
 
 ## 下一步
 
-完成真实强杀agentd、预算/取消/不明写入等其余V1项目，以及显式旧工作区迁移、统一启动、性能与三类回放。全部V1完成后再启动V2。持续保存失败记录与真实结果，不使用已消费的模型预算。
+完成V1-04/06/10/11/14，以及显式旧工作区迁移、统一入口和性能统计。三类回放与当前回归已过，后续改动继续相关验证。全部V1完成后再启动V2，保留完整范围，不使用已消费的模型预算。
 
 ## 2026-10-18 TaskStore/Runner接线与真实Agent验收
 
@@ -102,18 +102,30 @@
 |---|---|
 | 01 Agent文件写读与NFS hash | 通过，真实本地服务+Replay Agent |
 | 02 完整轮次后Pod故障自动接管 | 通过，管理员正常删除的可控故障 |
-| 03 强杀agentd自动接续 | 待真实进程实验；Fake/重开账本不代替 |
+| 03 强杀agentd自动接续 | 通过，真实SIGKILL -9与同控制目录重启 |
 | 04 原预算/截止时间 | 纯逻辑/Fake覆盖，待真实验收 |
-| 05 终态不复活 | Fake覆盖，待真实服务重启验收 |
+| 05 终态不复活 | 通过，四类真实终态及服务重启、三份日志未变化 |
 | 06 取消/重复恢复/单写入者 | 部分组件/Fake覆盖，待完整验收 |
-| 07 不明文件写入 | hash核查Fake覆盖，待真实中断验收 |
-| 08 模型/工具中断 | 部分逻辑与V1-02读工具中断；完整场景待验收 |
-| 09 旧节点拒绝且历史可读 | Store/API逻辑覆盖，待真实服务验收 |
+| 07 不明文件写入 | 通过，实际写入后夹具客户端丢弃确认；不是TCP断包 |
+| 08 模型/工具中断 | 通过，实际Pod工具中断+SIGKILL在途模型，原始父链/槽位审计 |
+| 09 旧节点拒绝且历史可读 | 通过，实际agentd分支409、旧路径200、head不变 |
 | 10 文件与跨工作区越权 | Go/组件覆盖，待完整验收 |
 | 11 NFS不可用/旧writer未确认 | 部分逻辑覆盖，待真实可控实验 |
-| 12 释放/取消/失败清理 | 正常释放已真实通过，其他场景待验收 |
-| 13 既有回归与三类联合回放 | Python回归已运行，三类回放待本轮执行 |
+| 12 释放/取消/失败清理 | 通过，四类真实释放、私有目录/Retain PV/PVC/控制日志仍在 |
+| 13 既有回归与三类联合回放 | 通过，165项回归及三类真实存储+脚本/Fake回放3/3 |
 | 14 命令游标与多attempt Trace | Fake覆盖，待真实进程验收 |
+
+## 2026-10-18 真实进程、终态、确认丢失与既有回归
+
+- `phase9-agent-process-recovery.json`：真实Uvicorn agentd进程先写文件，在第二个模型调用预留后等待固定Replay响应；管理夹具SIGKILL自身子进程，OS返回-9。第二进程用同控制目录恢复，无手动resume，原Task/session/branch/workspace/deadline/limits/timing保持；旧模型预留转uncertain，合计4个模型槽、一次写入。
+- 同轮核对旧/新Pod UID不同、不可变imageId相同、实际gVisor/NFSv4.1及NFS文件hash、原始Session字节前缀保留、当前完整父链Tool配对、Go旧owner释放证明。旧完整节点路径HTTP200、携带工作区分支HTTP409，head不变，覆盖V1-03/09。
+- 单轮kill→API ready54.688秒、→替换Pod观察56.925秒、→Task成功65.497秒；包含WSL挂载盘源码启动及8秒Replay等待，不能作为生产RTO/P50/P95。Replay新增可选delayMs仅模拟在途响应，范围0～60000，Live Provider不经过它。
+- `phase9-agent-terminal-restart.json`：实际API任务分别产生succeeded、failed、limit_exceeded和运行中cancelled；失败来自刻意损坏Replay参数，超限来自6轮真实list工具循环，取消在运行中调用取消API。第五个服务启动后四类状态与全部Task/Session/Go日志保持，覆盖V1-05；不手工写终态。
+- `phase9-agent-write-ack-recovery.json`：真实Go文件RPC成功后，管理夹具客户端丢弃确认并抛出超时；运行时保留写入槽为uncertain，第二attempt实际读hash后继续。只执行/预留write_file一次、可见父链不含旧半组写入，最终hash一致，23.524秒单轮，覆盖V1-07。此注入在客户端确认边界，不能描述成TCP网络断包。
+- `phase9-agent-interruption-cleanup-audit.json`：对真实V1-02、SIGKILL与终态报告关联原始日志逐项复查；旧半组读工具AI节点留在审计、不进入当前完整父链，模型与工具槽保留；正常/取消/失败/超限工作区目录65532:65532:700、Retain PV/PVC和Session仍在、对应Pod已消失。覆盖V1-08/12，只读审计未再次执行工具。
+- `phase9-joint-ops-replay.json`：实际Milvus2.5.10/OpenSearch和缓存E5/BGE，memory/Service/readiness三类3/3。模型/Jev/沙箱生命周期仍为脚本/Fake，不评自然语言能力或语义引用蕴含；设置HF/Transformers离线及OMP=2，不下载模型、不重建索引。四个项目服务经资源检查临时启动后停回初始状态，ES及其他项目未启动，覆盖V1-13回放部分。
+- 完整Python165/165、290.536秒，`phase9-python-process-regression-tests.txt`；Replay延迟/只读监测与恢复定向16/16、0.995秒，`phase9-process-replay-tests.txt`。两份覆盖重叠，不相加。所有外部模型调用0。
+- 尚缺04/06/10/11/14真实验收、显式旧工作区迁移、统一入口、小负载性能及全部V2。SIGKILL旧Trace为控制面补录并注明usageKnown=false，后续14仍需检查命令窗口与崩溃证据可追溯，不能把未知用量当已知零。
 
 ## 2026-10-18 分阶段时钟与Session多attempt
 

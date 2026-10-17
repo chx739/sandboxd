@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M2/M3：持久TaskStore/Runner已接线，真实Agent文件链路通过；逐项真实故障验收中；Goal active
+    Phase 9 M3：V1正式验收9/14通过，其余5项与迁移/性能待完成；V2未开始；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -40,7 +40,12 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 最后补取消与stale done运行句柄的竞态：blocked任务收到取消时仍排队对账原owner，不新增attempt/写入。TaskStore/API最终9/9、1.151秒通过，phase9-durable-cancel-final-tests.txt；compileall、历史演示bash语法、diff检查通过。旧run-agent-demo显式local，NFS验收走新的真实夹具；用户docs32/docs34修改仍未暂存。
 - 真实V1-01通过：phase9-agent-workspace-smoke-v2.json，16.488秒；真实Go服务、gVisor启动、非root65532、实际NFSv4.1挂载，Agent写读report.md与服务端hash一致，正常释放Pod后文件保留。首轮发现Go数字开头sandbox_id被Python逻辑ID校验误拒；失败原文及原Go/Python账本对账释放证据保留，未强删Pod。
 - V1-02首轮Task已自动两attempt成功，但夹具即时检查API对象消失过早而失败；raw与post-failure-control-journal-inspection保留，不能当正式通过。修正为有界等自然删除后，phase9-agent-pod-recovery-v2.json严格复验通过，19.886秒：完整工具边界后管理员正常删除Pod，原Task/session/branch/workspace不变，2个attempt/不同Pod UID/generation2，文件hash一致，4个模型槽/3个工具槽保留，旧/新owner均确认停止；自然删除观察等待258.69ms。不是强杀agentd、节点失联或模型质量测评。
-- 第一项下一步：真实强杀agentd自动接续、原预算/取消/不明写入等剩余V1验收；补显式旧文件迁移、统一启动命令、性能统计与三类回放。V1目前2/14项正式通过，V2未开始；V1全验收前不推进V2主链路。
+- 2026-10-18真实进程验收：phase9-agent-process-recovery.json通过V1-03/V1-09。确实SIGKILL自建agentd子进程(returnCode=-9)，同控制目录第二进程自动接续原Task，未调用resume；Task/session/branch/workspace/deadline/limits/timing保持，旧模型预留转uncertain且不归零，写入仅1次，当前父链Tool消息配对、旧节点读200/携带工作区分支409。原/新Pod UID不同，Go旧释放证明和NFS hash保留。单轮kill→API ready54.688秒、→替换Pod观察56.925秒、→Task成功65.497秒，包含源码挂载盘启动和8秒Replay等待，不是生产RTO。
+- V1-05：phase9-agent-terminal-restart.json实际创建succeeded/failed/limit_exceeded/运行中cancelled四类Task，再启动第五个服务；Task/Session/Go账本字节保持、不发新调用。失败用刻意损坏的Replay响应产生，超限由6轮真实工具循环产生，属于真实服务+Replay，不是手工写终态。
+- V1-07：phase9-agent-write-ack-recovery.json通过，23.524秒。实际Go/gVisor/NFS写入后，夹具客户端丢弃确认；第二attempt实际读hash后接续，工具write_file只预留/执行1次，旧半组写入意图不进入可见父链；不是TCP断包实验。
+- V1-08/V1-12：phase9-agent-interruption-cleanup-audit.json从此前真实报告和原始Session/控制日志复查。模型/工具中断仅恢复完整父链、原模型/工具槽不归零；正常/取消/失败/超限均保留0700 NFS目录、Retain PV/PVC及控制日志，目标Pod均消失。审计只读，不重放工具或伪造故障。
+- V1-13：四个原有项目服务经标签/版本/资源/localhost端口核对后临时启动，ES未启动；真实Milvus2.5.10/OpenSearch+缓存E5/BGE三类联合回放3/3，phase9-joint-ops-replay.json。模型/Jev/沙箱生命周期仍为脚本/Fake，非真实模型能力；完整Python165/165、290.536秒，phase9-python-process-regression-tests.txt；延迟/只读日志和恢复定向16/16、0.995秒。回放后四服务停回原状态，旧索引/卷保留。
+- 第一项下一步：剩余V1-04原预算/过期、06并发取消/重复实例、10文件边界、11不可用/旧writer阻止接管、14命令游标与崩溃Trace；补显式旧文件迁移、统一命令和性能统计。当前9/14已过，机器可读清单phase9-v1-acceptance-progress.json；强杀Trace缺失用usageKnown=false控制面记录，不把它当完整已知用量。V1全验收前不推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.2已载入kind，旧runtime-v1/v1.1保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移；强杀agentd真实证据和旧文件显式迁移仍未完成。

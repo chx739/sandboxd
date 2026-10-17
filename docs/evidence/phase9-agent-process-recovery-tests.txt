@@ -1,0 +1,5 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 115162}
+{"stage": "sigkill-confirmed", "taskId": "task-8de7ab11badaf358", "returnCode": -9}
+{"stage": "agentd-process-started", "number": 2, "pid": 115415}
+{"stage": "agentd-process-started", "number": 3, "pid": 115587}
+{"passed": true, "output": "docs/evidence/phase9-agent-process-recovery.json", "verifiedCases": ["V1-03", "V1-09"]}

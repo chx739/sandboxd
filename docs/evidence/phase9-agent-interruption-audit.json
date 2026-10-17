@@ -1,0 +1,37 @@
+{
+  "mode": "retained-real-service-evidence-audit",
+  "timestamp": "2026-10-17T17:47:40.976213+00:00",
+  "externalModelCalls": 0,
+  "passed": true,
+  "results": [
+    {
+      "passed": true,
+      "verifiedCase": "V1-08",
+      "scope": "real Pod-tool interruption plus real SIGKILL during model response",
+      "sources": [
+        {
+          "path": "docs/evidence/phase9-agent-pod-recovery-v2.json",
+          "sha256": "355e61ac2d6d93414d10a35fed283dd971f3ae411fddac32bf1c898a0136c616"
+        },
+        {
+          "path": "docs/evidence/phase9-agent-process-recovery.json",
+          "sha256": "5c2091e86c93ae9dc95b6490233186c6c7166dcc4428078924bf91c7d9de296b"
+        }
+      ],
+      "interruptedToolNodeId": "node-d014ff0318a68d85",
+      "interruptedToolAttemptId": "attempt-6894dbfeacb64855a26cf1345e44e402",
+      "visibleToolCallIds": [
+        "write-report",
+        "read-after-recovery"
+      ],
+      "visibleCallsPaired": true,
+      "interruptedModelReservationIds": [
+        "call-cd457b0b9f9642be8680c572441c1565"
+      ],
+      "podCaseModelSlots": 4,
+      "podCaseToolSlots": 3,
+      "modelCaseOriginalDeadlinePreserved": true,
+      "journalSha256": "a0aa440eca86f7432006f5ccfb99c52ccd5d0ee6082d2eef8adc57cb34a73e24"
+    }
+  ]
+}
