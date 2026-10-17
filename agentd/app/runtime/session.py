@@ -105,6 +105,10 @@ def _serialize_message(message: BaseMessage) -> dict[str, Any]:
         payload["toolCalls"] = _safe_json_value(safe_calls)
     if isinstance(message, ToolMessage):
         payload["toolCallId"] = str(message.tool_call_id)
+    if isinstance(message, HumanMessage):
+        command_id = message.additional_kwargs.get("sandboxdCommandId")
+        if isinstance(command_id, str) and re.fullmatch(r"command-[a-f0-9]{32}", command_id):
+            payload["commandId"] = command_id
     return payload
 
 
@@ -114,7 +118,8 @@ def _deserialize_message(payload: dict[str, Any]) -> BaseMessage:
     if role == "system":
         return SystemMessage(content=content)
     if role == "user":
-        return HumanMessage(content=content)
+        metadata = {"sandboxdCommandId": payload["commandId"]} if "commandId" in payload else {}
+        return HumanMessage(content=content, additional_kwargs=metadata)
     if role == "assistant":
         calls = payload.get("toolCalls", [])
         return AIMessage(
@@ -570,6 +575,7 @@ class SessionJournal:
         self._directory.mkdir(mode=0o700, parents=True, exist_ok=True)
         self._directory.chmod(0o700)
         with self._path.open("a+b") as handle:
+            os.fchmod(handle.fileno(), 0o600)
             handle.seek(0, os.SEEK_END)
             if handle.tell():
                 handle.seek(-1, os.SEEK_END)
@@ -593,6 +599,13 @@ class SessionJournal:
             handle.flush()
             os.fsync(handle.fileno())
         self._path.chmod(0o600)
+        # 新Session文件及新建sessions目录的名字也要持久化，不能只fsync正文。
+        for directory in (self._directory, self._directory.parent):
+            descriptor = os.open(directory, os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
 
     def _check_active_attempt(self, entries: Sequence[dict[str, Any]], task_id: str) -> None:
         starts = [entry for entry in entries

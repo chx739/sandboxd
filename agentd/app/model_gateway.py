@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -78,6 +79,11 @@ class LiveModelGateway:
         max_retries: int = 1,
     ) -> None:
         self.model_name = model
+        self.automatic_retries = max_retries
+        self.recovery_fingerprint = hashlib.sha256(json.dumps({
+            "baseUrl": base_url.rstrip("/"), "model": model, "thinking": thinking,
+            "maxTokens": max_tokens, "maxRetries": max_retries,
+        }, sort_keys=True).encode()).hexdigest()
         if max_tokens is not None and max_tokens <= 0:
             raise ValueError("max_tokens 必须为正数")
         if max_retries < 0:
@@ -103,9 +109,11 @@ class LiveModelGateway:
 
 
 class ReplayModelSession:
-    def __init__(self, responses: list[dict[str, Any]]) -> None:
+    def __init__(self, responses: list[dict[str, Any]], cursor: int = 0) -> None:
+        if type(cursor) is not int or not 0 <= cursor <= len(responses):
+            raise ValueError("invalid persisted Replay cursor")
         self._responses = responses
-        self._index = 0
+        self._index = cursor
 
     async def invoke(self, messages: Sequence[BaseMessage]) -> ModelInvocation:
         if self._index >= len(self._responses):
@@ -186,7 +194,9 @@ class ReplayModelGateway:
     capabilities = {"toolCalling": True, "deterministic": True}
 
     def __init__(self, path: Path) -> None:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        raw = path.read_bytes()
+        payload = json.loads(raw)
+        self.recovery_fingerprint = hashlib.sha256(raw).hexdigest()
         if payload.get("kind") not in {"deterministic-policy-case", "captured-live"}:
             raise ValueError("Replay kind 必须明确标记证据来源")
         responses = payload.get("responses")
@@ -198,3 +208,7 @@ class ReplayModelGateway:
     def new_session(self, tool_schemas: Sequence[dict[str, Any]]) -> ModelSession:
         # 每个任务从同一份只读 Fixture 的第一步开始，任务之间不共享会话状态。
         return ReplayModelSession(list(self._responses))
+
+    def new_session_at(self, tool_schemas: Sequence[dict[str, Any]], cursor: int) -> ModelSession:
+        # 包括结果不明的预留调用；接续不能倒回第一条重放工具意图。
+        return ReplayModelSession(list(self._responses), cursor)

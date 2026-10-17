@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_demo.py", line 171, in <module>
+    main()
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_demo.py", line 166, in main
+    result = asyncio.run(run(args.output, args.binary.resolve(), args.nfs_server))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_demo.py", line 115, in run
+    assert task.status == "succeeded", task.error
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 旧执行者未确认停止：invalid recovery identity

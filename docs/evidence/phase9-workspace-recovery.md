@@ -50,9 +50,9 @@
 
 ## 正式验收矩阵
 
-文档43的 V1-01～V1-14、V2-01～V2-10 **全部尚未验收**。纯逻辑测试只作为相关不变量的先行证据，不能提前勾选真实集成项目。
+文档43当前正式通过 **V1-01、V1-02**；其他V1及全部V2尚未验收。纯逻辑/Fake证据不能提前勾选真实集成项目。
 
-Go持久归属、受限HTTP文件接口和正常释放后换Pod的组件路径已经真实通过；当前默认Python Runner仍未迁移，TaskStore/Session自动接续与完整预算仍待接线，14项V1正式验收未通过。V2主链路未启动。
+默认Python TaskStore/Runner已接持久预算、Session多attempt及真实远程文件路径。V1-01文件链路和V1-02完整轮次后Pod删除自动接管已真实通过；强杀agentd等其余项目不能由Go账本重开或Fake测试替代。V2主链路未启动。
 
 ## 第二批实现与测试执行环境（7b244bf时）
 
@@ -85,7 +85,35 @@ Go持久归属、受限HTTP文件接口和正常释放后换Pod的组件路径�
 
 ## 下一步
 
-接Python TaskStore/Runner/Session的持久Task/attempt与自动恢复，原claim/loop/cleanup独立时钟、预算预留/Replay游标、取消与控制命令游标、未知写入hash核查及旧节点限制。之后迁移默认文件后端并执行14项V1完整验收，再启动V2。持续保存失败记录与真实结果，不使用已消费的模型预算。
+完成真实强杀agentd、预算/取消/不明写入等其余V1项目，以及显式旧工作区迁移、统一启动、性能与三类回放。全部V1完成后再启动V2。持续保存失败记录与真实结果，不使用已消费的模型预算。
+
+## 2026-10-18 TaskStore/Runner接线与真实Agent验收
+
+- 部署配置默认nfs与原生持久控制目录；TaskStore启动扫描、同Task多attempt、调用预留、Provider/Replay指纹与游标、原阶段时钟、取消、命令消费游标、独立attempt Trace已接入。local显式保留旧离线后端，旧业务目录不删除。
+- Runner定向48/48、TaskStore/API/Session定向32/32；完整Python批次155/155、276.596秒。随后新增配置/路由/预算与runtime数字ID覆盖为68/68、2.822秒；最终HTTP409/Trace鉴权与ID为15/15、0.797秒。相互有重叠，不相加；155项不是后续全部新增用例的最终完整重跑。
+- 最后取消竞态修正由`phase9-durable-cancel-final-tests.txt`覆盖，TaskStore/API 9/9、1.151秒；确认blocked owner取消后即使内存中留有已完成句柄，也会对账清理且不新建attempt。该项仍是Fake，V1-06真实并发验收未勾选。
+- V1-01：`phase9-agent-workspace-smoke-v2.json`通过，16.488秒。Replay Agent实际经Go HTTP在gVisor非root65532专属NFSv4.1目录写读report.md，内容与服务端hash一致；正常释放Pod后文件保留。
+- V1-01首轮失败：Go生成的十六进制sandbox_id以数字开头，被Python复用了“逻辑ID以字母开头”的规则。`phase9-agent-workspace-smoke-tests.txt`保留原失败；修正独立runtime ID规则后，用原Go/Python账本正常停止旧Pod，`phase9-agent-workspace-id-reconciliation.json`记录before/after与停止证明，不强删或抹掉失败数据。
+- V1-02首轮：Task已自动两attempt成功，但即时检查API对象消失过早，严格夹具失败。原文`phase9-agent-pod-recovery-tests.txt`及事后账本检查`phase9-agent-pod-first-inspection.json`保留，后者strictVerifierPassed=false，不代替复验。
+- V1-02严格复验：`phase9-agent-pod-recovery-v2.json`通过，19.886秒。完整工具组与Session边界持久化后，由管理员正常delete单个测试Pod，不force、不清空finalizer；TaskStore自动停止旧owner、生成新attempt并重新认领同工作区，最终读回同hash。
+- 该轮Task/session/branch/workspace保持，2个Pod UID不同、generation=2，原模型槽4/工具槽3保留，旧/新owner均确认停止，最终自然删除观察等待258.69ms。只验证此单节点、正常删除的故障注入，不外推节点网络分区或生产RTO。所有外部模型调用0。
+
+| V1项目 | 当前正式状态 |
+|---|---|
+| 01 Agent文件写读与NFS hash | 通过，真实本地服务+Replay Agent |
+| 02 完整轮次后Pod故障自动接管 | 通过，管理员正常删除的可控故障 |
+| 03 强杀agentd自动接续 | 待真实进程实验；Fake/重开账本不代替 |
+| 04 原预算/截止时间 | 纯逻辑/Fake覆盖，待真实验收 |
+| 05 终态不复活 | Fake覆盖，待真实服务重启验收 |
+| 06 取消/重复恢复/单写入者 | 部分组件/Fake覆盖，待完整验收 |
+| 07 不明文件写入 | hash核查Fake覆盖，待真实中断验收 |
+| 08 模型/工具中断 | 部分逻辑与V1-02读工具中断；完整场景待验收 |
+| 09 旧节点拒绝且历史可读 | Store/API逻辑覆盖，待真实服务验收 |
+| 10 文件与跨工作区越权 | Go/组件覆盖，待完整验收 |
+| 11 NFS不可用/旧writer未确认 | 部分逻辑覆盖，待真实可控实验 |
+| 12 释放/取消/失败清理 | 正常释放已真实通过，其他场景待验收 |
+| 13 既有回归与三类联合回放 | Python回归已运行，三类回放待本轮执行 |
+| 14 命令游标与多attempt Trace | Fake覆盖，待真实进程验收 |
 
 ## 2026-10-18 分阶段时钟与Session多attempt
 

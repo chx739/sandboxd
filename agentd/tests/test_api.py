@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from unittest.mock import AsyncMock, patch
 from pathlib import Path
 from shutil import copyfile
 from tempfile import TemporaryDirectory
@@ -9,6 +10,7 @@ from httpx import ASGITransport, AsyncClient
 
 from agentd.app.config import Settings
 from agentd.app.main import create_app
+from agentd.app.store import TaskConflictError
 
 
 class AgentAPIAuthTest(unittest.IsolatedAsyncioTestCase):
@@ -157,6 +159,19 @@ class AgentAPIAuthTest(unittest.IsolatedAsyncioTestCase):
                 )
                 self.assertEqual(response.status_code, 202)
                 self.assertEqual(response.json()["branchedFrom"], "node-0000000000000003")
+                task_id = response.json()["taskId"]
+                response = await client.get(f"/api/v1/tasks/{task_id}/traces", headers={"Authorization": "Bearer alert-token"})
+                self.assertEqual(response.status_code, 401)
+                response = await client.get(f"/api/v1/tasks/{task_id}/traces", headers={"Authorization": "Bearer api-token"})
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json()["attempts"], [])
+                with patch("agentd.app.store.TaskStore.resume", new=AsyncMock(side_effect=TaskConflictError("NFS V1 无对应历史文件版本"))):
+                    response = await client.post(
+                        f"/api/v1/sessions/{demo_id}/branch/node-0000000000000003",
+                        headers={"Authorization": "Bearer api-token"},
+                    )
+                self.assertEqual(response.status_code, 409)
+                self.assertIn("历史文件版本", response.json()["detail"])
 
 
 if __name__ == "__main__":

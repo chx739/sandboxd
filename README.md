@@ -8,6 +8,8 @@ Go sandboxd 保留通用 Exec API 用于沙箱机制验证，但当前 Python ag
 
 ## 当前运维 MVP（Phase 8）
 
+> 当前实施Phase 9工作区恢复：默认部署已接入持久Task/attempt账本及Go受限RPC→gVisor→专属NFS。V1-01文件链路、V1-02完整轮次后删除Pod自动接管已有真实本地服务+Replay Agent证据；V1其余12项与全部V2仍待完成。[部署与复验](deploy/workspace/README.md)、[学习手册](docs/45-持久工作区与任务恢复学习手册.md)、[逐项状态](docs/evidence/phase9-workspace-recovery.md)。
+
 - 会话树与分层记忆：分支/恢复、完整工具组、来源/冲突/遗忘；参考固定 Pi/Codex 源码，未完整复刻。
 - 知识：Milvus **2.5.10 原生 BM25 + E5 Dense + RRF + BGE Reranker**，40 篇固定运维文档，默认不依赖 ES。
 - 日志：OpenSearch 2.19.6，720 条合成日志/40 个独立 oracle 用例通过，另有小规模 Benchmark。
@@ -22,7 +24,7 @@ graph LR
     AM["Prometheus / Alertmanager"] -->|Alert Token| Agentd["Python agentd<br/>Pi-style 双层 Loop<br/>Session + Plugins"]
     Agentd -->|PromQL| Prom["Prometheus Query API"]
     Agentd -->|固定 targetId + operation| SSH["Linux SSH Target<br/>strict host key · forced-command"]
-    Agentd --> WS["Task Workspace<br/>list/read/search/write/edit"]
+    Agentd --> WS["Go受限文件RPC → gVisor/NFS Workspace<br/>list/read/search/write/edit"]
     Agentd -->|Agent Token| API
     Operator["Operator"] -->|Operator Token| API
     subgraph sandboxd
@@ -278,6 +280,6 @@ GET  /api/v1/plugins
 
 ## Phase 4 Linux Host 与原生文件工具
 
-当前 Registry 新增 `linux-host` 和 `files` 两个受信任内置插件。`linux_read` 只允许部署者预登记 targetId 的四个只读 operation；五个文件工具不带 artifact 前缀，只访问当前 task 的 Linux 文件系统工作区。
+Phase 4新增`linux-host`和`files`两个受信任内置插件，`linux_read`只允许静态targetId及四个只读operation。文件工具名保持；当前Phase 9部署默认经Go访问Pod专属NFS，旧local路径仅用于显式离线兼容。
 
 `hack/run-linux-agent-demo.sh` 会离线校验本地固定 kicbase image ID，启动一个 0.25 CPU、192 MiB、64 PID、read-only rootfs 的一次性 SSH Target；Key 和配置只在 `/tmp`，退出精确删除。它复用完整 Agent E2E，同时断言 Linux/Pod 两路注入、文件正文脱敏、forced-command 负向拒绝，以及原有 gVisor、RBAC、Policy、审批门不退化。

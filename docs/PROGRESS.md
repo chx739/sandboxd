@@ -14,7 +14,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M1：真实Go生命周期/HTTP文件接口通过，Python远程适配器已测；默认Runner与自动恢复仍待接线；Goal active
+    Phase 9 M2/M3：持久TaskStore/Runner已接线，真实Agent文件链路通过；逐项真实故障验收中；Goal active
 
 ## Phase 9 当前恢复点
 
@@ -25,7 +25,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 新增 DurableJournal 与 RecoveryLedger：进程锁、fsync/断尾/坏行处理、身份/预算/截止时间/取消/命令游标，20/20 本地测试通过。尚未接 TaskStore；不能声称重启自动接续完成。
 - 新增 Go 固定文件 helper 与专属 Pod/PV/PVC 构造：路径/symlink/特殊文件/CAS/额度边界，helper 9 顶层测试及 race 通过；sandbox 定向回归通过。尚未接公开文件 RPC，默认文件工具仍是旧后端。
 - NFS 配置在 deploy/workspace；用户已明确允许仅给可信服务容器增加 DAC_READ_SEARCH，不放宽业务 Pod。官方 Google Registry 连接超时，已从固定 Debian 基础摘要与 Ganesha4.3-2 包构建，单独服务172.23.0.3。导出父目录0711、工作区0700、root_squash匿名映射65532；真实非 root gVisor/NFS/helper读写及服务端hash一致通过，属于组件探测，不能冒充 Agent/自动恢复验收。
-- 学习文档：[45](45-持久工作区与任务恢复学习手册.md)；逐项状态与原始证据：[Phase9](evidence/phase9-workspace-recovery.md)。V1 14项/V2 10项正式验收尚未执行，外部模型调用0。
+- 学习文档：[45](45-持久工作区与任务恢复学习手册.md)；逐项状态与原始证据：[Phase9](evidence/phase9-workspace-recovery.md)。初期正式验收未执行；当前V1逐项进展见下文，V2未开始，外部模型调用0。
 - 第二批：Go独立JSONL与WorkspaceRegistry、固定workspace-init、工作区通用exec/释放拒绝与预热池隔离已实现，相关Go/race通过；仍未接真实生命周期和受限RPC。必须由Go采集真实容器终止证明后才能ConfirmStopped，不能把状态机方法当fencing。
 - 完整Python离线回归110/110通过，295.970秒，原始输出 phase9-python-regression-native-tests.txt。第一次受限执行器因asyncio.to_thread线程唤醒无法退出而主动中断，部分输出phase9-python-regression-tests.txt保留为环境问题，非通过成绩；不改应用逻辑规避。
 - Git交付：第一批dbc02d2已推送，草稿 [PR #2](https://github.com/chx739/sandboxd/pull/2) base=codex/agent-memory-rag-plan，依赖PR#1，已附到当前聊天；不合并。用户docs32/docs34原修改仍保留。
@@ -35,10 +35,15 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 后续785553f已推送，远端PR#2仍为OPEN/DRAFT、base=codex/agent-memory-rag-plan。新增恢复时钟schema2：排队未启动不计claim，首次attempt固定claim开始，首次绑定后固定loop开始；接续继承原阶段剩余时间，旧schema1不改写或补发额度。启动records扫描包含取消/过期待清理owner，数字开头的真实Pod UID可保存，已停止attempt和绑定不可改写。
 - Session新增for_attempt视图：同文件/同锁，按task+attempt定位增量；旧半组工具调用仅留审计，新attempt从当前完整head继承，旧attempt不能追加/重新激活；返回fsync后的安全nodeId。旧线性迁移保留legacy归属，原字节不变。相关定向50/50通过，1.537秒，phase9-attempt-clock-final-tests.txt；只是模块验证，TaskStore/Runner尚未选择这些接口，不是V1自动接续验收。
 - 本轮完整离线回归批次137/137通过，270.335秒，phase9-python-attempt-clock-regression-tests.txt；启动后追加的时钟回拨/新绑定前禁止调用/legacy线性视图边界由最终50项定向覆盖，不将137项冒称包含后来追加的全部用例，两份测试覆盖有重叠、不相加。compileall与diff检查通过。未启动新真实服务或调用外部模型。
-- 第一项下一步：TaskStore/Runner/Session多attempt与持久预算、原claim/loop/cleanup时钟、取消/控制游标、未知写入hash核查、完整轮次恢复及V1旧节点限制；之后默认文件路径迁移和14项真实验收。V1验收前不推进V2主链路。
+- 2026-10-18 M2接线：TaskStore默认部署路径改为持久账本，启动扫描未完成Task、同Task新增attempt、原预算/时钟、取消先落盘、控制命令ID及消费游标、独立attempt.trace；Runner实际选择RemoteFileWorkspace并先对账旧Go owner。模型配置/Replay文件hash固定，游标计入不明预留；不明写入先读hash，不明Plan或无法确认的新内容停止。CLI默认nfs，local仅旧离线兼容；旧Session读取保留，旧文件迁移入口仍待做。
+- 新Runner定向48/48、TaskStore/API/Session定向32/32通过；完整Python批次155/155、276.596秒。后续配置/路由/预算及数字runtime ID修复定向68/68、2.822秒，HTTP409/Trace鉴权及ID最终15/15、0.797秒；测试有重叠不相加，完整155项不是后续全部新增用例的完整重跑。
+- 最后补取消与stale done运行句柄的竞态：blocked任务收到取消时仍排队对账原owner，不新增attempt/写入。TaskStore/API最终9/9、1.151秒通过，phase9-durable-cancel-final-tests.txt；compileall、历史演示bash语法、diff检查通过。旧run-agent-demo显式local，NFS验收走新的真实夹具；用户docs32/docs34修改仍未暂存。
+- 真实V1-01通过：phase9-agent-workspace-smoke-v2.json，16.488秒；真实Go服务、gVisor启动、非root65532、实际NFSv4.1挂载，Agent写读report.md与服务端hash一致，正常释放Pod后文件保留。首轮发现Go数字开头sandbox_id被Python逻辑ID校验误拒；失败原文及原Go/Python账本对账释放证据保留，未强删Pod。
+- V1-02首轮Task已自动两attempt成功，但夹具即时检查API对象消失过早而失败；raw与post-failure-control-journal-inspection保留，不能当正式通过。修正为有界等自然删除后，phase9-agent-pod-recovery-v2.json严格复验通过，19.886秒：完整工具边界后管理员正常删除Pod，原Task/session/branch/workspace不变，2个attempt/不同Pod UID/generation2，文件hash一致，4个模型槽/3个工具槽保留，旧/新owner均确认停止；自然删除观察等待258.69ms。不是强杀agentd、节点失联或模型质量测评。
+- 第一项下一步：真实强杀agentd自动接续、原预算/取消/不明写入等剩余V1验收；补显式旧文件迁移、统一启动命令、性能统计与三类回放。V1目前2/14项正式通过，V2未开始；V1全验收前不推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.2已载入kind，旧runtime-v1/v1.1保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
-- 下一步接线注意：原claim开始、首次进入loop的时间锚点要持久化，恢复不能重新发190/120秒；没收到claim响应不等于从未发送，必须查Go元数据并确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写；默认后端迁移和强杀agentd证据仍未完成。
+- 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移；强杀agentd真实证据和旧文件显式迁移仍未完成。
 
 ## 2026-10-17 工作区持久化与恢复规格（实施授权前记录）
 

@@ -1,0 +1,173 @@
+test_alert_webhook_requires_its_own_token (test_api.AgentAPIAuthTest.test_alert_webhook_requires_its_own_token) ... Executing <Task finished name='Task-2' coro=<AgentAPIAuthTest.test_alert_webhook_requires_its_own_token() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_api.py:15> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.311 seconds
+ok
+test_keeps_system_and_complete_latest_tool_protocol (test_context.ContextTransformTest.test_keeps_system_and_complete_latest_tool_protocol) ... ok
+test_append_reopen_and_independent_projection (test_durable.DurableJournalTests.test_append_reopen_and_independent_projection) ... ok
+test_complete_corrupt_line_is_not_skipped (test_durable.DurableJournalTests.test_complete_corrupt_line_is_not_skipped) ... ok
+test_duplicate_owner_is_rejected_until_close (test_durable.DurableJournalTests.test_duplicate_owner_is_rejected_until_close) ... ok
+test_fsync_failure_poisons_writer (test_durable.DurableJournalTests.test_fsync_failure_poisons_writer) ... ok
+test_invalid_or_large_event_does_not_change_file (test_durable.DurableJournalTests.test_invalid_or_large_event_does_not_change_file) ... ok
+test_partial_tail_is_not_a_record_and_is_repaired_before_append (test_durable.DurableJournalTests.test_partial_tail_is_not_a_record_and_is_repaired_before_append) ... ok
+test_sequence_tamper_is_rejected_even_with_recomputed_checksum (test_durable.DurableJournalTests.test_sequence_tamper_is_rejected_even_with_recomputed_checksum) ... ok
+test_symlink_journal_is_rejected (test_durable.DurableJournalTests.test_symlink_journal_is_rejected) ... ok
+test_authorized_diagnosis_canary_echo_is_not_external_leak (test_eval.PromptInjectionDatasetTest.test_authorized_diagnosis_canary_echo_is_not_external_leak) ... ok
+test_live_no_attack_does_not_require_a_deny_layer (test_eval.PromptInjectionDatasetTest.test_live_no_attack_does_not_require_a_deny_layer) ... ok
+test_loader_rejects_inconsistent_injection_sources (test_eval.PromptInjectionDatasetTest.test_loader_rejects_inconsistent_injection_sources) ... ok
+test_loader_rejects_wrong_source_channel (test_eval.PromptInjectionDatasetTest.test_loader_rejects_wrong_source_channel) ... ok
+test_scorer_does_not_confuse_attempt_with_real_side_effect (test_eval.PromptInjectionDatasetTest.test_scorer_does_not_confuse_attempt_with_real_side_effect) ... ok
+test_unexpected_injection_source_is_a_contract_error (test_eval.PromptInjectionDatasetTest.test_unexpected_injection_source_is_a_contract_error) ... ok
+test_v1_dataset_shape_and_semantics (test_eval.PromptInjectionDatasetTest.test_v1_dataset_shape_and_semantics) ... ok
+test_v2_dataset_shape_and_coverage (test_eval.PromptInjectionDatasetTest.test_v2_dataset_shape_and_coverage) ... ok
+test_all_v2_cases_hit_real_runtime_boundaries (test_eval.PromptInjectionReplayTest.test_all_v2_cases_hit_real_runtime_boundaries) ... ok
+test_replay_baseline_matches_golden (test_eval_golden.EvalReplayGoldenTest.test_replay_baseline_matches_golden) ... ok
+test_each_task_has_an_independent_root (test_files.FileWorkspaceTest.test_each_task_has_an_independent_root) ... ok
+test_rejects_escape_symlink_duplicate_edit_and_large_file (test_files.FileWorkspaceTest.test_rejects_escape_symlink_duplicate_edit_and_large_file) ... ok
+test_write_read_search_edit_and_cas (test_files.FileWorkspaceTest.test_write_read_search_edit_and_cas) ... ok
+test_extracts_fenced_json_after_prose (test_final_output.FinalOutputTest.test_extracts_fenced_json_after_prose) ... ok
+test_nested_evidence_does_not_replace_outer_diagnosis (test_final_output.FinalOutputTest.test_nested_evidence_does_not_replace_outer_diagnosis) ... ok
+test_prefers_last_valid_diagnosis_object (test_final_output.FinalOutputTest.test_prefers_last_valid_diagnosis_object) ... ok
+test_rejects_text_without_diagnosis_json (test_final_output.FinalOutputTest.test_rejects_text_without_diagnosis_json) ... ok
+test_config_and_key_permissions_fail_closed (test_linux_host.LinuxHostClientTest.test_config_and_key_permissions_fail_closed) ... ok
+test_fixed_argv_and_connector_policy (test_linux_host.LinuxHostClientTest.test_fixed_argv_and_connector_policy) ... ok
+test_agent_reads_summary_as_data_and_detail_via_policy_tool (test_memory.MemoryStoreTest.test_agent_reads_summary_as_data_and_detail_via_policy_tool) ... ok
+test_cross_session_update_conflict_forget_and_budget (test_memory.MemoryStoreTest.test_cross_session_update_conflict_forget_and_budget) ... Executing <Task finished name='Task-114' coro=<MemoryStoreTest.test_cross_session_update_conflict_forget_and_budget() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_memory.py:84> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.167 seconds
+ok
+test_fake_gateway_rejects_tool_node_source (test_memory.MemoryStoreTest.test_fake_gateway_rejects_tool_node_source) ... ok
+test_memory_cli_extract_rebuild_summary_forget (test_memory.MemoryStoreTest.test_memory_cli_extract_rebuild_summary_forget) ... Executing <Task finished name='Task-124' coro=<MemoryStoreTest.test_memory_cli_extract_rebuild_summary_forget() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_memory.py:281> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 268.341 seconds
+ok
+test_only_succeeded_and_active_branch_are_extracted (test_memory.MemoryStoreTest.test_only_succeeded_and_active_branch_are_extracted) ... ok
+test_scoped_auto_read_and_legacy_on_demand (test_memory.MemoryStoreTest.test_scoped_auto_read_and_legacy_on_demand) ... Executing <Task finished name='Task-134' coro=<MemoryStoreTest.test_scoped_auto_read_and_legacy_on_demand() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_memory.py:132> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.297 seconds
+ok
+test_first_incomplete_turn_recovers_initial_alert (test_memory_boundaries.MemoryBoundaryTest.test_first_incomplete_turn_recovers_initial_alert) ... ok
+test_omitted_pending_checks_are_preserved_and_oversized_update_rejected (test_memory_boundaries.MemoryBoundaryTest.test_omitted_pending_checks_are_preserved_and_oversized_update_rejected) ... ok
+test_prometheus_old_sample_cannot_become_current_fact (test_memory_boundaries.MemoryBoundaryTest.test_prometheus_old_sample_cannot_become_current_fact) ... ok
+test_real_stdout_uid_survives_runtime_truncation (test_memory_boundaries.MemoryBoundaryTest.test_real_stdout_uid_survives_runtime_truncation) ... ok
+test_resumed_branch_preserves_denial (test_memory_boundaries.MemoryBoundaryTest.test_resumed_branch_preserves_denial) ... ok
+test_snapshot_document_replace_delete_and_original_preserved (test_ops_dataset.OpsDatasetTest.test_snapshot_document_replace_delete_and_original_preserved) ... ok
+test_sources_questions_and_split_contract (test_ops_dataset.OpsDatasetTest.test_sources_questions_and_split_contract) ... ok
+test_unanswerable_is_not_zero_recall (test_ops_dataset.OpsDatasetTest.test_unanswerable_is_not_zero_recall) ... ok
+test_budget_counts_calls_before_network_and_never_logs_key (test_ops_eval.OpsEvalTest.test_budget_counts_calls_before_network_and_never_logs_key) ... ok
+test_failure_latches_stop_and_retains_reservation (test_ops_eval.OpsEvalTest.test_failure_latches_stop_and_retains_reservation) ... ok
+test_generation_plan_fixed_inputs_and_hash (test_ops_eval.OpsEvalTest.test_generation_plan_fixed_inputs_and_hash) ... ok
+test_live_action_adapter_uses_registered_tools_only (test_ops_eval.OpsEvalTest.test_live_action_adapter_uses_registered_tools_only) ... ok
+test_connector_rejects_partial_results_and_preserves_literal_values (test_ops_logs.OpsLogsTest.test_connector_rejects_partial_results_and_preserves_literal_values) ... ok
+test_independent_oracle_boundary_timezone_and_incorrect_result (test_ops_logs.OpsLogsTest.test_independent_oracle_boundary_timezone_and_incorrect_result) ... ok
+test_milvus_model_identity_and_filter_escaping (test_ops_logs.OpsLogsTest.test_milvus_model_identity_and_filter_escaping) ... ok
+test_plugin_rejects_oversized_payload_before_runtime_truncates_json (test_ops_logs.OpsLogsTest.test_plugin_rejects_oversized_payload_before_runtime_truncates_json) ... ok
+test_policy_rejects_dsl_unbounded_and_naive_time (test_ops_logs.OpsLogsTest.test_policy_rejects_dsl_unbounded_and_naive_time) ... ok
+test_builtin_registry_exposes_only_expected_tools (test_plugins.PluginRegistryTest.test_builtin_registry_exposes_only_expected_tools) ... ok
+test_tool_schemas_are_defensive_copies (test_plugins.PluginRegistryTest.test_tool_schemas_are_defensive_copies) ... ok
+test_unknown_tool_does_not_resolve (test_plugins.PluginRegistryTest.test_unknown_tool_does_not_resolve) ... ok
+test_cancel_is_durable_and_precedes_rebind (test_recovery.RecoveryLedgerTests.test_cancel_is_durable_and_precedes_rebind) ... ok
+test_commands_have_durable_ids_and_consumption_boundary (test_recovery.RecoveryLedgerTests.test_commands_have_durable_ids_and_consumption_boundary) ... ok
+test_deadline_includes_downtime (test_recovery.RecoveryLedgerTests.test_deadline_includes_downtime) ... ok
+test_failed_fsync_does_not_publish_state (test_recovery.RecoveryLedgerTests.test_failed_fsync_does_not_publish_state) ... ok
+test_recovery_is_bounded (test_recovery.RecoveryLedgerTests.test_recovery_is_bounded) ... ok
+test_redaction_and_unconfirmed_write_metadata (test_recovery.RecoveryLedgerTests.test_redaction_and_unconfirmed_write_metadata) ... ok
+test_restart_preserves_identity_deadline_and_reservations (test_recovery.RecoveryLedgerTests.test_restart_preserves_identity_deadline_and_reservations) ... ok
+test_stale_attempt_and_rerouting_are_rejected (test_recovery.RecoveryLedgerTests.test_stale_attempt_and_rerouting_are_rejected) ... ok
+test_terminal_tasks_do_not_resurrect (test_recovery.RecoveryLedgerTests.test_terminal_tasks_do_not_resurrect) ... ok
+test_termination_evidence_cannot_be_a_lease_or_deleted_object (test_recovery.RecoveryLedgerTests.test_termination_evidence_cannot_be_a_lease_or_deleted_object) ... ok
+test_uncertain_reservation_consumes_budget (test_recovery.RecoveryLedgerTests.test_uncertain_reservation_consumes_budget) ... ok
+test_workspace_ownership_is_not_just_task_identity (test_recovery.RecoveryLedgerTests.test_workspace_ownership_is_not_just_task_identity) ... ok
+test_absent_claim_binding_blocks_takeover (test_recovery_runner.RecoveryRunnerTests.test_absent_claim_binding_blocks_takeover) ... ok
+test_cancellation_is_preserved_while_resource_cleanup_records_binding (test_recovery_runner.RecoveryRunnerTests.test_cancellation_is_preserved_while_resource_cleanup_records_binding) ... ok
+test_changed_replay_fixture_is_rejected_before_claim_or_model (test_recovery_runner.RecoveryRunnerTests.test_changed_replay_fixture_is_rejected_before_claim_or_model) ... ok
+test_lost_claim_response_reconciles_go_owner_instead_of_assuming_absence (test_recovery_runner.RecoveryRunnerTests.test_lost_claim_response_reconciles_go_owner_instead_of_assuming_absence) ... ok
+test_lost_write_response_is_inspected_after_reopen_and_not_replayed (test_recovery_runner.RecoveryRunnerTests.test_lost_write_response_is_inspected_after_reopen_and_not_replayed) ... Executing <Task pending name='Task-211' coro=<RecoveryRunnerTests.test_lost_write_response_is_inspected_after_reopen_and_not_replayed() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_recovery_runner.py:152> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:181] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.115 seconds
+ok
+test_router_is_not_called_again_after_restart (test_recovery_runner.RecoveryRunnerTests.test_router_is_not_called_again_after_restart) ... Executing <Task pending name='Task-219' coro=<RecoveryRunnerTests.test_router_is_not_called_again_after_restart() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_recovery_runner.py:235> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:181] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.104 seconds
+Executing <Task pending name='Task-219' coro=<RecoveryRunnerTests.test_router_is_not_called_again_after_restart() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_recovery_runner.py:238> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:181] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.107 seconds
+ok
+test_runner_injects_remote_workspace_and_commits_budgets_and_trace (test_recovery_runner.RecoveryRunnerTests.test_runner_injects_remote_workspace_and_commits_budgets_and_trace) ... Executing <Task pending name='Task-227' coro=<RecoveryRunnerTests.test_runner_injects_remote_workspace_and_commits_budgets_and_trace() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_recovery_runner.py:127> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[_run_until_complete_cb() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:181] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.147 seconds
+ok
+test_unknown_write_without_matching_hash_stops_before_another_model_call (test_recovery_runner.RecoveryRunnerTests.test_unknown_write_without_matching_hash_stops_before_another_model_call) ... ok
+test_accepted_queued_task_is_automatically_discovered_after_reopen (test_recovery_store.DurableTaskStoreTests.test_accepted_queued_task_is_automatically_discovered_after_reopen) ... Executing <Task pending name='Task-244' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:185> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.131 seconds
+ok
+test_acknowledged_commands_survive_reopen_and_have_complete_boundaries (test_recovery_store.DurableTaskStoreTests.test_acknowledged_commands_survive_reopen_and_have_complete_boundaries) ... Executing <Task pending name='Task-253' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:185> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.145 seconds
+ok
+test_queued_cancellation_is_persisted_before_restart (test_recovery_store.DurableTaskStoreTests.test_queued_cancellation_is_persisted_before_restart) ... ok
+test_shutdown_does_not_become_user_cancellation (test_recovery_store.DurableTaskStoreTests.test_shutdown_does_not_become_user_cancellation) ... ok
+test_terminal_tasks_are_not_restarted (test_recovery_store.DurableTaskStoreTests.test_terminal_tasks_are_not_restarted) ... Executing <Task pending name='Task-283' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:185> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.178 seconds
+ok
+test_v1_old_node_resume_rejected_but_latest_uses_same_workspace (test_recovery_store.DurableTaskStoreTests.test_v1_old_node_resume_rejected_but_latest_uses_same_workspace) ... Executing <Task pending name='Task-294' coro=<AgentRunner.run() running at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/app/runner.py:185> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:922, Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:448> cb=[Task.task_wakeup()] created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py:420> took 0.133 seconds
+ok
+test_worker_automatically_continues_same_task_after_unknown_write (test_recovery_store.DurableTaskStoreTests.test_worker_automatically_continues_same_task_after_unknown_write) ... ok
+test_claim_recovery_uses_original_190_seconds (test_recovery_timing.RecoveryTimingTests.test_claim_recovery_uses_original_190_seconds) ... ok
+test_clock_anchor_or_derived_deadline_cannot_be_rewritten (test_recovery_timing.RecoveryTimingTests.test_clock_anchor_or_derived_deadline_cannot_be_rewritten) ... ok
+test_clock_configuration_is_bounded_and_immutable (test_recovery_timing.RecoveryTimingTests.test_clock_configuration_is_bounded_and_immutable) ... ok
+test_clock_rollback_stops_instead_of_refunding_time (test_recovery_timing.RecoveryTimingTests.test_clock_rollback_stops_instead_of_refunding_time) ... ok
+test_expired_claim_cannot_start_a_fresh_loop (test_recovery_timing.RecoveryTimingTests.test_expired_claim_cannot_start_a_fresh_loop) ... ok
+test_expired_loop_allows_cleanup_but_never_new_calls (test_recovery_timing.RecoveryTimingTests.test_expired_loop_allows_cleanup_but_never_new_calls) ... ok
+test_legacy_deadline_is_read_without_rewriting_or_extending (test_recovery_timing.RecoveryTimingTests.test_legacy_deadline_is_read_without_rewriting_or_extending) ... ok
+test_loop_has_separate_budget_and_downtime_is_not_refunded (test_recovery_timing.RecoveryTimingTests.test_loop_has_separate_budget_and_downtime_is_not_refunded) ... ok
+test_loop_requires_a_bound_current_attempt_and_cancel_wins (test_recovery_timing.RecoveryTimingTests.test_loop_requires_a_bound_current_attempt_and_cancel_wins) ... ok
+test_model_and_tool_cannot_run_before_loop_clock_is_committed (test_recovery_timing.RecoveryTimingTests.test_model_and_tool_cannot_run_before_loop_clock_is_committed) ... ok
+test_queued_time_does_not_consume_unstarted_claim_window (test_recovery_timing.RecoveryTimingTests.test_queued_time_does_not_consume_unstarted_claim_window) ... ok
+test_real_kubernetes_uid_can_start_with_a_digit_and_binding_is_immutable (test_recovery_timing.RecoveryTimingTests.test_real_kubernetes_uid_can_start_with_a_digit_and_binding_is_immutable) ... ok
+test_recovery_cannot_use_existing_loop_clock_before_new_binding (test_recovery_timing.RecoveryTimingTests.test_recovery_cannot_use_existing_loop_clock_before_new_binding) ... ok
+test_startup_scan_includes_expired_and_cancelled_owners_for_cleanup (test_recovery_timing.RecoveryTimingTests.test_startup_scan_includes_expired_and_cancelled_owners_for_cleanup) ... ok
+test_redacts_bearer_header_and_bounds_output (test_redaction.PublicErrorTest.test_redacts_bearer_header_and_bounds_output) ... ok
+test_redacts_raw_and_masked_api_keys (test_redaction.PublicErrorTest.test_redacts_raw_and_masked_api_keys) ... ok
+test_backend_and_stale_owner_failures_are_distinct (test_remote_files.RemoteWorkspaceTests.test_backend_and_stale_owner_failures_are_distinct) ... ok
+test_binding_cannot_choose_free_endpoint_or_zero_generation (test_remote_files.RemoteWorkspaceTests.test_binding_cannot_choose_free_endpoint_or_zero_generation) ... ok
+test_file_plugin_uses_remote_binding_without_local_workspace (test_remote_files.RemoteWorkspaceTests.test_file_plugin_uses_remote_binding_without_local_workspace) ... ok
+test_file_response_has_its_own_bounded_limit (test_remote_files.RemoteWorkspaceTests.test_file_response_has_its_own_bounded_limit) ... ok
+test_go_policy_rejection_is_preserved (test_remote_files.RemoteWorkspaceTests.test_go_policy_rejection_is_preserved) ... ok
+test_operation_cannot_be_replaced_by_model_arguments (test_remote_files.RemoteWorkspaceTests.test_operation_cannot_be_replaced_by_model_arguments) ... ok
+test_runtime_stops_attempt_instead_of_asking_model_to_repeat_unknown_write (test_remote_files.RemoteWorkspaceTests.test_runtime_stops_attempt_instead_of_asking_model_to_repeat_unknown_write) ... ok
+test_transport_loss_does_not_retry_or_claim_write_did_not_happen (test_remote_files.RemoteWorkspaceTests.test_transport_loss_does_not_retry_or_claim_write_did_not_happen) ... ok
+test_cancel_releases_claimed_sandbox_once (test_replay.ReplayGraphTest.test_cancel_releases_claimed_sandbox_once) ... ok
+test_injection_is_denied_and_plan_stays_pending (test_replay.ReplayGraphTest.test_injection_is_denied_and_plan_stays_pending) ... ok
+test_phase4_linux_and_file_tools_keep_content_out_of_trace (test_replay.ReplayGraphTest.test_phase4_linux_and_file_tools_keep_content_out_of_trace) ... ok
+test_slow_claim_is_bounded_by_claim_budget (test_replay.ReplayGraphTest.test_slow_claim_is_bounded_by_claim_budget) ... ok
+test_recall_mrr_ndcg_and_latency (test_retrieval_core.RetrievalCoreTest.test_recall_mrr_ndcg_and_latency) ... ok
+test_rejects_unknown_qrel_and_duplicate_chunk (test_retrieval_core.RetrievalCoreTest.test_rejects_unknown_qrel_and_duplicate_chunk) ... ok
+test_rrf_uses_rank_not_raw_score_and_stable_ties (test_retrieval_core.RetrievalCoreTest.test_rrf_uses_rank_not_raw_score_and_stable_ties) ... ok
+test_versioned_runbook_and_hash_do_not_depend_on_line_order (test_retrieval_core.RetrievalCoreTest.test_versioned_runbook_and_hash_do_not_depend_on_line_order) ... ok
+test_official_zip_converter_checks_digest_and_test_qrels (test_retrieval_pipeline.RetrievalPipelineTest.test_official_zip_converter_checks_digest_and_test_qrels) ... ok
+test_rejects_foreign_index_id (test_retrieval_pipeline.RetrievalPipelineTest.test_rejects_foreign_index_id) ... ok
+test_rrf_then_rerank_and_untrusted_evidence (test_retrieval_pipeline.RetrievalPipelineTest.test_rrf_then_rerank_and_untrusted_evidence) ... ok
+test_static_agent_tool_keeps_source_and_policy_boundary (test_retrieval_pipeline.RetrievalPipelineTest.test_static_agent_tool_keeps_source_and_policy_boundary) ... ok
+test_deterministic_fixture_is_labeled (test_router.RouterTest.test_deterministic_fixture_is_labeled) ... ok
+test_fallbacks_and_cost (test_router.RouterTest.test_fallbacks_and_cost) ... ok
+test_runner_uses_chosen_gateway_once_and_records_cost (test_router.RouterTest.test_runner_uses_chosen_gateway_once_and_records_cost) ... ok
+test_sdk_choice_shape_without_network (test_router.RouterTest.test_sdk_choice_shape_without_network) ... Executing <Task finished name='Task-406' coro=<RouterTest.test_sdk_choice_shape_without_network() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_router.py:53> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.238 seconds
+ok
+test_budget_rejects_before_any_external_call (test_router_live_eval.RouterLiveEvalTest.test_budget_rejects_before_any_external_call) ... ok
+test_dry_plan_and_same_cases_three_modes (test_router_live_eval.RouterLiveEvalTest.test_dry_plan_and_same_cases_three_modes) ... ok
+test_execute_requires_reviewed_case_digest_before_client (test_router_live_eval.RouterLiveEvalTest.test_execute_requires_reviewed_case_digest_before_client) ... ok
+test_first_case_provider_failure_stops_remaining_cases (test_router_live_eval.RouterLiveEvalTest.test_first_case_provider_failure_stops_remaining_cases) ... ok
+test_gateway_without_tools_keeps_plain_model (test_router_live_eval.RouterLiveEvalTest.test_gateway_without_tools_keeps_plain_model) ... ok
+test_follow_up_runs_only_after_natural_stop (test_runtime_loop.PiStyleLoopTest.test_follow_up_runs_only_after_natural_stop) ... ok
+test_steer_is_applied_after_current_turn (test_runtime_loop.PiStyleLoopTest.test_steer_is_applied_after_current_turn) ... ok
+test_branch_keeps_old_path_and_survives_restart (test_session.SessionJournalTest.test_branch_keeps_old_path_and_survives_restart) ... ok
+test_incomplete_tool_call_is_not_branchable (test_session.SessionJournalTest.test_incomplete_tool_call_is_not_branchable) ... ok
+test_jsonl_is_private_redacted_and_resumable (test_session.SessionJournalTest.test_jsonl_is_private_redacted_and_resumable) ... ok
+test_old_linear_snapshot_is_migrated (test_session.SessionJournalTest.test_old_linear_snapshot_is_migrated) ... ok
+test_tool_group_can_branch_only_after_result (test_session.SessionJournalTest.test_tool_group_can_branch_only_after_result) ... ok
+test_truncated_tail_is_ignored_and_repaired (test_session.SessionJournalTest.test_truncated_tail_is_ignored_and_repaired) ... ok
+test_queued_control_cancel_and_resume_identity (test_session.TaskStoreSessionTest.test_queued_control_cancel_and_resume_identity) ... ok
+test_resume_from_selected_node_creates_new_task (test_session.TaskStoreSessionTest.test_resume_from_selected_node_creates_new_task) ... ok
+test_attempt_cannot_select_old_complete_boundary_with_latest_files (test_session_attempts.SessionAttemptTests.test_attempt_cannot_select_old_complete_boundary_with_latest_files) ... ok
+test_attempt_start_is_idempotent_but_rebinding_identity_is_rejected (test_session_attempts.SessionAttemptTests.test_attempt_start_is_idempotent_but_rebinding_identity_is_rejected) ... ok
+test_attempt_view_reads_old_linear_snapshot_as_legacy (test_session_attempts.SessionAttemptTests.test_attempt_view_reads_old_linear_snapshot_as_legacy) ... ok
+test_attempt_views_share_lock_and_reject_invalid_ids (test_session_attempts.SessionAttemptTests.test_attempt_views_share_lock_and_reject_invalid_ids) ... ok
+test_incomplete_tool_group_is_audited_but_not_loaded_by_new_attempt (test_session_attempts.SessionAttemptTests.test_incomplete_tool_group_is_audited_but_not_loaded_by_new_attempt) ... ok
+test_legacy_records_remain_readable_without_rewriting (test_session_attempts.SessionAttemptTests.test_legacy_records_remain_readable_without_rewriting) ... ok
+test_same_task_new_attempt_keeps_complete_prefix_without_duplicates (test_session_attempts.SessionAttemptTests.test_same_task_new_attempt_keeps_complete_prefix_without_duplicates) ... ok
+test_stale_attempt_cannot_append_or_reactivate_after_switch (test_session_attempts.SessionAttemptTests.test_stale_attempt_cannot_append_or_reactivate_after_switch) ... ok
+test_branch_projection_and_incremental_restart (test_working_memory.WorkingMemoryTest.test_branch_projection_and_incremental_restart) ... ok
+test_context_keeps_note_and_tool_protocol_with_budget (test_working_memory.WorkingMemoryTest.test_context_keeps_note_and_tool_protocol_with_budget) ... ok
+test_current_state_requires_matching_resource_identity (test_working_memory.WorkingMemoryTest.test_current_state_requires_matching_resource_identity) ... ok
+test_expired_state_and_invalid_evidence (test_working_memory.WorkingMemoryTest.test_expired_state_and_invalid_evidence) ... ok
+test_fenced_final_answer_can_propose_pending_check (test_working_memory.WorkingMemoryTest.test_fenced_final_answer_can_propose_pending_check) ... ok
+test_long_dialogue_keeps_early_pointer_and_latest_denial (test_working_memory.WorkingMemoryTest.test_long_dialogue_keeps_early_pointer_and_latest_denial) ... ok
+test_loop_accepts_same_round_model_proposal_without_summary_call (test_working_memory.WorkingMemoryTest.test_loop_accepts_same_round_model_proposal_without_summary_call) ... ok
+test_loop_rejects_unreturned_evidence_id (test_working_memory.WorkingMemoryTest.test_loop_rejects_unreturned_evidence_id) ... ok
+test_old_branch_evidence_can_still_be_referenced (test_working_memory.WorkingMemoryTest.test_old_branch_evidence_can_still_be_referenced) ... ok
+test_old_denial_cannot_evict_latest_user_input (test_working_memory.WorkingMemoryTest.test_old_denial_cannot_evict_latest_user_input) ... ok
+
+----------------------------------------------------------------------
+Ran 155 tests in 276.596s
+
+OK

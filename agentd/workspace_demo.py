@@ -1,0 +1,262 @@
+"""真实本地 Go/gVisor/NFS + Replay Agent 文件链路；无付费模型调用。"""
+from __future__ import annotations
+
+import argparse
+import asyncio
+import hashlib
+import json
+import os
+import secrets
+import subprocess
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from uuid import uuid4
+
+import httpx
+
+from .app.clients import SandboxdClient
+from .app.model_gateway import ReplayModelGateway
+from .app.models import AlertEvent
+from .app.runner import AgentRunner
+from .app.store import TaskStore
+from .app.runtime.recovery import RecoveryLedger
+from .app.runtime.execution import RecoveryAttempt
+
+CONTENT = "synthetic Agent report on durable NFS\n"
+REPO = Path(__file__).resolve().parents[1]
+
+
+def checked(argv: list[str]) -> str:
+    return subprocess.run(argv, check=True, capture_output=True, text=True, timeout=35).stdout
+
+
+class ObservedClient(SandboxdClient):
+    """管理员侧采集组件证据；Agent 工具仍只走受限 HTTP，不得到 exec 能力。"""
+    def __init__(self, token: str) -> None:
+        super().__init__("http://127.0.0.1:10880", token)
+        self.observations = []
+
+    async def claim_workspace(self, workspace, task, attempt):
+        result = await super().claim_workspace(workspace, task, attempt)
+        if 200 <= result.status_code < 300:
+            record = result.body
+            pod_name = record["owner"]["podName"]
+            k = ["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-demo"]
+            pod = json.loads(checked([*k, "get", "pod", pod_name, "-o", "json"]))
+            assert pod["metadata"]["uid"] == record["owner"]["podUid"]
+            assert pod["spec"]["runtimeClassName"] == "gvisor"
+            assert pod["spec"]["securityContext"]["runAsUser"] == 65532
+            dmesg = checked([*k, "exec", pod_name, "--", "dmesg"])
+            assert "gVisor" in dmesg
+            mount_path = "/var/lib/kubelet/pods/" + pod["metadata"]["uid"] + "/volumes/kubernetes.io~nfs/sandboxd-" + workspace
+            mount = json.loads(checked(["docker", "exec", "sandboxd-control-plane", "findmnt", "--json", "--target", mount_path,
+                                        "--output", "SOURCE,FSTYPE,OPTIONS"]))["filesystems"][0]
+            assert mount["fstype"] == "nfs4" and "vers=4.1" in mount["options"]
+            self.observations.append({"workspaceId": workspace, "attemptId": attempt, "podUid": pod["metadata"]["uid"],
+                                      "sandboxId": record["owner"]["sandboxId"], "runtimeClass": "gvisor", "runAsUser": 65532,
+                                      "imageId": record["imageId"], "imageRef": record["imageRef"], "nfsMount": mount,
+                                      "gvisorStartup": next(line for line in dmesg.splitlines() if "gVisor" in line)})
+        return result
+
+
+def start_go(root: Path, binary: Path, nfs_server: str):
+    agent_token = secrets.token_urlsafe(32)
+    child_env = dict(os.environ, SANDBOXD_TOKEN=agent_token, SANDBOXD_OPERATOR_TOKEN=secrets.token_urlsafe(32))
+    log_path = root / "sandboxd.log"
+    log = log_path.open("a")
+    log_path.chmod(0o600)
+    process = subprocess.Popen([str(binary), "-listen", "127.0.0.1:10880", "-pool-size", "0",
+                                "-workspace-nfs-server", nfs_server, "-workspace-image", "sandboxd-workspace:runtime-v1.2",
+                                "-workspace-control-dir", str(root / "go-control")],
+                               env=child_env, stdout=log, stderr=subprocess.STDOUT)
+    return process, log, agent_token
+
+
+async def ready(process):
+    async with httpx.AsyncClient() as client:
+        async with asyncio.timeout(30):
+            while True:
+                if process.poll() is not None:
+                    raise RuntimeError("project Go service exited; inspect private synthetic run log")
+                try:
+                    if (await client.get("http://127.0.0.1:10880/readyz", timeout=1)).status_code == 200:
+                        return
+                except httpx.HTTPError:
+                    pass
+                await asyncio.sleep(0.1)
+
+
+def stop_go(process, log):
+    process.terminate()
+    try:
+        process.wait(timeout=8)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=3)
+    log.close()
+
+
+async def reconcile(root: Path, output: Path, binary: Path, nfs_server: str):
+    # 管理员只能指定本夹具留下的一个run；不提供自由资源删除或文件清理。
+    import re
+    expected = Path.home() / ".local/share/sandboxd/workspace-agent-smoke"
+    if root.resolve().parent != expected.resolve() or not re.fullmatch(r"[a-f0-9]{32}", root.name):
+        raise ValueError("requires this fixture's retained native control root")
+    assert checked(["kubectl", "config", "current-context"]).strip() == "kind-sandboxd"
+    process, log, token = start_go(root, binary, nfs_server)
+    client = SandboxdClient("http://127.0.0.1:10880", token)
+    ledger = RecoveryLedger(root / "agent-control/tasks.jsonl")
+    report = {"mode": "real-local-administrative-reconciliation", "externalModelCalls": 0,
+              "controlRoot": str(root), "observations": []}
+    try:
+        await ready(process)
+        runner = AgentRunner(object(), client, ReplayModelGateway(root / "replay.json"))
+        for state in ledger.records():
+            if not state["attempts"] or state["attempts"][-1]["ownerStopped"]:
+                continue
+            before = await client.get_workspace(state["workspaceId"])
+            await runner.stop_attempt(RecoveryAttempt(ledger, state["taskId"], state["attempts"][-1]["attemptId"]))
+            after = await client.get_workspace(state["workspaceId"])
+            report["observations"].append({"taskId": state["taskId"], "before": before.body, "after": after.body,
+                                           "ownerStopped": ledger.get(state["taskId"])["attempts"][-1]["ownerStopped"]})
+        report["passed"] = True
+        output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+        return report
+    finally:
+        await client.close()
+        ledger.close()
+        stop_go(process, log)
+
+
+async def run(output: Path, binary: Path, nfs_server: str, fault_after_first_turn: bool = False) -> dict:
+    assert checked(["kubectl", "config", "current-context"]).strip() == "kind-sandboxd"
+    nodes = json.loads(checked(["kubectl", "--context", "kind-sandboxd", "get", "nodes", "-o", "json"]))["items"]
+    assert len(nodes) == 1 and nodes[0]["metadata"]["name"] == "sandboxd-control-plane"
+    server = json.loads(checked(["docker", "inspect", "sandboxd-workspace-nfs-1"]))[0]
+    assert server["Config"]["Labels"]["com.docker.compose.project"] == "sandboxd-workspace"
+    assert nfs_server in [n["IPAddress"] for n in server["NetworkSettings"]["Networks"].values()]
+    run_id = uuid4().hex
+    root = Path.home() / ".local/share/sandboxd/workspace-agent-smoke" / run_id
+    root.mkdir(parents=True, mode=0o700)
+    script = root / "replay.json"
+    responses = [
+        {"toolCalls": [{"id": "write-report", "name": "write_file", "args": {"path": "report.md", "content": CONTENT}}]},
+        {"toolCalls": [{"id": "read-report", "name": "read_file", "args": {"path": "report.md"}}]},
+        {"content": '{"summary":"Synthetic report written and read through the workspace tool","severity":"info","recommendation":"This is a local replay demonstration."}'},
+    ]
+    if fault_after_first_turn:
+        responses.insert(2, {"toolCalls": [{"id": "read-after-recovery", "name": "read_file", "args": {"path": "report.md"}}]})
+    script.write_text(json.dumps({"kind": "deterministic-policy-case", "model": "workspace-file-smoke", "responses": responses}))
+    script.chmod(0o600)
+    # 仅管理夹具为Go子进程生成两个不同的临时合成Token；Runner只收到Agent Token。
+    process, log, agent_token = start_go(root, binary, nfs_server)
+    client = ObservedClient(agent_token)
+    store = TaskStore(root / "legacy-traces", recovery_dir=root / "agent-control")
+    faults = []
+    if fault_after_first_turn:
+        original_boundary = store._ledger.complete_boundary
+        def boundary(task_id, attempt_id, node_id, command_ids):
+            state = original_boundary(task_id, attempt_id, node_id, command_ids)
+            wrote = any(c["kind"] == "tool" and c["operation"] == "write_file" and c["state"] == "finished"
+                        for c in state["calls"].values())
+            if wrote and not faults:
+                owner = state["attempts"][-1]
+                pod_name = "sandbox-" + owner["sandboxId"]
+                k = ["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-demo"]
+                pod = json.loads(checked([*k, "get", "pod", pod_name, "-o", "json"]))
+                assert pod["metadata"]["uid"] == owner["podUid"]
+                assert "sandbox.io/workspace-writer" in pod["metadata"]["finalizers"]
+                checked([*k, "delete", "pod", pod_name, "--wait=false", "--grace-period=1"])
+                faults.append({"kind": "administrative-normal-pod-delete", "afterCompleteNodeId": node_id,
+                               "taskId": task_id, "attemptId": attempt_id, "podUid": owner["podUid"],
+                               "timestamp": datetime.now(timezone.utc).isoformat()})
+            return state
+        store._ledger.complete_boundary = boundary
+    worker = None
+    started = time.perf_counter()
+    try:
+        await ready(process)
+        runner = AgentRunner(object(), client, ReplayModelGateway(script))
+        task = await store.enqueue(AlertEvent(labels={"cluster": "local-kind", "namespace": "sandboxd-target"},
+                                              annotations={"summary": "Synthetic durable workspace file smoke"}))
+        worker = asyncio.create_task(store.worker(runner))
+        async with asyncio.timeout(330):
+            while True:
+                task = await store.get(task.task_id)
+                if task.status in {"succeeded", "failed", "cancelled", "limit_exceeded", "interrupted"}:
+                    break
+                await asyncio.sleep(0.1)
+        assert task.status == "succeeded", task.error
+        traces = await store.get_task_traces(task.task_id)
+        assert len(traces) == (2 if fault_after_first_turn else 1) and traces[-1]["status"] == "succeeded"
+        steps = [step for trace in traces for step in trace["steps"]]
+        assert [s["tool"] for s in steps] == ["write_file", "read_file"]
+        read = json.loads(steps[1]["observation"])["body"]
+        expected = hashlib.sha256(CONTENT.encode()).hexdigest()
+        assert read["content"] == CONTENT and read["sha256"] == expected
+        server_hash = checked(["docker", "exec", "--user", "65532:65532", "sandboxd-workspace-nfs-1", "sha256sum",
+                               "/export/workspaces/" + task.workspace_id + "/report.md"]).split()[0]
+        assert server_hash == expected
+        state = store._ledger.get(task.task_id)
+        assert state["status"] == "succeeded" and state["attempts"][-1]["ownerStopped"]
+        metadata = await client.get_workspace(task.workspace_id)
+        assert metadata.status_code == 200 and metadata.body["phase"] == "released"
+        assert metadata.body["owner"]["stopConfirmed"]
+        # 元数据确认后，还检查相同UID的业务Pod已由Go正常释放。
+        deletion_started = time.perf_counter()
+        async with asyncio.timeout(10):
+            while True:
+                pods = json.loads(checked(["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-demo", "get", "pods", "-o", "json"]))["items"]
+                if all(p["metadata"]["uid"] != state["attempts"][-1]["podUid"] for p in pods):
+                    break
+                # Go释放归属后，API对象的自然删除可稍后可见；不强删或清空finalizer。
+                await asyncio.sleep(0.1)
+        deletion_wait_ms = round((time.perf_counter() - deletion_started) * 1000, 3)
+        if fault_after_first_turn:
+            assert len(faults) == 1 and len(state["attempts"]) == 2
+            assert all(a["ownerStopped"] for a in state["attempts"])
+            assert state["attempts"][0]["podUid"] != state["attempts"][1]["podUid"]
+            assert all(o["workspaceId"] == task.workspace_id for o in client.observations)
+            assert traces[0]["status"] == "interrupted"
+            assert traces[0]["taskId"] == traces[1]["taskId"] == task.task_id
+        report = {"timestamp": datetime.now(timezone.utc).isoformat(), "mode": "real-local-services-replay-agent",
+                  "scope": ("V1-02 automatic same-Task continuation after normal Pod deletion at a complete tool boundary"
+                            if fault_after_first_turn else "V1-01 Agent file write/read via real Go/gVisor/NFS; not process-crash or Pod-fault acceptance"),
+                  "passed": True, "externalModelCalls": 0, "runId": run_id,
+                  "controlRoot": str(root), "task": task.model_dump(mode="json", by_alias=True, exclude={"trace"}),
+                  "workspaceObservations": client.observations, "trace": traces[-1], "traces": traces,
+                  "faults": faults, "calls": state["calls"], "timing": state.get("timing"), "deadline": state["deadline"],
+                  "workspaceAfterRelease": metadata.body,
+                  "podDisappearanceWaitMs": deletion_wait_ms,
+                  "serverFileSha256AfterRelease": server_hash, "expectedSha256": expected,
+                  "elapsedMs": round((time.perf_counter() - started) * 1000, 3)}
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+        return report
+    finally:
+        if worker is not None:
+            worker.cancel()
+            await asyncio.gather(worker, return_exceptions=True)
+        await client.close()
+        store.close()
+        stop_go(process, log)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--binary", type=Path, default=REPO / ".cache/workspace-sandboxd")
+    parser.add_argument("--nfs-server", required=True)
+    parser.add_argument("--reconcile-control-root", type=Path)
+    parser.add_argument("--fault-after-first-turn", action="store_true")
+    args = parser.parse_args()
+    if args.reconcile_control_root is not None:
+        result = asyncio.run(reconcile(args.reconcile_control_root, args.output, args.binary.resolve(), args.nfs_server))
+    else:
+        result = asyncio.run(run(args.output, args.binary.resolve(), args.nfs_server, args.fault_after_first_turn))
+    print(json.dumps({"passed": result["passed"], "output": str(args.output), "mode": result["mode"]}))
+
+
+if __name__ == "__main__":
+    main()

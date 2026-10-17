@@ -1,6 +1,6 @@
 # NFS V1 部署候选配置
 
-当前状态：M1，真实NFS/gVisor、Go生命周期与HTTP文件接口组件探测已通过；Python默认Runner和自动恢复仍待接通。原始证据：docs/evidence/phase9-nfs-component.json、phase9-go-runtime-component.json、phase9-go-http-component.json。
+当前状态：M2/M3，Python持久TaskStore/Runner已接入。V1-01真实Agent文件链路、V1-02完整边界后正常删除Pod自动接管已通过；其余V1与V2仍待验收。原始证据见docs/evidence/phase9-agent-workspace-smoke-v2.json、phase9-agent-pod-recovery-v2.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -23,6 +23,39 @@ Ganesha VFS 的文件句柄访问需要额外 `CAP_DAC_READ_SEARCH`。该权限�
 4. 按已确认的存储服务权限，实际测试 mount、锁、非 root 权限及持久化；失败就记录事实，不用本地 bind mount 代替 NFS 验收。
 
 后续统一启动脚本在 M2 完成。不要执行 `docker compose down -v`；Pod 删除与业务数据删除必须分开。
+
+## Python部署默认值与真实验收入口
+
+原有Agent/Alert Token与sandboxd Agent Token继续通过仓库外配置传入；不把Operator Token传给agentd。启动上面的Go服务后：
+
+```bash
+export AGENTD_WORKSPACE_BACKEND=nfs
+export AGENTD_RECOVERY_DIR="$HOME/.local/share/sandboxd/agent-control"
+agentd/.venv/bin/python -m uvicorn agentd.app.main:create_app --factory --host 127.0.0.1 --port 8090
+```
+
+环境读取函数默认nfs；control目录须在原生Linux持久盘，不能用/tmp。旧离线流程可显式配置`AGENTD_WORKSPACE_BACKEND=local`，只读旧Session可回退到旧trace目录；旧业务文件未自动搬迁，显式映射/校验迁移仍待交付。
+
+下述管理夹具自行启动并结束本项目Go服务（固定127.0.0.1:10880需空闲），生成只用于本轮的合成Token，不读取真实Key；创建的NFS文件、PV/PVC和原生控制目录保留。它实际调用TaskStore/Runner与受限HTTP文件工具：
+
+```bash
+go build -o .cache/workspace-sandboxd ./cmd/sandboxd
+agentd/.venv/bin/python -m agentd.workspace_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --output .cache/workspace-agent-file.json
+agentd/.venv/bin/python -m agentd.workspace_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --fault-after-first-turn --output .cache/workspace-agent-pod-recovery.json
+```
+
+第二条场景在完整工具轮次落盘后由管理员正常删除本夹具的单个Pod，再由TaskStore自动接续；不force、不清空finalizer。文件读回、实际NFSv4.1、gVisor启动、UID/代次、停止证明及自然删除均验证。单次耗时不作为P50/P95/RTO结论；这不是强杀agentd测试。
+
+异常遗留时，核对报告中的controlRoot，只允许用本夹具原Go/Python账本恢复管理对账：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_demo --nfs-server "$SANDBOXD_NFS_SERVER" \
+  --reconcile-control-root '<报告中的本夹具原生controlRoot>' --output .cache/workspace-reconciliation.json
+```
+
+此入口限制在`~/.local/share/sandboxd/workspace-agent-smoke/<run UUID>`，只通过Go停止已登记owner；不重放模型/写入、不删除工作区，不代替Agent自动恢复验收。
 
 ## Go 生命周期与 HTTP 探测
 

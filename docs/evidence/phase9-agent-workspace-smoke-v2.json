@@ -1,0 +1,502 @@
+{
+  "timestamp": "2026-10-17T17:12:39.878866+00:00",
+  "mode": "real-local-services-replay-agent",
+  "scope": "V1-01 Agent file write/read via real Go/gVisor/NFS; not process-crash or Pod-fault acceptance",
+  "passed": true,
+  "externalModelCalls": 0,
+  "runId": "12a6dd2b2ff3465dbaf169415c1ebaf3",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/12a6dd2b2ff3465dbaf169415c1ebaf3",
+  "task": {
+    "taskId": "task-89801afdf366d792",
+    "status": "succeeded",
+    "sessionId": "session-2e7ad519a198b83d",
+    "branchId": "branch-632812d48ed948e28476b770db0c3b9f",
+    "workspaceId": "workspace-0d5a41ee816f4bc7a124fe7d9330bee7",
+    "attemptId": "attempt-2a40848bbcee43978da190329bf0faf9",
+    "attemptCount": 1,
+    "alert": {
+      "status": "firing",
+      "labels": {
+        "cluster": "local-kind",
+        "namespace": "sandboxd-target"
+      },
+      "annotations": {
+        "summary": "Synthetic durable workspace file smoke"
+      },
+      "startsAt": null,
+      "fingerprint": "dce609ad949be1b85fd4dd6c5c0e4b8d"
+    },
+    "createdAt": "2026-10-17T17:12:23.560404Z",
+    "updatedAt": "2026-10-17T17:12:39.668727Z",
+    "result": {
+      "summary": "Synthetic report written and read through the workspace tool",
+      "rootCause": "",
+      "severity": "info",
+      "evidence": [
+        {
+          "source": "write_file",
+          "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":38,\"created\":true,\"diff\":\"--- report.md:old\\n+++ report.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic Agent report on durable NFS\\n+\\n\",\"newSha256\":\"576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8\",\"oldSha256\":null,\"path\":\"report.md\",\"redacted\":false},\"evidenceId\":\"ev-eac51cec78760f6c7fcf\",\"observedAt\":\"2026-10-17T17:12:37.383458+00:00\"}"
+        },
+        {
+          "source": "read_file",
+          "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic Agent report on durable NFS\\n\",\"offset\":0,\"path\":\"report.md\",\"redacted\":false,\"sha256\":\"576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8\",\"totalChars\":38,\"truncated\":false},\"evidenceId\":\"ev-35626ad23d807026421e\",\"observedAt\":\"2026-10-17T17:12:37.442414+00:00\"}"
+        }
+      ],
+      "injectionDetected": false,
+      "deniedActions": [],
+      "recommendation": "This is a local replay demonstration.",
+      "planId": null
+    },
+    "error": null
+  },
+  "workspaceObservations": [
+    {
+      "workspaceId": "workspace-0d5a41ee816f4bc7a124fe7d9330bee7",
+      "attemptId": "attempt-2a40848bbcee43978da190329bf0faf9",
+      "podUid": "1762b4c8-c672-40bf-ba48-aa038740a487",
+      "sandboxId": "45887754ec14bdaa",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+      "imageRef": "sandboxd-workspace:runtime-v1.2",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-0d5a41ee816f4bc7a124fe7d9330bee7",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    }
+  ],
+  "trace": {
+    "alertFingerprint": "dce609ad949be1b85fd4dd6c5c0e4b8d",
+    "attemptId": "attempt-2a40848bbcee43978da190329bf0faf9",
+    "capabilities": {
+      "deterministic": true,
+      "toolCalling": true
+    },
+    "elapsedMs": 16228,
+    "events": [
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 1,
+        "iteration": null,
+        "tool": "",
+        "type": "agent.started"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 2,
+        "iteration": null,
+        "tool": "",
+        "type": "sandbox.claim.started"
+      },
+      {
+        "details": {},
+        "elapsedMs": 13740,
+        "index": 3,
+        "iteration": null,
+        "tool": "",
+        "type": "sandbox.claim.completed"
+      },
+      {
+        "details": {
+          "afterChars": 1404,
+          "afterMessages": 2,
+          "beforeChars": 1404,
+          "beforeMessages": 2,
+          "compactedGroups": 0,
+          "estimatedTokensWithOutputReserve": 10802,
+          "toolSchemaEstimatedTokens": 4152,
+          "trimmed": false
+        },
+        "elapsedMs": 0,
+        "index": 4,
+        "iteration": 1,
+        "tool": "",
+        "type": "context.transformed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 5,
+        "iteration": 1,
+        "tool": "",
+        "type": "turn.started"
+      },
+      {
+        "details": {
+          "finishReason": "tool_calls",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        },
+        "elapsedMs": 0,
+        "index": 6,
+        "iteration": 1,
+        "tool": "",
+        "type": "model.completed"
+      },
+      {
+        "details": {
+          "pluginId": "files",
+          "pluginVersion": "1.0.0"
+        },
+        "elapsedMs": 0,
+        "index": 7,
+        "iteration": 1,
+        "tool": "write_file",
+        "type": "tool.started"
+      },
+      {
+        "details": {
+          "denied": false,
+          "denyLayer": "",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "statusCode": 200
+        },
+        "elapsedMs": 58,
+        "index": 8,
+        "iteration": 1,
+        "tool": "write_file",
+        "type": "tool.completed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 9,
+        "iteration": 1,
+        "tool": "",
+        "type": "turn.completed"
+      },
+      {
+        "details": {
+          "afterChars": 2888,
+          "afterMessages": 5,
+          "beforeChars": 1946,
+          "beforeMessages": 4,
+          "compactedGroups": 0,
+          "estimatedTokensWithOutputReserve": 12334,
+          "toolSchemaEstimatedTokens": 4152,
+          "trimmed": false
+        },
+        "elapsedMs": 0,
+        "index": 10,
+        "iteration": 2,
+        "tool": "",
+        "type": "context.transformed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 11,
+        "iteration": 2,
+        "tool": "",
+        "type": "turn.started"
+      },
+      {
+        "details": {
+          "finishReason": "tool_calls",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        },
+        "elapsedMs": 0,
+        "index": 12,
+        "iteration": 2,
+        "tool": "",
+        "type": "model.completed"
+      },
+      {
+        "details": {
+          "pluginId": "files",
+          "pluginVersion": "1.0.0"
+        },
+        "elapsedMs": 0,
+        "index": 13,
+        "iteration": 2,
+        "tool": "read_file",
+        "type": "tool.started"
+      },
+      {
+        "details": {
+          "denied": false,
+          "denyLayer": "",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "statusCode": 200
+        },
+        "elapsedMs": 46,
+        "index": 14,
+        "iteration": 2,
+        "tool": "read_file",
+        "type": "tool.completed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 15,
+        "iteration": 2,
+        "tool": "",
+        "type": "turn.completed"
+      },
+      {
+        "details": {
+          "afterChars": 3923,
+          "afterMessages": 7,
+          "beforeChars": 2375,
+          "beforeMessages": 6,
+          "compactedGroups": 0,
+          "estimatedTokensWithOutputReserve": 13401,
+          "toolSchemaEstimatedTokens": 4152,
+          "trimmed": false
+        },
+        "elapsedMs": 0,
+        "index": 16,
+        "iteration": 3,
+        "tool": "",
+        "type": "context.transformed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 17,
+        "iteration": 3,
+        "tool": "",
+        "type": "turn.started"
+      },
+      {
+        "details": {
+          "finishReason": "stop",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        },
+        "elapsedMs": 0,
+        "index": 18,
+        "iteration": 3,
+        "tool": "",
+        "type": "model.completed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 19,
+        "iteration": 3,
+        "tool": "",
+        "type": "turn.completed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 20,
+        "iteration": null,
+        "tool": "",
+        "type": "agent.completed"
+      },
+      {
+        "details": {},
+        "elapsedMs": 0,
+        "index": 21,
+        "iteration": null,
+        "tool": "",
+        "type": "sandbox.release.started"
+      },
+      {
+        "details": {},
+        "elapsedMs": 2331,
+        "index": 22,
+        "iteration": null,
+        "tool": "",
+        "type": "sandbox.release.completed"
+      }
+    ],
+    "final": {
+      "deniedActions": [],
+      "evidence": [
+        {
+          "source": "write_file",
+          "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":38,\"created\":true,\"diff\":\"--- report.md:old\\n+++ report.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic Agent report on durable NFS\\n+\\n\",\"newSha256\":\"576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8\",\"oldSha256\":null,\"path\":\"report.md\",\"redacted\":false},\"evidenceId\":\"ev-eac51cec78760f6c7fcf\",\"observedAt\":\"2026-10-17T17:12:37.383458+00:00\"}"
+        },
+        {
+          "source": "read_file",
+          "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic Agent report on durable NFS\\n\",\"offset\":0,\"path\":\"report.md\",\"redacted\":false,\"sha256\":\"576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8\",\"totalChars\":38,\"truncated\":false},\"evidenceId\":\"ev-35626ad23d807026421e\",\"observedAt\":\"2026-10-17T17:12:37.442414+00:00\"}"
+        }
+      ],
+      "injectionDetected": false,
+      "planId": null,
+      "recommendation": "This is a local replay demonstration.",
+      "rootCause": "",
+      "severity": "info",
+      "summary": "Synthetic report written and read through the workspace tool"
+    },
+    "injectedVia": [],
+    "mode": "replay",
+    "model": "workspace-file-smoke",
+    "modelUsage": {
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "totalTokens": 0
+    },
+    "plugins": [
+      {
+        "capabilities": [
+          "network:prometheus",
+          "metrics:read"
+        ],
+        "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+        "id": "prometheus",
+        "tools": [
+          "query_prometheus"
+        ],
+        "version": "1.0.0"
+      },
+      {
+        "capabilities": [
+          "sandbox:claim",
+          "kubernetes:read",
+          "deployment-scale:propose"
+        ],
+        "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+        "id": "kubernetes",
+        "tools": [
+          "kubernetes_read",
+          "propose_plan"
+        ],
+        "version": "1.0.0"
+      },
+      {
+        "capabilities": [
+          "network:ssh",
+          "linux:read"
+        ],
+        "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+        "id": "linux-host",
+        "tools": [
+          "linux_read"
+        ],
+        "version": "1.0.0"
+      },
+      {
+        "capabilities": [
+          "task-workspace:read",
+          "task-workspace:write"
+        ],
+        "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+        "id": "files",
+        "tools": [
+          "list_files",
+          "read_file",
+          "search_files",
+          "write_file",
+          "edit_file"
+        ],
+        "version": "1.0.0"
+      }
+    ],
+    "provider": "replay",
+    "routing": {},
+    "sandboxId": "45887754ec14bdaa",
+    "status": "succeeded",
+    "steps": [
+      {
+        "arguments": {
+          "content": {
+            "bytes": 38,
+            "redacted": true,
+            "sha256": "576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8"
+          },
+          "path": "report.md"
+        },
+        "auditDetails": {
+          "body": {
+            "bytes": 38,
+            "created": true,
+            "diff": "--- report.md:old\n+++ report.md:new\n@@ -1,0 +1,2 @@\n+synthetic Agent report on durable NFS\n+\n",
+            "newSha256": "576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8",
+            "oldSha256": null,
+            "path": "report.md",
+            "redacted": false
+          },
+          "evidenceId": "ev-eac51cec78760f6c7fcf",
+          "observedAt": "2026-10-17T17:12:37.383458+00:00",
+          "ok": true,
+          "statusCode": 200
+        },
+        "denied": false,
+        "denyLayer": "",
+        "elapsedMs": 58,
+        "index": 1,
+        "node": "execute_tool",
+        "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":38,\"created\":true,\"diff\":\"--- report.md:old\\n+++ report.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic Agent report on durable NFS\\n+\\n\",\"newSha256\":\"576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8\",\"oldSha256\":null,\"path\":\"report.md\",\"redacted\":false},\"evidenceId\":\"ev-eac51cec78760f6c7fcf\",\"observedAt\":\"2026-10-17T17:12:37.383458+00:00\"}",
+        "pluginId": "files",
+        "pluginVersion": "1.0.0",
+        "tool": "write_file"
+      },
+      {
+        "arguments": {
+          "path": "report.md"
+        },
+        "auditDetails": {
+          "body": {
+            "content": "synthetic Agent report on durable NFS\n",
+            "offset": 0,
+            "path": "report.md",
+            "redacted": false,
+            "sha256": "576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8",
+            "totalChars": 38,
+            "truncated": false
+          },
+          "evidenceId": "ev-35626ad23d807026421e",
+          "observedAt": "2026-10-17T17:12:37.442414+00:00",
+          "ok": true,
+          "statusCode": 200
+        },
+        "denied": false,
+        "denyLayer": "",
+        "elapsedMs": 46,
+        "index": 2,
+        "node": "execute_tool",
+        "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic Agent report on durable NFS\\n\",\"offset\":0,\"path\":\"report.md\",\"redacted\":false,\"sha256\":\"576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8\",\"totalChars\":38,\"truncated\":false},\"evidenceId\":\"ev-35626ad23d807026421e\",\"observedAt\":\"2026-10-17T17:12:37.442414+00:00\"}",
+        "pluginId": "files",
+        "pluginVersion": "1.0.0",
+        "tool": "read_file"
+      }
+    ],
+    "taskId": "task-89801afdf366d792",
+    "verdict": "completed",
+    "workspaceId": "workspace-0d5a41ee816f4bc7a124fe7d9330bee7"
+  },
+  "workspaceAfterRelease": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-0d5a41ee816f4bc7a124fe7d9330bee7",
+    "sessionId": "session-2e7ad519a198b83d",
+    "branchId": "branch-632812d48ed948e28476b770db0c3b9f",
+    "generation": 1,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-89801afdf366d792",
+      "attemptId": "attempt-2a40848bbcee43978da190329bf0faf9",
+      "sandboxId": "45887754ec14bdaa",
+      "podName": "sandbox-45887754ec14bdaa",
+      "podUid": "1762b4c8-c672-40bf-ba48-aa038740a487",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.2",
+    "imageId": "sha256:728afaa92bc46a13d72ad15fc26918cc2deb9925b14534990cfac821c1c63c98",
+    "stopReason": "containers-terminated"
+  },
+  "serverFileSha256AfterRelease": "576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8",
+  "expectedSha256": "576d5f3f5b8cd7e3ef0ae3cd7c2b3a6dc3c93167ee363d19764a235b36beddd8",
+  "elapsedMs": 16488.127
+}

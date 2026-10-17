@@ -1,0 +1,1 @@
+{"passed": true, "output": "docs/evidence/phase9-agent-workspace-smoke-v2.json", "mode": "real-local-services-replay-agent"}

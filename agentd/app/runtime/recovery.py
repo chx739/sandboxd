@@ -10,11 +10,13 @@ from typing import Any
 from uuid import uuid4
 
 from ..redaction import redact_text
+from ..models import AgentTrace
 from .durable import DurableJournal, JournalCorrupt
 
 TERMINAL = frozenset({"succeeded", "failed", "cancelled", "limit_exceeded"})
 _IDENTITY = re.compile(r"[a-z][a-z0-9-]{0,95}\Z")
 _RESOURCE_UID = re.compile(r"[a-z0-9][a-z0-9-]{0,127}\Z")
+_SANDBOX_ID = re.compile(r"[a-z0-9][a-z0-9-]{0,62}\Z")
 _HASH = re.compile(r"[a-f0-9]{64}\Z")
 
 
@@ -49,25 +51,41 @@ def _resource_uid(value: str) -> str:
     return value
 
 
+def _sandbox_id(value: str) -> str:
+    if not isinstance(value, str) or not _SANDBOX_ID.fullmatch(value):
+        raise ValueError("invalid sandbox runtime ID")
+    return value
+
+
 class RecoveryLedger:
     """每次转移先 fsync，再发布内存投影；无费用、无外部副作用。
 
     单写入者由 DurableJournal 的进程锁保证。调用者只能在 Go 已确认旧
     执行者停止后调用 owner_stopped；这个账本本身不是分布式 fencing。
-    尚未接入 TaskStore，不能把本模块的测试当作自动接续验收。
+    TaskStore/Runner已接入；本模块单测仍不能代替真实故障验收。
     """
 
     def __init__(self, path: Path) -> None:
         self._journal = DurableJournal(path)
         self._mutex = threading.RLock()
         self._tasks: dict[str, dict[str, Any]] = {}
+        self._traces: dict[str, dict[str, Any]] = {}
+        self._created_at: dict[str, str] = {}
         try:
             for event in self._journal.entries():
+                if event["type"] == "attempt.trace":
+                    data = event["data"]
+                    self._check_trace(data)
+                    if data["attemptId"] in self._traces:
+                        raise JournalCorrupt("duplicate attempt trace")
+                    self._traces[data["attemptId"]] = data
+                    continue
                 if event["type"] != "task.state":
                     raise JournalCorrupt("unsupported recovery ledger event")
                 state = event["data"]
                 self._check_projection(state)
                 self._tasks[state["taskId"]] = state
+                self._created_at.setdefault(state["taskId"], event["timestamp"])
         except BaseException:
             self._journal.close()
             raise
@@ -112,10 +130,12 @@ class RecoveryLedger:
                 _utc(datetime.fromisoformat(attempt["startedAt"]))
                 if attempt["attemptId"] in attempt_ids or type(attempt["ownerStopped"]) is not bool:
                     raise ValueError
+                if "claimRequested" in attempt and type(attempt["claimRequested"]) is not bool:
+                    raise ValueError
                 if (attempt["sandboxId"] is None) != (attempt["podUid"] is None):
                     raise ValueError
                 if attempt["sandboxId"] is not None:
-                    _identity(attempt["sandboxId"])
+                    _sandbox_id(attempt["sandboxId"])
                     _resource_uid(attempt["podUid"])
                 attempt_ids.add(attempt["attemptId"])
             if set(state["limits"]) != {"model", "tool", "router"}:
@@ -157,6 +177,8 @@ class RecoveryLedger:
                         if old[key] != current[key]:
                             raise ValueError
                     if old["ownerStopped"] and current != old:
+                        raise ValueError
+                    if old.get("claimRequested") is True and current.get("claimRequested") is not True:
                         raise ValueError
                     if old["sandboxId"] is not None:
                         if any(current[key] != old[key] for key in ("sandboxId", "podUid")):
@@ -202,6 +224,7 @@ class RecoveryLedger:
         self._check_projection(state)
         event = self._journal.append("task.state", state)
         self._tasks[state["taskId"]] = event["data"]
+        self._created_at.setdefault(state["taskId"], event["timestamp"])
         return copy.deepcopy(event["data"])
 
     def get(self, task_id: str) -> dict[str, Any]:
@@ -214,6 +237,39 @@ class RecoveryLedger:
         """启动对账包括超时/取消记录，不能只扫描仍可发起模型调用的候选。"""
         with self._mutex:
             return copy.deepcopy(list(self._tasks.values()))
+
+    def created_at(self, task_id: str) -> str:
+        with self._mutex:
+            return self._created_at[task_id]
+
+    def _check_trace(self, data: dict[str, Any]) -> None:
+        try:
+            trace = AgentTrace.model_validate(data)
+            state = self._tasks[trace.task_id]
+            if not any(a["attemptId"] == trace.attempt_id for a in state["attempts"]):
+                raise ValueError("trace has no attempt")
+            if trace.workspace_id != state["workspaceId"]:
+                raise ValueError("trace has another workspace")
+        except (ValueError, KeyError, TypeError):
+            raise JournalCorrupt("invalid attempt trace") from None
+
+    def record_trace(self, trace: AgentTrace) -> None:
+        with self._mutex:
+            data = trace.model_dump(mode="json", by_alias=True)
+            self._check_trace(data)
+            previous = self._traces.get(trace.attempt_id)
+            if previous is not None:
+                if previous != data:
+                    raise RecoveryConflict("attempt trace cannot be overwritten")
+                return
+            event = self._journal.append("attempt.trace", data)
+            self._traces[trace.attempt_id] = event["data"]
+
+    def traces(self, task_id: str) -> list[dict[str, Any]]:
+        with self._mutex:
+            state = self.get(task_id)
+            return [copy.deepcopy(self._traces[a["attemptId"]]) for a in state["attempts"]
+                    if a["attemptId"] in self._traces]
 
     def create(
         self, *, task_id: str, session_id: str, branch_id: str,
@@ -293,6 +349,8 @@ class RecoveryLedger:
                 "attemptId": new_id("attempt"), "startedAt": _utc(now).isoformat(),
                 "ownerStopped": False, "sandboxId": None, "podUid": None,
             })
+            if state["schemaVersion"] == 2:
+                attempts[-1]["claimRequested"] = False
             if state["schemaVersion"] == 2 and state["timing"]["claimStartedAt"] is None:
                 state["timing"]["claimStartedAt"] = _utc(now).isoformat()
                 state["deadline"] = (_utc(now) + timedelta(seconds=state["timing"]["claimSeconds"])).isoformat()
@@ -333,7 +391,30 @@ class RecoveryLedger:
                 raise RecoveryConflict("task cancellation takes precedence")
             if attempt["sandboxId"] is not None:
                 raise RecoveryConflict("attempt already bound")
-            attempt["sandboxId"], attempt["podUid"] = _identity(sandbox_id), _resource_uid(pod_uid)
+            attempt["sandboxId"], attempt["podUid"] = _sandbox_id(sandbox_id), _resource_uid(pod_uid)
+            return self._save(state)
+
+    def claim_requested(self, task_id: str, attempt_id: str) -> dict[str, Any]:
+        """先记录可能发送认领，再发 HTTP；没有响应不代表 Go 没有收到。"""
+        with self._mutex:
+            state = self.get(task_id)
+            attempt = self._active(state, attempt_id)
+            if state["cancelRequested"]:
+                raise RecoveryConflict("task cancellation takes precedence")
+            attempt["claimRequested"] = True
+            return self._save(state)
+
+    def observed_owner(self, task_id: str, attempt_id: str, sandbox_id: str, pod_uid: str) -> dict[str, Any]:
+        """仅供可信清理核对 Go 元数据；取消后仍记录实际资源，不授权继续执行。"""
+        with self._mutex:
+            state = self.get(task_id)
+            attempt = self._active(state, attempt_id)
+            sandbox_id, pod_uid = _sandbox_id(sandbox_id), _resource_uid(pod_uid)
+            if attempt["sandboxId"] is not None:
+                if (attempt["sandboxId"], attempt["podUid"]) != (sandbox_id, pod_uid):
+                    raise RecoveryConflict("observed owner differs from the saved binding")
+                return state
+            attempt["sandboxId"], attempt["podUid"] = sandbox_id, pod_uid
             return self._save(state)
 
     @staticmethod
@@ -404,12 +485,23 @@ class RecoveryLedger:
             call["state"] = "finished"
             return self._save(state)
 
-    def select_provider(self, task_id: str, provider: str, model: str) -> dict[str, Any]:
+    def select_provider(
+        self, task_id: str, provider: str, model: str, *, fingerprint: str | None = None,
+        tier: str | None = None,
+    ) -> dict[str, Any]:
         with self._mutex:
             state = self.get(task_id)
             if state["status"] in TERMINAL or state["cancelRequested"]:
                 raise RecoveryConflict("task not accepting a provider")
             selected = {"provider": redact_text(provider, 64)[0], "model": redact_text(model, 128)[0]}
+            if fingerprint is not None:
+                if not _HASH.fullmatch(fingerprint):
+                    raise ValueError("invalid provider configuration fingerprint")
+                selected["fingerprint"] = fingerprint
+            if tier is not None:
+                if tier not in {"economy", "strong"}:
+                    raise ValueError("invalid provider tier")
+                selected["tier"] = tier
             if state["provider"] is not None and state["provider"] != selected:
                 raise RecoveryConflict("automatic recovery cannot reroute the task")
             state["provider"] = selected

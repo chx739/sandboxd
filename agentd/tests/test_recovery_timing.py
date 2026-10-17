@@ -145,7 +145,7 @@ class RecoveryTimingTests(unittest.TestCase):
     def test_real_kubernetes_uid_can_start_with_a_digit_and_binding_is_immutable(self) -> None:
         attempt = self.begin()
         uid = "7823c42d-a3cf-4fd1-aa4d-39d09dc4bea1"
-        self.ledger.bind("task-clock", attempt, "sandbox-clock", uid)
+        self.ledger.bind("task-clock", attempt, "0123456789abcdef", uid)
         self.reopen()
         self.assertEqual(self.ledger.get("task-clock")["attempts"][0]["podUid"], uid)
         state = self.ledger.get("task-clock")
