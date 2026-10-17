@@ -32,6 +32,9 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 2026-10-18续作：新增WorkspaceRuntime，真实维护Pod初始化/NFS读写检查/Pod UID绑定/终止状态+NodeReady+近期Lease/finalizer释放；GoHTTP工作区接口和启动配置已接入。真实Go组件与HTTP组件各通过一轮：新attempt/Pod UID/代次变化、同workspace文件hash一致、旧attempt拒绝、Go账本关闭重开，见phase9-go-runtime-component.json与phase9-go-http-component.json；不是Python自动恢复成绩。
 - 新Python RemoteFileWorkspace与Client/Plugin适配器已接，未知写入不重试，Loop退出当前attempt；定向17/17通过，phase9-remote-files-tests-final.txt。新增后完整Python118/118通过，276.228秒，phase9-python-remote-regression-tests.txt；默认Runner仍尚未选择Remote。
 - 第三批d7bef93已推送至草稿PR#2。后续接口复查补缺失/null/空文本与UTF-8区分、存储执行错误通道、生命周期锁等待可取消；runtime-v1.1和runtime-v1.2分别以新tag保留镜像，正常真实HTTP组件复验通过。错误分类与取消等待为单测，未伪称已注入真实fsync故障。
+- 后续785553f已推送，远端PR#2仍为OPEN/DRAFT、base=codex/agent-memory-rag-plan。新增恢复时钟schema2：排队未启动不计claim，首次attempt固定claim开始，首次绑定后固定loop开始；接续继承原阶段剩余时间，旧schema1不改写或补发额度。启动records扫描包含取消/过期待清理owner，数字开头的真实Pod UID可保存，已停止attempt和绑定不可改写。
+- Session新增for_attempt视图：同文件/同锁，按task+attempt定位增量；旧半组工具调用仅留审计，新attempt从当前完整head继承，旧attempt不能追加/重新激活；返回fsync后的安全nodeId。旧线性迁移保留legacy归属，原字节不变。相关定向50/50通过，1.537秒，phase9-attempt-clock-final-tests.txt；只是模块验证，TaskStore/Runner尚未选择这些接口，不是V1自动接续验收。
+- 本轮完整离线回归批次137/137通过，270.335秒，phase9-python-attempt-clock-regression-tests.txt；启动后追加的时钟回拨/新绑定前禁止调用/legacy线性视图边界由最终50项定向覆盖，不将137项冒称包含后来追加的全部用例，两份测试覆盖有重叠、不相加。compileall与diff检查通过。未启动新真实服务或调用外部模型。
 - 第一项下一步：TaskStore/Runner/Session多attempt与持久预算、原claim/loop/cleanup时钟、取消/控制游标、未知写入hash核查、完整轮次恢复及V1旧节点限制；之后默认文件路径迁移和14项真实验收。V1验收前不推进V2主链路。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.2已载入kind，旧runtime-v1/v1.1保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。

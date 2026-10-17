@@ -22,6 +22,7 @@ from ..redaction import public_error, safe_tool_arguments
 
 _SESSION_ID = re.compile(r"^session-[a-f0-9]{16}$")
 _NODE_ID = re.compile(r"^node-[a-f0-9]{16}$")
+_ATTEMPT_ID = re.compile(r"^attempt-[a-f0-9]{32}$")
 _MAX_MESSAGE_CHARS = 16 << 10
 
 
@@ -190,6 +191,19 @@ class SessionJournal:
         self._directory = directory
         self._path = directory / (session_id + ".jsonl")
         self._lock = asyncio.Lock()
+        self._attempt_id: str | None = None
+
+    def for_attempt(self, attempt_id: str) -> SessionJournal:
+        """同一文件、同一锁的尝试视图；不改写旧无 attempt 的历史记录。"""
+        if not isinstance(attempt_id, str) or not _ATTEMPT_ID.fullmatch(attempt_id):
+            raise ValueError("非法 attempt id")
+        view = SessionJournal(self._directory, self.session_id)
+        view._lock = self._lock
+        view._attempt_id = attempt_id
+        return view
+
+    def _same_run(self, entry: dict[str, Any], task_id: str) -> bool:
+        return entry.get("taskId") == task_id and entry.get("attemptId") == self._attempt_id
 
     @property
     def path(self) -> Path:
@@ -201,16 +215,38 @@ class SessionJournal:
         alert: AlertEvent,
         parent_node_id: str | None = None,
     ) -> None:
+        async with self._lock:
+            self._initialize_unlocked(task_id, alert, parent_node_id)
+
+    def _initialize_unlocked(
+        self, task_id: str, alert: AlertEvent, parent_node_id: str | None,
+    ) -> None:
         if self._path.exists():
             if parent_node_id is not None and not _NODE_ID.fullmatch(parent_node_id):
                 raise ValueError("非法 Session 父节点")
+            if self._attempt_id is not None:
+                entries = self._read_entries_unlocked()
+                starts = [entry for entry in entries
+                          if entry.get("type") in {"run.started", "session.header"}]
+                matching = [entry for entry in starts if entry.get("attemptId") == self._attempt_id]
+                if matching:
+                    if (matching[-1].get("taskId") != task_id
+                            or matching[-1].get("parentNodeId") != parent_node_id):
+                        raise ValueError("attempt 已有不同的 Session 起点")
+                    if starts[-1].get("attemptId") != self._attempt_id:
+                        raise ValueError("旧 attempt 不能重新激活")
+                    return
+                nodes = self._nodes(entries)
+                active_head = self._head_id(entries, nodes)
+                if parent_node_id != active_head:
+                    raise ValueError("自动接续必须从当前完整 Session 边界开始")
             events = [("run.started", {"taskId": task_id, "parentNodeId": parent_node_id})]
             if parent_node_id is not None:
                 # 分支一旦选中，活动叶子先退回安全的完整 Turn 边界。
                 events.append(("session.head", {"taskId": task_id, "nodeId": parent_node_id}))
-            await self._append_many(events)
+            self._write_events_unlocked(events)
             return
-        await self._append(
+        self._write_events_unlocked([(
             "session.header",
             {
                 "sessionId": self.session_id,
@@ -220,7 +256,7 @@ class SessionJournal:
                     alert.model_dump(mode="json", by_alias=True)
                 ),
             },
-        )
+        )])
 
     async def append_command(
         self,
@@ -241,9 +277,17 @@ class SessionJournal:
         self,
         task_id: str,
         messages: Sequence[BaseMessage],
-    ) -> None:
+    ) -> str | None:
+        async with self._lock:
+            return self._append_transcript_unlocked(task_id, messages)
+
+    def _append_transcript_unlocked(
+        self, task_id: str, messages: Sequence[BaseMessage],
+    ) -> str | None:
         serialized = [_serialize_message(message) for message in messages]
-        entries = await self._read_entries()
+        entries = self._read_entries_unlocked()
+        if self._attempt_id is not None:
+            self._check_active_attempt(entries, task_id)
         nodes = {
             str(entry["nodeId"]): entry
             for entry in entries
@@ -251,13 +295,13 @@ class SessionJournal:
         }
         runs = [
             entry for entry in entries
-            if entry.get("type") == "run.started" and entry.get("taskId") == task_id
+            if entry.get("type") == "run.started" and self._same_run(entry, task_id)
         ]
         parent_id = runs[-1].get("parentNodeId") if runs else None
         base = _path_nodes(nodes, str(parent_id)) if parent_id is not None else []
         snapshots = [
             entry for entry in entries
-            if entry.get("type") == "session.transcript" and entry.get("taskId") == task_id
+            if entry.get("type") == "session.transcript" and self._same_run(entry, task_id)
         ]
         previous = snapshots[-1] if snapshots else None
         base_messages = (
@@ -269,13 +313,13 @@ class SessionJournal:
         if serialized[: len(base_messages)] != base_messages:
             raise ValueError("Session 消息与已保存的完整前缀不一致")
         if len(serialized) == len(base_messages):
-            return
+            return self._head_id(entries, nodes)
 
         flags = _branchable_flags(serialized)
         events: list[tuple[str, dict[str, Any]]] = []
         task_nodes = [
             entry for entry in entries
-            if entry.get("type") == "session.node" and entry.get("taskId") == task_id
+            if entry.get("type") == "session.node" and self._same_run(entry, task_id)
         ]
         leaf_id = (
             str(task_nodes[-1]["nodeId"]) if task_nodes
@@ -283,7 +327,7 @@ class SessionJournal:
         )
         heads = [
             entry for entry in entries
-            if entry.get("type") == "session.head" and entry.get("taskId") == task_id
+            if entry.get("type") == "session.head" and self._same_run(entry, task_id)
         ]
         safe_head = (
             str(heads[-1]["nodeId"]) if heads
@@ -307,7 +351,8 @@ class SessionJournal:
         events.append(("session.transcript", {
             "taskId": task_id, "messages": serialized, "leafId": leaf_id,
         }))
-        await self._append_many(events)
+        self._write_events_unlocked(events)
+        return safe_head
 
     async def append_result(
         self,
@@ -414,6 +459,7 @@ class SessionJournal:
                     "nodeId": node["nodeId"],
                     "parentId": node.get("parentId"),
                     "taskId": node.get("taskId"),
+                    "attemptId": node.get("attemptId"),
                     "role": node.get("message", {}).get("role"),
                     "branchable": bool(node.get("branchable")),
                 }
@@ -497,7 +543,8 @@ class SessionJournal:
                 }))
                 parent_id = node_id
             events.append(("session.head", {"taskId": "legacy-migration", "nodeId": parent_id}))
-            self._write_events_unlocked(events)
+            # 旧快照迁移产生的节点仍属于 legacy，不能被读取者的 attempt 收编。
+            self._write_events_unlocked(events, legacy_migration=True)
 
     async def _append(self, entry_type: str, values: dict[str, Any]) -> None:
         await self._append_many([(entry_type, values)])
@@ -512,9 +559,14 @@ class SessionJournal:
     def _write_events_unlocked(
         self,
         events: Sequence[tuple[str, dict[str, Any]]],
+        *, legacy_migration: bool = False,
     ) -> None:
         if not events:
             return
+        if self._attempt_id is not None and not legacy_migration and self._path.exists():
+            entries = self._read_entries_unlocked()
+            if events[0][0] not in {"session.header", "run.started"}:
+                self._check_active_attempt(entries, str(events[0][1].get("taskId", "")))
         self._directory.mkdir(mode=0o700, parents=True, exist_ok=True)
         self._directory.chmod(0o700)
         with self._path.open("a+b") as handle:
@@ -529,6 +581,8 @@ class SessionJournal:
             handle.seek(0, os.SEEK_END)
             for entry_type, values in events:
                 entry = {"type": entry_type, "timestamp": _now(), **values}
+                if self._attempt_id is not None and not legacy_migration:
+                    entry["attemptId"] = self._attempt_id
                 line = json.dumps(
                     entry,
                     ensure_ascii=False,
@@ -539,6 +593,13 @@ class SessionJournal:
             handle.flush()
             os.fsync(handle.fileno())
         self._path.chmod(0o600)
+
+    def _check_active_attempt(self, entries: Sequence[dict[str, Any]], task_id: str) -> None:
+        starts = [entry for entry in entries
+                  if entry.get("type") in {"session.header", "run.started"}]
+        if (not starts or starts[-1].get("attemptId") != self._attempt_id
+                or starts[-1].get("taskId") != task_id):
+            raise ValueError("旧或未登记的 attempt 不能追加 Session")
 
     async def _read_entries(self) -> list[dict[str, Any]]:
         async with self._lock:

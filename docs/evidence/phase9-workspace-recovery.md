@@ -16,6 +16,8 @@
 | Go生命周期、物理终止条件、文件/HTTP/配置相关race与回归 | 通过 | phase9-go-workspace-http-final-tests.txt、phase9-go-lifecycle-regression-tests.txt |
 | Python远程文件、未知写入停止、旧文件/Loop/Replay定向 | 17/17通过，0.557s | phase9-remote-files-tests-final.txt |
 | 第三批完整Python离线回归 | 118/118通过，276.228s | phase9-python-remote-regression-tests.txt |
+| 账本分阶段时钟、Session多attempt与既有模块定向 | 50/50通过，1.537s | phase9-attempt-clock-final-tests.txt |
+| 分阶段时钟/Session批次完整Python回归 | 137/137通过，270.335s；后续追加边界见上述50项 | phase9-python-attempt-clock-regression-tests.txt |
 
 这些是原生 Linux 临时目录与构造函数测试，不是真实 NFS、真实 Pod 故障或真实模型验证。20/20 包含前述 8 项，不可累加为 28 项。
 
@@ -84,3 +86,12 @@ Go持久归属、受限HTTP文件接口和正常释放后换Pod的组件路径�
 ## 下一步
 
 接Python TaskStore/Runner/Session的持久Task/attempt与自动恢复，原claim/loop/cleanup独立时钟、预算预留/Replay游标、取消与控制命令游标、未知写入hash核查及旧节点限制。之后迁移默认文件后端并执行14项V1完整验收，再启动V2。持续保存失败记录与真实结果，不使用已消费的模型预算。
+
+## 2026-10-18 分阶段时钟与Session多attempt
+
+- 新账本schema2保存首次claim/loop时间锚点：190秒认领与120秒循环保持独立；排队未启动无claim截止时间，进入loop只转换一次，后续恢复认领/停机时间计入原阶段。旧schema1显式deadline原样读取，不额外发放额度。
+- 模型/工具调用要求当前attempt已绑定且loop时间已保存；取消、过期和时钟早于attempt开始时停止。资源清理可以在超时后执行，records()不丢弃这类owner。Runner独立清理窗口和实际预算注入仍待接线。
+- Kubernetes Pod UID允许数字开头；已有attempt的开始时间、绑定及已确认停止事实不允许回滚。无费用定向测试包含真实UID形状，不表示已运行新Python Pod恢复链。
+- SessionJournal.for_attempt共用文件和锁；消息增量按task+attempt组织，半组工具调用留在旧attempt审计，新的父链只继承完整head。重复边界幂等，旧attempt不能继续写，旧线性快照的迁移节点仍归legacy，历史字节保持前缀不变。
+- `phase9-attempt-clock-final-tests.txt`为50/50、1.537秒；不等同强杀agentd、真实Pod故障或V1历史节点HTTP限制验收。默认TaskStore/Runner未接这些新接口，正式矩阵保持未完成。
+- `phase9-python-attempt-clock-regression-tests.txt`完整批次为137/137、270.335秒；该进程启动后追加的时钟回拨、新绑定前禁止调用和legacy线性视图边界，由最终50项定向覆盖。两份用例有重叠，不合计为187项，也不把早期完整批次标成后来全部用例的完整重跑。

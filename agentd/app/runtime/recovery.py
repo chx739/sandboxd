@@ -4,7 +4,7 @@ from __future__ import annotations
 import copy
 import re
 import threading
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -14,6 +14,7 @@ from .durable import DurableJournal, JournalCorrupt
 
 TERMINAL = frozenset({"succeeded", "failed", "cancelled", "limit_exceeded"})
 _IDENTITY = re.compile(r"[a-z][a-z0-9-]{0,95}\Z")
+_RESOURCE_UID = re.compile(r"[a-z0-9][a-z0-9-]{0,127}\Z")
 _HASH = re.compile(r"[a-f0-9]{64}\Z")
 
 
@@ -39,6 +40,13 @@ def _utc(value: datetime) -> datetime:
     if not isinstance(value, datetime) or value.tzinfo is None:
         raise ValueError("recovery time needs an explicit timezone")
     return value.astimezone(timezone.utc)
+
+
+def _resource_uid(value: str) -> str:
+    # Kubernetes UID 是资源身份，不是以字母开头的本项目逻辑 ID。
+    if not isinstance(value, str) or not _RESOURCE_UID.fullmatch(value):
+        raise ValueError("invalid Kubernetes resource UID")
+    return value
 
 
 class RecoveryLedger:
@@ -67,18 +75,27 @@ class RecoveryLedger:
     def _check_projection(self, state: dict[str, Any]) -> None:
         # A malformed complete state is not silently skipped or reset to zero.
         try:
-            if set(state) != {
+            fields = {
                 "schemaVersion", "taskId", "sessionId", "branchId", "workspaceId",
                 "alert", "status", "cancelRequested", "deadline", "limits",
                 "maxRecoveries", "attempts", "calls", "commands", "provider", "completeNodeId",
-            }:
+            }
+            version = state["schemaVersion"]
+            if type(version) is not int or version not in {1, 2}:
+                raise ValueError
+            if version == 2:
+                fields.add("timing")
+            if set(state) != fields:
                 raise ValueError
             task_id = _identity(state["taskId"])
             for key in ("sessionId", "branchId", "workspaceId"):
                 _identity(state[key])
-            if state["schemaVersion"] != 1 or state["status"] not in TERMINAL | {"queued", "running", "interrupted", "cancelling"}:
+            if state["status"] not in TERMINAL | {"queued", "running", "interrupted", "cancelling"}:
                 raise ValueError
-            _utc(datetime.fromisoformat(state["deadline"]))
+            if version == 1:
+                _utc(datetime.fromisoformat(state["deadline"]))
+            else:
+                self._check_timing(state)
             if type(state["cancelRequested"]) is not bool:
                 raise ValueError
             if type(state["maxRecoveries"]) is not int or not 0 <= state["maxRecoveries"] <= 10:
@@ -99,7 +116,7 @@ class RecoveryLedger:
                     raise ValueError
                 if attempt["sandboxId"] is not None:
                     _identity(attempt["sandboxId"])
-                    _identity(attempt["podUid"])
+                    _resource_uid(attempt["podUid"])
                 attempt_ids.add(attempt["attemptId"])
             if set(state["limits"]) != {"model", "tool", "router"}:
                 raise ValueError
@@ -116,9 +133,16 @@ class RecoveryLedger:
                     raise ValueError
             previous = self._tasks.get(task_id)
             if previous:
-                for key in ("sessionId", "branchId", "workspaceId", "deadline", "limits", "maxRecoveries", "alert"):
+                for key in ("schemaVersion", "sessionId", "branchId", "workspaceId", "limits", "maxRecoveries", "alert"):
                     if previous[key] != state[key]:
                         raise ValueError
+                if version == 1 and previous["deadline"] != state["deadline"]:
+                    raise ValueError
+                if version == 2:
+                    for key, old in previous["timing"].items():
+                        # 时间锚点只能首次设置；重启/新 attempt 不能把停机时间抹掉。
+                        if old is not None and state["timing"][key] != old:
+                            raise ValueError
                 if previous["cancelRequested"] and not state["cancelRequested"]:
                     raise ValueError
                 if previous["status"] in TERMINAL and state != previous:
@@ -127,6 +151,16 @@ class RecoveryLedger:
                     raise ValueError
                 if len(state["attempts"]) < len(previous["attempts"]):
                     raise ValueError
+                for index, old in enumerate(previous["attempts"]):
+                    current = state["attempts"][index]
+                    for key in ("attemptId", "startedAt"):
+                        if old[key] != current[key]:
+                            raise ValueError
+                    if old["ownerStopped"] and current != old:
+                        raise ValueError
+                    if old["sandboxId"] is not None:
+                        if any(current[key] != old[key] for key in ("sandboxId", "podUid")):
+                            raise ValueError
                 if previous["provider"] is not None and state["provider"] != previous["provider"]:
                     raise ValueError
                 for call_id, old in previous["calls"].items():
@@ -137,6 +171,32 @@ class RecoveryLedger:
                         raise ValueError
         except (KeyError, TypeError, ValueError, AttributeError):
             raise JournalCorrupt("invalid recovery state or nonmonotonic history") from None
+
+    @staticmethod
+    def _check_timing(state: dict[str, Any]) -> None:
+        timing = state["timing"]
+        if set(timing) != {"claimSeconds", "loopSeconds", "claimStartedAt", "loopStartedAt"}:
+            raise ValueError("invalid phase timing")
+        for key in ("claimSeconds", "loopSeconds"):
+            if type(timing[key]) is not int or not 1 <= timing[key] <= 600:
+                raise ValueError("invalid phase budget")
+        claim = timing["claimStartedAt"]
+        loop = timing["loopStartedAt"]
+        if claim is None:
+            if loop is not None or state["attempts"] or state["deadline"] is not None:
+                raise ValueError("unstarted task has phase state")
+            return
+        claim_time = _utc(datetime.fromisoformat(claim))
+        if not state["attempts"] or state["attempts"][0]["startedAt"] != claim:
+            raise ValueError("claim clock must start with the first attempt")
+        start, seconds = claim_time, timing["claimSeconds"]
+        if loop is not None:
+            start = _utc(datetime.fromisoformat(loop))
+            if start < claim_time or start >= claim_time + timedelta(seconds=seconds):
+                raise ValueError("loop started outside original claim window")
+            seconds = timing["loopSeconds"]
+        if state["deadline"] != (start + timedelta(seconds=seconds)).isoformat():
+            raise ValueError("deadline differs from persisted phase clock")
 
     def _save(self, state: dict[str, Any]) -> dict[str, Any]:
         self._check_projection(state)
@@ -150,10 +210,16 @@ class RecoveryLedger:
                 raise LookupError("task not found")
             return copy.deepcopy(self._tasks[task_id])
 
+    def records(self) -> list[dict[str, Any]]:
+        """启动对账包括超时/取消记录，不能只扫描仍可发起模型调用的候选。"""
+        with self._mutex:
+            return copy.deepcopy(list(self._tasks.values()))
+
     def create(
         self, *, task_id: str, session_id: str, branch_id: str,
-        workspace_id: str, alert: dict[str, Any], deadline: datetime,
+        workspace_id: str, alert: dict[str, Any], deadline: datetime | None = None,
         model_limit: int = 6, tool_limit: int = 8, max_recoveries: int = 2,
+        claim_seconds: int = 190, loop_seconds: int = 120,
     ) -> dict[str, Any]:
         with self._mutex:
             for value in (task_id, session_id, branch_id, workspace_id):
@@ -175,20 +241,30 @@ class RecoveryLedger:
                     raise ValueError("invalid alert fields")
                 safe_alert[key] = {redact_text(str(k), 128)[0]: redact_text(str(v), 2048)[0]
                                    for k, v in values.items()}
-            return self._save({
-                "schemaVersion": 1, "taskId": task_id, "sessionId": session_id,
+            state = {
+                "schemaVersion": 1 if deadline is not None else 2,
+                "taskId": task_id, "sessionId": session_id,
                 "branchId": branch_id, "workspaceId": workspace_id,
                 "alert": safe_alert, "status": "queued", "cancelRequested": False,
-                "deadline": _utc(deadline).isoformat(),
+                "deadline": _utc(deadline).isoformat() if deadline is not None else None,
                 "limits": {"model": model_limit, "tool": tool_limit, "router": 1},
                 "maxRecoveries": max_recoveries, "attempts": [], "calls": {},
                 "commands": [], "provider": None, "completeNodeId": None,
-            })
+            }
+            if deadline is None:
+                state["timing"] = {
+                    "claimSeconds": claim_seconds, "loopSeconds": loop_seconds,
+                    "claimStartedAt": None, "loopStartedAt": None,
+                }
+            return self._save(state)
 
     def _eligible(self, state: dict[str, Any], now: datetime) -> None:
         if state["cancelRequested"] or state["status"] in TERMINAL:
             raise RecoveryConflict("task is cancelled or terminal")
-        if _utc(now) >= datetime.fromisoformat(state["deadline"]):
+        now = _utc(now)
+        if state["attempts"] and now < datetime.fromisoformat(state["attempts"][-1]["startedAt"]):
+            raise RecoveryConflict("wall clock precedes the persisted attempt start")
+        if state["deadline"] is not None and now >= datetime.fromisoformat(state["deadline"]):
             raise RecoveryLimit("original task deadline has expired")
 
     def candidates(self, now: datetime) -> list[dict[str, Any]]:
@@ -217,8 +293,37 @@ class RecoveryLedger:
                 "attemptId": new_id("attempt"), "startedAt": _utc(now).isoformat(),
                 "ownerStopped": False, "sandboxId": None, "podUid": None,
             })
+            if state["schemaVersion"] == 2 and state["timing"]["claimStartedAt"] is None:
+                state["timing"]["claimStartedAt"] = _utc(now).isoformat()
+                state["deadline"] = (_utc(now) + timedelta(seconds=state["timing"]["claimSeconds"])).isoformat()
             state["status"] = "running"
             return self._save(state)
+
+    def begin_loop(self, task_id: str, attempt_id: str, now: datetime) -> dict[str, Any]:
+        """首次认领成功后开启独立 loop 时钟；恢复只能复用这个截止时间。"""
+        with self._mutex:
+            state = self.get(task_id)
+            self._eligible(state, now)
+            attempt = self._active(state, attempt_id)
+            if state["schemaVersion"] != 2:
+                # 旧账本只有硬截止时间，保守继承，不为迁移补发 120 秒。
+                return state
+            if attempt["sandboxId"] is None:
+                raise RecoveryConflict("loop requires a bound attempt")
+            if state["timing"]["loopStartedAt"] is None:
+                state["timing"]["loopStartedAt"] = _utc(now).isoformat()
+                state["deadline"] = (_utc(now) + timedelta(seconds=state["timing"]["loopSeconds"])).isoformat()
+                return self._save(state)
+            return state
+
+    def remaining_seconds(self, task_id: str, now: datetime) -> float:
+        """给 wait_for 的剩余额度。排队未启动时没有计时窗口。"""
+        with self._mutex:
+            state = self.get(task_id)
+            self._eligible(state, now)
+            if state["deadline"] is None:
+                raise RecoveryConflict("task has not started its claim clock")
+            return (datetime.fromisoformat(state["deadline"]) - _utc(now)).total_seconds()
 
     def bind(self, task_id: str, attempt_id: str, sandbox_id: str, pod_uid: str) -> dict[str, Any]:
         with self._mutex:
@@ -228,7 +333,7 @@ class RecoveryLedger:
                 raise RecoveryConflict("task cancellation takes precedence")
             if attempt["sandboxId"] is not None:
                 raise RecoveryConflict("attempt already bound")
-            attempt["sandboxId"], attempt["podUid"] = _identity(sandbox_id), _identity(pod_uid)
+            attempt["sandboxId"], attempt["podUid"] = _identity(sandbox_id), _resource_uid(pod_uid)
             return self._save(state)
 
     @staticmethod
@@ -267,9 +372,12 @@ class RecoveryLedger:
         with self._mutex:
             state = self.get(task_id)
             self._eligible(state, now)
-            self._active(state, attempt_id)
+            attempt = self._active(state, attempt_id)
             if kind not in state["limits"]:
                 raise ValueError("invalid call kind")
+            if (state["schemaVersion"] == 2 and kind in {"model", "tool"}
+                    and (state["timing"]["loopStartedAt"] is None or attempt["sandboxId"] is None)):
+                raise RecoveryConflict("model and tool calls require a bound attempt and the original loop clock")
             if sum(c["kind"] == kind for c in state["calls"].values()) >= state["limits"][kind]:
                 raise RecoveryLimit("call budget exhausted, including uncertain reservations")
             if len(operation) > 64 or len(path.encode()) > 512:
