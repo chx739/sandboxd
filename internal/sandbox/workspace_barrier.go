@@ -10,17 +10,19 @@ import (
 // A process crash, HTTP timeout, or vanished Pod must not silently unfreeze it.
 // Only trusted maintenance reconciliation advances the Pod stop evidence.
 type WorkspaceBarrier struct {
-	Version      int             `json:"schemaVersion"`
-	WorkspaceID  string          `json:"workspaceId"`
-	CheckpointID string          `json:"checkpointId"`
-	Operation    string          `json:"operation"`
-	Access       WorkspaceAccess `json:"access"`
-	JobID        string          `json:"jobId"`
-	PodName      string          `json:"podName"`
-	PodUID       string          `json:"podUid,omitempty"`
-	Phase        string          `json:"phase"`
-	StopReason   string          `json:"stopReason,omitempty"`
-	Job          BackupJobConfig `json:"job,omitempty"`
+	Version         int             `json:"schemaVersion"`
+	WorkspaceID     string          `json:"workspaceId"`
+	CheckpointID    string          `json:"checkpointId"`
+	Operation       string          `json:"operation"`
+	Access          WorkspaceAccess `json:"access"`
+	JobID           string          `json:"jobId"`
+	PodName         string          `json:"podName"`
+	PodUID          string          `json:"podUid,omitempty"`
+	Phase           string          `json:"phase"`
+	StopReason      string          `json:"stopReason,omitempty"`
+	Job             BackupJobConfig `json:"job,omitempty"`
+	RestoreSource   RestoreSource   `json:"restoreSource,omitzero"`
+	RestoreVerified bool            `json:"restoreVerified,omitempty"`
 }
 
 // Trusted deployment inputs are pinned with the job, so restart cannot silently
@@ -33,7 +35,7 @@ type BackupJobConfig struct {
 
 func (r *WorkspaceRegistry) barrierActive(workspaceID string) bool {
 	b, ok := r.barriers[workspaceID]
-	return ok && b.Phase != "released"
+	return ok && (b.Phase != "released" || (b.RestoreSource != (RestoreSource{}) && !b.RestoreVerified))
 }
 
 func (r *WorkspaceRegistry) Barrier(workspaceID string) (WorkspaceBarrier, bool) {
@@ -51,10 +53,13 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		return err
 	}
 	if b.Job != (BackupJobConfig{}) {
-		if b.Operation != "backup" {
+		request := backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}
+		if b.Operation == "restore" && b.RestoreSource.valid() {
+			request = backuphelper.Request{Operation: "restore", SnapshotID: b.RestoreSource.SnapshotID, ManifestSHA256: b.RestoreSource.ManifestSHA256}
+		} else if b.Operation != "backup" {
 			return ErrWorkspaceConflict
 		}
-		if _, err := BuildBackupPod(Config{Image: b.Job.ImageRef, RuntimeClass: "gvisor"}, b.JobID, b.WorkspaceID, b.Job.SecretName, backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}); err != nil {
+		if _, err := BuildBackupPod(Config{Image: b.Job.ImageRef, RuntimeClass: "gvisor"}, b.JobID, b.WorkspaceID, b.Job.SecretName, request); err != nil {
 			return err
 		}
 		if _, err := BuildBackupNetworkPolicy(b.Job.EndpointIP); err != nil {
@@ -67,12 +72,16 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 	}
 	switch b.Operation {
 	case "backup":
-		if b.Access.Validate() != nil || !matches(record, b.Access) {
+		if b.Access.Validate() != nil || !matches(record, b.Access) || b.RestoreSource != (RestoreSource{}) || b.RestoreVerified {
 			return ErrWorkspaceConflict
 		}
 	case "restore":
 		// 目标只能是从未认领的新目录；已释放的旧目录也不能作为恢复目标。
 		if record.Phase != "ready" || record.Generation != 0 || b.Access != (WorkspaceAccess{}) {
+			return ErrWorkspaceConflict
+		}
+		if (b.RestoreSource != (RestoreSource{}) && (!b.RestoreSource.valid() || b.Job == (BackupJobConfig{}))) ||
+			(b.RestoreVerified && (b.Phase != "released" || record.RestoredFrom != b.RestoreSource || b.RestoreSource == (RestoreSource{}))) {
 			return ErrWorkspaceConflict
 		}
 	default:
@@ -105,6 +114,9 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 	}
 	previous, exists := r.barriers[b.WorkspaceID]
 	if !exists || previous.JobID != b.JobID {
+		if exists && previous.RestoreSource != (RestoreSource{}) && b.Operation == "restore" {
+			return ErrWorkspaceConflict
+		}
 		if exists && (previous.Phase != "released" || previous.CheckpointID == b.CheckpointID) {
 			return ErrWorkspaceConflict
 		}
@@ -113,7 +125,8 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		}
 		return nil
 	}
-	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.Job != b.Job || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) {
+	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.Job != b.Job || previous.RestoreSource != b.RestoreSource || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) ||
+		(previous.RestoreVerified != b.RestoreVerified && !(previous.Phase == "stopped" && b.Phase == "released" && !previous.RestoreVerified && b.RestoreVerified)) {
 		return ErrWorkspaceConflict
 	}
 	if b == previous {

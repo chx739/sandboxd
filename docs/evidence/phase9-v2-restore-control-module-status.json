@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "module": "Go restore target control state",
+  "scope": "local synthetic metadata/state-machine tests only; not a running restore executor",
+  "externalModelCalls": 0,
+  "implemented": [
+    "immutable fixed snapshot/manifest/repository crypto and business image descriptor",
+    "new never-claimed workspace reservation",
+    "failed/unverified target quarantine without blocking unrelated maintenance after stop/release",
+    "persist restoredFrom before verified barrier release; restart in middle stays frozen",
+    "business image reference and actual image identity pin on claim/Bind",
+    "legacy zero-field JSON omission and old-record reading"
+  ],
+  "tests": [
+    "phase9-v2-restore-control-tests.txt",
+    "phase9-v2-restore-control-race-tests.txt",
+    "phase9-v2-restore-control-final-race-tests.txt",
+    "phase9-v2-restore-control-full-go-tests.txt",
+    "phase9-v2-restore-control-targeted-tests.txt"
+  ],
+  "targetedCases": 5,
+  "realRestoreExecuted": false,
+  "nextRequired": [
+    "trusted restore runtime using existing fixed gVisor maintenance spec",
+    "repository crypto identity must be verified BEFORE writing target; update helper contract",
+    "actual empty target check before write; full snapshot/manifest verification after restore",
+    "trusted termination proof then completeRestore; failed targets remain quarantined",
+    "limited HTTP/client and exact Session-prefix/branch integration",
+    "protected active restore references and cleanup management"
+  ]
+}

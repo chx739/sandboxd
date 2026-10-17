@@ -64,7 +64,7 @@ def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, num
     if port not in {18090, 18091}:
         raise ValueError("process fixture only uses ports 18090/18091")
     if checkpoint_mode not in {"off", "restic"} or (checkpoint_cutpoint is not None and (
-            checkpoint_mode != "restic" or port != 18090 or checkpoint_cutpoint not in {"reserved","preparing","data-ready","before-commit","committed"})):
+            checkpoint_mode != "restic" or port != 18090 or checkpoint_cutpoint not in {"reserved","preparing","before-data-ready","data-ready","before-commit","committed"})):
         raise ValueError("invalid fixed checkpoint process fixture mode")
     # 清除继承的模型/路由/Operator配置。子进程只拿本次合成Agent身份，不拿Operator Token。
     env = {k: v for k, v in os.environ.items() if not k.startswith(("AGENTD_", "SANDBOXD_"))

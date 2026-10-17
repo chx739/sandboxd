@@ -28,16 +28,17 @@ type WorkspaceOwner struct {
 // WorkspaceRecord is Go's authority. Labels are checked against this record,
 // never used as a replacement for it. Every update is fsynced before publication.
 type WorkspaceRecord struct {
-	Version     int            `json:"schemaVersion"`
-	WorkspaceID string         `json:"workspaceId"`
-	SessionID   string         `json:"sessionId"`
-	BranchID    string         `json:"branchId"`
-	Generation  uint64         `json:"generation"`
-	Phase       string         `json:"phase"`
-	Owner       WorkspaceOwner `json:"owner"`
-	ImageRef    string         `json:"imageRef,omitempty"`
-	ImageID     string         `json:"imageId,omitempty"`
-	StopReason  string         `json:"stopReason,omitempty"`
+	Version      int            `json:"schemaVersion"`
+	WorkspaceID  string         `json:"workspaceId"`
+	SessionID    string         `json:"sessionId"`
+	BranchID     string         `json:"branchId"`
+	Generation   uint64         `json:"generation"`
+	Phase        string         `json:"phase"`
+	Owner        WorkspaceOwner `json:"owner"`
+	ImageRef     string         `json:"imageRef,omitempty"`
+	ImageID      string         `json:"imageId,omitempty"`
+	StopReason   string         `json:"stopReason,omitempty"`
+	RestoredFrom RestoreSource  `json:"restoredFrom,omitzero"`
 }
 
 type WorkspaceAccess struct {
@@ -100,6 +101,9 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 }
 
 func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
+	if record.RestoredFrom != (RestoreSource{}) && !record.RestoredFrom.valid() {
+		return ErrWorkspaceConflict
+	}
 	if record.Version != 1 || !workspaceIDPattern.MatchString(record.WorkspaceID) || !runtimeIDPattern.MatchString(record.SessionID) || !strings.HasPrefix(record.SessionID, "session-") || !runtimeIDPattern.MatchString(record.BranchID) || !strings.HasPrefix(record.BranchID, "branch-") {
 		return errors.New("invalid workspace record identity")
 	}
@@ -123,6 +127,12 @@ func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
 		return errors.New("invalid workspace phase")
 	}
 	if previous, ok := r.records[record.WorkspaceID]; ok {
+		if record.RestoredFrom != previous.RestoredFrom {
+			b, exists := r.barriers[record.WorkspaceID]
+			if previous.RestoredFrom != (RestoreSource{}) || !exists || b.Operation != "restore" || b.Phase != "stopped" || b.StopReason != "containers-terminated" || b.RestoreSource != record.RestoredFrom || record.Phase != "ready" || record.Generation != 0 {
+				return ErrWorkspaceConflict
+			}
+		}
 		if record.SessionID != previous.SessionID || record.BranchID != previous.BranchID || record.Generation < previous.Generation || record.Generation > previous.Generation+1 {
 			return errors.New("workspace scope or generation changed unexpectedly")
 		}
@@ -151,7 +161,7 @@ func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
 		if r.barrierActive(record.WorkspaceID) && record.Generation != previous.Generation {
 			return ErrWorkspaceConflict
 		}
-	} else if record.Phase != "registered" || record.Generation != 0 {
+	} else if record.Phase != "registered" || record.Generation != 0 || record.RestoredFrom != (RestoreSource{}) {
 		return errors.New("workspace history must start with registration")
 	}
 	return nil
@@ -249,6 +259,12 @@ func (r *WorkspaceRegistry) BeginClaim(workspaceID, taskID, attemptID, sandboxID
 	expectedImageID := record.ImageID
 	if record.Owner.TaskID != taskID {
 		expectedImageID = ""
+	}
+	if record.RestoredFrom != (RestoreSource{}) {
+		if record.RestoredFrom.ImageRef != imageRef {
+			return WorkspaceRecord{}, ErrWorkspaceConflict
+		}
+		expectedImageID = record.RestoredFrom.ImageID
 	}
 	record.Generation++
 	record.Phase = "starting"

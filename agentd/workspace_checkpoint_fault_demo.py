@@ -34,7 +34,7 @@ from .app.runtime.session_refs import SessionReferences
 from .workspace_demo import REPO, checked, observe_pod, ready, start_go, stop_go
 from .workspace_process_demo import API, TERMINAL, agent_ready, entries, start_agent, state_for, stop_agent
 
-PHASES = ("reserved", "preparing", "data-ready", "before-commit", "committed")
+PHASES = ("reserved", "preparing", "before-data-ready", "data-ready", "before-commit", "committed")
 CONTENT = "synthetic joint checkpoint process recovery\n"
 
 
@@ -83,12 +83,12 @@ def install_cutpoint(root: Path, phase: str) -> None:
         CheckpointCoordinator._call=reserved
         return
 
-    method={"preparing":"prepare","data-ready":"data_ready","before-commit":"commit","committed":"commit"}[phase]
+    method={"preparing":"prepare","before-data-ready":"data_ready","data-ready":"data_ready","before-commit":"commit","committed":"commit"}[phase]
     original=getattr(CheckpointLedger,method)
     def wrapped(ledger,*args,**kwargs):
-        if phase=="before-commit":pause(ledger,ledger.get(args[0]))
+        if phase in {"before-data-ready","before-commit"}:pause(ledger,ledger.get(args[0]))
         record=original(ledger,*args,**kwargs)
-        if phase!="before-commit":pause(ledger,record)
+        if phase not in {"before-data-ready","before-commit"}:pause(ledger,record)
         return record
     setattr(CheckpointLedger,method,wrapped)
 
@@ -175,6 +175,10 @@ async def run(output: Path, phase: str, secret: str, endpoint: str) -> dict:
         barrier=(await sdk.get_workspace_backup(before["workspaceId"])).body
         assert barrier["checkpointId"]==cut["checkpointId"] and barrier["phase"]!="released"
         maintenance=observe_maintenance(barrier)
+        if phase=="before-data-ready":
+            actual=await sdk.workspace_backup("wait",barrier["access"],cut["checkpointId"],barrier["jobId"],timeout=5)
+            assert actual.status_code==200
+            report["uncommittedBackupResult"]=actual.body["result"]
         first.kill();assert first.wait(timeout=8)==-signal.SIGKILL
         killed=time.perf_counter()
         report.update(cutPoint=cut,stateBeforeKill=before,podBeforeKill=before_pod,barrierAtCut=barrier,
@@ -195,7 +199,7 @@ async def run(output: Path, phase: str, secret: str, endpoint: str) -> dict:
                 ledger.restore_point(cut["checkpointId"])
             else:
                 selected=ledger.get(cut["checkpointId"])
-                assert selected["status"]==("PREPARING" if phase=="preparing" else "DATA_READY") and head is None
+                assert selected["status"]==("PREPARING" if phase in {"preparing","before-data-ready"} else "DATA_READY") and head is None
                 try:ledger.restore_point(cut["checkpointId"])
                 except CheckpointConflict:pass
                 else:raise AssertionError("uncommitted checkpoint exposed as restore point")

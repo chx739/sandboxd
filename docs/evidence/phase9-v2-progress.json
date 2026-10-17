@@ -25,7 +25,7 @@
     {
       "id": "V2-04",
       "status": "pending",
-      "note": "three real Agent cut points passed (reserved/data-ready/committed); preparing/before-commit and full protocol matrix pending"
+      "note": "six Agent protocol cut points passed and journal projections verified; final historical restore-point API integration pending; full V2 matrix not complete"
     },
     {
       "id": "V2-05",
@@ -59,9 +59,9 @@
     }
   ],
   "remaining": [
-    "real Agent PREPARING and before-COMMITTED interruptions; real cancellation/startup reconciliation; full V2-04 still pending",
+    "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "trusted restore barrier into new empty NFS workspace and immutable business image identity checks",
+    "trusted restore runtime/API over tested target control state; verify repository crypto before writes, empty target and immutable business image; actual integration pending",
     "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
     "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
     "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
@@ -121,6 +121,26 @@
       "sha256": "4045e21a0c90fe5b9fb664e34b0a5ff3265f59bf3a8ed4738fb268caf7f537d3"
     },
     {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit-audit.json",
+      "sha256": "c78e67e980daf7390b75cd8c39dd35bb02549ac4fe9dcbcdad85a9c6019804b3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit-tests.txt",
+      "sha256": "ac5f919a8640f565243eddee9f0fce52e02c0ef7ff3d8fd13eb322b2b67f39b6"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit.json",
+      "sha256": "8245784802faa8c2f4e130f33fa15fe4e5ffac322b19980dc7418d2f77d49f51"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-data-ready-tests.txt",
+      "sha256": "85b1d0177ae15f01ef5bc50dad9d3f241a252aa7099b986e66ede9aec21a3a6e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-data-ready.json",
+      "sha256": "7517a4fd3a02c7b0399eed21c1418accee872cb12e8b5f79e9729f354343789f"
+    },
+    {
       "path": "docs/evidence/phase9-v2-agent-cut-committed-audit.json",
       "sha256": "520894b74e9c6add71dea632bcce4389107a5b491ab3fa1d30d4c0d2a8e3d071"
     },
@@ -143,6 +163,18 @@
     {
       "path": "docs/evidence/phase9-v2-agent-cut-data-ready.json",
       "sha256": "f2080f02a7f99dc056e0068d9fbb096c8a865178a38e6fdfa803e7ca46fb7a38"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing-audit.json",
+      "sha256": "b720e470a5baa8c089ec9fff5c33d27b0a2134df2342c332a810a7166203b5af"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing-tests.txt",
+      "sha256": "9b67f5f3dc138b631fe5bbf1526867b74571a8d70ec657a77f9de52f24a077e5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing.json",
+      "sha256": "bd5f52d38244407805e2400e900651c2605a1b104cfa1a8425e5807ffcd99d8e"
     },
     {
       "path": "docs/evidence/phase9-v2-agent-cut-reserved-preflight.json",
@@ -357,6 +389,14 @@
       "sha256": "63f76087976822d713ce5e121e4c062409887534754a1b1dd04c4cb2bb9b35d9"
     },
     {
+      "path": "docs/evidence/phase9-v2-joint-six-cut-summary.json",
+      "sha256": "9d47beed63b43c8cced632852168f3c6183c5273feeb1b8457799f9ab99a8da9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-six-cut-tests.txt",
+      "sha256": "b46b8f9729016fbaf5736ccd85e10a46113b5735648700f5549160e77105fa34"
+    },
+    {
       "path": "docs/evidence/phase9-v2-restic-image-build-tests.txt",
       "sha256": "64990e1d09280e34f5d591bbcf6d6ef3d11ad837c65b1ab3f2a98145e06eb5c8"
     },
@@ -371,11 +411,36 @@
     {
       "path": "docs/evidence/phase9-v2-restic-tool.json",
       "sha256": "ae0acfa865c44bd26a4b890f3bfb21495d36e62cec4005069d9f95c68b897950"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-final-race-tests.txt",
+      "sha256": "ee01ccbec45f093fcab333b62900edc9a0e3d36b7ed02d88440df3c20cca20a8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-full-go-tests.txt",
+      "sha256": "9571a83709b4b5f273fdfe6fe4bc4b15bd3314e745f0217bb5b9493c405247a5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-module-status.json",
+      "sha256": "1ba536b9156451f8a590b6f2f9fa370b85207cd4fbb9ca0c19ca57ae69f00831"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-race-tests.txt",
+      "sha256": "abe443869614387b3fd81c758a39cbe5b1d7c65536fca106dcea191647f150e4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-targeted-tests.txt",
+      "sha256": "54ca00e9ecc8d50ef9249dc37e75969479f1e7169b8327a6924640e7b92f1709"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-tests.txt",
+      "sha256": "2f74d53fc73a6256659042051c352d68267c69fd01de1fff4ac19e06f2001f27"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
   "backupHTTPScope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator",
   "agentJointCheckpointScope": "Real TaskStore/Runner/Go HTTP/gVisor/NFS/restic/MinIO normal complete tool groups and Runtime final diagnosis verified; process fault/restore/GC acceptance pending",
   "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json",
-  "agentFaultScope": "Real Agent SIGKILL at reserved/data-ready/committed passed; preparing/before-commit and full V2-04 still pending; Go/storage stayed available"
+  "agentFaultScope": "Six actual Agent SIGKILL cut points verified (reserved, preparing, before-data-ready, data-ready, before-commit, committed); Go/storage stayed available; restore API/full matrix not yet complete",
+  "restoreControlScope": "synthetic Go control-journal tests only: fixed descriptor, failed target quarantine, image pin, publication restart; no trusted restore runtime/API or actual joint restore acceptance yet"
 }

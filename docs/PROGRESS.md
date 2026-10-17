@@ -18,6 +18,15 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：六个提交切点已验证；恢复目标控制模块已测试
+
+- 起点c70251d，PR#3远端核对一致，用户docs32/docs34未暂存。已核对项目仅kind/NFS/专属MinIO，业务/维护Pod空闲，可用内存约20.7GiB/swap用量0/根盘931GiB。
+- preparing和before-commit两轮真实SIGKILL均通过，原始报告phase9-v2-agent-cut-preparing.json、-before-commit.json；前者PREPARING→FAILED，后者DATA_READY→FAILED，最终head均revision2；原Task/预算/截止时间、文件hash及工具配对继续核验。没有更换Go服务二进制。
+- 审计发现仍需“备份已成功、DATA_READY未写入”的即时切点，新增before-data-ready管理夹具包装及测试，已真实通过phase9-v2-agent-cut-before-data-ready.json：备份结果完整但Python点仍为PREPARING/data=null；重启后FAILED、最终revision2，kill→API ready54,865.64ms、→核查72,153.67ms。父进程仅通过原job Wait只读核对实际备份结果，不启动新备份，不将快照自动当成恢复点；外部模型0。不能因为其他五个切点通过就提前勾选完整协议。
+- 新Go RestoreSource/目标隔离/恢复来源固定逻辑：专用新空目标的metadata预留、失败未核验目标禁止认领、全局维护可释放给其他工作区；成功路径先写restoredFrom再释放verified屏障，中间重开仍冻结；认领固定业务imageRef/实际imageID。保留旧零值JSON格式与旧日志读取，不修改旧目录。尚未接可信restic恢复执行器/HTTP/分支，纯逻辑测试不冒称真实恢复。
+- sandbox/API本地及race通过，最终追加来源发布中间窗口后race再次通过；Go全项目通过phase9-v2-restore-control-full-go-tests.txt。新模块5项测试为合成身份/状态机；既往Python239项不冒充本批夹具更改覆盖，最新Python定向19/19、3.617s通过phase9-v2-joint-six-cut-tests.txt。文档47 §9记录能力边界。
+- 六个实际切点报告及预算/调用/恢复头只读复核汇总phase9-v2-joint-six-cut-summary.json已保存，所有报告通过，业务/维护Pod与10880/18090监听均为空，仅kind/NFS/专属MinIO保留。**第一项下一步**：接可信restore执行器；必须在写入前核对仓库crypto身份、实际空目标，成功后核对snapshot/manifest和业务镜像，失败目标保持隔离。再接Session精确分支/引用保护、真实取消/存储故障和同条件性能。完整Goal active。
+
 ### 2026-10-18：联合检查点进程切点（3个真实切点已验证）
 
 - 本批有效实现9a6e519（起点56285fc，推送至草稿PR#3，依赖PR#2→PR#1，不合并）；新增workspace_checkpoint_fault_demo及测试，复用workspace_process_demo.start_agent默认V1行为，显式restic模式才使用切点子进程。仅管理夹具包裹真实方法，不添加生产故障开关、不改账本/时钟、不使用外部模型。

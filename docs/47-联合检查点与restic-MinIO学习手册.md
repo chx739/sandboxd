@@ -250,6 +250,7 @@ agentd/.venv/bin/python -m agentd.workspace_checkpoint_demo \
 |---|---|---|
 | reserved | Go Reserve返回、Session引用/PREPARING之前 | 仅Go屏障存在；不能凭空制造Python检查点，先对账释放原job |
 | preparing | PREPARING真实fsync之后、Start之前 | 不能作为恢复点；原点失败后沿NFS最新目录接续 |
+| before-data-ready | restic成功返回、DATA_READY尚未写入 | 仍为PREPARING，原job可读到快照结果但不能推进head |
 | data-ready | restic成功、DATA_READY真实fsync之后 | 文件已备份不等于提交；原点不能成为head |
 | before-commit | 已核对owner，在短锁内调用commit之前 | 仍为DATA_READY，不能暴露为COMMITTED |
 | committed | COMMITTED真实fsync后、Go Finish之前 | 重建必须保留原提交/head/revision；先Finish再换attempt |
@@ -261,7 +262,7 @@ agentd/.venv/bin/python -m agentd.workspace_checkpoint_demo \
 agentd/.venv/bin/python -m agentd.workspace_checkpoint_fault_demo \
   --phase data-ready --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" \
   --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" --output .cache/checkpoint-cut-data-ready.json
-# 可分别选择reserved/preparing/before-commit/committed；串行执行，输出路径不可复用。
+# 可分别选择reserved/preparing/before-data-ready/before-commit/committed；串行执行，输出路径不可复用。
 ```
 
 首个实际`phase9-v2-agent-cut-data-ready.json`通过：真实SIGKILL、原Task自动接续2个attempt、原未提交点变FAILED、最终head revision2；原模型槽保留并共3模型/2工具槽，写/读各1次，NFS服务端hash一致。杀进程至API ready约57,013.97ms、至最终核查73,746.66ms，包含Windows挂载盘Python启动等待及核查/清理，不是生产RTO。DATA_READY时维护Pod的CRI实际为runsc。随后`phase9-v2-agent-cut-committed.json`也通过：原COMMITTED点及revision1在重启后保留，最终head revision3；原Task/额度/时钟保持、写/读各1次，kill→API ready50,588.48ms、→核查66,022.02ms。其余切点按PROGRESS和逐个原始报告判断，不能从部分成功推断整项V2-04已完成。
@@ -272,11 +273,31 @@ RESERVED首轮在端口预检即报EADDRINUSE，未创建控制目录、Go或Age
 
 本批完整Python239/239、282.089s通过`phase9-v2-joint-fault-full-tests.txt`，包含五类切点包装与启动默认兼容；此后端口probe抽取及额外本机监听用例由最终5/5、0.068s覆盖`phase9-v2-joint-fault-fixture-final-v2-tests.txt`，不将239项冒称包含后加用例，也不相加。中间4/4、0.187s报告单列。
 
-三个真实切点的独立报告一致性审计分别以`*-audit.json`保存，附原报告SHA256；它们是只读核对，不算额外三次服务实验。PREPARING后、COMMITTED前两轮尚未执行，V2-04完整项仍pending；取消/存储异常、历史恢复与引用GC也未由这些实验验证。
+三个真实切点的独立报告一致性审计分别以`*-audit.json`保存，附原报告SHA256；它们是只读核对，不算额外三次服务实验。后续PREPARING后、COMMITTED前及备份完成但DATA_READY前也已真实通过，六个切点汇总见`phase9-v2-joint-six-cut-summary.json`。这证明Agent进程级协议切点恢复；Go进程崩溃、真实取消/存储异常、历史恢复和引用GC未由这些实验验证，完整V2验收仍未完成。
 
 夹具首轮单测29项1 error：模拟Popen.pid未设置整数导致状态打印无法JSON序列化；原始phase9-v2-joint-fault-fixture-tests.txt保留。修正后29/29、7.051s通过phase9-v2-joint-fault-fixture-v2-tests.txt；后续增加reserved包装的单测和完整回归分别记录，不能将29项冒称覆盖后增加用例。测试的暂停信号在单测中被Mock，不冒充真实进程实验。
 
-## 9. 官方参考与版本
+本批新增三轮：preparing的kill→API ready55,281.38ms、→核查71,626.33ms；before-commit为55,903.56/71,971.31ms；before-data-ready为54,865.64/72,153.67ms。最后一轮由父进程对原job执行只读Wait核对实际完整snapshot ID，而Python点仍为PREPARING/data=null；重启后FAILED，最终head revision2，不提升孤立快照。所有原Task/调用/时间预算保持、原写入各仅一次。三轮使用原固定Go二进制，未用新恢复控制模块冒充实际恢复。最新夹具/协调器Python19/19、3.617s通过`phase9-v2-joint-six-cut-tests.txt`；既往239全量是前一批，不冒称含新切点代码。
+
+## 9. 新空恢复目标的控制日志约束（逻辑模块，尚未执行恢复）
+
+新增Go `restore_barrier.go`，复用已有WorkspaceRegistry/持久屏障，不复制一套生命周期、数据库或控制服务。`RestoreSource`固定完整snapshot ID、manifest SHA256、仓库crypto ID、业务imageRef和实际imageID；同一job重试不能换来源。它不是自由PodSpec，维护镜像、Secret和endpoint仍来自可信部署配置。
+
+`reserveRestore`只接受ready/generation0、从未认领的新目标；原工作区不会被覆盖。来源与job先写Go独占/fsync JSONL，再由未来的可信执行器创建恢复维护Pod。目录内容是否真的为空还必须由固定helper在写入前检查，本模块的“未认领”不等同于已经验证空目录。
+
+恢复失败或未核验时，维护Pod确认停止后可释放全局维护占用，但目标仍保持不可认领：`restoreSource != zero && !restoreVerified`。不删失败目录，不换另一个快照覆盖它；新恢复请求应使用新的workspace ID。其他工作区不因已停止的失败任务永久阻塞。执行者停止不明时仍保留原有屏障，不能据超时/Pod NotFound放行。
+
+可信执行器后续读取并验证实际repo/snapshot/manifest成功结果后，才可调用内部`completeRestore`：先将不可变`restoredFrom`来源写入workspace记录，再fsync释放屏障并标记verified。两次落盘之间崩溃仍冻结，重开可按同来源补齐；来源不能被移除或更换。业务Pod认领须使用原imageRef，并通过现有Bind路径核对实际imageID，不能用不同镜像静默继续。
+
+零值字段使用项目Go1.26.5支持的omitzero，不改变旧backup/无恢复记录的JSON字段；新程序可读原记录。历史无配置restore逻辑夹具保持读取兼容，不将它当作真实已核验恢复。出现新恢复字段的日志不能交给旧严格解析二进制继续写；不改写旧日志或原数据。
+
+5个新增逻辑用例覆盖：来源幂等/禁止改变、重开仍冻结、失败目标隔离而其他目录可运行、来源与实际业务镜像固定、零值编码，以及来源已fsync但屏障未释放的中间重开。Pod/仓库身份为合成夹具，停止证明也由状态机夹具构造，**不是真实restic恢复或真正进程崩溃**。
+
+原始Go sandbox/API与race分别见`phase9-v2-restore-control-tests.txt`、`-race-tests.txt`；追加中间落盘用例后最终race见`phase9-v2-restore-control-final-race-tests.txt`，Go全项目回归见`phase9-v2-restore-control-full-go-tests.txt`。本轮真实Agent切点仍使用上一批固定Go二进制，新恢复字段未接运行中服务，不能用切点报告声称验证了本模块实际恢复。
+
+下一步仍需：可信恢复执行器/固定仓库身份校验、恢复成功前验证实际文件和镜像、失败目标隔离的真实服务验证、受限管理接口、Session精确父链与新分支接线、引用保护和受控清理。内部completeRestore不是对外成功证据，也不能将“容器停止”直接当作“文件完整恢复”。
+
+## 10. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

@@ -13,11 +13,11 @@ from agentd.workspace_process_demo import start_agent
 
 class CheckpointFaultFixtureTests(unittest.TestCase):
     def test_fixed_cut_points_pause_before_or_after_selected_transition(self):
-        for phase in ("preparing","data-ready","before-commit","committed"):
+        for phase in ("preparing","before-data-ready","data-ready","before-commit","committed"):
             with self.subTest(phase=phase),tempfile.TemporaryDirectory(dir="/tmp") as directory:
                 root=Path(directory)
                 class Ledger:
-                    status="DATA_READY" if phase=="before-commit" else "NEW"
+                    status="DATA_READY" if phase=="before-commit" else "PREPARING" if phase=="before-data-ready" else "NEW"
                     def record(self):
                         return {"checkpointId":"cp-fixture","status":self.status,
                                 "identity":{"sessionId":"session-fixture","branchId":"branch-fixture"}}
@@ -29,9 +29,9 @@ class CheckpointFaultFixtureTests(unittest.TestCase):
                 with patch.object(fixture,"CheckpointLedger",Ledger),patch.object(fixture,"native_root",return_value=root),patch.object(fixture.os,"kill") as stop:
                     fixture.install_cutpoint(root,phase)
                     ledger=Ledger()
-                    getattr(ledger,{"preparing":"prepare","data-ready":"data_ready"}.get(phase,"commit"))("cp-fixture")
+                    getattr(ledger,{"preparing":"prepare","before-data-ready":"data_ready","data-ready":"data_ready"}.get(phase,"commit"))("cp-fixture")
                     marker=json.loads((root/"cut-point.json").read_text())
-                    self.assertEqual(marker["status"],{"preparing":"PREPARING","data-ready":"DATA_READY","before-commit":"DATA_READY","committed":"COMMITTED"}[phase])
+                    self.assertEqual(marker["status"],{"preparing":"PREPARING","before-data-ready":"PREPARING","data-ready":"DATA_READY","before-commit":"DATA_READY","committed":"COMMITTED"}[phase])
                     self.assertEqual(marker["headCheckpointId"],"cp-fixture" if phase=="committed" else None)
                     self.assertEqual((root/"cut-point.json").stat().st_mode&0o777,0o600)
                     stop.assert_called_once_with(fixture.os.getpid(),signal.SIGSTOP)
