@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：Task/API历史分支接线与真实两分支通过
 
-- 起点82a6b2d，当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未动。RestoreCoordinator/TaskStore/main新增明确checkpoint+UUIDv4请求接口及状态查询；旧node branch在restic模式找唯一COMMITTED版本，off/V1仍拒绝历史文件恢复。先固定来源引用和queued Task以接受取消，Worker再恢复/验证/FILES_READY/ATTACHED，之后才允许Runner认领业务Pod/调用模型。Session有未完成Task时拒绝切换路线。
+- 本批有效实现f0930f5（起点82a6b2d），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未动。RestoreCoordinator/TaskStore/main新增明确checkpoint+UUIDv4请求接口及状态查询；旧node branch在restic模式找唯一COMMITTED版本，off/V1仍拒绝历史文件恢复。先固定来源引用和queued Task以接受取消，Worker再恢复/验证/FILES_READY/ATTACHED，之后才允许Runner认领业务Pod/调用模型。Session有未完成Task时拒绝切换路线。
 - 同Task原claim/loop时钟和预算保留，恢复整段90秒且不超过原deadline；重启复用原job/目标、先核查旧执行者，未知停止阻止新attempt；ATTACHED后沿最新NFS继续，不重新restore覆盖新文件。来源已RESERVED但Task缺失启动补建原ID；后续状态缺原Task拒绝。取消和ATTACHED短锁排序，启动queued投影有旧活跃attempt时先显示cancelling，不提前终态。
 - phase9-v2-restore-branches-component.json真实2场景通过（69,547.90ms）：实际Agent ASGI处理器/TaskStore/Runner→真实Go TCP/gVisor/NFS/restic/MinIO，从同一旧点创建两条独立路线；第一条新增branch-only文件，第二条目录及精确Session父链没有兄弟内容。原Task账本/来源分支head/原控制文件hash不变，首份parent=来源、revision1，最终head分别3/2；新模型槽3/2、工具槽2/1，全部固定Replay、外部模型0。维护实际runsc、业务镜像/gVisor启动与NFS hash核对；不是Agent TCP/SIGKILL/GC实验。
 - 独立Go/Python原始控制日志checksum/seq及proof→release→claim顺序审计通过phase9-v2-restore-branches-audit.json，不计为第三个服务成绩。实验后两命名空间无Pod，10880/18090无监听，仅kind/NFS/专属MinIO运行；目录/快照/卷/Secret/日志保留。运行前内存可用20,696MiB、swap使用0、根盘931GiB。
