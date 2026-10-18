@@ -45,7 +45,8 @@ class RepositoryLock:
             raise ValueError("unexpected restic lock identities")
         return sorted(ids)
 
-    def begin(self):
+    def configure_repository(self):
+        """只生成管理侧私有连接并核对身份；不取得锁、不执行清理。"""
         binary = REPO / ".cache/restic-image-v2/restic"
         assert hashlib.sha256(binary.read_bytes()).hexdigest() == RESTIC_SHA256
         secret = json.loads(checked(["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-storage",
@@ -76,6 +77,9 @@ class RepositoryLock:
         config = json.loads(self.execute("cat", "config"))
         assert config["id"] == self.expected_repository_id, "lock must target exact committed repository"
         assert not self.locks(), "existing locks belong to another operation; do not unlock them"
+
+    def begin(self):
+        self.configure_repository()
         self.process = subprocess.Popen(self.command + ["check", "--read-data", "--limit-download", "8"],
                                         env=self.env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                                         stderr=subprocess.DEVNULL)

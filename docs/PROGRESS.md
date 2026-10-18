@@ -18,6 +18,14 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：真实restic部分不可读与孤立快照验证
+
+- 起点fc937a4，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实锁实验/回归/提交/PR为进展；本轮补V2-05最后的部分文件失败。新PartialBackup管理夹具只触碰本次新UUID工作区合成report.md，复用固定镜像/Go/同步提交协议；新增固定partial-file模式，不扩大Agent工具权限。
+- 运行前available20,623MiB、swap0、根盘930GiB、业务/维护Pod空，原三容器运行。初轮phase9-v2-storage-partial-file.json失败保留：后端卷chmod未证明维护客户端读失败，实际三次COMMITTED、Task succeeded，不能计部分失败；原权限/服务恢复，快照和控制日志全保留。修正经可信kind节点既有NFS挂载SETATTR，验证挂载/PodUID/合成hash；在helper进入当前cp的真实snapshots子命令后chmod，再从维护Pod确认报告Permission denied而另一文件可读，才放行MinIO。不是调整生产提交规则或放开业务Pod权限。
+- 新目录-v2真实通过：内部restic退出3/helper1、实际runsc/v2镜像；第二点cp-625c... PREPARING→FAILED，无DATA_READY/恢复入口、原head/revision1不变；1attempt/2模型槽/3工具槽、无再次写/调模型。故障启动至failed6,858.55ms；观察exit3后、业务挂载释放前恢复原权限，独立150秒看门狗与finally后端兜底保留，MinIO恢复。旧快照dump报告与NFS hash一致；新孤立不完整快照8d8126...可读文件存在/报告缺失，明确保留不forget。
+- -v2-audit核对原始Go/Python19/27/5条checksum/seq、原loop deadline/timing/calls和真实停止→释放，不是第三次实验。夹具初轮13/13与客户端可见性修正13/13均0.013秒；后加两个恢复兜底断言，最终完整Python282/282、290.392秒通过phase9-v2-storage-final-full-python-tests.txt。-final-checks确认两轮文件均600/UID65532、Pod/监听清空、MinIO正常、语法/diff与3个生成存储凭据在15份本轮文件无匹配。storage-failure-matrix汇总三个真实存储场景、排除首轮未触发不可读失败夹具，不计新实验/完整验收。文档47 §17记录命令、失败/修正、源码来源、角色权限与数据保留边界。
+- **第一项下一步**：受控清理预览/引用保护/forget-prune，固定条件V1/V2性能流量、统一restic入口与完整十项证据审计/回归。三个真实存储异常分开保留；V2完整Goal active，不能因V2-05子场景齐备宣称整体完成。
+
 ### 2026-10-18：真实restic排他仓库锁冲突通过
 
 - 本批有效实现214d1e5（起点640868a），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一目标轮有真实MinIO超时、提交与PR证据，属于进展；本轮推进剩余真实锁场景。存储夹具增加固定repository-lock模式，默认minio保留；生产Runtime/Go/镜像未改，不增加Agent工具或自由restic入口。

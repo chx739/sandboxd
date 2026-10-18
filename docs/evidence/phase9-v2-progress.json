@@ -30,7 +30,7 @@
     {
       "id": "V2-05",
       "status": "pending",
-      "note": "Actual MinIO pause/default 90s Wait timeout and actual exclusive restic check lock verified separately. Lock test returns real restic exit11/helper exit1 via gVisor; previous revision1 remains, next point FAILED; stop/release proof, original loop clock/calls retained, normal check shutdown releases lock without unlock. Partial-file failure and full V2 audit remain unverified."
+      "note": "Three actual storage subcases verified separately: MinIO unavailable/default Wait timeout, exclusive restic check lock, partial unreadable file with actual restic exit3 and retained incomplete snapshot. Original head remains, next point FAILED without DATA_READY, old snapshot report readable, clocks/calls retained. First partial fixture missed fault and is retained/excluded; corrected client visibility gate passed. Full Python282 passed; formal V2 audit still pending."
     },
     {
       "id": "V2-06",
@@ -59,7 +59,6 @@
     }
   ],
   "remaining": [
-    "Real restic partial-file failure; actual MinIO unavailability/default Wait timeout and actual exclusive repository lock are verified without head advance",
     "Reference-aware controlled cleanup preview, protected branch/pinned/active-restore sources, forget/prune; default no automatic deletion",
     "Fixed-workload V1/V2 performance/traffic and resource comparison including synchronous checkpoint overhead",
     "Actual unified shell startup restic-mode execution",
@@ -709,6 +708,46 @@
     {
       "path": "docs/evidence/phase9-v2-storage-repository-lock.json",
       "sha256": "21f0183924c21b5fdaf33e43530fa0c4a75459c31e3bb1de851ed55801274ed4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-partial-backup-final-checks.json",
+      "sha256": "a25d941d65b6bbf44fc566371bd1b1ac2385338294b62325cedf66b43c729661"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-partial-backup-fixture-tests.txt",
+      "sha256": "5cb7472945ff5eacbc8a750605d2668941636473ff62af30cb7ab346b75e2dcb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-partial-backup-visible-fixture-tests.txt",
+      "sha256": "5cb7472945ff5eacbc8a750605d2668941636473ff62af30cb7ab346b75e2dcb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-failure-matrix.json",
+      "sha256": "73ee62d98d23d4619cad5c938a5833c5aec150c11105391cf230f7dfb9c9c611"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-final-full-python-tests.txt",
+      "sha256": "0891ca072a93984acff226230ff63f32848e5610306ab34f58252307a61552da"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-command.txt",
+      "sha256": "e4a4536e5b0b12dfccbca590ba8aec7de1ce2fdf6f526c75d3e01b0103413e16"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-v2-audit.json",
+      "sha256": "eda171013d5fde1abbbebb6462d133e896517b880845572ac831629cfd0dd001"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-v2-command.txt",
+      "sha256": "6e68576032474f5d82f0cba186ef1993c2a2399c295390dcc940e9edf78539e3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-v2.json",
+      "sha256": "8203e0ffc5c5d4cf13ae9612027ee7d9238d384b70fc51f8ea63c6ef6ceb7357"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file.json",
+      "sha256": "42836228b9b17a4e92f577229262adc1aecc21e3a56b19612f3623f2405ccc02"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

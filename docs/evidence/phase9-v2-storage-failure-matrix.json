@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "mode": "readonly-summary-of-three-actual-storage-experiments",
+  "passed": true,
+  "requirement": "V2-05 storage subcases",
+  "formalV2AcceptanceComplete": false,
+  "externalModelCalls": 0,
+  "cases": [
+    {
+      "case": "minio-unavailable-and-timeout",
+      "report": "phase9-v2-storage-minio-outage.json",
+      "sha256": "21280469b3bc6ffe7712603bccb19bc9e58740a5ea19d58dbd7d9f112fa5707c",
+      "passed": true,
+      "waitHttpStatus": 504,
+      "resticExitCode": null,
+      "oldHeadRevision": 1,
+      "failedCheckpointStatus": "FAILED",
+      "modelReservations": 2,
+      "toolReservations": 2,
+      "attempts": 1,
+      "abortAndFinishConfirmed": true
+    },
+    {
+      "case": "repository-lock",
+      "report": "phase9-v2-storage-repository-lock.json",
+      "sha256": "21f0183924c21b5fdaf33e43530fa0c4a75459c31e3bb1de851ed55801274ed4",
+      "passed": true,
+      "waitHttpStatus": 503,
+      "resticExitCode": 11,
+      "oldHeadRevision": 1,
+      "failedCheckpointStatus": "FAILED",
+      "modelReservations": 2,
+      "toolReservations": 2,
+      "attempts": 1,
+      "abortAndFinishConfirmed": true
+    },
+    {
+      "case": "partial-file",
+      "report": "phase9-v2-storage-partial-file-v2.json",
+      "sha256": "8203e0ffc5c5d4cf13ae9612027ee7d9238d384b70fc51f8ea63c6ef6ceb7357",
+      "passed": true,
+      "waitHttpStatus": 503,
+      "resticExitCode": 3,
+      "oldHeadRevision": 1,
+      "failedCheckpointStatus": "FAILED",
+      "modelReservations": 2,
+      "toolReservations": 3,
+      "attempts": 1,
+      "abortAndFinishConfirmed": true
+    }
+  ],
+  "excludedFailedFixtureRuns": [
+    {
+      "report": "phase9-v2-storage-partial-file.json",
+      "reason": "Backend chmod did not prove client unreadability; task succeeded; not partial-failure acceptance"
+    }
+  ],
+  "scope": "No new service experiment; earlier reports remain authoritative; GC/performance/full V2 audit pending"
+}

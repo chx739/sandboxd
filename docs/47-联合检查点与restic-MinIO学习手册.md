@@ -606,7 +606,37 @@ finally与独立150秒看门狗只对自己的PID+内核starttime匹配进程发
 
 最终相关回归27/27、3.876秒通过`phase9-v2-repository-lock-related-tests.txt`（包含锁/存储夹具与协调器/协议切点），本轮未重跑旧267项全量，不把历史数字冒称新夹具覆盖。`phase9-v2-repository-lock-final-checks.json`确认持锁进程已退出、两命名空间Pod/端口均空、MinIO正常；语法/diff与3个生成存储凭据在10份本轮文件的扫描通过。实际维护子命令在备份前的快照查询阶段因排他锁退出11；不冒充上传中途失败。
 
-## 17. 官方参考与版本
+## 17. 实际部分文件不可读与孤立快照
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_storage_fault_demo \
+  --fault partial-file \
+  --secret-name '<本环境已初始化的专用仓库Secret名称>' \
+  --minio-ip '<当前专属MinIO在kind网络内的IPv4>' \
+  --output docs/evidence/phase9-v2-storage-partial-file-v2.json
+```
+
+`workspace_partial_backup.py`只操作当前新UUID工作区的合成`report.md`。首次工具组写入报告和可读的`evidence.txt`，正常保存第一份COMMITTED；下一次保存前暂时暂停专属MinIO。管理员观察该次维护Pod中的真实restic PID与NUL分隔argv，确认已进入`snapshots --tag checkpoint:<当前cp>`；按helper源码顺序，此时前置manifest已经完成。随后核对业务Pod UID、现有NFSv4挂载和合成报告hash，经可信kind节点的该挂载将其权限临时改为000（NFS仍按root squash映射65532）。必须从维护Pod确认报告实际Permission denied、同时另一个文件仍可读取，再恢复MinIO，让真实backup继续读取。没有改Go/helper/维护镜像、伪造退出码或把前置manifest失败冒充restic部分失败。
+
+这是一项明确的管理员侧故障注入：正常运行的Go写屏障会阻止Agent继续写文件，本实验专门通过现有可信节点NFS挂载模拟屏障外的权限变化，不向业务Pod增加权限。文件内容不改、不删除，权限原值保存；观察到真实exit3时先在业务Pod挂载释放前恢复原权限，再进入普通Task清理。独立150秒看门狗可通过保留的NFS后端文件恢复权限，避免Pod挂载已消失；finally也有回退路径。MinIO还有独立恢复保险。目录与服务配置只允许本项目固定范围，旧工作区和快照不操作。
+
+验收必须同时看到真实restic退出3、helper非零、Go拒绝结果、新点FAILED/无DATA_READY、原head保留。再按该cp tag列出唯一不完整快照，读取其目录和可读文件，确认报告缺失；从原COMMITTED快照dump报告校验hash。孤立快照保留，不能因“后端已经存在snapshot ID”而把它当可恢复检查点，也不在失败清理中forget。任务预算、调用槽、停止证明与完整消息组沿既有日志核查。该模式默认不启用，不是允许业务沙箱chmod或自由执行命令。
+
+固定版本的[backup退出码定义](https://github.com/restic/restic/blob/v0.18.1/cmd/restic/cmd_backup.go)说明3表示部分源数据不可读且产生不完整快照；[ls JSON实现](https://github.com/restic/restic/blob/v0.18.1/cmd/restic/cmd_ls.go)用于核对目录证据。固定镜像BusyBox只读ps参数兼容预检使用过无挂载、无网络、非root临时容器，该预检不是gVisor或部分备份验收成绩。
+
+首轮`phase9-v2-storage-partial-file.json`明确失败：直接在NFS后端卷chmod后，维护端未验证实际读失败，三次真实保存均成功且manifest未变化，Task succeeded；不存在真实exit3，不能勾选部分失败。原报告/命令日志、三份成功快照及控制目录全部保留，原权限已恢复。服务端文件属性变化不能代替客户端可见性证据；现象与绕过NFS/Ganesha缓存路径一致，但本实验未逐层定位唯一缓存根因。夹具修正为上述真实NFS客户端SETATTR及维护Pod读失败门禁，新结果使用-v2路径，不覆盖首轮，不修改生产提交协议。
+
+第二轮`phase9-v2-storage-partial-file-v2.json`通过：实际维护CRI runsc/v2固定镜像，helper退出1、内部restic退出3，Go Wait拒绝该结果。第二点`cp-625c39c4ea9145e3ad8c5df202cc4412`只有PREPARING→FAILED，无DATA_READY、无可恢复入口；原head/revision1和Session引用保留。故障启动至Task failed6,858.55ms，包含观察进程/可读性与权限恢复，不能当生产性能结论。1attempt、2模型槽、3文件工具槽（写报告、写可读文件、读报告），没有重复写入/再次调用诊断模型。
+
+实际孤立不完整快照`8d812691f5bfa06e77173fbf220963a095bbe077c601a715b34f4ac5e76f9dc9`保留，目录中有evidence.txt、无report.md，可读文件内容核对；原COMMITTED快照dump报告SHA为`0c5ce0350dabf08c11d14694e08e382948033888a9b9b44697551e44c9196c78`，与恢复权限后的NFS文件一致。`-v2-audit.json`只读检查三个原始日志19/27/5条checksum/seq、精确状态顺序、无DATA_READY、仅一次submitted、stopped证明→released、原loop timing/deadline/calls不变；是同一服务实验的审计，不计作第三轮。
+
+夹具初轮13/13、0.013秒通过，客户端可见性修正后13/13、0.013秒通过`phase9-v2-partial-backup-visible-fixture-tests.txt`；后加两个权限恢复兜底断言，完整回归结果另存，不把13项冒充包含最后改动。Go与生产Runtime未改；本节是补真实失败证据，不声称修复了一个已证实的生产提交漏洞。
+
+最终完整Python282/282、290.392秒通过`phase9-v2-storage-final-full-python-tests.txt`，包含最后两个权限恢复断言及既有会话/记忆/恢复/预算回归。`phase9-v2-partial-backup-final-checks.json`核对两轮保留报告文件均600/UID65532、业务/维护Pod及监听清空、MinIO正常、语法/diff及3个生成存储凭据在15份本轮文件无匹配。
+
+`phase9-v2-storage-failure-matrix.json`按原报告hash只读汇总三项实际实验：MinIO不可用/default Wait超时、真实排他锁、实际exit3部分失败。逐项核对原head/revision1、下一点FAILED无data、一次attempt、调用次数和abort/finish200；首轮未触发不可读的失败夹具单列排除。汇总不是新实验，也不表示引用清理、性能或完整V2十项已完成。
+
+## 18. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

@@ -1,0 +1,30 @@
+{
+  "mode": "local-post-partial-backup-checks",
+  "passed": true,
+  "syntaxValid": true,
+  "gitDiffCheck": true,
+  "fullPythonTests": 282,
+  "fullPythonPassed": true,
+  "generatedCredentialValuesChecked": 3,
+  "filesScanned": 15,
+  "credentialMatches": 0,
+  "podCounts": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "minioRunningAndUnpaused": true,
+  "agentAndGoPortsIdle": true,
+  "retainedFiles": [
+    {
+      "report": "phase9-v2-storage-partial-file.json",
+      "retainedFileMode": "600",
+      "ownerUid": 65532
+    },
+    {
+      "report": "phase9-v2-storage-partial-file-v2.json",
+      "retainedFileMode": "600",
+      "ownerUid": 65532
+    }
+  ],
+  "scope": "Only generated project storage credentials; not a general secret detection guarantee"
+}
