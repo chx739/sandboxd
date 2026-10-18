@@ -1,5 +1,7 @@
 # 后续开发执行规则
 
+> Phase9当前交付状态：文档43的工作区恢复目标已逐项验收并发布实现4ba0d6a至PR#3；V1 14/V2 10、最终339 Python、三类联合Replay及交付证据见文档49/phase9-workspace-final-acceptance.json。PR依赖#2→#1且未合并。以下阶段性“下一步/待完成”是历史实施记录，不自动扩成新工作；后续按用户新指令和PROGRESS的最新收尾记录继续，Phase8付费/人工审核边界保留。
+
 > 当前仓库状态：Phase 1–6 已完成，Phase 7 代码与历史证据保留。用户于 2026-09-29 授权 Phase 8 Kubernetes 运维 Agent MVP。当前完整范围与验收见 `GOAL.md` 和 `docs/37-Kubernetes运维Agent目标与验收.md`；用户最新已将 Jev 最小路由加入当前范围，覆盖旧暂停条款。
 
 本仓库的任何自动化编码助手在开始工作前，必须完整阅读：

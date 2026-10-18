@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-10-18T05:51:47.892741+00:00",
+  "scope": "Document43 NFS V1 latest-state/automatic recovery and NFS+restic/MinIO V2 joint checkpoint MVP only; Phase8 Live/human review remains separate",
+  "acceptanceComplete": true,
+  "formalV2AcceptanceComplete": true,
+  "externalModelCalls": 0,
+  "v1Cases": 14,
+  "v2Cases": 10,
+  "localAudit": {
+    "path": "docs/evidence/phase9-workspace-final-local-audit.json",
+    "sha256": "64d802542cb8ff946c17c2db7c86bdfddbbaba129aeffb248f2d5dc16fe782bb"
+  },
+  "requirementAudit": {
+    "path": "docs/evidence/phase9-v2-requirement-audit.json",
+    "sha256": "32f393766f85ed1a9c2231bde8503d7c53b9ddc6a3420c981b82de79d219ba2c"
+  },
+  "pythonTests": {
+    "count": 339,
+    "seconds": 309.394,
+    "sha256": "cbeccbcff65446c1378be7769fb2c1c152a3c08aee2e5d0a5a05c5ee2e02d7ee"
+  },
+  "jointReplayCases": 3,
+  "performance": {
+    "v1Trials": 9,
+    "v2Trials": 9,
+    "snapshots": 18,
+    "scope": "Offline independent dataset/manifest/hash/protocol/counter/quantile recomputation of same experiment; no new service/restore/performance run"
+  },
+  "implementationCommit": "4ba0d6ab12e736e8bca2d124fc50eb57a7560ecc",
+  "publishedPullRequest": {
+    "baseRefName": "codex/workspace-nfs-v1",
+    "headRefName": "codex/workspace-restic-v2",
+    "headRefOid": "4ba0d6ab12e736e8bca2d124fc50eb57a7560ecc",
+    "isDraft": true,
+    "state": "OPEN",
+    "url": "https://github.com/chx739/sandboxd/pull/3"
+  },
+  "dependencies": [
+    "PR#3 -> PR#2 -> PR#1; no automatic merge"
+  ],
+  "sourceSha256": {
+    "agentd/workspace_checkpoint_acceptance.py": "822eaa41c6c817205a5e4dda0eba655e57fdb9c247a0bfe571b4930500b7cb9d",
+    "agentd/workspace_checkpoint_acceptance_audit.py": "859d4428a3120659d6f80024aafb0ffccd78874d7e955dbc0024fecc4b4488c6",
+    "agentd/workspace_v2_audit.py": "a02d132f0d72ec83a44abe7e2988ee75d7b4716d8f09f6d68f4af3a86a799eb8",
+    "agentd/workspace_checkpoint_benchmark.py": "c065d0f6a600f33a373a87b0562a1c4087246dbfe6798641c851f001a5db86c7",
+    "agentd/tests/test_workspace_checkpoint_acceptance.py": "351bb71ee130584e3e5226d1acd03cf4901a9a4f56de6828fac69e82d75e45d2",
+    "agentd/tests/test_workspace_checkpoint_benchmark.py": "62816769cfdefb8b4255dc7195a238bf4fcbea807d06b479be97557bb2137c9c",
+    "hack/workspace.sh": "bb2175f03615dcb4f594e6798ec5fb32a85b02dde66b5dbd661c7563b872c208"
+  },
+  "userDocumentSha256": {
+    "32-Agent记忆检索与路由学习手册.md": "80bf3d7a08124a40480c7532ae9d374f669d1b29571f50aac6d97266f92895a7",
+    "34-Codex风格分层记忆学习手册.md": "6d69af87f3966a2ee4c6599b4d954efb37f6fd7eb8fd57515d8c0d5dc203c75f"
+  },
+  "completionChecks": [
+    "Actual local services and deterministic/Fake/Replay scopes separated",
+    "V1 14/V2 10 exact requirements and retained raw evidence inspected",
+    "Installation/startup/migration/demo/evaluation commands documented; current default cache paths verified",
+    "339 final Python tests and final three local-store joint Replay cases passed",
+    "Same-condition performance/raw traffic/resource evidence retained without rerunning to select better numbers",
+    "Old data/indexes/volumes and user modifications retained; only each experiment own new synthetic snapshots cleaned under operator protocol",
+    "Project Pods/ports cleaned, temporary four dependencies restored stopped, three original project containers retained running",
+    "Secrets absent in checked public sources/reports; no paid model budget used",
+    "Published implementation HEAD equals actual PR HEAD; base and open/draft state verified"
+  ],
+  "limits": [
+    "single node/deployment; NFS remains runtime authority; no storage/control-disk/zone HA",
+    "synchronous checkpoint scan/wait; bounded UTF-8 regular files 64MiB/512 entries/256KiB per file",
+    "Replay is not Live LLM quality or automatic repair; no S3 pack bit-flip claim",
+    "Old-source helper/image evidence and newer owned deployment evidence explicitly distinguished"
+  ],
+  "recordPublication": "This closing record and status-only documentation are committed after the verified implementation; closing commit does not change the frozen implementation sources or original experiments."
+}

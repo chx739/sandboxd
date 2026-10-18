@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "milestone": "M5-local-acceptance-complete",
-  "formalV2AcceptanceComplete": false,
+  "milestone": "M5-complete",
+  "formalV2AcceptanceComplete": true,
   "externalModelCalls": 0,
   "componentReport": "phase9-v2-backup-component-v3.json",
   "componentScope": "trusted backend component only; no Agent/session joint checkpoint or production write barrier acceptance",
@@ -108,9 +108,7 @@
       ]
     }
   ],
-  "remaining": [
-    "Publish current verified implementation/evidence and final documentation, verify PR3 HEAD/base/dependencies/unmerged state, then record final delivery before completing Goal"
-  ],
+  "remaining": [],
   "evidence": [
     {
       "path": "docs/evidence/phase9-v2-agent-checkpoint-diagnosis-budget-tests.txt",
@@ -1115,6 +1113,10 @@
     {
       "path": "docs/evidence/phase9-workspace-final-local-audit.json",
       "sha256": "64d802542cb8ff946c17c2db7c86bdfddbbaba129aeffb248f2d5dc16fe782bb"
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-final-acceptance.json",
+      "sha256": "fe5da42b8c1b5f20c790948939f61d9dbdd4f32d467104c63b8a08d776a706e1"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -1135,7 +1137,10 @@
   "unifiedDeploymentAudit": "phase9-v2-deployment-audit.json",
   "unifiedDeploymentScope": "Fresh owned repository persistent init/reuse, directory claim and actual unified Shell Go+Agent TCP/SIGKILL same-Task recovery with 3 committed checkpoints, unchanged budgets and native read-data; init fault windows are Fake protocol tests, not real initializer SIGKILL.",
   "localAcceptanceComplete": true,
-  "publicationPending": true,
+  "publicationPending": false,
   "requirementAuditReport": "phase9-v2-requirement-audit.json",
-  "finalLocalAcceptanceAudit": "phase9-workspace-final-local-audit.json"
+  "finalLocalAcceptanceAudit": "phase9-workspace-final-local-audit.json",
+  "finalAcceptanceReport": "phase9-workspace-final-acceptance.json",
+  "implementationCommit": "4ba0d6ab12e736e8bca2d124fc50eb57a7560ecc",
+  "pullRequest": "https://github.com/chx739/sandboxd/pull/3"
 }
