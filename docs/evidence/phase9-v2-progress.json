@@ -50,7 +50,7 @@
     {
       "id": "V2-09",
       "status": "pending",
-      "note": "Local reference protection/preview and durable Go owned repository binding/cleanup barrier/Operator API verified; actual standalone owned-helper fresh-repository forget/prune component passed. Python unique control-root binding/manager coordinator and actual joint reference protection/restart/lock/retained restore not complete. Formal acceptance pending."
+      "note": "Local reference control, owned Go binding/cleanup/Operator routes and independent Python coordinator/root claim verified. Standalone owned-helper actual fresh-repository component passed. Actual combined reference protection, cleanup, restart/lock and retained restore acceptance still pending; do not delete shared historical repositories."
     },
     {
       "id": "V2-10",
@@ -856,6 +856,26 @@
     {
       "path": "docs/evidence/phase9-v2-cleanup-runtime-final-checks.json",
       "sha256": "544f9e014f413e234f0bb3bb581b96d9e05b37112103685fa4fe6cb262aecfa1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-targeted-tests.txt",
+      "sha256": "a77af7191913724dccb18503fbbc84d0bfb0b86b00152b4be72216cc8c00bb19"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-v2-targeted-tests.txt",
+      "sha256": "6682e4c4bdf9706ac6788c22172c777a2e012df62b56c8054d1472cf2409974f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-full-python-tests.txt",
+      "sha256": "fb6d985a5fb9472eb9e78ba0918e6381ad8ad11cf44f39b263da4e87626c7a67"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-initial-tests.txt",
+      "sha256": "0fb5f2ddda1bf2b7b525df107d45bd9ba843f78c12e23351964c600d7bab2f1d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-audit.json",
+      "sha256": "558c920218772e03e48c844a88532d35df789b5b9656ce4e399bf534d24abfb1"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -866,5 +886,6 @@
   "restoreControlScope": "prior synthetic control-module evidence retained; current actual executor evidence recorded in restoreExecutorScope; HTTP/Session integration pending",
   "restoreExecutorScope": "actual trusted Go/gVisor/NFS/restic/MinIO component restored new empty target and rejected wrong expected repository before writes; no HTTP/Session historical branch/Task resume acceptance yet",
   "repositoryBindingScope": "Go journal pins owned repository/controller/marker/Secret name/endpoint on fresh control log only; rejects downgrade and foreign restore source; local Go and fake Kube tests passed. Python unique control-root ownership, persistent GC barrier, admin HTTP and joint cleanup not implemented.",
-  "cleanupRuntimeScope": "Go persistent global cleanup barrier, owned fixed operations, stored result proof, bounded stop/UID cleanup, explicit same-target retry and Operator-only routes verified locally with fake Kubernetes; actual joint cleanup and Python coordinator not yet verified."
+  "cleanupRuntimeScope": "Go persistent global cleanup barrier, owned fixed operations, stored result proof, bounded stop/UID cleanup, explicit same-target retry and Operator-only routes verified locally with fake Kubernetes; actual joint cleanup and Python coordinator not yet verified.",
+  "cleanupCoordinatorScope": "Independent operator-only Python process, same-journal repository binding/execution cursors, fixed local crypto-to-directory claim, reference recheck/PREPARED/Go proof/FORGOTTEN/Finish protocol, explicit bounded attempt retry and startup gate verified with local Fake/MockTransport; actual joint storage acceptance pending."
 }

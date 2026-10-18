@@ -39,6 +39,7 @@ class CheckpointCoordinator:
 
     async def preflight(self, recovery: RecoveryAttempt) -> None:
         recovery.remaining()
+        self.ledger.assert_maintenance_idle()
         response = await self.client.get_workspace_backup(recovery.snapshot()["workspaceId"])
         if response.status_code != 404:
             self._ok(response)

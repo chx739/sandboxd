@@ -12,6 +12,7 @@ from typing import Any
 
 from .durable import DurableJournal, JournalCorrupt
 from .session_refs import SessionReferences
+from .maintenance import MaintenanceControl
 
 _ID = re.compile(r"[a-z0-9][a-z0-9-]{0,95}\Z")
 _CP = re.compile(r"cp-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9]{15}\Z")
@@ -56,8 +57,12 @@ class CheckpointLedger:
         self._origins: dict[tuple[str, str], str] = {}
         self._pins: set[str] = set()
         self._forgets: dict[str, dict[str, Any]] = {}
+        self.maintenance = MaintenanceControl(self)
         try:
             for entry in self._journal.entries():
+                if entry["type"] in {"repository.binding", "cleanup.execution"}:
+                    self.maintenance.replay(entry["type"], entry["data"])
+                    continue
                 if entry["type"] in {"checkpoint.pin", "checkpoint.forget"}:
                     self._validate_retention(entry["type"], entry["data"])
                     self._project_retention(entry["type"], entry["data"])
@@ -110,6 +115,8 @@ class CheckpointLedger:
                     or not isinstance(data["repositoryId"], str) or not _ID.fullmatch(data["repositoryId"])
                     or any(not isinstance(data[k], str) or not _HASH.fullmatch(data[k]) for k in _DATA - {"repositoryId"})):
                 raise JournalCorrupt("checkpoint requires full repository/snapshot/manifest identities")
+            if self.maintenance._binding is not None and data["repositoryCryptoId"] != self.maintenance.binding()["owner"]["repositoryCryptoId"]:
+                raise JournalCorrupt("checkpoint belongs to another bound repository")
             if any((data["repositoryCryptoId"], data["snapshotId"]) == (g["repositoryCryptoId"], g["snapshotId"])
                    for g in self._forgets.values()):
                 raise JournalCorrupt("checkpoint reuses a pending/forgotten snapshot")
@@ -130,6 +137,8 @@ class CheckpointLedger:
             raise JournalCorrupt("invalid checkpoint failure reason")
         previous = self._records.get(r["checkpointId"])
         if previous is None:
+            if self.maintenance.pending():
+                raise JournalCorrupt("new checkpoint during pending maintenance")
             if any(g["status"] == "PREPARED" for g in self._forgets.values()):
                 raise JournalCorrupt("new checkpoint during pending cleanup")
             if r["status"] != "PREPARING" or self._parent(self._branch(r)) != r["parentCheckpointId"]:
@@ -218,7 +227,7 @@ class CheckpointLedger:
                 if old["identity"] != identity or old["parentCheckpointId"] != expected_head:
                     raise CheckpointConflict("checkpoint retry changed binding")
                 return old
-            if any(r["status"] == "PREPARED" for r in self._forgets.values()):
+            if self.maintenance.pending() or any(r["status"] == "PREPARED" for r in self._forgets.values()):
                 raise CheckpointConflict("repository cleanup pending; reconcile before new checkpoint")
             if self._parent((identity["sessionId"], identity["branchId"])) != expected_head:
                 raise CheckpointConflict("branch head changed")
@@ -296,6 +305,8 @@ class CheckpointLedger:
             raise JournalCorrupt("invalid restore failure code")
         old = self._restores.get(record["restoreId"])
         if old is None:
+            if self.maintenance.pending():
+                raise JournalCorrupt("new restore during pending maintenance")
             if any(g["status"] == "PREPARED" for g in self._forgets.values()):
                 raise JournalCorrupt("new restore during pending cleanup")
             if self.file_availability(record["sourceCheckpointId"]) != "available":
@@ -456,6 +467,12 @@ class CheckpointLedger:
                     or old["status"] != "PREPARED" or record["status"] != "FORGOTTEN"):
                 raise JournalCorrupt("invalid checkpoint forget transition")
             return
+        if self.maintenance._binding is not None:
+            execution = self.maintenance.get(record["gcId"])
+            if (execution is None or execution["status"] != "PENDING" or execution["operation"] != "forget"
+                    or execution["snapshotId"] != record["snapshotId"] or execution["planSha256"] != record["planSha256"]
+                    or record["repositoryCryptoId"] != self.maintenance.binding()["owner"]["repositoryCryptoId"]):
+                raise JournalCorrupt("owned forget requires its persisted management execution")
         view = self.cleanup_preview()
         target = next((r for r in view["snapshots"] if r["repositoryCryptoId"] == record["repositoryCryptoId"]
                        and r["snapshotId"] == record["snapshotId"]), None)
@@ -527,6 +544,11 @@ class CheckpointLedger:
     def forget_requests(self) -> list[dict[str, Any]]:
         with self._lock:
             return copy.deepcopy(list(self._forgets.values()))
+
+    def assert_maintenance_idle(self) -> None:
+        with self._lock:
+            if self.maintenance.pending() or any(r["status"] == "PREPARED" for r in self._forgets.values()):
+                raise CheckpointConflict("repository maintenance pending; administrator must reconcile original request")
 
     def close(self) -> None:
         self._journal.close()

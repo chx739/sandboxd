@@ -28,7 +28,9 @@ owned helper组件（文档48 §8）已在新专用合成仓库实际验证精�
 
 文档48 §9新增Go日志repository.binding和显式Owner部署参数；只准全新控制日志，拒绝旧工作区自动收编和重启降级。owned备份已接可信Runtime并核对crypto；本地Go/fake回归不是新真实存储验收。该绑定不代替Python控制目录唯一归属、GC持久屏障或Operator授权，后续仍按完整管理协议实施。
 
-文档48 §10已接Go持久GC屏障/固定执行与Operator专属HTTP，本地fake/race/全Go通过，不等于真实联合GC验收。下一步独立Python管理员协调器先锁日志/绑定唯一目录；只有尚未PREPARED且Go证明never-submitted的过期预留可cancel-reservation，PREPARED之后不以此解冻。未知/失败保持冻结并按同GC/job对账，不能给agentd服务注入Operator Token。
+文档48 §10已接Go持久GC屏障/固定执行与Operator专属HTTP，本地fake/race/全Go通过，不等于真实联合GC验收。独立Python管理员协调器的接线见§11；只有尚未PREPARED且Go证明never-submitted的过期预留可cancel-reservation，PREPARED之后不以此解冻。未知/失败保持冻结并按同GC/job对账，不能给agentd服务注入Operator Token。
+
+文档48 §11已接独立checkpoint_cleanup管理协调器：同CP日志的repository.binding/cleanup.execution、原生目录路径+设备/inode和本机固定仓库claim，禁止旧历史自动收编及同仓库另一目录登记。管理员命令持CP单写入锁，PENDING先落盘再Reserve，PREPARED后才Start，核验Go结果后FORGOTTEN→Finish→DONE；失败不自动重试/解冻。agentd在Worker前拒绝未对账管理状态，不消耗新模型预算。当前仍是本地Fake验证；下一步新干净专属仓库实际联合清理/重启/锁冲突/保留版本恢复，不能复用旧共享或故意污染夹具。
 
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 

@@ -18,7 +18,8 @@ def perform(directory: Path, command: str, checkpoint_id: str | None = None) -> 
     try:
         if command != "preview":
             ledger.retain(checkpoint_id, command == "pin")
-        return ledger.cleanup_preview()
+        # 管理游标另列，不改变planSha256覆盖的原引用投影。
+        return {**ledger.cleanup_preview(), "maintenance": ledger.maintenance.view()}
     finally:
         ledger.close()
 

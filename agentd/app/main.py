@@ -117,6 +117,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if cfg.checkpoint_mode == "restic":
             refs = SessionReferences(cfg.recovery_dir / "checkpoints")
             checkpoint_ledger = CheckpointLedger(cfg.recovery_dir / "checkpoints/checkpoints.jsonl",refs)
+            # 管理员清理中断时先拒绝启动Worker，保留原Task/预算供对账后自动接续。
+            checkpoint_ledger.assert_maintenance_idle()
             checkpoints = CheckpointCoordinator(sandboxd,checkpoint_ledger,refs,cfg.checkpoint_repository_id)
             store.configure_checkpoints(checkpoints)
     except BaseException:
