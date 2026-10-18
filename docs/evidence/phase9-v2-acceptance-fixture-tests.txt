@@ -1,0 +1,10 @@
+test_manifest_and_image_faults_do_not_change_snapshot_or_repository (agentd.tests.test_workspace_checkpoint_acceptance.AcceptanceInputTests.test_manifest_and_image_faults_do_not_change_snapshot_or_repository) ... ok
+test_no_free_case_or_source_field (agentd.tests.test_workspace_checkpoint_acceptance.AcceptanceInputTests.test_no_free_case_or_source_field) ... ok
+test_reference_fault_can_restore_exact_original_bytes_and_private_mode (agentd.tests.test_workspace_checkpoint_acceptance.AcceptanceInputTests.test_reference_fault_can_restore_exact_original_bytes_and_private_mode) ... ok
+test_snapshot_fault_changes_only_snapshot_and_keeps_full_hash (agentd.tests.test_workspace_checkpoint_acceptance.AcceptanceInputTests.test_snapshot_fault_changes_only_snapshot_and_keeps_full_hash) ... ok
+test_repeat_same_request_records_only_finish_and_preserves_journals (agentd.tests.test_workspace_checkpoint_acceptance.RepeatedSaveTests.test_repeat_same_request_records_only_finish_and_preserves_journals) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.047s
+
+OK

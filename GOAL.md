@@ -20,6 +20,8 @@ Phase 9 只解除与本轮直接相关的历史限制：文件工具经 Go 受�
 
 统一部署后续：新owned-deploy仓库已通过持久初始化、同目录复用、Owner/私有目录绑定及实际Shell Go+Agent启动/SIGKILL自动接续，3份联合COMMITTED与独立仓库read-data审计通过；异常初始化窗口是Fake验证，不能冒称实际初始化进程故障。完整V2十项最终审计与交付仍待完成，Goal保持active；最新回归/原始证据以PROGRESS为准。
 
+最终审计增量：文档49的V1 14项/V2 10项证据范围已核对，V2机器审计重读43份保留日志、235份既有证据hash；新专属仓库补保存幂等及真实拒绝路径，最终三类联合Replay3/3。完整337回归通过后修补性能入口对历史缓存的隐含依赖，最终完整回归/交付门禁与PR尚在收尾，不能提前把Goal标为complete；历史性能数据不重算，Phase8独立待办保留。
+
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
 
 ## 已完成目标：Phase 2 外部告警诊断 Agent

@@ -208,6 +208,7 @@ agentd/.venv/bin/python -m agentd.workspace_migration_demo --nfs-server "$SANDBO
 | 本地回归 | `bash hack/workspace.sh test` | Python冻结依赖，不请求模型 |
 | 独立存储验收 | `bash hack/workspace.sh verify migration` | 真实Go/gVisor/NFS，使用合成数据；10880需空闲 |
 | 全套存储夹具 | `bash hack/workspace.sh verify all` | 串行，不与正常8080/8090业务任务共享实验窗口；部分场景临时暂停专属NFS/删除自己的Pod/强杀自己的agentd |
+| V1/V2固定后端比较 | `bash hack/workspace.sh benchmark-v2 --repeats 3 --output .cache/<新报告>.json` | 先build-storage、NFS/专属MinIO和私有凭据就绪；10880空闲，默认当前构建Go，显式--binary可选历史版本；历史数值见46，不外推生产 |
 | 三类联合回放 | `bash hack/workspace.sh joint --output .cache/joint.json` | 既有Milvus2.5.10/OpenSearch与缓存模型须先就绪；离线模型缓存，脚本不启动数据库、不重建索引 |
 
 `agent`固定NFS+Replay、Jev关闭；若环境要求live则直接拒绝。它会移除Operator Token环境变量，Python只获得Agent凭据。`go`使用当前固定runtime-v1.5，须先按原安装流程将该镜像载入本项目kind、部署Calico/gVisor/RBAC等基础能力；统一入口不替代这些前置安装。

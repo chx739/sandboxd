@@ -14,9 +14,22 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M5：V1已交付；V2保存/协议切点/历史分支/存储故障/联合GC/固定后端性能及统一owned部署接续已验证；十项完整验收审计待完成；Goal active
+    Phase 9 M5：V1 14项与V2 10项、最终339 Python/三类联合回放/本地交付门禁均通过；待最后提交推送与远端PR核对；Goal active
 
 ## Phase 9 当前恢复点
+
+### 2026-10-18：V2十项证据审计通过，最终交付收尾
+
+- 起点e9d4445，仍为codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未改。上轮owned持久初始化/真实统一入口接续/332回归/推送为进展；本轮补workspace_checkpoint_acceptance、独立原始证据审计与五项夹具契约测试，真实运行前5/5、0.047秒通过，不改生产Agent/Go权限或工具。
+- 新原生部署acceptance-778e77ca3a334597bcac2370c2d51031、独立owned-deploy前缀的真实-refusals通过：同一Coordinator.save立即重试，只多一次幂等Finish，CP/snapshot/revision及Go/CP日志不变；首个完整保存窗口，活动Session API409/活动目录Go409且源文件/日志不改。源Task固定Replay2模型槽/1写工具，最后CP2为head。
+- 三个新目标真实验证：不存在snapshot和错误manifest在写入前失败、目标空且claim409；错误imageID在真实恢复文件后，实际CRI身份与期望不同，绑定/文件工具409，最后通过Go确认Pod停止。另在本轮新Session引用上注入坏字节（原件先另存），API409后恢复原件；关闭Agent lifespan后，可信管理员只遗忘本轮CP1非head新合成快照，重开API恢复409、历史消息200，head CP2/原Task/Session/文件不变。未改旧仓库或image tag，未模拟S3 pack位翻转；ASGI夹具不冒充Agent TCP或管理员独立OS进程。
+- 独立-acceptance-audit通过：Go55/CP11/Task21条checksum/序号、原日志前缀、来源/目标/实际镜像及停止证明一致；实际仓库只余marker+head两份snapshot，正常check --read-data通过，项目业务/维护Pod空。原始-refusals/-command/-audit/-audit-command保留，不重跑原实验。
+- workspace_v2_audit已逐项核对文档43十项条件、235份先前证据hash及43份保留Go/CP/Task日志，机器结果phase9-v2-requirement-audit.json为10/10；不是再做服务实验或整体交付完成。V1矩阵14/14及附加安装/迁移/性能的48个引用hash也已复核，旧矩阵pendingV2字段保留为历史。新增文档49为当前逐项证据/交付门禁入口。
+- 完整Python337/337、314.139秒通过-acceptance-full-python-tests。随后发现性能脚本隐含依赖历史.cache二进制名：已修补为统一build-storage的默认Go产物/固定原生restic，提供--binary保留显式历史选择，并接workspace.sh benchmark-v2。新增两项路径/缺依赖前置测试，相关10/10、0.047秒通过-final-entry-targeted-tests。历史9+9性能原件不改、不重算数字。
+- 最后三类联合回放已真实3/3通过-final-joint-replay.json：实际Milvus2.5.10/OpenSearch+缓存E5/BGE、脚本模型/Fake路由与生命周期，外部模型0。四个依赖先核对project/image/原停止状态，按原ID临时启动，结束后全部恢复停止；服务前后和健康记录-final-joint-services及两份command保留，不重建索引、不启动ES或其他旧容器。
+- 最终完整Python339/339、309.394秒通过-final-python-tests，原生session27846实际退出0，沿原句柄等待完慢记忆CLI后收取；包括最后两项性能默认路径测试。Go internal/cmd/go.mod/go.sum与2a09349完全相同，先前全Go结果适用；没有伪称本轮再跑Go测试。统一benchmark-v2 --help亦实际加载并显示--binary参数，不运行新性能样本。
+- phase9-workspace-final-local-audit.json已通过全范围本地门禁：V1 14项/48条引用（去重后另计）、V2十项及43保留日志hash、339回归、3/3联合回放/原服务ID停回、18快照/9+9性能、实际统一安装/启动/原Go源码与镜像身份、AST/shell/文档链接围栏、用户两文档hash、3实际存储值字面/Base64零匹配、业务/维护Pod0和四端口空闲。本地验收已完成，publicationPending=true；不在PR发布前提前结束Goal。
+- **第一项下一步**：提交推送当前已验证实现/文档/原始证据，核对远端PR#3的HEAD、base依赖和未合并状态，再保存最终交付记录并做Goal完成审计。新验收目录已有Task/遗忘记录，不能作为fresh目录复跑；原源文件/未遗忘快照/控制数据全保留。Phase8 Live/人工审核独立待办保留，本轮不借用其预算。
 
 ### 2026-10-18：owned V2初始化与统一入口接续已真实通过
 

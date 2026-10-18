@@ -40,6 +40,8 @@ owned helper组件（文档48 §8）已在新专用合成仓库实际验证精�
 
 统一部署后续以文档47 §19为准：init-v2固定新仓库/controller/Secret/job，PLANNED→SECRET_READY→INIT_SUBMITTED→OWNER_READY→READY；意图先落盘，未知后只查原Pod，缺失/失败/UID变化不得盲目init。已真实验证新owned-deploy初始化/复用、目录claim与统一Go/Agent SIGKILL接续和3份CP，独立32/10/35条日志及仓库read-data通过；本地初始化异常23项与真实服务分开。当前新目录已有Task，不能重跑entry夹具；正常启动沿原目录，旧共享/污染夹具保留。下一步完整十项逐项审计，不能从本轮单项通过宣布整体完成。
 
+最终验收续作先读文档49：V2十项原始证据/43保留控制日志已审计10/10，新acceptance专属仓库补真实保存重试、活动来源/缺失/校验/镜像/遗忘拒绝；仅遗忘本轮新建CP1，marker/head保留，不复用该目录作为fresh夹具。当前完整Goal仍需最后回归与交付门禁/PR；workspace.sh benchmark-v2默认统一构建Go与原生restic，旧性能报告及旧--binary显式选择保留。三类最终联合Replay已3/3且四依赖停回原状态，不能把Fake模型/生命周期当Live模型或真实K8s修复。
+
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。

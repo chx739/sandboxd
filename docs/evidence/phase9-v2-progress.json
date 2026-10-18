@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "milestone": "M5-in-progress",
+  "milestone": "M5-local-acceptance-complete",
   "formalV2AcceptanceComplete": false,
   "externalModelCalls": 0,
   "componentReport": "phase9-v2-backup-component-v3.json",
@@ -9,59 +9,107 @@
   "requirements": [
     {
       "id": "V2-01",
-      "status": "pending",
-      "note": "backend component evidence available; Session binding/protocol acceptance pending"
+      "status": "verified",
+      "note": "真实文件快照/恢复与权限、大小、hash元数据；加上当前owned联合保存",
+      "sources": [
+        "phase9-v2-backup-component-v3.json",
+        "phase9-v2-deployment-entry.json",
+        "phase9-v2-deployment-audit.json"
+      ]
     },
     {
       "id": "V2-02",
-      "status": "pending",
-      "note": "backend component evidence available; Session binding/protocol acceptance pending"
+      "status": "verified",
+      "note": "合成新增/修改/管理员删除后的两版真实恢复；不是新增模型删除工具",
+      "sources": [
+        "phase9-v2-backup-component-v3.json"
+      ]
     },
     {
       "id": "V2-03",
-      "status": "pending",
-      "note": "two historical branches from exact committed Session/files verified via actual Agent ASGI handlers and real Go/gVisor/NFS/restic/MinIO; sibling isolation and original state preserved; complete V2 matrix review pending"
+      "status": "verified",
+      "note": "真实Agent ASGI/Go TCP两条历史分支，不冒称Agent TCP或进程内存恢复",
+      "sources": [
+        "phase9-v2-restore-branches-component.json",
+        "phase9-v2-restore-branches-audit.json"
+      ]
     },
     {
       "id": "V2-04",
-      "status": "pending",
-      "note": "Six actual Agent protocol cuts and historical restore API/branch paths verified; final full V2 matrix review pending."
+      "status": "verified",
+      "note": "六个真实Agent SIGKILL切点，Go/存储保持在线；实际持久日志重读",
+      "sources": [
+        "phase9-v2-joint-six-cut-summary.json",
+        "phase9-v2-agent-cut-reserved-v2.json",
+        "phase9-v2-agent-cut-preparing.json",
+        "phase9-v2-agent-cut-before-data-ready.json",
+        "phase9-v2-agent-cut-data-ready.json",
+        "phase9-v2-agent-cut-before-commit.json",
+        "phase9-v2-agent-cut-committed.json"
+      ]
     },
     {
       "id": "V2-05",
-      "status": "pending",
-      "note": "Three actual storage subcases verified separately: MinIO unavailable/default Wait timeout, exclusive restic check lock, partial unreadable file with actual restic exit3 and retained incomplete snapshot. Original head remains, next point FAILED without DATA_READY, old snapshot report readable, clocks/calls retained. First partial fixture missed fault and is retained/excluded; corrected client visibility gate passed. Full Python282 passed; formal V2 audit still pending."
+      "status": "verified",
+      "note": "真实MinIO不可用/Wait超时、排他锁exit11、不可读文件exit3；失败夹具另存排除",
+      "sources": [
+        "phase9-v2-storage-failure-matrix.json",
+        "phase9-v2-storage-minio-outage.json",
+        "phase9-v2-storage-repository-lock.json",
+        "phase9-v2-storage-partial-file-v2.json"
+      ]
     },
     {
       "id": "V2-06",
-      "status": "pending",
-      "note": "backend component evidence available; Session binding/protocol acceptance pending"
+      "status": "verified",
+      "note": "同一真实Coordinator.save请求立即重试；后端原组件亦重复相同checkpoint请求",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-acceptance-audit.json",
+        "phase9-v2-backup-component-v3.json"
+      ]
     },
     {
       "id": "V2-07",
-      "status": "pending",
-      "note": "full acceptance not executed"
+      "status": "verified",
+      "note": "真实Go缺失snapshot/错误manifest/实际CRI与期望imageID不符，Agent引用校验失败与遗忘拒绝；未测试S3 pack位翻转",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-acceptance-audit.json"
+      ]
     },
     {
       "id": "V2-08",
-      "status": "pending",
-      "note": "normal explicit checkpoint restore to independent empty workspaces verified; live source-task refusal and complete fault matrix still need actual-service evidence"
+      "status": "verified",
+      "note": "活动Session/原目录拒绝，加两新空历史目标及精确会话/文件对应",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-restore-branches-component.json",
+        "phase9-v2-restore-branches-audit.json"
+      ]
     },
     {
       "id": "V2-09",
       "status": "verified",
-      "note": "Actual new owned-joint repository: head/pin/retained cancelled-restore source refused locally, original Task/Session/head preserved, exact two new synthetic snapshots forgotten, prune and pinned file restore passed; admin+Go SIGKILL same job/UID reconciled, real exclusive lock froze GC and valid backup then explicit target-fixed retry passed. Independent journals/inventory/read-data audit and actual readonly CLI passed. Old shared/foreign fixtures untouched; single-node MVP scope only."
+      "note": "新专属仓库实际受控forget/prune、保护拒绝、管理及Go中断、锁冲突与保留文件恢复；不删除旧数据",
+      "sources": [
+        "phase9-v2-owned-gc-joint.json",
+        "phase9-v2-owned-gc-joint-audit.json",
+        "phase9-v2-owned-gc-joint-preview-audit.json"
+      ]
     },
     {
       "id": "V2-10",
-      "status": "pending",
-      "note": "actual Agent TCP restored Task SIGKILL after committed CAS write preserves nonzero calls, exact loop timing/deadline and latest file; one restore submission and one write, new business UID, complete parent-chain verified; whole V2 completion audit pending"
+      "status": "verified",
+      "note": "历史恢复后已执行CAS写，再真实Agent TCP SIGKILL接续；不是新Task重发预算",
+      "sources": [
+        "phase9-v2-restore-cut-after-tool-v2.json",
+        "phase9-v2-restore-fault-four-case-audit-v2.json"
+      ]
     }
   ],
   "remaining": [
-    "Final ten-item V2 authoritative requirement-by-requirement audit: verify each condition against original reports/journals, not just passing booleans",
-    "Gather any missing actual-service evidence, especially V2-07 missing/corrupt/image refusal, V2-08 active-source refusal and V2-06 identical save request idempotence; existing restore started/attached standalone modes remain disclosed as unexecuted optional fixtures rather than new requirements",
-    "Final reviewable PR delivery, fixed commands and evidence linkage; preserve all old fixtures and user edits, no merge"
+    "Publish current verified implementation/evidence and final documentation, verify PR3 HEAD/base/dependencies/unmerged state, then record final delivery before completing Goal"
   ],
   "evidence": [
     {
@@ -1003,6 +1051,70 @@
     {
       "path": "docs/evidence/phase9-v2-deployment-status.json",
       "sha256": "6540e99f5a0218f0db9898fe3cf0a3cabc9fdf2d1f8ba74e6bb028614554f25f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-audit-command.txt",
+      "sha256": "397b2feee8b71a03ff6806786d9241dae0973513b103ffe6f13e281fd14ff3f1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-audit.json",
+      "sha256": "1fb56fd28bb27e233a47fc7cc255e2fb8aea645239583c72bc06ed8b74970735"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-fixture-tests.txt",
+      "sha256": "2324ca976ed4090f7f6119f2af89c75c58594f38d178ac937e465e1df0d1fc7a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-full-python-tests.txt",
+      "sha256": "8fac12036634f141ba2e053a63b0053cd9bdad1c14d71b9feecbfa017466f194"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-refusals-command.txt",
+      "sha256": "1f0344f17b82c95f7610209a19cf3bbce55120b32a40c407bee110f567d398cb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-refusals.json",
+      "sha256": "bfbb68e3b528f080f8a5ebcb3f7d1acad925e79bd388a3f93997cfc478a89884"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-benchmark-entry-help.txt",
+      "sha256": "44bcd9a0e516849bac6baac6db899b78c5e581b82e3f26e40beb7a4c14ca36a2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-entry-targeted-tests.txt",
+      "sha256": "33b07234dc1e97079a684fc11a6d0a81585efb90ca58d7b70bae9f7b72efab0f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-command.txt",
+      "sha256": "e91ce98b2827ea82f87484b3de4203bd3dc51886e3408475daac1af1c3bab66e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-replay.json",
+      "sha256": "bb080bfca83efad564080d696800ef8ec11a22b2ae5ff3a73349fe89adf96dce"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-services.json",
+      "sha256": "96aa9e7ff38b610e9cfcd0a5a7fdb7bda7d023e8444b156f2a0d84ed47ef555c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-wrapper-command.txt",
+      "sha256": "1749c9dc5dc1a5ed89f270aacc05ed275463314acc4242a621ba3fa607af4113"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-python-tests.txt",
+      "sha256": "cbeccbcff65446c1378be7769fb2c1c152a3c08aee2e5d0a5a05c5ee2e02d7ee"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-requirement-audit-command.txt",
+      "sha256": "7f823f6195bad4b14170e8737d669a722b7a1c46c046db42bf5439c05a17f7b1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-requirement-audit.json",
+      "sha256": "32f393766f85ed1a9c2231bde8503d7c53b9ddc6a3420c981b82de79d219ba2c"
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-final-local-audit.json",
+      "sha256": "64d802542cb8ff946c17c2db7c86bdfddbbaba129aeffb248f2d5dc16fe782bb"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -1021,5 +1133,9 @@
   "unifiedStorageBuildScope": "Actual cached restic verification, original Docker IDs preserved, current Go/server renderer build and kind loading; four Fake shell contracts. No fresh repository initialization or Agent startup acceptance.",
   "unifiedDeploymentReport": "phase9-v2-deployment-entry.json",
   "unifiedDeploymentAudit": "phase9-v2-deployment-audit.json",
-  "unifiedDeploymentScope": "Fresh owned repository persistent init/reuse, directory claim and actual unified Shell Go+Agent TCP/SIGKILL same-Task recovery with 3 committed checkpoints, unchanged budgets and native read-data; init fault windows are Fake protocol tests, not real initializer SIGKILL."
+  "unifiedDeploymentScope": "Fresh owned repository persistent init/reuse, directory claim and actual unified Shell Go+Agent TCP/SIGKILL same-Task recovery with 3 committed checkpoints, unchanged budgets and native read-data; init fault windows are Fake protocol tests, not real initializer SIGKILL.",
+  "localAcceptanceComplete": true,
+  "publicationPending": true,
+  "requirementAuditReport": "phase9-v2-requirement-audit.json",
+  "finalLocalAcceptanceAudit": "phase9-workspace-final-local-audit.json"
 }

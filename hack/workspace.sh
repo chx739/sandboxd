@@ -42,6 +42,7 @@ case "$action" in
   migrate ARGS  旧工作区预览/显式导入，参数见workspace_migrate --help
   entry ARGS    通过本入口启动Go/agentd并验收重启接续；要求--output
   benchmark ARGS 固定NFS文本负载；要求--output，可设--repeats 1..5
+  benchmark-v2 ARGS 同数据V1/V2后端比较；要求build-storage、专属MinIO及--output
   verify CASE   真实存储验收，独立输出目录；CASE可选：
                 file pod process terminal ack budget expired boundary concurrency nfs command migration all
   joint         三类运维Replay；要求已有Milvus/OpenSearch及缓存模型正常运行
@@ -151,6 +152,12 @@ EOF
     server="$(nfs_address)"
     [[ -z "$(ss -ltnH '( sport = :10880 )')" ]] || { echo '性能实验要求10880空闲。' >&2; exit 1; }
     exec "$python_bin" -m agentd.workspace_benchmark --nfs-server "$server" "$@"
+    ;;
+  benchmark-v2)
+    check_cluster
+    nfs_address >/dev/null
+    [[ -z "$(ss -ltnH '( sport = :10880 )')" ]] || { echo '性能实验要求10880空闲。' >&2; exit 1; }
+    exec "$python_bin" -m agentd.workspace_checkpoint_benchmark "$@"
     ;;
   joint)
     # 不替用户启动数据库、重建索引或下载模型；缺少依赖时明确失败。

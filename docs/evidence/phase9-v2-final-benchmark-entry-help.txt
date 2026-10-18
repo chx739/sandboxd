@@ -1,0 +1,17 @@
+CPU: 12
+可用内存: 20493 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   28G  929G   3% /
+C:\             932G  805G  127G  87% /mnt/c
+运行中的 Docker 容器: 3
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+usage: workspace_checkpoint_benchmark.py [-h] --output OUTPUT
+                                         [--repeats REPEATS] [--binary BINARY]
+
+options:
+  -h, --help         show this help message and exit
+  --output OUTPUT
+  --repeats REPEATS
+  --binary BINARY    显式固定可信Go二进制；默认统一build-storage产物

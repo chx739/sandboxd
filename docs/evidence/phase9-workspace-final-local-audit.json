@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "scope": "all local Document43 acceptance and delivery gates verified; final publication/PR HEAD still checked separately before Goal completion",
+  "v1Cases": 14,
+  "v1EvidenceHashesVerified": 39,
+  "v2Cases": 10,
+  "v2RetainedJournals": 43,
+  "python": {
+    "count": 339,
+    "seconds": 309.394,
+    "sha256": "cbeccbcff65446c1378be7769fb2c1c152a3c08aee2e5d0a5a05c5ee2e02d7ee"
+  },
+  "jointReplayCases": 3,
+  "jointScope": "No live cluster or repair; natural-language decisions and semantic citation entailment not evaluated",
+  "performance": {
+    "v1Trials": 9,
+    "v2Trials": 9,
+    "snapshots": 18,
+    "scope": "Offline independent dataset/manifest/hash/protocol/counter/quantile recomputation of same experiment; no new service/restore/performance run"
+  },
+  "goSourceUnchangedSince": "2a0934954faf9904dcd19e71e0a9986ea00f41b3",
+  "priorGoTestSha256": "cce03bd77a22e130da5eee0f036dfad56e6a879482f9dba9611727e728a55685",
+  "sourceSha256": {
+    "agentd/workspace_checkpoint_acceptance.py": "822eaa41c6c817205a5e4dda0eba655e57fdb9c247a0bfe571b4930500b7cb9d",
+    "agentd/workspace_checkpoint_acceptance_audit.py": "859d4428a3120659d6f80024aafb0ffccd78874d7e955dbc0024fecc4b4488c6",
+    "agentd/workspace_v2_audit.py": "a02d132f0d72ec83a44abe7e2988ee75d7b4716d8f09f6d68f4af3a86a799eb8",
+    "agentd/workspace_checkpoint_benchmark.py": "c065d0f6a600f33a373a87b0562a1c4087246dbfe6798641c851f001a5db86c7",
+    "agentd/tests/test_workspace_checkpoint_acceptance.py": "351bb71ee130584e3e5226d1acd03cf4901a9a4f56de6828fac69e82d75e45d2",
+    "agentd/tests/test_workspace_checkpoint_benchmark.py": "62816769cfdefb8b4255dc7195a238bf4fcbea807d06b479be97557bb2137c9c",
+    "hack/workspace.sh": "bb2175f03615dcb4f594e6798ec5fb32a85b02dde66b5dbd661c7563b872c208"
+  },
+  "documentsChecked": [
+    "AGENTS.md",
+    "GOAL.md",
+    "README.md",
+    "deploy/workspace/README.md",
+    "docs/PROGRESS.md",
+    "docs/README.md",
+    "docs/46-工作区恢复性能与流量测量.md",
+    "docs/47-联合检查点与restic-MinIO学习手册.md",
+    "docs/48-检查点引用保护与受控清理.md",
+    "docs/49-工作区V1V2逐项验收与交付审计.md"
+  ],
+  "reportSha256": {
+    "docs/evidence/phase9-v2-acceptance-audit-command.txt": "397b2feee8b71a03ff6806786d9241dae0973513b103ffe6f13e281fd14ff3f1",
+    "docs/evidence/phase9-v2-acceptance-audit.json": "1fb56fd28bb27e233a47fc7cc255e2fb8aea645239583c72bc06ed8b74970735",
+    "docs/evidence/phase9-v2-acceptance-fixture-tests.txt": "2324ca976ed4090f7f6119f2af89c75c58594f38d178ac937e465e1df0d1fc7a",
+    "docs/evidence/phase9-v2-acceptance-full-python-tests.txt": "8fac12036634f141ba2e053a63b0053cd9bdad1c14d71b9feecbfa017466f194",
+    "docs/evidence/phase9-v2-acceptance-refusals-command.txt": "1f0344f17b82c95f7610209a19cf3bbce55120b32a40c407bee110f567d398cb",
+    "docs/evidence/phase9-v2-acceptance-refusals.json": "bfbb68e3b528f080f8a5ebcb3f7d1acad925e79bd388a3f93997cfc478a89884",
+    "docs/evidence/phase9-v2-final-benchmark-entry-help.txt": "44bcd9a0e516849bac6baac6db899b78c5e581b82e3f26e40beb7a4c14ca36a2",
+    "docs/evidence/phase9-v2-final-entry-targeted-tests.txt": "33b07234dc1e97079a684fc11a6d0a81585efb90ca58d7b70bae9f7b72efab0f",
+    "docs/evidence/phase9-v2-final-joint-command.txt": "e91ce98b2827ea82f87484b3de4203bd3dc51886e3408475daac1af1c3bab66e",
+    "docs/evidence/phase9-v2-final-joint-replay.json": "bb080bfca83efad564080d696800ef8ec11a22b2ae5ff3a73349fe89adf96dce",
+    "docs/evidence/phase9-v2-final-joint-services.json": "96aa9e7ff38b610e9cfcd0a5a7fdb7bda7d023e8444b156f2a0d84ed47ef555c",
+    "docs/evidence/phase9-v2-final-joint-wrapper-command.txt": "1749c9dc5dc1a5ed89f270aacc05ed275463314acc4242a621ba3fa607af4113",
+    "docs/evidence/phase9-v2-final-python-tests.txt": "cbeccbcff65446c1378be7769fb2c1c152a3c08aee2e5d0a5a05c5ee2e02d7ee",
+    "docs/evidence/phase9-v2-requirement-audit-command.txt": "7f823f6195bad4b14170e8737d669a722b7a1c46c046db42bf5439c05a17f7b1",
+    "docs/evidence/phase9-v2-requirement-audit.json": "32f393766f85ed1a9c2231bde8503d7c53b9ddc6a3420c981b82de79d219ba2c"
+  },
+  "userDocumentSha256": {
+    "32-Agent记忆检索与路由学习手册.md": "80bf3d7a08124a40480c7532ae9d374f669d1b29571f50aac6d97266f92895a7",
+    "34-Codex风格分层记忆学习手册.md": "6d69af87f3966a2ee4c6599b4d954efb37f6fd7eb8fd57515d8c0d5dc203c75f"
+  },
+  "storageSecretValuesScanned": 3,
+  "publicFilesScanned": 32,
+  "secretMatches": 0,
+  "podCounts": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "portsIdle": [
+    8080,
+    8090,
+    10880,
+    18090
+  ],
+  "runningProjectContainers": {
+    "sandboxd-control-plane": "true false",
+    "sandboxd-workspace-nfs-1": "true false",
+    "sandboxd-workspace-backup-minio-1": "true false"
+  },
+  "externalModelCalls": 0,
+  "localAcceptanceComplete": true,
+  "publicationPending": true
+}

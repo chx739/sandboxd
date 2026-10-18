@@ -28,6 +28,17 @@ from .workspace_migrate import require_ok
 CONTAINERS = ("sandboxd-workspace-nfs-1", MINIO, "sandboxd-control-plane")
 
 
+def benchmark_binary(binary=None):
+    path = Path(binary) if binary is not None else REPO / ".cache/workspace-sandboxd"
+    if not path.is_file() or not os.access(path, os.X_OK):
+        raise ValueError("build current trusted binary with workspace.sh build-storage before measuring")
+    return path.resolve()
+
+
+def restic_binary():
+    return Path.home() / ".local/share/sandboxd-tools/restic-0.18.1/restic"
+
+
 def counters(pid):
     result = {"go": process_counters(pid), "controller": process_counters(os.getpid()), "containers": {}}
     for name in CONTAINERS:
@@ -48,7 +59,7 @@ def delta(before, after):
 
 
 def repository_stats(values, root_id, trial_id, owner):
-    binary = REPO / ".cache/restic-image-v3/restic"
+    binary = restic_binary()
     assert hashlib.sha256(binary.read_bytes()).hexdigest() == "01143daba61a1dc8afb0cb3d03ba83e6b118f55b6b146b27473a09efc3df13d6"
     env = {"PATH": os.environ["PATH"], "HOME": str(Path.home()), "RESTIC_PASSWORD": values["password"],
            "RESTIC_REPOSITORY": "s3:http://127.0.0.1:9002/sandboxd-workspace/owned-perf/" + root_id + "/" + trial_id,
@@ -65,10 +76,11 @@ def repository_stats(values, root_id, trial_id, owner):
             "scope": "restic referenced raw-data stats plus MinIO prefix apparent filesystem bytes including metadata/directories; not S3 billable bytes"}
 
 
-async def run(output: Path, repeats=3):
+async def run(output: Path, repeats=3, binary=None):
     if not 1 <= repeats <= 5: raise ValueError("repeats must be1..5")
     base_output = output.with_name(output.stem + "-v1.json")
     if output.exists() or base_output.exists(): raise ValueError("preserve previous evidence")
+    binary = benchmark_binary(binary)
     require_idle_ports((10880,))
     for ns in ("sandboxd-demo", "sandboxd-storage"):
         assert not json.loads(checked([*KUBE, "-n", ns, "get", "pods", "-o", "json"]))["items"]
@@ -79,7 +91,6 @@ async def run(output: Path, repeats=3):
     assert minio["Config"]["Labels"]["com.docker.compose.project"] == "sandboxd-workspace-backup"
     nfs_ip, endpoint = nfs["NetworkSettings"]["Networks"]["kind"]["IPAddress"], minio["NetworkSettings"]["Networks"]["kind"]["IPAddress"]
     assert {"HostIp": "127.0.0.1", "HostPort": "9002"} in minio["NetworkSettings"]["Ports"]["9000/tcp"]
-    binary = REPO / ".cache/workspace-sandboxd-owned-cleanup"
     root = Path.home() / ".local/share/sandboxd/workspace-checkpoint-benchmark" / uuid4().hex
     root.mkdir(parents=True, mode=0o700)
     report = {"passed": False, "mode": "actual-fixed-workload-nfs-v1-v2-backend-benchmark", "externalModelCalls": 0,
@@ -234,4 +245,5 @@ async def run(output: Path, repeats=3):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(); parser.add_argument("--output", type=Path, required=True); parser.add_argument("--repeats", type=int, default=3)
-    args = parser.parse_args(); asyncio.run(run(args.output, args.repeats))
+    parser.add_argument("--binary", type=Path, help="显式固定可信Go二进制；默认统一build-storage产物")
+    args = parser.parse_args(); asyncio.run(run(args.output, args.repeats, args.binary))

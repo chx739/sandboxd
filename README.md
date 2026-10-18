@@ -8,7 +8,7 @@ Go sandboxd 保留通用 Exec API 用于沙箱机制验证，但当前 Python ag
 
 ## 当前运维 MVP（Phase 8）
 
-> 当前实施Phase 9工作区恢复：默认部署已接入持久Task/attempt账本及Go受限RPC→gVisor→专属NFS。真实SIGKILL自动接续、终态重启、确认丢失等使V1验收矩阵14/14项通过；旧文件显式迁移已通过真实验收；统一安装/启动、联合回放与小规模性能基线已验证，V1单节点MVP具备交付证据；V2真实restic/MinIO后端和Agent联合检查点正常保存已验证；六个协议切点和可信文件恢复组件已真实验证；历史会话分支及部分Agent TCP恢复故障/取消已通过真实服务验证；引用清理及V2完整故障验收仍待完成。全部实验无付费模型。[部署与复验](deploy/workspace/README.md)、[学习手册](docs/45-持久工作区与任务恢复学习手册.md)、[逐项状态](docs/evidence/phase9-workspace-recovery.md)。
+> Phase 9工作区恢复：默认部署使用持久Task/attempt账本与Go受限RPC→gVisor→专属NFS。V1的14项验收、显式迁移及统一启动已有真实证据；V2同步restic/MinIO联合检查点、历史分支、提交切点、存储故障、引用清理、owned部署与拒绝路径的10项条件已逐项审计。固定性能原始结果保留，全部实验无付费模型；最终回归与PR交付状态见[49逐项审计](docs/49-工作区V1V2逐项验收与交付审计.md)。[部署与复验](deploy/workspace/README.md)、[恢复学习手册](docs/45-持久工作区与任务恢复学习手册.md)、[检查点与部署](docs/47-联合检查点与restic-MinIO学习手册.md)。
 
 - 会话树与分层记忆：分支/恢复、完整工具组、来源/冲突/遗忘；参考固定 Pi/Codex 源码，未完整复刻。
 - 知识：Milvus **2.5.10 原生 BM25 + E5 Dense + RRF + BGE Reranker**，40 篇固定运维文档，默认不依赖 ES。
@@ -111,7 +111,7 @@ Kubernetes SIG Apps 的 [agent-sandbox](https://github.com/kubernetes-sigs/agent
 | Deployment scale DryRun、双 Token 分权、TOCTOU 拒绝 | 已实测 |
 | Agent 层：外部告警、Pi-style Loop、插件、Session、注入与 Pending Plan | Phase 2 Replay/DeepSeek Live 已实测；Phase 3 离线回归通过 |
 | Linux Host：静态 Target、strict host key、低权限双 forced-command | Phase 4 真实 SSH Replay 已实测 |
-| 原生文件：task 工作区、路径/symlink、CAS、原子写、脱敏 Trace | Phase 4 真实 Replay 与单测已实测 |
+| 原生文件：专属工作区、路径/symlink、CAS、原子写、脱敏 Trace | Phase 4原语保留；Phase 9部署改为Pod专属NFS，证据见49 |
 | Prompt Injection Eval：40 条场景、覆盖标签、行为/执行边界分层 | 来源隔离后 88 Task：ASR 1/72、Containment 1/1、副作用 0/72 |
 | Phase 7 Session 树、分层记忆、混合检索、Jev 路由 | Session/Memory 本地测评；Milvus 2.5.10 + ES/BGE 真实本机集成与 SciFact 30 条固定子集消融；Jev 官方 SDK 与 Fake/Replay 通过，Live 首题回退后受 TypeSafe 401 阻塞，见 [phase21](docs/evidence/phase21-jev-live-first-case.md) |
 
@@ -243,7 +243,7 @@ Agent、Linux 和文件的专题学习/题库，以及 Phase 2–4 历史计划�
 - Task、Trace 索引和 Plan 是单进程内存状态；Session Transcript 用本地 JSONL 最小持久化，但不是数据库
 - 当前有 localhost Prometheus/Alertmanager 和静态 Linux SSH Target；没有生产级多主机归属、凭据轮转或堡垒机
 - SSH Connector 不经过 gVisor；它依赖 Target Registry、strict host key、低权限账号和 forced-command
-- 文件工具只写 task 工作区草案，不会上传远端、修改仓库或自动执行 Plan
+- 文件工具修改专属工作区中的草案；默认经Go写入Pod挂载的NFS，外部系统变更走专用Plan与审批
 - DeepSeek Live 三次注入实验均为 `not-triggered`；危险调用的确定性拒绝证据来自 Replay，二者不互相冒充
 
 gVisor 是纵深防御的一层，**不是「绝对安全」的承诺**。
