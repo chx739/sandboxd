@@ -94,9 +94,10 @@ class ObservedClient(SandboxdClient):
 
 
 def start_go(root: Path, binary: Path, nfs_server: str, *, backup_secret: str | None = None, backup_minio_ip: str | None = None,
-             backup_image: str = "sandboxd-restic:0.18.1-v1"):
+             backup_image: str = "sandboxd-restic:0.18.1-v1", backup_owner: dict | None = None,
+             operator_token: str | None = None):
     agent_token = secrets.token_urlsafe(32)
-    child_env = dict(os.environ, SANDBOXD_TOKEN=agent_token, SANDBOXD_OPERATOR_TOKEN=secrets.token_urlsafe(32))
+    child_env = dict(os.environ, SANDBOXD_TOKEN=agent_token, SANDBOXD_OPERATOR_TOKEN=operator_token or secrets.token_urlsafe(32))
     log_path = root / "sandboxd.log"
     log = log_path.open("a")
     log_path.chmod(0o600)
@@ -108,6 +109,16 @@ def start_go(root: Path, binary: Path, nfs_server: str, *, backup_secret: str | 
             raise ValueError("trusted backup fixture needs Secret name and MinIO IPv4")
         command += ["-workspace-backup-image", backup_image,
                     "-workspace-backup-secret", backup_secret, "-workspace-backup-minio-ip", backup_minio_ip]
+    if backup_owner is not None:
+        import re
+        if (not backup_secret or set(backup_owner) != {"controllerId", "repositoryCryptoId", "ownerSnapshotId"}
+                or not re.fullmatch(r"controller-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9]{15}", backup_owner["controllerId"])
+                or any(not re.fullmatch(r"[a-f0-9]{64}", backup_owner[k]) for k in ("repositoryCryptoId", "ownerSnapshotId"))):
+            log.close()
+            raise ValueError("trusted fixture requires complete repository owner")
+        command += ["-workspace-backup-controller", backup_owner["controllerId"],
+                    "-workspace-backup-repository-id", backup_owner["repositoryCryptoId"],
+                    "-workspace-backup-owner-snapshot", backup_owner["ownerSnapshotId"]]
     process = subprocess.Popen(command, env=child_env, stdout=log, stderr=subprocess.STDOUT)
     return process, log, agent_token
 

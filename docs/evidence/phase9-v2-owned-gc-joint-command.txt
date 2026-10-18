@@ -1,0 +1,5 @@
+fresh owned repository initialized
+Replay Agent completed five joint checkpoints
+admin and Go SIGKILL reconciled without repeating backend job
+exclusive lock failure and explicit retry verified
+actual prune and retained pinned version restored

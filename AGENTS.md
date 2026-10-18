@@ -30,7 +30,9 @@ owned helper组件（文档48 §8）已在新专用合成仓库实际验证精�
 
 文档48 §10已接Go持久GC屏障/固定执行与Operator专属HTTP，本地fake/race/全Go通过，不等于真实联合GC验收。独立Python管理员协调器的接线见§11；只有尚未PREPARED且Go证明never-submitted的过期预留可cancel-reservation，PREPARED之后不以此解冻。未知/失败保持冻结并按同GC/job对账，不能给agentd服务注入Operator Token。
 
-文档48 §11已接独立checkpoint_cleanup管理协调器：同CP日志的repository.binding/cleanup.execution、原生目录路径+设备/inode和本机固定仓库claim，禁止旧历史自动收编及同仓库另一目录登记。管理员命令持CP单写入锁，PENDING先落盘再Reserve，PREPARED后才Start，核验Go结果后FORGOTTEN→Finish→DONE；失败不自动重试/解冻。agentd在Worker前拒绝未对账管理状态，不消耗新模型预算。当前仍是本地Fake验证；下一步新干净专属仓库实际联合清理/重启/锁冲突/保留版本恢复，不能复用旧共享或故意污染夹具。
+文档48 §11已接独立checkpoint_cleanup管理协调器：同CP日志的repository.binding/cleanup.execution、原生目录路径+设备/inode和本机固定仓库claim，禁止旧历史自动收编及同仓库另一目录登记。管理员命令持CP单写入锁，PENDING先落盘再Reserve，PREPARED后才Start，核验Go结果后FORGOTTEN→Finish→DONE；失败不自动重试/解冻。agentd在Worker前拒绝未对账管理状态，不消耗新模型预算。该实现批次仅本地Fake验证，后续真实联合结果见§12；任何后续实验仍不能复用旧共享或故意污染夹具。
+
+最新真实GC见文档48 §12：新owned-joint仓库的5个真实联合CP、head/pin/保留来源拒绝、管理员及Go SIGKILL同job对账、实际排他锁/固定目标重试、prune后pin版本文件恢复通过；独立审计30/85/42条日志及4个保留snapshot/read-data，真实只读预览10文件未改，完整Python306通过。仅删除本轮新建的两份合成snapshot，旧共享/污染夹具保留。此实验不是新的历史分支Task恢复或性能测评；接下来固定性能/流量、统一V2入口、十项逐项审计，Goal仍完整active。
 
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 

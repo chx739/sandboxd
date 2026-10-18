@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "pendingCheckpointIds": [],
+  "activeRestoreIds": [],
+  "pendingGcIds": [],
+  "snapshots": [
+    {
+      "repositoryCryptoId": "87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b",
+      "snapshotId": "397cdae80b0e3cd8ae4d8ae2e61cc73079cd49498bddd6fcf3f7be85895376f6",
+      "checkpointIds": [
+        "cp-573a916936fc4f92a896fe7666a9a733"
+      ],
+      "repositoryIds": [
+        "repo-owned-joint"
+      ],
+      "reasons": [
+        "cp-573a916936fc4f92a896fe7666a9a733:branch-head:session-9fa525cd9e6304ef/branch-b83a5f1fd9da46aabee79087579ee074"
+      ],
+      "availability": "available",
+      "eligible": false
+    },
+    {
+      "repositoryCryptoId": "87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b",
+      "snapshotId": "39d27a09a23b3030f9817af4879087f5799aa94534a88347dcb8492453ad9189",
+      "checkpointIds": [
+        "cp-f65c1224d444432bac12b7b8ffc06025"
+      ],
+      "repositoryIds": [
+        "repo-owned-joint"
+      ],
+      "reasons": [],
+      "availability": "forgotten",
+      "eligible": false
+    },
+    {
+      "repositoryCryptoId": "87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b",
+      "snapshotId": "4fa273aa6a95a547690071578cbc013c1a2309cc2dd7a64922ecdd779f2504f8",
+      "checkpointIds": [
+        "cp-af4b373b2b7f4d488e9aeb134b0dc5b1"
+      ],
+      "repositoryIds": [
+        "repo-owned-joint"
+      ],
+      "reasons": [],
+      "availability": "forgotten",
+      "eligible": false
+    },
+    {
+      "repositoryCryptoId": "87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b",
+      "snapshotId": "9cd729707a99616b2c961bd89c0d1af9ef1ebcd4aed931f6dc3f59e7e956c23c",
+      "checkpointIds": [
+        "cp-a26f07d818ab4ac88715e5e974daffed"
+      ],
+      "repositoryIds": [
+        "repo-owned-joint"
+      ],
+      "reasons": [
+        "cp-a26f07d818ab4ac88715e5e974daffed:explicit-pin"
+      ],
+      "availability": "available",
+      "eligible": false
+    },
+    {
+      "repositoryCryptoId": "87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b",
+      "snapshotId": "b15c0f08238ef9f80eb91df325c5b66a4173cf0085bb9e52a3b4c3ae5847acae",
+      "checkpointIds": [
+        "cp-1a961b5a4f39441bb8669482996738ea"
+      ],
+      "repositoryIds": [
+        "repo-owned-joint"
+      ],
+      "reasons": [
+        "cp-1a961b5a4f39441bb8669482996738ea:restore-source:restore-fe31cd3da98b4145b346ab45f6c01c5c"
+      ],
+      "availability": "available",
+      "eligible": false
+    }
+  ],
+  "planSha256": "601111d11fac616f501ce414c47b258591d462aa6cd67fc42219b0cae9955914",
+  "maintenance": {
+    "owner": {
+      "controllerId": "controller-d7d795299f024e5994c10a462e163868",
+      "ownerSnapshotId": "25f9c080deae190abace6751bdbe3d908e6584248c101d5b2cf7f71483a294d4",
+      "repositoryCryptoId": "87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b"
+    },
+    "pendingExecutions": []
+  }
+}

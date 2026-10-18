@@ -49,8 +49,8 @@
     },
     {
       "id": "V2-09",
-      "status": "pending",
-      "note": "Local reference control, owned Go binding/cleanup/Operator routes and independent Python coordinator/root claim verified. Standalone owned-helper actual fresh-repository component passed. Actual combined reference protection, cleanup, restart/lock and retained restore acceptance still pending; do not delete shared historical repositories."
+      "status": "verified",
+      "note": "Actual new owned-joint repository: head/pin/retained cancelled-restore source refused locally, original Task/Session/head preserved, exact two new synthetic snapshots forgotten, prune and pinned file restore passed; admin+Go SIGKILL same job/UID reconciled, real exclusive lock froze GC and valid backup then explicit target-fixed retry passed. Independent journals/inventory/read-data audit and actual readonly CLI passed. Old shared/foreign fixtures untouched; single-node MVP scope only."
     },
     {
       "id": "V2-10",
@@ -880,6 +880,42 @@
     {
       "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-checks.json",
       "sha256": "520bbae6bb1a80e2b8809ccea263d172844fce01b57e40931e494ce6a4968cc2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-audit-command.txt",
+      "sha256": "b1087664d9e7b9531dad76f3f3d7fa4b33861c406edab618bdc9a2776beff774"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-audit-v2-command.txt",
+      "sha256": "6e833c045535c530c4102d0c907507f2cc6119810cf5306e3d1c17519cac9ff1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-audit.json",
+      "sha256": "f85f689ad58932aa0bc8e85fff05dee9c232d8a7198aea372e187259123475df"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-command.txt",
+      "sha256": "f6e05445eed78ed5e8bab29a378c4d79fc0601f9829f9abc257e6236d956262b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-final-checks.json",
+      "sha256": "c9fad54260ca0e7b5dca91b52559ffdcffb88af7d8f3e27e66e4d4ab6a464693"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-full-python-tests.txt",
+      "sha256": "5264f22241c915a822b4882cd59563b938529fe1d36566d4a3e8451ac4aa5c21"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-preview-audit.json",
+      "sha256": "97db8facc4e0400f018b7a97f0b1cae379a47b2ec7d21b91b21656f46b984dd7"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-preview.json",
+      "sha256": "ecb8b49eb9ac5703b2098bc351cb8c82599b06213b377d1612ee91607a39a7f5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint.json",
+      "sha256": "081265cebee261bff177ceb1a67ba6040f4eb580f5664b0cf8bd8c7be461b17f"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -891,5 +927,6 @@
   "restoreExecutorScope": "actual trusted Go/gVisor/NFS/restic/MinIO component restored new empty target and rejected wrong expected repository before writes; no HTTP/Session historical branch/Task resume acceptance yet",
   "repositoryBindingScope": "Go journal pins owned repository/controller/marker/Secret name/endpoint on fresh control log only; rejects downgrade and foreign restore source; local Go and fake Kube tests passed. Python unique control-root ownership, persistent GC barrier, admin HTTP and joint cleanup not implemented.",
   "cleanupRuntimeScope": "Go persistent global cleanup barrier, owned fixed operations, stored result proof, bounded stop/UID cleanup, explicit same-target retry and Operator-only routes verified locally with fake Kubernetes; actual joint cleanup and Python coordinator not yet verified.",
-  "cleanupCoordinatorScope": "Independent operator-only Python process, same-journal repository binding/execution cursors, fixed local crypto-to-directory claim, reference recheck/PREPARED/Go proof/FORGOTTEN/Finish protocol, explicit bounded attempt retry and startup gate verified with local Fake/MockTransport; actual joint storage acceptance pending."
+  "cleanupCoordinatorScope": "Independent operator-only Python process, same-journal repository binding/execution cursors, fixed local crypto-to-directory claim, reference recheck/PREPARED/Go proof/FORGOTTEN/Finish protocol, explicit bounded attempt retry and startup gate verified with local Fake/MockTransport; actual joint storage acceptance pending.",
+  "actualJointCleanupScope": "Actual Replay Agent five CPs, local protected references, Go Operator fixed GC, Python metadata, admin/Go SIGKILL after durable proof, real lock conflict/explicit retry, prune and retained pinned file restore verified; not new historical Task resume or performance benchmark."
 }

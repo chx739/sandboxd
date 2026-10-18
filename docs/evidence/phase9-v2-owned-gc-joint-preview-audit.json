@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "createdAt": "2026-10-18T03:57:54.926896+00:00",
+  "command": [
+    "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/.venv/bin/python",
+    "-m",
+    "agentd.checkpoint_admin",
+    "--checkpoint-dir",
+    "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints",
+    "preview"
+  ],
+  "sourceReportSha256": "081265cebee261bff177ceb1a67ba6040f4eb580f5664b0cf8bd8c7be461b17f",
+  "previewSha256": "ecb8b49eb9ac5703b2098bc351cb8c82599b06213b377d1612ee91607a39a7f5",
+  "unchangedControlFiles": [
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/tasks.jsonl",
+      "sha256": "167d3803d5a8f92c78a2442ee5e266199bf485122f90bc27783492d27b97d544",
+      "ctimeNs": 1792295223589909284,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/sessions/session-9fa525cd9e6304ef.jsonl",
+      "sha256": "78b3c92da51d6f6fdb0a404f844acea92487c29713624d0a50e25a0360079680",
+      "ctimeNs": 1792295223601909776,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/go-control/workspaces.jsonl",
+      "sha256": "05dcf6228fae8c8f06a10735bd4a56ec6c51e62a92b5b326ba07996c86fc3d77",
+      "ctimeNs": 1792295336239614920,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/checkpoints.jsonl",
+      "sha256": "2d4d022afdfa68e8272ef5682a30cc635161c2e05e26884c9a776f347a72808d",
+      "ctimeNs": 1792295319655676568,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/repository-controllers/87e8dde14b3f7c58e2816b97a868c925a82c52eec983742acb0b0315ae058a6b.json",
+      "sha256": "8a8caa54c4437324933926cb774a598f0602b99ccde3e2d46dfc5050aa50d1a6",
+      "ctimeNs": 1792295174284295207,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/session-refs/c4e7d9b89013e638fe75278a3a7e2a268045d66558ec107e9b0e9ea78e2e60aa.json",
+      "sha256": "c4e7d9b89013e638fe75278a3a7e2a268045d66558ec107e9b0e9ea78e2e60aa",
+      "ctimeNs": 1792295180668562309,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/session-refs/2192ea169a9b04a6fda05b2e2bc6f0d91d90ba15ba601201618eb6477747e3b9.json",
+      "sha256": "2192ea169a9b04a6fda05b2e2bc6f0d91d90ba15ba601201618eb6477747e3b9",
+      "ctimeNs": 1792295189464359844,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/session-refs/798efd61ecc23fc5743f347f70fca6c290289e598db58a31a5f3de672539ca7a.json",
+      "sha256": "798efd61ecc23fc5743f347f70fca6c290289e598db58a31a5f3de672539ca7a",
+      "ctimeNs": 1792295197660711277,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/session-refs/c6f46b87c59938280bd4d13f2b4dbdf8ff62ed86410614d19ceeb9001f7203bd.json",
+      "sha256": "c6f46b87c59938280bd4d13f2b4dbdf8ff62ed86410614d19ceeb9001f7203bd",
+      "ctimeNs": 1792295206449105000,
+      "mode": 33152
+    },
+    {
+      "path": "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/session-refs/ae6ca925e0dee85ecf960fd2d1a19db2199295aec0db261e5958ab93032c13ca.json",
+      "sha256": "ae6ca925e0dee85ecf960fd2d1a19db2199295aec0db261e5958ab93032c13ca",
+      "ctimeNs": 1792295214425535220,
+      "mode": 33152
+    }
+  ],
+  "snapshotGroups": 5,
+  "pendingExecutions": 0,
+  "externalModelCalls": 0,
+  "scope": "Actual offline CLI on retained owned deployment; content/ctime/mode unchanged; read atime may change. No storage query or deletion."
+}

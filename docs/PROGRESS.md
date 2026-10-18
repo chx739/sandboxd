@@ -14,9 +14,19 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M4：V1已交付；V2正常保存、协议切点、历史分支与存储故障已验证；引用控制/owned组件/Go GC与Operator接口/Python管理协调器及目录归属已有分层本地证据；真实联合GC、性能/统一入口和十项完整验收待完成；Goal active
+    Phase 9 M4/M5：V1已交付；V2正常保存、协议切点、历史分支、存储故障及新仓库真实联合GC已验证；固定性能/流量、统一V2入口和十项完整验收审计待完成；Goal active
 
 ## Phase 9 当前恢复点
+
+### 2026-10-18：新专属仓库真实联合GC通过
+
+- 起点61bdb39，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮Python管理协议/目录归属、本地回归和PR为进展；本轮新增workspace_gc_joint_demo及独立标准库审计，start_go管理夹具显式Owner/Operator参数，旧调用默认不变。新owned-joint/UUID仓库及controller/Secret/控制目录，完全不复用旧共享或故意污染夹具。
+- phase9-v2-owned-gc-joint.json真实通过：Agent Replay经实际Go/runsc/NFS/restic/MinIO创建5份联合CP（5模型槽/4工具槽），head/pin/保留取消计划来源3类拒绝；新第1点在真实Wait/Go证明后实际管理员SIGKILL+Go SIGKILL，沿原GC/job/Pod UID仅Wait+Finish对账，无后端重跑。原Task已成功后才注入管理员故障，不宣称unfinished Agent跨Go故障自动接续。原Task/Session字节与deadline/calls不改，活动NFS仍version3。
+- 新第3点实际排他check锁使清理Wait503/helper1，PREPARED冻结；有效另一工作区备份Reserve409。正常CONT/INT释放自己的锁后，固定snapshot显式attempt2/newjob成功，备份Reserve200；无force unlock，内部restic退出码未采集。实际prune后，从pin的第2点恢复新空NFS并经RPC读回version2/hash；这是保留文件恢复，不是新历史分支Task。只遗忘本次新第1/3点，COMMITTED历史和全部旧数据保留。
+- 独立-owned-gc-joint-audit通过：CP30/Go85/Task42条checksum/序号、Session引用父链、claim及原文件hash；核对PREPARED→submitted→Go证明→FORGOTTEN→released顺序（时间规范为微秒并结合协议，不以墙钟代替因果）。实际仓库恰留owner marker+第2/4/5点4个snapshot，crypto/controller/专属前缀和正常read-data检查通过。初次系统Python不识别Go RFC3339Nano的Z/9位小数而失败，原-audit-command保留；显式兼容后-v2-command通过，没有重跑原实验或改日志。
+- 真实checkpoint_admin preview通过-owned-gc-joint-preview及-preview-audit：10个控制/引用/claim文件hash/ctime/mode不变，5组均不可再清理，无pending；允许读atime变化。最终完整Python306/306、297.056秒通过-full-python-tests，Go生产代码未改不重跑旧Go。真实实验后available20,521MiB、swap0、业务/维护Pod空；服务关闭，所有剩余仓库数据/Secret/目录/日志保留，外部模型0。
+- 收尾-owned-gc-joint-final-checks通过：AST、项目三容器健康/无暂停、Pod0/端口10880与18090空闲、MinIO200，4个实际凭据的字面/Base64在15份本轮公开文件零命中。213份证据hash逐项通过，进度矩阵仅V2-09按上述实证置verified，整体formalV2AcceptanceComplete仍false；其余项继续逐项审计，不用本轮成绩替代全部目标。
+- **第一项下一步**：固定同条件NFS V1与V2性能/流量、实际上传/去重/占用与恢复成本，再接统一restic启动（新Owner bootstrap，旧共享只保留），最后按文档43全部十项审核与PR交付。V2-09有完整真实候选证据，其他未审计项和性能不缩减；Goal保持active。文档48 §12为本批命令/结果/边界。
 
 ### 2026-10-18：独立Python管理协调器与目录归属
 
