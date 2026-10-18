@@ -24,6 +24,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 绑定完整Owner及原生私有目录路径/设备/inode；固定本机repository-controllers/crypto.json独占登记，另一个控制目录/复制账本拒绝，已有CP历史和Session引用不收编。不是跨主机排他/HA，目录或claim损坏不强行修复。PENDING持久化GC/job后才Reserve，复核引用并PREPARED后Start；同owner/完整目标/Go持久证明核验后FORGOTTEN→Finish→DONE。失败保持冻结，显式retry先落盘新attempt再远端调用，响应丢失沿原nextJob对账。
 - 初始18/18、2.696秒通过-cleanup-coordinator-initial-tests；随后相关34/34、6.818秒通过-final-targeted-tests。完整Python303/303、312.634秒通过-full-python-tests；最后补启动门/只读预览/异常关闭测试及client close嵌套finally，由最终-v2-targeted报告单独核验，不把303说成包含后补全部测试。CLI默认错误不打印HTTP异常链，客户端仅loopback/固定动作/有界响应、无重定向/环境代理/自动重试。
 - 最终相关38/38、7.624秒通过phase9-v2-cleanup-coordinator-final-v2-targeted-tests.txt，含本批14项新测试及旧引用/保存协调器回归；303完整与38相关有重叠、不相加。完整进程一直等待原session结束，没有因观察超时重启。源代码/文档diff及AST检查通过，用户两份文档hash与前批一致。
+- 有效实现78bde50；收尾-final-checks核对7份源代码hash、204份证据hash及既有可信Go缓存二进制hash一致，未启动该服务。无新依赖/下载、原始日志保留；当前真实联合GC仍未执行，不能把本批Fake控制结果当后端删除证明。
 - 预览另列Owner/pendingExecutions，引用plan SHA原投影不变。维护PENDING阻止新CP/恢复，restic服务在Worker前拒绝启动以保留原Task/预算，Runner选模型/路由前再次预检。Fake切点明确是合成协议异常，不冒称实际SIGKILL/restic结果；未启动新服务、访问实际仓库或调用外部模型。
 - **第一项下一步**：使用新干净专属仓库和.cache/workspace-sandboxd-owned-cleanup，真实走目录绑定→Session/文件联合CP→管理员引用复核→Go屏障/Operator→实际forget/prune→保留版本恢复；加入中断/锁冲突及原目录不变证据，不能复用旧共享或故意污染夹具。再完成固定性能/流量、统一V2启动和十项完整审计。文档48 §11为管理代码/命令入口，Goal保持完整active。
 
