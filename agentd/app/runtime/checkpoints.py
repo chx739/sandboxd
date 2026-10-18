@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import json
 import re
 import threading
 from datetime import datetime, timezone
@@ -43,8 +45,8 @@ class CheckpointLedger:
     SessionReferences保存不可变可读父链，日志只保存定位与校验信息。
     commit须由协调器在Task取消锁/owner校验内调用，本模块不是跨服务锁。
     """
-    def __init__(self, path: Path, refs: SessionReferences):
-        self._journal = DurableJournal(path)
+    def __init__(self, path: Path, refs: SessionReferences, *, read_only: bool = False):
+        self._journal = DurableJournal(path, read_only=read_only)
         self._refs = refs
         self._lock = threading.RLock()
         self._records: dict[str, dict[str, Any]] = {}
@@ -52,8 +54,14 @@ class CheckpointLedger:
         self._boundaries: dict[tuple[str, str, str], str] = {}
         self._restores: dict[str, dict[str, Any]] = {}
         self._origins: dict[tuple[str, str], str] = {}
+        self._pins: set[str] = set()
+        self._forgets: dict[str, dict[str, Any]] = {}
         try:
             for entry in self._journal.entries():
+                if entry["type"] in {"checkpoint.pin", "checkpoint.forget"}:
+                    self._validate_retention(entry["type"], entry["data"])
+                    self._project_retention(entry["type"], entry["data"])
+                    continue
                 if entry["type"] == "checkpoint.restore":
                     self._validate_restore(entry["data"])
                     self._project_restore(entry["data"])
@@ -102,6 +110,9 @@ class CheckpointLedger:
                     or not isinstance(data["repositoryId"], str) or not _ID.fullmatch(data["repositoryId"])
                     or any(not isinstance(data[k], str) or not _HASH.fullmatch(data[k]) for k in _DATA - {"repositoryId"})):
                 raise JournalCorrupt("checkpoint requires full repository/snapshot/manifest identities")
+            if any((data["repositoryCryptoId"], data["snapshotId"]) == (g["repositoryCryptoId"], g["snapshotId"])
+                   for g in self._forgets.values()):
+                raise JournalCorrupt("checkpoint reuses a pending/forgotten snapshot")
         if r["status"] not in {"PREPARING", "DATA_READY", "COMMITTED", "FAILED"}:
             raise JournalCorrupt("invalid checkpoint state")
         if r["status"] == "PREPARING" and r["data"] is not None:
@@ -119,6 +130,8 @@ class CheckpointLedger:
             raise JournalCorrupt("invalid checkpoint failure reason")
         previous = self._records.get(r["checkpointId"])
         if previous is None:
+            if any(g["status"] == "PREPARED" for g in self._forgets.values()):
+                raise JournalCorrupt("new checkpoint during pending cleanup")
             if r["status"] != "PREPARING" or self._parent(self._branch(r)) != r["parentCheckpointId"]:
                 raise JournalCorrupt("checkpoint must start at current committed head")
             if self._branch(r) not in self._heads and self._branch(r) in self._origins:
@@ -160,7 +173,8 @@ class CheckpointLedger:
         with self._lock:
             return [cp for cp, record in self._records.items() if record["status"] == "COMMITTED"
                     and record["identity"]["sessionId"] == session_id
-                    and record["identity"]["sessionNodeId"] == node_id]
+                    and record["identity"]["sessionNodeId"] == node_id
+                    and self.file_availability(cp) == "available"]
 
     def _project(self, state: dict[str, Any]) -> None:
         r = copy.deepcopy(state)
@@ -204,6 +218,8 @@ class CheckpointLedger:
                 if old["identity"] != identity or old["parentCheckpointId"] != expected_head:
                     raise CheckpointConflict("checkpoint retry changed binding")
                 return old
+            if any(r["status"] == "PREPARED" for r in self._forgets.values()):
+                raise CheckpointConflict("repository cleanup pending; reconcile before new checkpoint")
             if self._parent((identity["sessionId"], identity["branchId"])) != expected_head:
                 raise CheckpointConflict("branch head changed")
             self._refs.read(identity["sessionRef"])
@@ -216,7 +232,7 @@ class CheckpointLedger:
         with self._lock:
             r = self.get(checkpoint_id)
             if r["status"] in {"DATA_READY", "COMMITTED"} and r["data"] == data:
-                return r
+                return self.restore_point(checkpoint_id)[0] if r["status"] == "COMMITTED" else r
             if r["status"] != "PREPARING":
                 raise CheckpointConflict("checkpoint cannot accept another snapshot")
             r.update(status="DATA_READY", data=copy.deepcopy(data))
@@ -228,7 +244,7 @@ class CheckpointLedger:
             r = self.get(checkpoint_id)
             self._refs.read(r["identity"]["sessionRef"])
             if r["status"] == "COMMITTED":
-                return r
+                return self.restore_point(checkpoint_id)[0]
             if r["status"] != "DATA_READY" or self._parent(self._branch(r)) != r["parentCheckpointId"]:
                 raise CheckpointConflict("checkpoint is not data-ready or head changed")
             head = self.head(*self._branch(r))
@@ -253,6 +269,8 @@ class CheckpointLedger:
             r = self.get(checkpoint_id)
             if r["status"] != "COMMITTED":
                 raise CheckpointConflict("checkpoint is not a committed restore point")
+            if self.file_availability(checkpoint_id) != "available":
+                raise CheckpointConflict("checkpoint file snapshot is pending forget or forgotten")
             return r, self._refs.read(r["identity"]["sessionRef"])
 
     def _validate_restore(self, record: dict[str, Any]) -> None:
@@ -278,6 +296,10 @@ class CheckpointLedger:
             raise JournalCorrupt("invalid restore failure code")
         old = self._restores.get(record["restoreId"])
         if old is None:
+            if any(g["status"] == "PREPARED" for g in self._forgets.values()):
+                raise JournalCorrupt("new restore during pending cleanup")
+            if self.file_availability(record["sourceCheckpointId"]) != "available":
+                raise JournalCorrupt("restore source snapshot is unavailable")
             if record["status"] != "RESERVED":
                 raise JournalCorrupt("restore must reserve source before execution")
             for other in self._restores.values():
@@ -345,14 +367,166 @@ class CheckpointLedger:
             return self._save_restore(record)
 
     def protected_checkpoints(self) -> dict[str, list[str]]:
-        """管理清理的引用输入；未提供主动解除引用或删除快照能力。"""
+        """按分支头、保留恢复源及显式pin生成引用；失败恢复也保持来源。"""
         with self._lock:
             protected: dict[str, list[str]] = {}
             for (session, branch), cp in self._heads.items():
                 protected.setdefault(cp, []).append("branch-head:" + session + "/" + branch)
             for request in self._restores.values():
                 protected.setdefault(request["sourceCheckpointId"], []).append("restore-source:" + request["restoreId"])
+            for cp in sorted(self._pins):
+                protected.setdefault(cp, []).append("explicit-pin")
             return protected
+
+    def file_availability(self, checkpoint_id: str) -> str:
+        """历史COMMITTED日志保留；文件恢复资格由独立遗忘投影决定。"""
+        with self._lock:
+            record = self.get(checkpoint_id)
+            data = record["data"]
+            if data:
+                for operation in self._forgets.values():
+                    if (data["repositoryCryptoId"], data["snapshotId"]) == (operation["repositoryCryptoId"], operation["snapshotId"]):
+                        return "forget-pending" if operation["status"] == "PREPARED" else "forgotten"
+            return "available" if record["status"] == "COMMITTED" else "uncommitted"
+
+    def cleanup_preview(self) -> dict[str, Any]:
+        """仅本控制账本已知引用；不授权删除未知快照/其他部署，也不执行后端操作。"""
+        with self._lock:
+            protected = self.protected_checkpoints()
+            pending = sorted(r["checkpointId"] for r in self.pending())
+            active_restores = sorted(r["restoreId"] for r in self._restores.values() if r["status"] in {"RESERVED", "FILES_READY"})
+            pending_gc = sorted(r["gcId"] for r in self._forgets.values() if r["status"] == "PREPARED")
+            groups: dict[tuple[str, str], dict[str, Any]] = {}
+            for cp, record in self._records.items():
+                data = record["data"]
+                if data is None:
+                    continue
+                key = (data["repositoryCryptoId"], data["snapshotId"])
+                group = groups.setdefault(key, {"repositoryCryptoId": key[0], "snapshotId": key[1],
+                                               "checkpointIds": [], "repositoryIds": [], "reasons": []})
+                group["checkpointIds"].append(cp)
+                group["repositoryIds"].append(data["repositoryId"])
+                group["reasons"].extend(cp + ":" + reason for reason in protected.get(cp, []))
+                if record["status"] != "COMMITTED":
+                    group["reasons"].append(cp + ":uncommitted-data")
+                else:
+                    try:
+                        self._refs.read(record["identity"]["sessionRef"])
+                    except (OSError, ValueError, JournalCorrupt):
+                        group["reasons"].append(cp + ":session-reference-unreadable")
+            for group in groups.values():
+                ids = group["checkpointIds"]
+                group["availability"] = self.file_availability(ids[0])
+                group["checkpointIds"] = sorted(ids)
+                group["repositoryIds"] = sorted(set(group["repositoryIds"]))
+                if pending:
+                    group["reasons"].append("pending-checkpoint")
+                if active_restores:
+                    group["reasons"].append("active-restore")
+                if pending_gc:
+                    group["reasons"].append("cleanup-in-progress")
+                group["reasons"] = sorted(set(group["reasons"]))
+                group["eligible"] = not group["reasons"] and group["availability"] == "available"
+            view = {"schemaVersion": 1, "pendingCheckpointIds": pending,
+                    "activeRestoreIds": active_restores, "pendingGcIds": pending_gc,
+                    "snapshots": [groups[key] for key in sorted(groups)]}
+            digest = hashlib.sha256(json.dumps(view, ensure_ascii=False, sort_keys=True,
+                                              separators=(",", ":")).encode()).hexdigest()
+            return {**view, "planSha256": digest}
+
+    def _validate_retention(self, kind: str, record: dict[str, Any]) -> None:
+        if kind == "checkpoint.pin":
+            if (not isinstance(record, dict) or set(record) != {"checkpointId", "retained"}
+                    or type(record["retained"]) is not bool or not isinstance(record["checkpointId"], str)
+                    or record["checkpointId"] not in self._records
+                    or self.file_availability(record["checkpointId"]) != "available"
+                    or (record["checkpointId"] in self._pins) == record["retained"]):
+                raise JournalCorrupt("invalid checkpoint pin transition")
+            return
+        fields = {"schemaVersion", "gcId", "repositoryCryptoId", "snapshotId", "checkpointIds", "planSha256", "status"}
+        if (not isinstance(record, dict) or set(record) != fields or type(record["schemaVersion"]) is not int
+                or record["schemaVersion"] != 1 or not isinstance(record["gcId"], str)
+                or not re.fullmatch(r"gc-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9]{15}", record["gcId"])
+                or any(not isinstance(record[k], str) or not _HASH.fullmatch(record[k])
+                       for k in ("repositoryCryptoId", "snapshotId", "planSha256"))):
+            raise JournalCorrupt("invalid checkpoint forget identity")
+        old = self._forgets.get(record["gcId"])
+        if old is not None:
+            if (any(record[k] != old[k] for k in fields - {"status"})
+                    or old["status"] != "PREPARED" or record["status"] != "FORGOTTEN"):
+                raise JournalCorrupt("invalid checkpoint forget transition")
+            return
+        view = self.cleanup_preview()
+        target = next((r for r in view["snapshots"] if r["repositoryCryptoId"] == record["repositoryCryptoId"]
+                       and r["snapshotId"] == record["snapshotId"]), None)
+        if (record["status"] != "PREPARED" or record["planSha256"] != view["planSha256"] or target is None
+                or not target["eligible"] or record["checkpointIds"] != target["checkpointIds"]
+                or any(r["status"] == "PREPARED" for r in self._forgets.values())):
+            raise JournalCorrupt("forget plan changed, protected snapshot or cleanup already pending")
+
+    def _project_retention(self, kind: str, record: dict[str, Any]) -> None:
+        if kind == "checkpoint.pin":
+            if record["retained"]:
+                self._pins.add(record["checkpointId"])
+            else:
+                self._pins.remove(record["checkpointId"])
+        else:
+            self._forgets[record["gcId"]] = copy.deepcopy(record)
+
+    def _save_retention(self, kind: str, record: dict[str, Any]) -> dict[str, Any]:
+        self._validate_retention(kind, record)
+        self._journal.append(kind, record)
+        self._project_retention(kind, record)
+        return copy.deepcopy(record)
+
+    def retain(self, checkpoint_id: str, retained: bool) -> None:
+        with self._lock:
+            if type(retained) is not bool or self.file_availability(checkpoint_id) != "available":
+                raise CheckpointConflict("only an available committed checkpoint may be pinned")
+            if (checkpoint_id in self._pins) != retained:
+                self._save_retention("checkpoint.pin", {"checkpointId": checkpoint_id, "retained": retained})
+
+    def prepare_forget(self, gc_id: str, repository_crypto_id: str, snapshot_id: str, plan_sha256: str) -> dict[str, Any]:
+        """内部管理协调器：先使整个快照组不可恢复，再启动可信后端forget。
+
+        未知后端结果保持PREPARED，不自动撤销或重新放行恢复。
+        """
+        with self._lock:
+            old = self._forgets.get(gc_id)
+            if old:
+                if any(old[k] != v for k, v in {"repositoryCryptoId": repository_crypto_id,
+                                               "snapshotId": snapshot_id, "planSha256": plan_sha256}.items()):
+                    raise CheckpointConflict("forget retry changed immutable binding")
+                return copy.deepcopy(old)
+            view = self.cleanup_preview()
+            target = next((r for r in view["snapshots"] if r["repositoryCryptoId"] == repository_crypto_id
+                           and r["snapshotId"] == snapshot_id), None)
+            if target is None or not target["eligible"] or view["planSha256"] != plan_sha256:
+                raise CheckpointConflict("unknown/protected snapshot or stale cleanup preview")
+            return self._save_retention("checkpoint.forget", {"schemaVersion": 1, "gcId": gc_id,
+                "repositoryCryptoId": repository_crypto_id, "snapshotId": snapshot_id,
+                "checkpointIds": target["checkpointIds"], "planSha256": plan_sha256, "status": "PREPARED"})
+
+    def complete_forget(self, gc_id: str) -> dict[str, Any]:
+        """仅可信协调器确认同仓库真实forget结果后使用；本方法本身不证明删除成功。"""
+        with self._lock:
+            if gc_id not in self._forgets:
+                raise CheckpointConflict("unknown cleanup request")
+            record = copy.deepcopy(self._forgets[gc_id])
+            if record["status"] == "FORGOTTEN":
+                return record
+            record["status"] = "FORGOTTEN"
+            return self._save_retention("checkpoint.forget", record)
+
+    def forget_request(self, gc_id: str) -> dict[str, Any]:
+        with self._lock:
+            if gc_id not in self._forgets:
+                raise CheckpointConflict("unknown cleanup request")
+            return copy.deepcopy(self._forgets[gc_id])
+
+    def forget_requests(self) -> list[dict[str, Any]]:
+        with self._lock:
+            return copy.deepcopy(list(self._forgets.values()))
 
     def close(self) -> None:
         self._journal.close()

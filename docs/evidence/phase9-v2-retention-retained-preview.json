@@ -1,0 +1,177 @@
+{
+  "mode": "actual-retained-control-readonly-cli-preview",
+  "passed": true,
+  "scope": "Existing real Session/checkpoint files only; no backend calls, deletion or real GC acceptance",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-restore-branch/9b3963bd246f42d8ac2f6da8e21d8167",
+  "checkpointDirectory": "/home/hx/.local/share/sandboxd/workspace-restore-branch/9b3963bd246f42d8ac2f6da8e21d8167/agent-control/checkpoints",
+  "externalModelCalls": 0,
+  "filesUnchanged": {
+    "checkpoints.jsonl": {
+      "sha256": "c5cd20a8dc351e0a6639834cece0c1b5e0d6f0b96dc604470efdae641ebf638d",
+      "ctimeNs": 1792282792161391779,
+      "mode": 384
+    },
+    "session-refs/18485c09b77436756120b59d8eb23f6c260b36c690ace3c2db82b1224510b2a8.json": {
+      "sha256": "18485c09b77436756120b59d8eb23f6c260b36c690ace3c2db82b1224510b2a8",
+      "ctimeNs": 1792282745835588186,
+      "mode": 384
+    },
+    "session-refs/1bf50e5de692034e904b5ce045c3a4f76b91e7c30d165bc2559144a0af010ce5.json": {
+      "sha256": "1bf50e5de692034e904b5ce045c3a4f76b91e7c30d165bc2559144a0af010ce5",
+      "ctimeNs": 1792282752589331002,
+      "mode": 384
+    },
+    "session-refs/28ccc2172cf85855cf9b101e5476a9016af643b4b9b51803efdd8d45033a2142.json": {
+      "sha256": "28ccc2172cf85855cf9b101e5476a9016af643b4b9b51803efdd8d45033a2142",
+      "ctimeNs": 1792282758542357595,
+      "mode": 384
+    },
+    "session-refs/5b2fffa711ef99b965b09a3d1ce637827afd15a7c60ce4c16d1be770a16f4be8.json": {
+      "sha256": "5b2fffa711ef99b965b09a3d1ce637827afd15a7c60ce4c16d1be770a16f4be8",
+      "ctimeNs": 1792282724576286120,
+      "mode": 384
+    },
+    "session-refs/704b8eafc99754b2864179e39347971d5a0d3c915eaedd44442ac79e61a36f1d.json": {
+      "sha256": "704b8eafc99754b2864179e39347971d5a0d3c915eaedd44442ac79e61a36f1d",
+      "ctimeNs": 1792282780731607033,
+      "mode": 384
+    },
+    "session-refs/a36fdf9abfa3866bf8820edb06b9c0bb1c2061854cf4d0126224671df4996db9.json": {
+      "sha256": "a36fdf9abfa3866bf8820edb06b9c0bb1c2061854cf4d0126224671df4996db9",
+      "ctimeNs": 1792282724576286120,
+      "mode": 384
+    },
+    "session-refs/da201d03a64638950a723a21497afa1c8b97aa36c0ecf0ab8bdc86d7f74bc778.json": {
+      "sha256": "da201d03a64638950a723a21497afa1c8b97aa36c0ecf0ab8bdc86d7f74bc778",
+      "ctimeNs": 1792282724576286120,
+      "mode": 384
+    },
+    "session-refs/de6455245020c3e385d03363a1b43c9ebfc7364d5e8d80b52a0cd0bcb24d97d1.json": {
+      "sha256": "de6455245020c3e385d03363a1b43c9ebfc7364d5e8d80b52a0cd0bcb24d97d1",
+      "ctimeNs": 1792282786543235761,
+      "mode": 384
+    }
+  },
+  "preview": {
+    "schemaVersion": 1,
+    "pendingCheckpointIds": [],
+    "activeRestoreIds": [],
+    "pendingGcIds": [],
+    "snapshots": [
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "7b171d47a00083c159a2ed47d70c5116fecc95d601ebdb90ead0e0d0011dec44",
+        "checkpointIds": [
+          "cp-81fce18386ea43db9846a722aa57751f"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [],
+        "availability": "available",
+        "eligible": true
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "969c7bcae396bfd5fbedaf8d515eaedb52b61e6e90df255bf400acda9db03fe1",
+        "checkpointIds": [
+          "cp-c43149b4251c475cb087ce14779349be"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [
+          "cp-c43149b4251c475cb087ce14779349be:branch-head:session-eba92e76c2add765/branch-5a034ecf434347b3b84acfc030366533"
+        ],
+        "availability": "available",
+        "eligible": false
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "af01c1246e601de49fa627f6b7610b98838c2c013583718aedfe97e91d16d78f",
+        "checkpointIds": [
+          "cp-23b8224bae98470980df4326a0af1f59"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [],
+        "availability": "available",
+        "eligible": true
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "b27688ce7081db83ed1c24d2abc5c3b28976a62399c4782d776b2f632fb3be79",
+        "checkpointIds": [
+          "cp-40caa2aa4bf941e19d9e93c298942e68"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [
+          "cp-40caa2aa4bf941e19d9e93c298942e68:branch-head:session-eba92e76c2add765/branch-c1d6a65c8846493ea86c0bc9a470329d"
+        ],
+        "availability": "available",
+        "eligible": false
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "b3a837ee198f223b0afee53d3b4be8c8be4e21129b7a15cd35ccd2396e7f5aa9",
+        "checkpointIds": [
+          "cp-9f11afe0469144478f56f781016e79ed"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [],
+        "availability": "available",
+        "eligible": true
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "bbb23d17b8776c6df33ba09ba558a1bf1d7780098044fc7bc30043e662223adc",
+        "checkpointIds": [
+          "cp-e96d4770e16f47609eb44c2d67bb0e20"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [
+          "cp-e96d4770e16f47609eb44c2d67bb0e20:branch-head:session-eba92e76c2add765/branch-bbb20b226d2746d69297844c27c0d2c9"
+        ],
+        "availability": "available",
+        "eligible": false
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "bc7d29c7a043a243ede7d33ccade6758d341dcce9c357f3905663da843e2145f",
+        "checkpointIds": [
+          "cp-93540b038af442d6a01fed6bf7ae9c15"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [
+          "cp-93540b038af442d6a01fed6bf7ae9c15:restore-source:restore-bef8e165ae0f42b795f4d9a86792b143",
+          "cp-93540b038af442d6a01fed6bf7ae9c15:restore-source:restore-fdd5af916ebe4ba1b752916e505db08d"
+        ],
+        "availability": "available",
+        "eligible": false
+      },
+      {
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "snapshotId": "e8fa837dcc338f831a885b137d23eecee5a204f9ff50f6df10055bf15c744485",
+        "checkpointIds": [
+          "cp-356ce2e96ece4a0588014cfac6edfa87"
+        ],
+        "repositoryIds": [
+          "repo-component"
+        ],
+        "reasons": [],
+        "availability": "available",
+        "eligible": true
+      }
+    ],
+    "planSha256": "4e6b9eccca7214f5376cf22252d823bd720f7881f0ee3b182b140be2a310e995"
+  }
+}

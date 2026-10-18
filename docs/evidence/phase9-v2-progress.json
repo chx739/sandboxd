@@ -50,7 +50,7 @@
     {
       "id": "V2-09",
       "status": "pending",
-      "note": "full acceptance not executed"
+      "note": "Local reference aggregation, explicit pins, stale-preview check and PREPARED/FORGOTTEN lifecycle implemented; protected heads/restore sources/aliases/uncommitted records covered by synthetic tests. Actual readonly CLI preserves 9 retained real control files (hash/ctime/mode), 8 snapshot groups projected. Full Python292 passed. Trusted Go forget/prune, repository-owner binding and actual deletion acceptance remain pending; local eligible is not deletion authority."
     },
     {
       "id": "V2-10",
@@ -59,7 +59,7 @@
     }
   ],
   "remaining": [
-    "Reference-aware controlled cleanup preview, protected branch/pinned/active-restore sources, forget/prune; default no automatic deletion",
+    "Trusted Go fixed forget/prune, global maintenance serialization, unique repository/control owner binding, offline coordinator and new dedicated synthetic repository actual cleanup/restore validation; local refs/pins/preview/lifecycle now implemented",
     "Fixed-workload V1/V2 performance/traffic and resource comparison including synchronous checkpoint overhead",
     "Actual unified shell startup restic-mode execution",
     "Final ten-item V2 requirement-by-requirement evidence audit and related regressions; restore started/attached standalone fixture modes not executed"
@@ -748,6 +748,22 @@
     {
       "path": "docs/evidence/phase9-v2-storage-partial-file.json",
       "sha256": "42836228b9b17a4e92f577229262adc1aecc21e3a56b19612f3623f2405ccc02"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-control-tests.txt",
+      "sha256": "441b52f4023df2b8b162e112ff9be97464d8fc46060e1b10a3fcd53ba81f76d2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-final-checks.json",
+      "sha256": "1531854a0c3ee6390e53dbcecfb5590565e978c0d8b383a08572a8ec8466f6af"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-full-python-tests.txt",
+      "sha256": "913effb1830efe5aebdb890233704f995d0589ff453a77d8bb822e4ec0e9cbca"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-retained-preview.json",
+      "sha256": "facb3ce8dc7def7c0d94854c250eeb4b246451a9a21cd522c23b25bd09c77695"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

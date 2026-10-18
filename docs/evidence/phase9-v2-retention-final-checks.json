@@ -1,0 +1,14 @@
+{
+  "mode": "local-retention-control-final-checks",
+  "passed": true,
+  "syntaxValid": true,
+  "gitDiffCheck": true,
+  "fullPythonTests": 292,
+  "fullPythonPassed": true,
+  "generatedCredentialValuesChecked": 3,
+  "filesScanned": 13,
+  "credentialMatches": 0,
+  "retainedRealControlFilesStillUnchanged": 9,
+  "backendForgetPruneExecuted": false,
+  "scope": "Local metadata control and actual readonly CLI only; real deletion acceptance pending"
+}
