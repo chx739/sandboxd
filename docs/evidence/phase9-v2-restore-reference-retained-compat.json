@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "scope": "read/rebuild retained real Agent checkpoint journal; no new restore, Task, API or storage execution",
+  "externalModelCalls": 0,
+  "sourceReport": "phase9-v2-agent-cut-committed.json",
+  "selectedCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+  "headCheckpointId": "cp-c43149b4251c475cb087ce14779349be",
+  "headRevision": 3,
+  "journalUnchanged": true,
+  "sessionRefUnchanged": true,
+  "journalSha256": "0312fa3647e2410bfec8ff2ea9ff80644bdec32c3a4faea3ec7fa877758b385e"
+}

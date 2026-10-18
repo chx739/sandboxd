@@ -1,0 +1,19 @@
+{"stage": "storage-fault-after-first-commit", "checkpointId": "cp-2d4922e90ef6467890b18efcd1400f4b", "faultType": "PartialBackup"}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_storage_fault_demo.py", line 250, in <module>
+    asyncio.run(run(args.output, args.secret_name, args.minio_ip, args.fault))
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_storage_fault_demo.py", line 181, in run
+    assert task.status != "succeeded", "failed storage must not claim task success"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: failed storage must not claim task success

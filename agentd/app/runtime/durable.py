@@ -40,17 +40,23 @@ class DurableJournal:
     数据必须由调用方选取字段并脱敏，不能直接传入凭据或原始工具请求。
     """
 
-    def __init__(self, path: Path, *, max_record_bytes: int = 2 << 20) -> None:
+    def __init__(self, path: Path, *, max_record_bytes: int = 2 << 20, read_only: bool = False) -> None:
         self.path = Path(path)
         self._mutex = threading.RLock()
         self._limit = max_record_bytes
         self._fd = -1
         self._poisoned = False
-        self.path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-        self.path.parent.chmod(0o700)
+        self._read_only = read_only
+        if not read_only:
+            self.path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+            self.path.parent.chmod(0o700)
+        else:
+            info = self.path.parent.lstat()
+            if not stat.S_ISDIR(info.st_mode) or stat.S_IMODE(info.st_mode) & 0o077:
+                raise JournalError("read-only control directory requires private permissions")
         try:
             self._fd = os.open(
-                self.path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600,
+                self.path, (os.O_RDONLY if read_only else os.O_RDWR | os.O_CREAT) | os.O_NOFOLLOW, 0o600,
             )
             if not stat.S_ISREG(os.fstat(self._fd).st_mode):
                 raise JournalError("control journal must be a regular file")
@@ -58,18 +64,20 @@ class DurableJournal:
                 fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 raise JournalInUse("control journal already has an active owner") from None
-            os.fchmod(self._fd, 0o600)
+            if not read_only:
+                os.fchmod(self._fd, 0o600)
             # Windows 挂载盘可能接受 chmod 却不实现权限；不能伪报私有控制目录。
             if stat.S_IMODE(os.fstat(self._fd).st_mode) & 0o077:
                 raise JournalError("control journal requires private Linux file permissions")
             with os.fdopen(os.dup(self._fd), "rb") as handle:
                 handle.seek(0)
                 self._records, self._valid_end = self._decode(handle)
-            parent_fd = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY)
-            try:
-                os.fsync(parent_fd)
-            finally:
-                os.close(parent_fd)
+            if not read_only:
+                parent_fd = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY)
+                try:
+                    os.fsync(parent_fd)
+                finally:
+                    os.close(parent_fd)
         except BaseException:
             self.close()
             raise
@@ -111,6 +119,8 @@ class DurableJournal:
 
     def append(self, kind: str, data: dict[str, Any]) -> dict[str, Any]:
         with self._mutex:
+            if self._read_only:
+                raise JournalError("read-only control journal cannot append")
             if self._fd < 0 or self._poisoned:
                 raise JournalError("control journal is closed or requires recovery")
             if not isinstance(kind, str) or not re.fullmatch(r"[a-z][a-z0-9_.-]{0,63}", kind):

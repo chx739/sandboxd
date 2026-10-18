@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-18T03:05:14.034305+00:00",
+  "scope": "Local Go durable repository binding, trusted deployment flags, owned backup request and result checks; fake Kubernetes only. No actual storage or deletion acceptance.",
+  "previousGoalTurn": "User traffic question answered with code inspection; no implementation or performance acceptance claimed. This turn advances repository binding.",
+  "externalModelCalls": 0,
+  "newServiceStarts": 0,
+  "snapshotsDeleted": 0,
+  "formalV2AcceptanceComplete": false,
+  "sources": [
+    {
+      "path": "internal/sandbox/repository_binding.go",
+      "sha256": "a23b1bd1baa2051ef658d1b647ad88369d0ab2c98955efa1541958eb9096c396"
+    },
+    {
+      "path": "internal/sandbox/repository_binding_test.go",
+      "sha256": "1e6edfd7d00e10eb05cb6f56b1a2854e46e610acce3abecafb4f27e54ea1842c"
+    },
+    {
+      "path": "internal/sandbox/backup_runtime.go",
+      "sha256": "03c31fdb485340ca9eda6f5a86572b1c1d6f3ec104e49afc3f4bcd9f20a904a4"
+    },
+    {
+      "path": "internal/sandbox/workspace_barrier.go",
+      "sha256": "5c11d4e2d7b8ea7594ba9d588327e2516528d0615fa12288921bd4390b972d87"
+    },
+    {
+      "path": "internal/sandbox/workspace_registry.go",
+      "sha256": "2c55796646cb04659988ba1b68a6e5e8a560d33dcb70bce596ceb2d75be5dbca"
+    },
+    {
+      "path": "internal/config/config.go",
+      "sha256": "faa3a6b6d0c44a033b6b7689e019c915b8d72e46e6ac9fac77a3dec5e5143867"
+    },
+    {
+      "path": "internal/config/workspace_test.go",
+      "sha256": "ddf2c3a96a8efb36d358c5198040097975a06c63cdcab9fb800619303fa7618d"
+    },
+    {
+      "path": "cmd/sandboxd/main.go",
+      "sha256": "0e6bd4ac8d173591c124f0a1693301151e613c7c1f57bcf3c49c46f097b91703"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-final-race-tests.txt",
+      "sha256": "baf20f512bb895fd944bbcb18cafb2f65b329e41a48414644453fa5ec6418d65"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-full-go-tests.txt",
+      "sha256": "30d15cf400701ba7ca57f7936e1940f922704d814d3705e0825436e66afe1472"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-race-tests.txt",
+      "sha256": "7e047705ab515e016e9c42a7e4f79c355a79f78aa1dfe3025ab89865c027d430"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-tests.txt",
+      "sha256": "1dc3ee304aff9773fc86338aae88feb0326e5af653f14f2684ab9b728f8c1ab0"
+    }
+  ],
+  "auditNote": "Initial collector rejected Go ok plus whitespace format; corrected collector uses whitespace regex. Tests were not rerun or altered."
+}

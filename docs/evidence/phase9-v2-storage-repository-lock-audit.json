@@ -1,0 +1,31 @@
+{
+  "mode": "independent-readonly-raw-repository-lock-audit",
+  "passed": true,
+  "sourceReportSha256": "21f0183924c21b5fdaf33e43530fa0c4a75459c31e3bb1de851ed55801274ed4",
+  "journals": [
+    {
+      "path": "go-control/workspaces.jsonl",
+      "records": 19,
+      "sha256": "38af3498b0c6db60d49e5c86fbd92cc41df0c44db5589cf31cbfdfe0995187b8",
+      "checksumAndSequenceValid": true
+    },
+    {
+      "path": "agent-control/tasks.jsonl",
+      "records": 24,
+      "sha256": "ba2fa65eff8ab6f5d8ec252de049250b55222d4fa1dc0c8eb9e876f525ce47d4",
+      "checksumAndSequenceValid": true
+    },
+    {
+      "path": "agent-control/checkpoints/checkpoints.jsonl",
+      "records": 5,
+      "sha256": "5d2329863c8ea0e249f4fd5ddff1bf8cc94760c90bb9d5977765da90fffb479d",
+      "checksumAndSequenceValid": true
+    }
+  ],
+  "exactCheckpointTransitions": true,
+  "taskCallsAndOriginalLoopClockPreserved": true,
+  "failedBackupSubmittedOnce": true,
+  "maintenanceStoppedAndReleased": true,
+  "actualResticExitCode": 11,
+  "scope": "same lock experiment, not another service run"
+}

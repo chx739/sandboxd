@@ -1,0 +1,36 @@
+{
+  "mode": "real-go-gvisor-nfs-restic-minio-component",
+  "passed": false,
+  "externalModelCalls": 0,
+  "scope": "trusted backend component only; no Agent/session joint checkpoint or production write barrier acceptance",
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-backup/components/029ec13c7550443494715729edc65d44",
+  "repository": "s3:http://172.23.0.4:9000/sandboxd-workspace/components/029ec13c7550443494715729edc65d44",
+  "secretName": "restic-de98bba66ef640f8",
+  "transport": "HTTP on private Docker kind network plus localhost9002; TLS not exercised",
+  "minio": {
+    "containerId": "83f1562f81d00bb331ebfc49c6e16976a6990bbe818aa57a025a2abdfe3a08b0",
+    "imageId": "sha256:6d770d7f255cda1f18d841ffc4365cb7e0d237f6af6a15fcdb587480cd7c3b93",
+    "kindIp": "172.23.0.4",
+    "mounts": [
+      {
+        "type": "volume",
+        "name": "sandboxd-workspace-backup_repository-data",
+        "destination": "/data"
+      }
+    ]
+  },
+  "operations": [],
+  "businessPods": [],
+  "cleanup": [
+    {
+      "workspaceId": "workspace-2e485c1fc4b54f5b92f8b1f70d488e39",
+      "stopConfirmed": true
+    },
+    {
+      "workspaceId": "workspace-2e485c1fc4b54f5b92f8b1f70d488e39",
+      "stopConfirmed": true
+    }
+  ],
+  "error": "trusted Kubernetes object operation failed",
+  "timestamp": "2026-10-17T21:01:04.477444+00:00"
+}

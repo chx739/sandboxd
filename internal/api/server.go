@@ -15,6 +15,7 @@ const maxRequestBodyBytes = 16 << 10
 
 type Server struct {
 	workspaces          *sandbox.WorkspaceRuntime
+	backups             *sandbox.BackupRuntime
 	manager             *sandbox.Manager
 	pool                *sandbox.Pool
 	plans               *approval.Service
@@ -62,6 +63,8 @@ func (s *Server) Handler() http.Handler {
 // EnableWorkspaces 只在开始监听前由可信启动配置调用；不接受HTTP动态后端切换。
 func (s *Server) EnableWorkspaces(runtime *sandbox.WorkspaceRuntime) { s.workspaces = runtime }
 
+func (s *Server) EnableBackups(runtime *sandbox.BackupRuntime) { s.backups = runtime }
+
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", textOK)
 	// healthz 只说明进程活着；readyz 必须回答依赖是否可用。
@@ -80,11 +83,17 @@ func (s *Server) routes() {
 	s.mux.Handle("POST /api/v1/workspaces/{workspace}/claim", s.requireAgent(http.HandlerFunc(s.claimWorkspace)))
 	s.mux.Handle("POST /api/v1/workspaces/{workspace}/release", s.requireAgent(http.HandlerFunc(s.releaseWorkspace)))
 	s.mux.Handle("POST /api/v1/workspaces/{workspace}/files", s.requireAgent(http.HandlerFunc(s.workspaceFiles)))
+	s.mux.Handle("GET /api/v1/workspaces/{workspace}/backup", s.requireAgent(http.HandlerFunc(s.getWorkspaceBackup)))
+	s.mux.Handle("POST /api/v1/workspaces/{workspace}/backup/{action}", s.requireAgent(http.HandlerFunc(s.workspaceBackup)))
+	s.mux.Handle("GET /api/v1/workspaces/{workspace}/restore", s.requireAgent(http.HandlerFunc(s.getWorkspaceRestore)))
+	s.mux.Handle("POST /api/v1/workspaces/{workspace}/restore/{action}", s.requireAgent(http.HandlerFunc(s.workspaceRestore)))
 
 	// Operator 需要先读取 Plan 再决策，所以 list 同时允许两种角色。
 	s.mux.Handle("GET /api/v1/plans", s.requireEither(http.HandlerFunc(s.listPlans)))
 	s.mux.Handle("POST /api/v1/plans/{id}/approve", s.requireOperator(http.HandlerFunc(s.approvePlan)))
 	s.mux.Handle("POST /api/v1/plans/{id}/reject", s.requireOperator(http.HandlerFunc(s.rejectPlan)))
+	s.mux.Handle("GET /api/v1/repository/cleanup", s.requireOperator(http.HandlerFunc(s.getRepositoryCleanup)))
+	s.mux.Handle("POST /api/v1/repository/cleanup/{action}", s.requireOperator(http.HandlerFunc(s.repositoryCleanup)))
 }
 
 func (s *Server) requireAgent(next http.Handler) http.Handler {

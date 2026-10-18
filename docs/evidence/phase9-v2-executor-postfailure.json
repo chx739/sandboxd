@@ -1,0 +1,60 @@
+{
+  "backupResult": {
+    "snapshotId": "54ec9c7e8e5bdadec7ac27cc61744770e29f5464dde08bce88ca3caa39104688",
+    "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+    "manifestSha256": "22f76f83068eef9641d4692198d14ad9e0b035c97a3c7e3a21553c359991972d",
+    "maintenanceImageId": "sha256:d84a466326ed959920fee751772ddfed5bfd0e766a4fa76c552d5063f0911b64",
+    "podUid": "7e252e66-130f-46ad-8e76-05b77cae9ce4"
+  },
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-backup/executor-probes/ba3cdc91606a4cde9176a432ef77a6ac",
+  "externalModelCalls": 0,
+  "finishedBarrier": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-383c4fecc133412887dcb6da19f405de",
+    "checkpointId": "cp-7d79bbc00cbf4572a6ad94f36466d97a",
+    "operation": "backup",
+    "access": {
+      "workspaceId": "workspace-383c4fecc133412887dcb6da19f405de",
+      "taskId": "task-ba4dbb113fd947fd98b894476c664f72",
+      "attemptId": "attempt-cb17e8737a6346dd8ddf37a54ec17055",
+      "sandboxId": "10b0c58f75a47a49",
+      "generation": 1
+    },
+    "jobId": "probe-62dd876803c6489988bf9296ffeee1d0",
+    "podName": "workspace-backup-probe-62dd876803c6489988bf9296ffeee1d0",
+    "podUid": "7e252e66-130f-46ad-8e76-05b77cae9ce4",
+    "phase": "released",
+    "stopReason": "containers-terminated",
+    "job": {
+      "imageRef": "sandboxd-restic:0.18.1-v1",
+      "secretName": "restic-96b2e21e6af74376",
+      "endpointIp": "172.23.0.4"
+    }
+  },
+  "mode": "real-backend-postfailure-reconciliation",
+  "observedBarrier": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-383c4fecc133412887dcb6da19f405de",
+    "checkpointId": "cp-7d79bbc00cbf4572a6ad94f36466d97a",
+    "operation": "backup",
+    "access": {
+      "workspaceId": "workspace-383c4fecc133412887dcb6da19f405de",
+      "taskId": "task-ba4dbb113fd947fd98b894476c664f72",
+      "attemptId": "attempt-cb17e8737a6346dd8ddf37a54ec17055",
+      "sandboxId": "10b0c58f75a47a49",
+      "generation": 1
+    },
+    "jobId": "probe-62dd876803c6489988bf9296ffeee1d0",
+    "podName": "workspace-backup-probe-62dd876803c6489988bf9296ffeee1d0",
+    "podUid": "7e252e66-130f-46ad-8e76-05b77cae9ce4",
+    "phase": "stopped",
+    "stopReason": "containers-terminated",
+    "job": {
+      "imageRef": "sandboxd-restic:0.18.1-v1",
+      "secretName": "restic-96b2e21e6af74376",
+      "endpointIp": "172.23.0.4"
+    }
+  },
+  "passed": true,
+  "scope": "backend write barrier and registry restart only; no Session joint commit or process SIGKILL claim"
+}

@@ -1,0 +1,5 @@
+# github.com/chx739/sandboxd/internal/sandbox [github.com/chx739/sandboxd/internal/sandbox.test]
+internal/sandbox/restore_runtime_test.go:196:106: invalid operation: *options.Preconditions.UID != stopped.PodUID (mismatched types types.UID and string)
+FAIL	github.com/chx739/sandboxd/internal/sandbox [build failed]
+ok  	github.com/chx739/sandboxd/internal/api	1.305s
+FAIL

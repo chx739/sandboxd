@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "module": "real Agent process cut-point acceptance fixture",
+  "milestone": "M4-in-progress",
+  "formalV2AcceptanceComplete": false,
+  "externalModelCalls": 0,
+  "baselineCommit": "56285fca5ace91f3cbd260c210e7386f07470ffc",
+  "realReports": {
+    "data-ready": "phase9-v2-agent-cut-data-ready.json",
+    "committed": "phase9-v2-agent-cut-committed.json",
+    "reserved": "phase9-v2-agent-cut-reserved-v2.json"
+  },
+  "realScope": "Actual SIGSTOP/waitpid proof then SIGKILL(-9) of self-created Agent; original native control directory auto-restart, Go/NFS/MinIO remain running",
+  "fullRegression": {
+    "path": "phase9-v2-joint-fault-full-tests.txt",
+    "passed": true,
+    "tests": 239,
+    "seconds": 282.089,
+    "scope": "before final port-probe extraction and extra local-listener case"
+  },
+  "finalTargeted": {
+    "path": "phase9-v2-joint-fault-fixture-final-v2-tests.txt",
+    "passed": true,
+    "tests": 5,
+    "seconds": 0.068
+  },
+  "retainedFailures": [
+    "phase9-v2-joint-fault-fixture-tests.txt",
+    "phase9-v2-agent-cut-reserved-tests.txt",
+    "phase9-v2-agent-cut-reserved-preflight.json"
+  ],
+  "scopeNotes": [
+    "Replay only, no paid models",
+    "all three preserve original task scope, call reservations, deadline/timing/provider; write once",
+    "uncommitted DATA_READY not restore point; COMMITTED preserved; reserved does not manufacture Python record",
+    "runsc maintenance observed for DATA_READY/COMMITTED; RESERVED has no maintenance Pod yet",
+    "empty business/storage namespaces confirmed after run; all data/volumes/Secrets retained"
+  ],
+  "notExecuted": [
+    "preparing and before-commit real cut points",
+    "Go process SIGKILL",
+    "real cancel/MinIO unavailability/repository lock",
+    "historical restore/new empty target/image pinning",
+    "branch isolation and continued restored execution",
+    "reference protection and controlled forget/prune",
+    "fixed-workload V1/V2 performance and traffic"
+  ]
+}

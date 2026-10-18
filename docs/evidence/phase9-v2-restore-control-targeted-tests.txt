@@ -1,0 +1,12 @@
+=== RUN   TestConfiguredRestoreDescriptorSurvivesRestartAndCannotChange
+--- PASS: TestConfiguredRestoreDescriptorSurvivesRestartAndCannotChange (0.04s)
+=== RUN   TestFailedRestoreQuarantinesTargetWithoutBlockingOtherWorkspaces
+--- PASS: TestFailedRestoreQuarantinesTargetWithoutBlockingOtherWorkspaces (0.06s)
+=== RUN   TestVerifiedRestorePinsBusinessImageAndReplaysMetadata
+--- PASS: TestVerifiedRestorePinsBusinessImageAndReplaysMetadata (0.08s)
+=== RUN   TestRestoreSourceValidationAndLegacyJSONEncoding
+--- PASS: TestRestoreSourceValidationAndLegacyJSONEncoding (0.00s)
+=== RUN   TestRestorePinPublicationCrashWindowStaysFrozen
+--- PASS: TestRestorePinPublicationCrashWindowStaysFrozen (0.06s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/sandbox	1.278s

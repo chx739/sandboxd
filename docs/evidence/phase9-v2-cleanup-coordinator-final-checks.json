@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-18T03:38:54.372317+00:00",
+  "implementationCommit": "78bde50fa7d8e48e12d18f2aa7e28e76ec65bf09",
+  "sourceHashes": "all seven verified against coordinator audit",
+  "diffCheck": "passed for implementation commit",
+  "trustedGoBinary": {
+    "path": ".cache/workspace-sandboxd-owned-cleanup",
+    "sha256": "0929dc28769812262f1d3d28bf4a0523b4096e5147257b82a859483a0a021953",
+    "unchanged": true,
+    "notStarted": true
+  },
+  "externalModelCalls": 0,
+  "newServiceStarts": 0,
+  "actualStorageOperations": 0,
+  "formalV2AcceptanceComplete": false,
+  "next": "Use a new clean dedicated repository for actual Python/Go Operator/retention/GC joint acceptance; old shared and contaminated fixture repositories must be retained."
+}

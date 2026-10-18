@@ -1,0 +1,1 @@
+{"stage": "storage-fault-after-first-commit", "checkpointId": "cp-625c39c4ea9145e3ad8c5df202cc4412", "faultType": "PartialBackup"}

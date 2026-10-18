@@ -1,0 +1,1 @@
+component failed; inspect report and retained control state

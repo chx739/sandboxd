@@ -1,0 +1,32 @@
+{
+  "mode": "independent-readonly-raw-partial-file-audit",
+  "passed": true,
+  "sourceReportSha256": "8203e0ffc5c5d4cf13ae9612027ee7d9238d384b70fc51f8ea63c6ef6ceb7357",
+  "journals": [
+    {
+      "path": "go-control/workspaces.jsonl",
+      "records": 19,
+      "sha256": "1f24c272b33d39bd458039dd5738c902f38201f1d238f3da9cec3081f1022db3",
+      "checksumAndSequenceValid": true
+    },
+    {
+      "path": "agent-control/tasks.jsonl",
+      "records": 27,
+      "sha256": "7bcc53f9417d285cf8732652ecb0444e38777bac2995511d185b6eea4b8a7122",
+      "checksumAndSequenceValid": true
+    },
+    {
+      "path": "agent-control/checkpoints/checkpoints.jsonl",
+      "records": 5,
+      "sha256": "982b2353c573c445f20a7295c35225d1286e4999ba08afd05a59c06c6ad47c10",
+      "checksumAndSequenceValid": true
+    }
+  ],
+  "exactCheckpointTransitions": true,
+  "partialSnapshotNeverDataReady": true,
+  "taskCallsAndOriginalLoopClockPreserved": true,
+  "failedBackupSubmittedOnce": true,
+  "maintenanceStoppedAndReleased": true,
+  "actualResticExitCode": 3,
+  "scope": "same v2 partial-file experiment; first failed fixture run retained separately"
+}

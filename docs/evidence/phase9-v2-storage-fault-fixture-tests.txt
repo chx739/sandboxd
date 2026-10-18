@@ -1,0 +1,8 @@
+test_failed_unpause_keeps_watchdog (agentd.tests.test_storage_fault_fixture.StorageFaultFixtureTests.test_failed_unpause_keeps_watchdog) ... ok
+test_untrusted_or_prepaused_service_is_untouched (agentd.tests.test_storage_fault_fixture.StorageFaultFixtureTests.test_untrusted_or_prepaused_service_is_untouched) ... ok
+test_watchdog_precedes_pause_and_targets_exact_id (agentd.tests.test_storage_fault_fixture.StorageFaultFixtureTests.test_watchdog_precedes_pause_and_targets_exact_id) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK

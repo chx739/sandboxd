@@ -1,0 +1,16 @@
+{
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-restore-runtime-smoke/28de3aa23fe24948a2e735b459ffcc41",
+  "externalModelCalls": 0,
+  "mode": "real-trusted-restore-fixture-reconciliation",
+  "passed": true,
+  "scope": "trusted restore executor only; no Session branch/API/GC acceptance",
+  "source": {
+    "snapshotId": "bc7d29c7a043a243ede7d33ccade6758d341dcce9c357f3905663da843e2145f",
+    "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+    "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+  },
+  "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+  "targetCount": 2
+}

@@ -24,6 +24,7 @@ _SESSION_ID = re.compile(r"^session-[a-f0-9]{16}$")
 _NODE_ID = re.compile(r"^node-[a-f0-9]{16}$")
 _ATTEMPT_ID = re.compile(r"^attempt-[a-f0-9]{32}$")
 _MAX_MESSAGE_CHARS = 16 << 10
+_MAX_RUNTIME_DIAG_CHARS = 128 << 10
 
 
 def _now() -> str:
@@ -72,6 +73,31 @@ def _safe_json_value(value: object, depth: int = 0) -> Any:
     return public_error(str(value), limit=2048)
 
 
+def _safe_runtime_diagnosis(content: object) -> str:
+    """最终公开诊断可能含多条证据，不能按普通消息截断后仍标成可恢复。
+
+    独立有界持久化预算；逐叶脱敏，不改变模型调用时的上下文预算。
+    Provider来源标记在Loop剥离，只有Runtime生成的诊断走此入口。
+    """
+    if not isinstance(content,str) or len(content)>_MAX_RUNTIME_DIAG_CHARS:
+        raise ValueError("Runtime diagnosis exceeds persistence budget")
+    value=json.loads(content)
+    def safe(item,depth=0):
+        if depth>8: raise ValueError("Runtime diagnosis depth exceeds limit")
+        if isinstance(item,str): return public_error(item,limit=_MAX_RUNTIME_DIAG_CHARS)
+        if isinstance(item,list):
+            if len(item)>64: raise ValueError("Runtime diagnosis item limit")
+            return [safe(v,depth+1) for v in item]
+        if isinstance(item,dict):
+            if len(item)>64: raise ValueError("Runtime diagnosis field limit")
+            return {str(k):safe(v,depth+1) for k,v in item.items()}
+        if item is None or isinstance(item,(bool,int,float)): return item
+        raise ValueError("invalid Runtime diagnosis value")
+    raw=json.dumps(safe(value),ensure_ascii=False,allow_nan=False)
+    if len(raw)>_MAX_RUNTIME_DIAG_CHARS: raise ValueError("Runtime diagnosis exceeds persistence budget")
+    return raw
+
+
 def _serialize_message(message: BaseMessage) -> dict[str, Any]:
     """只保存 Provider 无关的公开消息字段，不保存 additional_kwargs/隐藏 CoT。"""
 
@@ -88,7 +114,9 @@ def _serialize_message(message: BaseMessage) -> dict[str, Any]:
 
     payload: dict[str, Any] = {
         "role": role,
-        "content": _safe_content(message.content),
+        "content": (_safe_runtime_diagnosis(message.content)
+                    if isinstance(message,AIMessage) and message.additional_kwargs.get("sandboxdRuntimeFinalDiagnosis") is True
+                    else _safe_content(message.content)),
     }
     if isinstance(message, AIMessage):
         # Tool 参数逐叶脱敏；不保存 additional_kwargs 和模型隐藏思维。
@@ -103,6 +131,8 @@ def _serialize_message(message: BaseMessage) -> dict[str, Any]:
                 safe_call["args"] = safe_tool_arguments(name, arguments)
             safe_calls.append(safe_call)
         payload["toolCalls"] = _safe_json_value(safe_calls)
+        if message.additional_kwargs.get("sandboxdRuntimeFinalDiagnosis") is True:
+            payload["runtimeGenerated"] = "final-diagnosis"
     if isinstance(message, ToolMessage):
         payload["toolCallId"] = str(message.tool_call_id)
     if isinstance(message, HumanMessage):
@@ -125,6 +155,8 @@ def _deserialize_message(payload: dict[str, Any]) -> BaseMessage:
         return AIMessage(
             content=content,
             tool_calls=calls if isinstance(calls, list) else [],
+            additional_kwargs=({"sandboxdRuntimeFinalDiagnosis": True}
+                               if payload.get("runtimeGenerated") == "final-diagnosis" else {}),
         )
     if role == "tool":
         return ToolMessage(
@@ -495,6 +527,28 @@ class SessionJournal:
         if head_id is None:
             raise ValueError("Session 尚无完整 Turn")
         return _path_nodes(nodes, head_id)
+
+    async def checkpoint_prefix(self, node_id: str) -> dict[str, Any]:
+        """只导出已落盘的完整父链；不改变活动head，不复制兄弟分支。"""
+        if not isinstance(node_id, str) or not _NODE_ID.fullmatch(node_id):
+            raise ValueError("非法检查点Session节点")
+        async with self._lock:
+            entries = self._read_entries_unlocked()
+            nodes = self._nodes(entries)
+            if node_id not in nodes or nodes[node_id].get("branchable") is not True:
+                raise ValueError("检查点需要已持久化的完整交互边界")
+            header = next((e for e in entries if e.get("type") == "session.header"), None)
+            if header is None:
+                raise ValueError("检查点缺少Session header")
+            chain = _path_nodes(nodes, node_id)
+            messages = [n["message"] for n in chain]
+            if not messages or not _branchable_flags(messages)[-1]:
+                raise ValueError("检查点父链包含不完整工具调用")
+            # 只保留恢复所需字段；原JSONL和中断审计不删改。
+            return {"schemaVersion": 1, "sessionId": self.session_id, "nodeId": node_id,
+                    "alert": header["alert"], "nodes": [
+                        {k: n[k] for k in ("nodeId", "parentId", "message", "taskId", "attemptId", "timestamp") if k in n}
+                        for n in chain]}
 
     @staticmethod
     def _nodes(entries: Sequence[dict[str, Any]]) -> dict[str, dict[str, Any]]:

@@ -28,16 +28,17 @@ type WorkspaceOwner struct {
 // WorkspaceRecord is Go's authority. Labels are checked against this record,
 // never used as a replacement for it. Every update is fsynced before publication.
 type WorkspaceRecord struct {
-	Version     int            `json:"schemaVersion"`
-	WorkspaceID string         `json:"workspaceId"`
-	SessionID   string         `json:"sessionId"`
-	BranchID    string         `json:"branchId"`
-	Generation  uint64         `json:"generation"`
-	Phase       string         `json:"phase"`
-	Owner       WorkspaceOwner `json:"owner"`
-	ImageRef    string         `json:"imageRef,omitempty"`
-	ImageID     string         `json:"imageId,omitempty"`
-	StopReason  string         `json:"stopReason,omitempty"`
+	Version      int            `json:"schemaVersion"`
+	WorkspaceID  string         `json:"workspaceId"`
+	SessionID    string         `json:"sessionId"`
+	BranchID     string         `json:"branchId"`
+	Generation   uint64         `json:"generation"`
+	Phase        string         `json:"phase"`
+	Owner        WorkspaceOwner `json:"owner"`
+	ImageRef     string         `json:"imageRef,omitempty"`
+	ImageID      string         `json:"imageId,omitempty"`
+	StopReason   string         `json:"stopReason,omitempty"`
+	RestoredFrom RestoreSource  `json:"restoredFrom,omitzero"`
 }
 
 type WorkspaceAccess struct {
@@ -59,9 +60,13 @@ func (a WorkspaceAccess) Validate() error {
 }
 
 type WorkspaceRegistry struct {
-	mu      sync.Mutex
-	journal *control.Journal
-	records map[string]WorkspaceRecord
+	mu           sync.Mutex
+	journal      *control.Journal
+	records      map[string]WorkspaceRecord
+	barriers     map[string]WorkspaceBarrier
+	repository   RepositoryBinding
+	cleanupPlans map[string]cleanupPlan
+	cleanupJobs  map[string]bool
 }
 
 func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
@@ -69,8 +74,31 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 	if err != nil {
 		return nil, err
 	}
-	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}}
+	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}, barriers: map[string]WorkspaceBarrier{}, cleanupPlans: map[string]cleanupPlan{}, cleanupJobs: map[string]bool{}}
 	for _, entry := range journal.Entries() {
+		if entry.Type == "repository.binding" {
+			var binding RepositoryBinding
+			decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))
+			decoder.DisallowUnknownFields()
+			if decoder.Decode(&binding) != nil || r.validateRepositoryBinding(binding) != nil {
+				journal.Close()
+				return nil, errors.New("invalid persistent repository binding")
+			}
+			r.repository = binding
+			continue
+		}
+		if entry.Type == "workspace.barrier" {
+			var barrier WorkspaceBarrier
+			decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))
+			decoder.DisallowUnknownFields()
+			if decoder.Decode(&barrier) != nil || r.validateBarrier(barrier) != nil {
+				journal.Close()
+				return nil, errors.New("invalid persistent workspace barrier")
+			}
+			r.barriers[barrier.WorkspaceID] = barrier
+			r.indexCleanup(barrier)
+			continue
+		}
 		var record WorkspaceRecord
 		decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))
 		decoder.DisallowUnknownFields()
@@ -88,6 +116,12 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 }
 
 func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
+	if r.repository != (RepositoryBinding{}) && record.WorkspaceID == r.cleanupWorkspaceID() {
+		return ErrWorkspaceConflict // 维护关联ID不是可挂载的业务工作区。
+	}
+	if record.RestoredFrom != (RestoreSource{}) && !record.RestoredFrom.valid() {
+		return ErrWorkspaceConflict
+	}
 	if record.Version != 1 || !workspaceIDPattern.MatchString(record.WorkspaceID) || !runtimeIDPattern.MatchString(record.SessionID) || !strings.HasPrefix(record.SessionID, "session-") || !runtimeIDPattern.MatchString(record.BranchID) || !strings.HasPrefix(record.BranchID, "branch-") {
 		return errors.New("invalid workspace record identity")
 	}
@@ -111,6 +145,12 @@ func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
 		return errors.New("invalid workspace phase")
 	}
 	if previous, ok := r.records[record.WorkspaceID]; ok {
+		if record.RestoredFrom != previous.RestoredFrom {
+			b, exists := r.barriers[record.WorkspaceID]
+			if previous.RestoredFrom != (RestoreSource{}) || !exists || b.Operation != "restore" || b.Phase != "stopped" || b.StopReason != "containers-terminated" || !b.RestoreVerified || b.RestoreSource != record.RestoredFrom || record.Phase != "ready" || record.Generation != 0 {
+				return ErrWorkspaceConflict
+			}
+		}
 		if record.SessionID != previous.SessionID || record.BranchID != previous.BranchID || record.Generation < previous.Generation || record.Generation > previous.Generation+1 {
 			return errors.New("workspace scope or generation changed unexpectedly")
 		}
@@ -136,7 +176,10 @@ func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
 		if record.Generation > previous.Generation && previous.Phase != "ready" && previous.Phase != "released" {
 			return errors.New("workspace takeover without a stopped owner")
 		}
-	} else if record.Phase != "registered" || record.Generation != 0 {
+		if r.barrierActive(record.WorkspaceID) && record.Generation != previous.Generation {
+			return ErrWorkspaceConflict
+		}
+	} else if record.Phase != "registered" || record.Generation != 0 || record.RestoredFrom != (RestoreSource{}) {
 		return errors.New("workspace history must start with registration")
 	}
 	return nil
@@ -209,6 +252,9 @@ func (r *WorkspaceRegistry) Records() []WorkspaceRecord {
 func (r *WorkspaceRegistry) BeginClaim(workspaceID, taskID, attemptID, sandboxID, imageRef string) (WorkspaceRecord, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+	if r.barrierActive(workspaceID) {
+		return WorkspaceRecord{}, ErrWorkspaceConflict
+	}
 	record, ok := r.records[workspaceID]
 	if !ok {
 		return WorkspaceRecord{}, ErrWorkspaceConflict
@@ -231,6 +277,12 @@ func (r *WorkspaceRegistry) BeginClaim(workspaceID, taskID, attemptID, sandboxID
 	expectedImageID := record.ImageID
 	if record.Owner.TaskID != taskID {
 		expectedImageID = ""
+	}
+	if record.RestoredFrom != (RestoreSource{}) {
+		if record.RestoredFrom.ImageRef != imageRef {
+			return WorkspaceRecord{}, ErrWorkspaceConflict
+		}
+		expectedImageID = record.RestoredFrom.ImageID
 	}
 	record.Generation++
 	record.Phase = "starting"
@@ -357,7 +409,7 @@ func (r *WorkspaceRegistry) WithOwner(ctx context.Context, access WorkspaceAcces
 		return err
 	}
 	record, ok := r.records[access.WorkspaceID]
-	if !ok || record.Phase != "bound" || !matches(record, access) || record.Owner.StopConfirmed {
+	if !ok || record.Phase != "bound" || !matches(record, access) || record.Owner.StopConfirmed || r.barrierActive(access.WorkspaceID) {
 		return ErrWorkspaceConflict
 	}
 	if err := fn(record); err != nil {

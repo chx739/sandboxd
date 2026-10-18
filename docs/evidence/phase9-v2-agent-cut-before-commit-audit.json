@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": "phase9-v2-agent-cut-before-commit.json",
+  "sha256": "8245784802faa8c2f4e130f33fa15fe4e5ffac322b19980dc7418d2f77d49f51",
+  "passed": true,
+  "checks": {
+    "realSigkill": true,
+    "sameOriginalTaskScopeAndBudget": true,
+    "originalCallsPreserved": true,
+    "notPromotedBeforeCommit": true,
+    "writeOnce": true,
+    "noPaidModel": true
+  },
+  "scope": "independent raw-report consistency audit; not another service run"
+}

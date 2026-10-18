@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "source": "phase9-v2-agent-cut-reserved-v2.json",
+  "sha256": "2f8157365a5f1f6e4162a61b70efe209481b0b788bc48db0485831311af29525",
+  "passed": true,
+  "checks": {
+    "actualSigkill": true,
+    "sameTaskScopeAndOriginalBudgets": true,
+    "originalCallsPreserved": true,
+    "noManufacturedPythonCheckpoint": true,
+    "originalGoBarrierReserved": true,
+    "noMaintenancePodBeforeStart": true,
+    "newCommittedHead": true,
+    "writeOnce": true,
+    "noPaidModel": true
+  },
+  "scope": "independent report audit; not another service run"
+}

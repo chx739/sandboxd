@@ -1,5 +1,7 @@
 # 后续开发执行规则
 
+> Phase9当前交付状态：文档43的工作区恢复目标已逐项验收并发布实现4ba0d6a至PR#3；V1 14/V2 10、最终339 Python、三类联合Replay及交付证据见文档49/phase9-workspace-final-acceptance.json。PR依赖#2→#1且未合并。以下阶段性“下一步/待完成”是历史实施记录，不自动扩成新工作；后续按用户新指令和PROGRESS的最新收尾记录继续，Phase8付费/人工审核边界保留。
+
 > 当前仓库状态：Phase 1–6 已完成，Phase 7 代码与历史证据保留。用户于 2026-09-29 授权 Phase 8 Kubernetes 运维 Agent MVP。当前完整范围与验收见 `GOAL.md` 和 `docs/37-Kubernetes运维Agent目标与验收.md`；用户最新已将 Jev 最小路由加入当前范围，覆盖旧暂停条款。
 
 本仓库的任何自动化编码助手在开始工作前，必须完整阅读：
@@ -19,6 +21,28 @@ Phase 9 允许增加本项目沙箱专属工作区的受限文件 RPC、NFS 挂�
 旧工作区迁移使用显式管理CLI，先停源写入者并持部署Task账本锁；PREPARING不算可恢复映射，只有Go停止确认、文件清单/hash和Session副本校验后COMMITTED才可接续。保留源文件/原JSONL/失败目录，不把迁移能力暴露为LLM工具。统一入口见hack/workspace.sh；分发代码与实际执行成绩必须分开记录。
 
 工作区性能与流量的基线见文档46与phase9-nfs-fixed-workload-serial.json；并行探索报告单列。V2比较复用固定seed/文件规模/缓存/并发，计入同步检查点等待；容器网络计数不等于公网流量，端点内存不等于峰值，不把本机小样本外推生产QPS。
+
+V2续作先读文档47：Go Reserve只冻结，Session引用/PREPARING持久化后才Start；DATA_READY不等于可恢复，COMMITTED同条日志投影head/revision。最终提交与Task取消共用短锁，不能将网络备份放进取消锁；当前已有真实Agent正常保存证据（文档47 §7），不代替真实故障/历史恢复的完整验收。AGENTD_CHECKPOINT_MODE=off为V1默认，restic需完整可信Go配置；不注册备份模型工具。
+
+V2引用清理续作还须读文档48：按仓库crypto ID与完整snapshot聚合全部引用；pin、分支头、保留恢复源和未提交数据不可删除。本地预览与PREPARED/FORGOTTEN日志控制已实现，但不等于实际forget/prune已接线或V2-09验收。管理CLI默认只读预览、只接受固定pin/unpin，禁止把测试中的complete_forget当真实删除证明。后续实际执行必须经可信Go固定操作与全局串行屏障，保留全部旧证据所用数据。
+
+owned helper组件（文档48 §8）已在新专用合成仓库实际验证精确forget/prune/恢复与归属拒绝；v3管理镜像不挂业务卷，默认v2路径未切换。组件使用可信管理员直接Pod/主动停源，不是Go持久GC屏障、Operator入口或Session引用保护联合验收；下一步不得跳过这些接线或对共享历史仓库执行清理。
+
+文档48 §9新增Go日志repository.binding和显式Owner部署参数；只准全新控制日志，拒绝旧工作区自动收编和重启降级。owned备份已接可信Runtime并核对crypto；本地Go/fake回归不是新真实存储验收。该绑定不代替Python控制目录唯一归属、GC持久屏障或Operator授权，后续仍按完整管理协议实施。
+
+文档48 §10已接Go持久GC屏障/固定执行与Operator专属HTTP，本地fake/race/全Go通过，不等于真实联合GC验收。独立Python管理员协调器的接线见§11；只有尚未PREPARED且Go证明never-submitted的过期预留可cancel-reservation，PREPARED之后不以此解冻。未知/失败保持冻结并按同GC/job对账，不能给agentd服务注入Operator Token。
+
+文档48 §11已接独立checkpoint_cleanup管理协调器：同CP日志的repository.binding/cleanup.execution、原生目录路径+设备/inode和本机固定仓库claim，禁止旧历史自动收编及同仓库另一目录登记。管理员命令持CP单写入锁，PENDING先落盘再Reserve，PREPARED后才Start，核验Go结果后FORGOTTEN→Finish→DONE；失败不自动重试/解冻。agentd在Worker前拒绝未对账管理状态，不消耗新模型预算。该实现批次仅本地Fake验证，后续真实联合结果见§12；任何后续实验仍不能复用旧共享或故意污染夹具。
+
+最新真实GC见文档48 §12：新owned-joint仓库的5个真实联合CP、head/pin/保留来源拒绝、管理员及Go SIGKILL同job对账、实际排他锁/固定目标重试、prune后pin版本文件恢复通过；独立审计30/85/42条日志及4个保留snapshot/read-data，真实只读预览10文件未改，完整Python306通过。仅删除本轮新建的两份合成snapshot，旧共享/污染夹具保留。此实验不是新的历史分支Task恢复或性能测评；接下来固定性能/流量、统一V2入口、十项逐项审计，Goal仍完整active。
+
+固定V2性能见文档46 §7～8：同一Go二进制重测V1，V1/V2各9/9、9独立仓库/18备份/9恢复；独立重算324条Go日志/数据/manifest/计数与分位数。仅可信后端批量微基准，不是默认Agent逐工具组总时延；V1复用Go、V2逐仓库重启Go，prepare/claim不作纯因果比较。packed新增与容器字节分列、du表观字节含metadata、资源仅端点非峰值；不得外推公网费用、SLA或宣称V2运行I/O更快。下一步统一V2入口与十项最终审计，不重跑已完成基准来筛选更好数字。
+
+统一安装续作：workspace.sh build-storage已有真实缓存校验/镜像复用/当前Go编译/kind加载证据和4项Fake契约测试；已有tag不覆盖，首次无缓存Docker构建未重跑。默认.cache/workspace-sandboxd已更新为本批源码构建，旧owned-cleanup缓存保留。fresh Owner持久初始化、目录绑定和统一restic服务启动仍待完成；不要从镜像准备成功推导部署完成或自动收编旧共享仓库。
+
+统一部署后续以文档47 §19为准：init-v2固定新仓库/controller/Secret/job，PLANNED→SECRET_READY→INIT_SUBMITTED→OWNER_READY→READY；意图先落盘，未知后只查原Pod，缺失/失败/UID变化不得盲目init。已真实验证新owned-deploy初始化/复用、目录claim与统一Go/Agent SIGKILL接续和3份CP，独立32/10/35条日志及仓库read-data通过；本地初始化异常23项与真实服务分开。当前新目录已有Task，不能重跑entry夹具；正常启动沿原目录，旧共享/污染夹具保留。下一步完整十项逐项审计，不能从本轮单项通过宣布整体完成。
+
+最终验收续作先读文档49：V2十项原始证据/43保留控制日志已审计10/10，新acceptance专属仓库补真实保存重试、活动来源/缺失/校验/镜像/遗忘拒绝；仅遗忘本轮新建CP1，marker/head保留，不复用该目录作为fresh夹具。当前完整Goal仍需最后回归与交付门禁/PR；workspace.sh benchmark-v2默认统一构建Go与原生restic，旧性能报告及旧--binary显式选择保留。三类最终联合Replay已3/3且四依赖停回原状态，不能把Fake模型/生命周期当Live模型或真实K8s修复。
 
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 

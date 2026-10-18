@@ -1,0 +1,2383 @@
+{
+  "mode": "real-go-gvisor-nfs-fixed-workload",
+  "passed": true,
+  "externalModelCalls": 0,
+  "seed": 20261018,
+  "repeats": 3,
+  "concurrency": 1,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-agent-smoke/cfff626498334b3ea3639096ac06fe07",
+  "trials": [
+    {
+      "scenario": "few-files",
+      "repeat": 0,
+      "files": 4,
+      "initialBytes": 4096,
+      "datasetSha256": "23bc5b078b6c0e11335e8738679af52383e4bd5de1d8b581b49ba9a36e054a9a",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 225.72375400341116,
+          "sha256": "b1cb709790ce548dfe4bc24a6081c1a5a52515f2d6b41601bd13f8f378c31dab"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 187.65225099923555,
+          "sha256": "ba74337058062d8508c12dec85635d925f013d6917c87a1171763306dfc023f3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 200.17145900055766,
+          "sha256": "922250db11c83bac8dab312039e94d596c8d1804ce91d337dfbffb59fc2b5da2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 201.39826399827143,
+          "sha256": "7707f55746e6dbc6e0bf78b06dae7f786a4be0ccf6bead44e02ba23813313515"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 186.97693100693868,
+          "sha256": "b1cb709790ce548dfe4bc24a6081c1a5a52515f2d6b41601bd13f8f378c31dab"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 201.4769500019611,
+          "sha256": "ba74337058062d8508c12dec85635d925f013d6917c87a1171763306dfc023f3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 197.19089399586665,
+          "sha256": "922250db11c83bac8dab312039e94d596c8d1804ce91d337dfbffb59fc2b5da2"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 205.0276180016226,
+          "sha256": "7707f55746e6dbc6e0bf78b06dae7f786a4be0ccf6bead44e02ba23813313515"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 4224.757187999785,
+      "claimReadyMs": 2256.8600280064857,
+      "pod": {
+        "workspaceId": "workspace-44575ca1578c42ceb37910e9b6c2f10c",
+        "attemptId": "attempt-de40d5bbcbce433c9de25962ef6b6b5e",
+        "podUid": "5a2a62d6-718c-4a75-aaca-960c3dafda72",
+        "sandboxId": "ba357ef2c5ea0e30",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-44575ca1578c42ceb37910e9b6c2f10c",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "ioWindowMs": 1605.6753400043817,
+      "operationsPerSecondInIoWindow": 4.9823272492795265,
+      "resourceSample": {
+        "rssKiB": 36044,
+        "cpuSeconds": 0.13
+      }
+    },
+    {
+      "scenario": "many-small-files",
+      "repeat": 0,
+      "files": 32,
+      "initialBytes": 8192,
+      "datasetSha256": "27c5fbdf6ff437abdb27369f3732fa6fb8fa1d701b98ea4a8f84888b2cbd2e54",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 216.36852700612508,
+          "sha256": "705b5706fa2054d4bd08548e062e37c25323ee666c7328942173d4d3f02bb2fd"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 195.77112600381952,
+          "sha256": "8c6fc0f9461ef809f37e316e7c94c17c5e9aad9673279359fa2249bf67543a9e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.7342249994981,
+          "sha256": "a9cd73ce37c2577ca56e9779f4a7333cdbf22910d7261b52dde08b0f2b274eab"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 199.63347999873804,
+          "sha256": "6eb619cf468efa0e340d6bd837e92ca3300d7861db35d782425814bd18bcea42"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 203.67346100101713,
+          "sha256": "b6ee44f7548794873f66aea22bb6bbf6c6480b4c7c7ffb7fb87cd4fc9e6dfbd3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 201.5453290005098,
+          "sha256": "9a0297ab6f85e786c218c5edb55f53c9f9e2ab6e1b03d374c1d429b384573da0"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 195.60393699794076,
+          "sha256": "a65ba6157dca46192535ac6058334e5a13aab303a2d635efc0a5e6e25374cec3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 197.67326099827187,
+          "sha256": "4d9e9b8c410e640d5699b2f308fcb3d32b3bffe3fcf72b70c61665091d125a7d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-008.txt",
+          "phase": "normal",
+          "elapsedMs": 201.25446599558927,
+          "sha256": "5cefc181a1aa7cbc2d607feade5a124f331920310642004174951e5975807274"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-009.txt",
+          "phase": "normal",
+          "elapsedMs": 200.30190700344974,
+          "sha256": "12b692d114ccedc34bc98a6ff7217ba547b9467ce0273e96726c0351d610cc20"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-010.txt",
+          "phase": "normal",
+          "elapsedMs": 201.23978600167902,
+          "sha256": "c9d00ee00f1d56b6638f2d92f28ccd173077aecd2ced74402dc69303796f9e7b"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-011.txt",
+          "phase": "normal",
+          "elapsedMs": 197.72157200350193,
+          "sha256": "1c76bfcff5a07e01c20d5dc1893ad148bbb5112714a239232581f432e798f11f"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-012.txt",
+          "phase": "normal",
+          "elapsedMs": 202.85132500430336,
+          "sha256": "06ebab284db636f1dce3832633437e1e44b0622ebeb402c3a75bb5f3c3b945a6"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-013.txt",
+          "phase": "normal",
+          "elapsedMs": 195.6036729970947,
+          "sha256": "b261a65b134e15183a484e522941414394fe7e77344ddfde03b0f3b1d8cde93a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-014.txt",
+          "phase": "normal",
+          "elapsedMs": 205.129283000133,
+          "sha256": "711333a76bc21775d8635bb9ea1b500584790670525a89f84b1492831adf161e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-015.txt",
+          "phase": "normal",
+          "elapsedMs": 194.97579799644882,
+          "sha256": "7017286afc2d7792faeef643b3c542621928ae52dd7efd36a203a06243ca7c7c"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-016.txt",
+          "phase": "normal",
+          "elapsedMs": 207.3038969974732,
+          "sha256": "a9a1e15ca8e8bd3ebba520f07d423b79f4d70c8f729343fdd22e393905494d35"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-017.txt",
+          "phase": "normal",
+          "elapsedMs": 196.1601500006509,
+          "sha256": "53aba6eb2960e8a3585bc1ebdb42f054e947a6b8830262b102c66263cef61c54"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-018.txt",
+          "phase": "normal",
+          "elapsedMs": 212.76638800190995,
+          "sha256": "ae55b4169bfaf1ba5f41ad7f274274b49beb42e3daf4f6d770f2e29824764971"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-019.txt",
+          "phase": "normal",
+          "elapsedMs": 189.634782000212,
+          "sha256": "e08780cd3d33193cb6ac3fcfa72f31e3fb6bf1d5cbe1a59cf22d291bf860d7ac"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-020.txt",
+          "phase": "normal",
+          "elapsedMs": 199.64818000153173,
+          "sha256": "ab71fd177a5bbe779ead713dfc4d7b94ba490b4b268ba3b68101ad0c02b2da12"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-021.txt",
+          "phase": "normal",
+          "elapsedMs": 199.31530699977884,
+          "sha256": "c71e4c08806b8ff042cc59ae327e038a26ea4e2af38af9a5175aadbec508309a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-022.txt",
+          "phase": "normal",
+          "elapsedMs": 199.0126090022386,
+          "sha256": "e3ca06d6c29d3fde4724e440230dba97c090487414880516d6f27f006b661a0e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-023.txt",
+          "phase": "normal",
+          "elapsedMs": 200.6701230056933,
+          "sha256": "a883265882a0d8a88b7afc0fd87ae2dfef8c046fa08338148c7d1c56f2baf70f"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-024.txt",
+          "phase": "normal",
+          "elapsedMs": 199.14597800379852,
+          "sha256": "0fe227bf21d2edff6d98867d7e81b5acc296b558e8b92263015d11c46c5349e1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-025.txt",
+          "phase": "normal",
+          "elapsedMs": 202.48243000241928,
+          "sha256": "936a9c08468590c6a9d4fb1eedcd3ce369d872d05c577ec84a14ac1f96dee888"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-026.txt",
+          "phase": "normal",
+          "elapsedMs": 197.50478000059957,
+          "sha256": "f421c27c95956e609ea1995ee41189154e21b9c26d9dd8c2d16a2f99ac683767"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-027.txt",
+          "phase": "normal",
+          "elapsedMs": 202.4570040011895,
+          "sha256": "ce7c93ddb14bcf78cd5153723707e218dc8eb4f668c0931d0ac43258148ba839"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-028.txt",
+          "phase": "normal",
+          "elapsedMs": 196.0195110004861,
+          "sha256": "5e6b1d9100c92b0884b9035a2306253aa9e1158b0ef3b5642d3e2e1d58eb8ad2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-029.txt",
+          "phase": "normal",
+          "elapsedMs": 198.33028800348984,
+          "sha256": "df6c190c16e21fcc6d326aef447cf2905882e10a4ba00549104b3335689c83d1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-030.txt",
+          "phase": "normal",
+          "elapsedMs": 203.37510699755512,
+          "sha256": "708a91892d6201cf1c6dadc77265343788231a5c5bb5df9710d690a7e2ba71a4"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-031.txt",
+          "phase": "normal",
+          "elapsedMs": 200.50087699928554,
+          "sha256": "de3130836aa2c811efb0b4731971b5bc0b192c3f588a17bb2f71577da5520257"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 186.61047600471647,
+          "sha256": "705b5706fa2054d4bd08548e062e37c25323ee666c7328942173d4d3f02bb2fd"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 201.97738799470244,
+          "sha256": "8c6fc0f9461ef809f37e316e7c94c17c5e9aad9673279359fa2249bf67543a9e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.65971699618967,
+          "sha256": "a9cd73ce37c2577ca56e9779f4a7333cdbf22910d7261b52dde08b0f2b274eab"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 199.66109900269657,
+          "sha256": "6eb619cf468efa0e340d6bd837e92ca3300d7861db35d782425814bd18bcea42"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 201.07967200601706,
+          "sha256": "b6ee44f7548794873f66aea22bb6bbf6c6480b4c7c7ffb7fb87cd4fc9e6dfbd3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 199.88981999631505,
+          "sha256": "9a0297ab6f85e786c218c5edb55f53c9f9e2ab6e1b03d374c1d429b384573da0"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 201.46277899766574,
+          "sha256": "a65ba6157dca46192535ac6058334e5a13aab303a2d635efc0a5e6e25374cec3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 197.41377599711996,
+          "sha256": "4d9e9b8c410e640d5699b2f308fcb3d32b3bffe3fcf72b70c61665091d125a7d"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-008.txt",
+          "phase": "normal",
+          "elapsedMs": 202.73312700010138,
+          "sha256": "5cefc181a1aa7cbc2d607feade5a124f331920310642004174951e5975807274"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-009.txt",
+          "phase": "normal",
+          "elapsedMs": 198.75635400239844,
+          "sha256": "12b692d114ccedc34bc98a6ff7217ba547b9467ce0273e96726c0351d610cc20"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-010.txt",
+          "phase": "normal",
+          "elapsedMs": 197.99807699746452,
+          "sha256": "c9d00ee00f1d56b6638f2d92f28ccd173077aecd2ced74402dc69303796f9e7b"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-011.txt",
+          "phase": "normal",
+          "elapsedMs": 200.8138230012264,
+          "sha256": "1c76bfcff5a07e01c20d5dc1893ad148bbb5112714a239232581f432e798f11f"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-012.txt",
+          "phase": "normal",
+          "elapsedMs": 220.80522000032943,
+          "sha256": "06ebab284db636f1dce3832633437e1e44b0622ebeb402c3a75bb5f3c3b945a6"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-013.txt",
+          "phase": "normal",
+          "elapsedMs": 179.1949000034947,
+          "sha256": "b261a65b134e15183a484e522941414394fe7e77344ddfde03b0f3b1d8cde93a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-014.txt",
+          "phase": "normal",
+          "elapsedMs": 197.98063600319438,
+          "sha256": "711333a76bc21775d8635bb9ea1b500584790670525a89f84b1492831adf161e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-015.txt",
+          "phase": "normal",
+          "elapsedMs": 201.7566640060977,
+          "sha256": "7017286afc2d7792faeef643b3c542621928ae52dd7efd36a203a06243ca7c7c"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-016.txt",
+          "phase": "normal",
+          "elapsedMs": 200.9478649997618,
+          "sha256": "a9a1e15ca8e8bd3ebba520f07d423b79f4d70c8f729343fdd22e393905494d35"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-017.txt",
+          "phase": "normal",
+          "elapsedMs": 199.73393600230338,
+          "sha256": "53aba6eb2960e8a3585bc1ebdb42f054e947a6b8830262b102c66263cef61c54"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-018.txt",
+          "phase": "normal",
+          "elapsedMs": 200.49341000412824,
+          "sha256": "ae55b4169bfaf1ba5f41ad7f274274b49beb42e3daf4f6d770f2e29824764971"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-019.txt",
+          "phase": "normal",
+          "elapsedMs": 199.83163500000956,
+          "sha256": "e08780cd3d33193cb6ac3fcfa72f31e3fb6bf1d5cbe1a59cf22d291bf860d7ac"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-020.txt",
+          "phase": "normal",
+          "elapsedMs": 197.24775299982866,
+          "sha256": "ab71fd177a5bbe779ead713dfc4d7b94ba490b4b268ba3b68101ad0c02b2da12"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-021.txt",
+          "phase": "normal",
+          "elapsedMs": 202.9607730000862,
+          "sha256": "c71e4c08806b8ff042cc59ae327e038a26ea4e2af38af9a5175aadbec508309a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-022.txt",
+          "phase": "normal",
+          "elapsedMs": 200.93770299718017,
+          "sha256": "e3ca06d6c29d3fde4724e440230dba97c090487414880516d6f27f006b661a0e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-023.txt",
+          "phase": "normal",
+          "elapsedMs": 203.78683400485897,
+          "sha256": "a883265882a0d8a88b7afc0fd87ae2dfef8c046fa08338148c7d1c56f2baf70f"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-024.txt",
+          "phase": "normal",
+          "elapsedMs": 194.0383440014557,
+          "sha256": "0fe227bf21d2edff6d98867d7e81b5acc296b558e8b92263015d11c46c5349e1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-025.txt",
+          "phase": "normal",
+          "elapsedMs": 202.75733399466844,
+          "sha256": "936a9c08468590c6a9d4fb1eedcd3ce369d872d05c577ec84a14ac1f96dee888"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-026.txt",
+          "phase": "normal",
+          "elapsedMs": 197.74461400083965,
+          "sha256": "f421c27c95956e609ea1995ee41189154e21b9c26d9dd8c2d16a2f99ac683767"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-027.txt",
+          "phase": "normal",
+          "elapsedMs": 199.22382299409946,
+          "sha256": "ce7c93ddb14bcf78cd5153723707e218dc8eb4f668c0931d0ac43258148ba839"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-028.txt",
+          "phase": "normal",
+          "elapsedMs": 201.980600002571,
+          "sha256": "5e6b1d9100c92b0884b9035a2306253aa9e1158b0ef3b5642d3e2e1d58eb8ad2"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-029.txt",
+          "phase": "normal",
+          "elapsedMs": 198.11650900373934,
+          "sha256": "df6c190c16e21fcc6d326aef447cf2905882e10a4ba00549104b3335689c83d1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-030.txt",
+          "phase": "normal",
+          "elapsedMs": 205.32972799992422,
+          "sha256": "708a91892d6201cf1c6dadc77265343788231a5c5bb5df9710d690a7e2ba71a4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-031.txt",
+          "phase": "normal",
+          "elapsedMs": 199.19161400321173,
+          "sha256": "de3130836aa2c811efb0b4731971b5bc0b192c3f588a17bb2f71577da5520257"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 5400.808102996962,
+      "claimReadyMs": 10240.319215001364,
+      "pod": {
+        "workspaceId": "workspace-a800162bd4e443249b5263321e4119c7",
+        "attemptId": "attempt-30b15b8efef4461f9588a1b390f5ab6d",
+        "podUid": "c42424ab-3f1e-40a2-a406-966d3fa62e2e",
+        "sandboxId": "4ce5fc4324229cc3",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-a800162bd4e443249b5263321e4119c7",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "ioWindowMs": 12803.85797299823,
+      "operationsPerSecondInIoWindow": 4.998493433382983,
+      "resourceSample": {
+        "rssKiB": 37308,
+        "cpuSeconds": 0.52
+      }
+    },
+    {
+      "scenario": "partial-change",
+      "repeat": 0,
+      "files": 8,
+      "initialBytes": 32768,
+      "datasetSha256": "28692ccccf73094358ede4a03b0ba2abb0f0265d82086cf71b1e2b1166bb9f59",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 217.51217899873154,
+          "sha256": "d7676d1ea6722d301a2749ee26a85a3baf6bef360073c7dfbc177a74f7e08eb2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 197.38582799618598,
+          "sha256": "42561fc1f5494b9d70cffb0e7745620e6eefbf6930c7926185375b33fadb36d4"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 202.38925199373625,
+          "sha256": "4c867323b41853ba441d7dce8d940cc6712f2ab616968314c73058e31b195b06"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 196.48944299842697,
+          "sha256": "0df1d6aaf8e9d4c52a611b64872ef44a694920a527cae26712275b62fd4039f1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 201.99288299772888,
+          "sha256": "6ebc2de4598f6dee679cf4716d1c3e72070e2b20112b611321bbdd87cfc08b5d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 202.90335500612855,
+          "sha256": "e8e186675d1a5fc072a4747040cca9e95c43bcb70130455f60c0117995a32abf"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 197.9371679990436,
+          "sha256": "68df2b2cc53799ff40790a117748f09dbeb6cc01bd5ffbcafad8def2e80e465a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 198.7884070040309,
+          "sha256": "67d03520f28c9d8959ebb6f3094e21e9c641b46f98ee7b15191ddda2b627177d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "update",
+          "elapsedMs": 205.44749600230716,
+          "sha256": "acada3f94dd22815a2ef7522421a621411b454253dbcb9a477e7ff733a61ebc4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 184.5000559987966,
+          "sha256": "acada3f94dd22815a2ef7522421a621411b454253dbcb9a477e7ff733a61ebc4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 200.86466499924427,
+          "sha256": "42561fc1f5494b9d70cffb0e7745620e6eefbf6930c7926185375b33fadb36d4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.35212799807778,
+          "sha256": "4c867323b41853ba441d7dce8d940cc6712f2ab616968314c73058e31b195b06"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 200.9738990018377,
+          "sha256": "0df1d6aaf8e9d4c52a611b64872ef44a694920a527cae26712275b62fd4039f1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 199.11078099539736,
+          "sha256": "6ebc2de4598f6dee679cf4716d1c3e72070e2b20112b611321bbdd87cfc08b5d"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 198.46830100141233,
+          "sha256": "e8e186675d1a5fc072a4747040cca9e95c43bcb70130455f60c0117995a32abf"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 202.25013500021305,
+          "sha256": "68df2b2cc53799ff40790a117748f09dbeb6cc01bd5ffbcafad8def2e80e465a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 199.40034300088882,
+          "sha256": "67d03520f28c9d8959ebb6f3094e21e9c641b46f98ee7b15191ddda2b627177d"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 5393.393488004222,
+      "claimReadyMs": 10048.476064002898,
+      "pod": {
+        "workspaceId": "workspace-61aaa60d5e8748bb8c86cbea4f749c58",
+        "attemptId": "attempt-5247cde47dcd4468ba9d1d565975dcfe",
+        "podUid": "9b59776c-b9cf-4837-aab6-796f5f0ff395",
+        "sandboxId": "12a3dbc009fe5125",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-61aaa60d5e8748bb8c86cbea4f749c58",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "changedFiles": 1,
+      "changedFileFraction": 0.125,
+      "ioWindowMs": 3404.898766995757,
+      "operationsPerSecondInIoWindow": 4.992806295677214,
+      "resourceSample": {
+        "rssKiB": 37168,
+        "cpuSeconds": 0.7
+      }
+    },
+    {
+      "scenario": "few-files",
+      "repeat": 1,
+      "files": 4,
+      "initialBytes": 4096,
+      "datasetSha256": "23bc5b078b6c0e11335e8738679af52383e4bd5de1d8b581b49ba9a36e054a9a",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 101.28683299990371,
+          "sha256": "b1cb709790ce548dfe4bc24a6081c1a5a52515f2d6b41601bd13f8f378c31dab"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 200.4404999970575,
+          "sha256": "ba74337058062d8508c12dec85635d925f013d6917c87a1171763306dfc023f3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 197.70403300208272,
+          "sha256": "922250db11c83bac8dab312039e94d596c8d1804ce91d337dfbffb59fc2b5da2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 190.82511000306113,
+          "sha256": "7707f55746e6dbc6e0bf78b06dae7f786a4be0ccf6bead44e02ba23813313515"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 188.41147900093347,
+          "sha256": "b1cb709790ce548dfe4bc24a6081c1a5a52515f2d6b41601bd13f8f378c31dab"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 200.85584300250048,
+          "sha256": "ba74337058062d8508c12dec85635d925f013d6917c87a1171763306dfc023f3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.72989100258565,
+          "sha256": "922250db11c83bac8dab312039e94d596c8d1804ce91d337dfbffb59fc2b5da2"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 202.67194099869812,
+          "sha256": "7707f55746e6dbc6e0bf78b06dae7f786a4be0ccf6bead44e02ba23813313515"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 5196.273999004916,
+      "claimReadyMs": 2265.5691879990627,
+      "pod": {
+        "workspaceId": "workspace-a250198e92ae43a09ba9a38d2b9d84cc",
+        "attemptId": "attempt-a634c1be89594ce0b105d378519a556e",
+        "podUid": "6e5bcff1-7ec5-4c3a-981a-623e488e3d6d",
+        "sandboxId": "5dbc69764b8d42c0",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-a250198e92ae43a09ba9a38d2b9d84cc",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "ioWindowMs": 1481.0152240024763,
+      "operationsPerSecondInIoWindow": 5.401700043555139,
+      "resourceSample": {
+        "rssKiB": 37652,
+        "cpuSeconds": 0.83
+      }
+    },
+    {
+      "scenario": "many-small-files",
+      "repeat": 1,
+      "files": 32,
+      "initialBytes": 8192,
+      "datasetSha256": "27c5fbdf6ff437abdb27369f3732fa6fb8fa1d701b98ea4a8f84888b2cbd2e54",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 214.71144899987848,
+          "sha256": "705b5706fa2054d4bd08548e062e37c25323ee666c7328942173d4d3f02bb2fd"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 199.5554759996594,
+          "sha256": "8c6fc0f9461ef809f37e316e7c94c17c5e9aad9673279359fa2249bf67543a9e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.35951999993995,
+          "sha256": "a9cd73ce37c2577ca56e9779f4a7333cdbf22910d7261b52dde08b0f2b274eab"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 198.84013399860123,
+          "sha256": "6eb619cf468efa0e340d6bd837e92ca3300d7861db35d782425814bd18bcea42"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 204.57437499862863,
+          "sha256": "b6ee44f7548794873f66aea22bb6bbf6c6480b4c7c7ffb7fb87cd4fc9e6dfbd3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 199.32145499478793,
+          "sha256": "9a0297ab6f85e786c218c5edb55f53c9f9e2ab6e1b03d374c1d429b384573da0"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 197.25178299995605,
+          "sha256": "a65ba6157dca46192535ac6058334e5a13aab303a2d635efc0a5e6e25374cec3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 202.23530200019013,
+          "sha256": "4d9e9b8c410e640d5699b2f308fcb3d32b3bffe3fcf72b70c61665091d125a7d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-008.txt",
+          "phase": "normal",
+          "elapsedMs": 197.7720880022389,
+          "sha256": "5cefc181a1aa7cbc2d607feade5a124f331920310642004174951e5975807274"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-009.txt",
+          "phase": "normal",
+          "elapsedMs": 202.60219499323284,
+          "sha256": "12b692d114ccedc34bc98a6ff7217ba547b9467ce0273e96726c0351d610cc20"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-010.txt",
+          "phase": "normal",
+          "elapsedMs": 201.4735189950443,
+          "sha256": "c9d00ee00f1d56b6638f2d92f28ccd173077aecd2ced74402dc69303796f9e7b"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-011.txt",
+          "phase": "normal",
+          "elapsedMs": 195.41810499504209,
+          "sha256": "1c76bfcff5a07e01c20d5dc1893ad148bbb5112714a239232581f432e798f11f"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-012.txt",
+          "phase": "normal",
+          "elapsedMs": 199.98643999861088,
+          "sha256": "06ebab284db636f1dce3832633437e1e44b0622ebeb402c3a75bb5f3c3b945a6"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-013.txt",
+          "phase": "normal",
+          "elapsedMs": 206.30946700111963,
+          "sha256": "b261a65b134e15183a484e522941414394fe7e77344ddfde03b0f3b1d8cde93a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-014.txt",
+          "phase": "normal",
+          "elapsedMs": 195.72353599505732,
+          "sha256": "711333a76bc21775d8635bb9ea1b500584790670525a89f84b1492831adf161e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-015.txt",
+          "phase": "normal",
+          "elapsedMs": 199.08186700195074,
+          "sha256": "7017286afc2d7792faeef643b3c542621928ae52dd7efd36a203a06243ca7c7c"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-016.txt",
+          "phase": "normal",
+          "elapsedMs": 203.14850300201215,
+          "sha256": "a9a1e15ca8e8bd3ebba520f07d423b79f4d70c8f729343fdd22e393905494d35"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-017.txt",
+          "phase": "normal",
+          "elapsedMs": 205.02027499605902,
+          "sha256": "53aba6eb2960e8a3585bc1ebdb42f054e947a6b8830262b102c66263cef61c54"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-018.txt",
+          "phase": "normal",
+          "elapsedMs": 191.14707900007488,
+          "sha256": "ae55b4169bfaf1ba5f41ad7f274274b49beb42e3daf4f6d770f2e29824764971"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-019.txt",
+          "phase": "normal",
+          "elapsedMs": 200.5845669991686,
+          "sha256": "e08780cd3d33193cb6ac3fcfa72f31e3fb6bf1d5cbe1a59cf22d291bf860d7ac"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-020.txt",
+          "phase": "normal",
+          "elapsedMs": 209.63517400377896,
+          "sha256": "ab71fd177a5bbe779ead713dfc4d7b94ba490b4b268ba3b68101ad0c02b2da12"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-021.txt",
+          "phase": "normal",
+          "elapsedMs": 194.01100400136784,
+          "sha256": "c71e4c08806b8ff042cc59ae327e038a26ea4e2af38af9a5175aadbec508309a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-022.txt",
+          "phase": "normal",
+          "elapsedMs": 198.94418500189204,
+          "sha256": "e3ca06d6c29d3fde4724e440230dba97c090487414880516d6f27f006b661a0e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-023.txt",
+          "phase": "normal",
+          "elapsedMs": 199.6703400000115,
+          "sha256": "a883265882a0d8a88b7afc0fd87ae2dfef8c046fa08338148c7d1c56f2baf70f"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-024.txt",
+          "phase": "normal",
+          "elapsedMs": 199.88382999872556,
+          "sha256": "0fe227bf21d2edff6d98867d7e81b5acc296b558e8b92263015d11c46c5349e1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-025.txt",
+          "phase": "normal",
+          "elapsedMs": 197.0556200030842,
+          "sha256": "936a9c08468590c6a9d4fb1eedcd3ce369d872d05c577ec84a14ac1f96dee888"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-026.txt",
+          "phase": "normal",
+          "elapsedMs": 200.51369899738347,
+          "sha256": "f421c27c95956e609ea1995ee41189154e21b9c26d9dd8c2d16a2f99ac683767"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-027.txt",
+          "phase": "normal",
+          "elapsedMs": 198.0409210009384,
+          "sha256": "ce7c93ddb14bcf78cd5153723707e218dc8eb4f668c0931d0ac43258148ba839"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-028.txt",
+          "phase": "normal",
+          "elapsedMs": 201.9918849982787,
+          "sha256": "5e6b1d9100c92b0884b9035a2306253aa9e1158b0ef3b5642d3e2e1d58eb8ad2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-029.txt",
+          "phase": "normal",
+          "elapsedMs": 203.79040800617076,
+          "sha256": "df6c190c16e21fcc6d326aef447cf2905882e10a4ba00549104b3335689c83d1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-030.txt",
+          "phase": "normal",
+          "elapsedMs": 199.53385499684373,
+          "sha256": "708a91892d6201cf1c6dadc77265343788231a5c5bb5df9710d690a7e2ba71a4"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-031.txt",
+          "phase": "normal",
+          "elapsedMs": 196.31854799808934,
+          "sha256": "de3130836aa2c811efb0b4731971b5bc0b192c3f588a17bb2f71577da5520257"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 189.87000599736348,
+          "sha256": "705b5706fa2054d4bd08548e062e37c25323ee666c7328942173d4d3f02bb2fd"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 198.49995399999898,
+          "sha256": "8c6fc0f9461ef809f37e316e7c94c17c5e9aad9673279359fa2249bf67543a9e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.86731300357496,
+          "sha256": "a9cd73ce37c2577ca56e9779f4a7333cdbf22910d7261b52dde08b0f2b274eab"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 204.63680000102613,
+          "sha256": "6eb619cf468efa0e340d6bd837e92ca3300d7861db35d782425814bd18bcea42"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 195.5838499998208,
+          "sha256": "b6ee44f7548794873f66aea22bb6bbf6c6480b4c7c7ffb7fb87cd4fc9e6dfbd3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 203.10375100234523,
+          "sha256": "9a0297ab6f85e786c218c5edb55f53c9f9e2ab6e1b03d374c1d429b384573da0"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 199.23132300027646,
+          "sha256": "a65ba6157dca46192535ac6058334e5a13aab303a2d635efc0a5e6e25374cec3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 198.2409589982126,
+          "sha256": "4d9e9b8c410e640d5699b2f308fcb3d32b3bffe3fcf72b70c61665091d125a7d"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-008.txt",
+          "phase": "normal",
+          "elapsedMs": 201.75350699719274,
+          "sha256": "5cefc181a1aa7cbc2d607feade5a124f331920310642004174951e5975807274"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-009.txt",
+          "phase": "normal",
+          "elapsedMs": 199.2532040021615,
+          "sha256": "12b692d114ccedc34bc98a6ff7217ba547b9467ce0273e96726c0351d610cc20"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-010.txt",
+          "phase": "normal",
+          "elapsedMs": 199.83265200426104,
+          "sha256": "c9d00ee00f1d56b6638f2d92f28ccd173077aecd2ced74402dc69303796f9e7b"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-011.txt",
+          "phase": "normal",
+          "elapsedMs": 226.64829800487496,
+          "sha256": "1c76bfcff5a07e01c20d5dc1893ad148bbb5112714a239232581f432e798f11f"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-012.txt",
+          "phase": "normal",
+          "elapsedMs": 173.78437399747781,
+          "sha256": "06ebab284db636f1dce3832633437e1e44b0622ebeb402c3a75bb5f3c3b945a6"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-013.txt",
+          "phase": "normal",
+          "elapsedMs": 198.51402900530957,
+          "sha256": "b261a65b134e15183a484e522941414394fe7e77344ddfde03b0f3b1d8cde93a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-014.txt",
+          "phase": "normal",
+          "elapsedMs": 199.00376599980518,
+          "sha256": "711333a76bc21775d8635bb9ea1b500584790670525a89f84b1492831adf161e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-015.txt",
+          "phase": "normal",
+          "elapsedMs": 202.43047900294187,
+          "sha256": "7017286afc2d7792faeef643b3c542621928ae52dd7efd36a203a06243ca7c7c"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-016.txt",
+          "phase": "normal",
+          "elapsedMs": 199.92972099862527,
+          "sha256": "a9a1e15ca8e8bd3ebba520f07d423b79f4d70c8f729343fdd22e393905494d35"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-017.txt",
+          "phase": "normal",
+          "elapsedMs": 199.64110799628543,
+          "sha256": "53aba6eb2960e8a3585bc1ebdb42f054e947a6b8830262b102c66263cef61c54"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-018.txt",
+          "phase": "normal",
+          "elapsedMs": 199.40843900258187,
+          "sha256": "ae55b4169bfaf1ba5f41ad7f274274b49beb42e3daf4f6d770f2e29824764971"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-019.txt",
+          "phase": "normal",
+          "elapsedMs": 199.1049110001768,
+          "sha256": "e08780cd3d33193cb6ac3fcfa72f31e3fb6bf1d5cbe1a59cf22d291bf860d7ac"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-020.txt",
+          "phase": "normal",
+          "elapsedMs": 201.54189499589847,
+          "sha256": "ab71fd177a5bbe779ead713dfc4d7b94ba490b4b268ba3b68101ad0c02b2da12"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-021.txt",
+          "phase": "normal",
+          "elapsedMs": 199.28719000017736,
+          "sha256": "c71e4c08806b8ff042cc59ae327e038a26ea4e2af38af9a5175aadbec508309a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-022.txt",
+          "phase": "normal",
+          "elapsedMs": 200.2098200027831,
+          "sha256": "e3ca06d6c29d3fde4724e440230dba97c090487414880516d6f27f006b661a0e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-023.txt",
+          "phase": "normal",
+          "elapsedMs": 201.7912930023158,
+          "sha256": "a883265882a0d8a88b7afc0fd87ae2dfef8c046fa08338148c7d1c56f2baf70f"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-024.txt",
+          "phase": "normal",
+          "elapsedMs": 197.11225399805699,
+          "sha256": "0fe227bf21d2edff6d98867d7e81b5acc296b558e8b92263015d11c46c5349e1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-025.txt",
+          "phase": "normal",
+          "elapsedMs": 200.18330399761908,
+          "sha256": "936a9c08468590c6a9d4fb1eedcd3ce369d872d05c577ec84a14ac1f96dee888"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-026.txt",
+          "phase": "normal",
+          "elapsedMs": 201.01200700446498,
+          "sha256": "f421c27c95956e609ea1995ee41189154e21b9c26d9dd8c2d16a2f99ac683767"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-027.txt",
+          "phase": "normal",
+          "elapsedMs": 199.88901999749942,
+          "sha256": "ce7c93ddb14bcf78cd5153723707e218dc8eb4f668c0931d0ac43258148ba839"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-028.txt",
+          "phase": "normal",
+          "elapsedMs": 200.80760999553604,
+          "sha256": "5e6b1d9100c92b0884b9035a2306253aa9e1158b0ef3b5642d3e2e1d58eb8ad2"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-029.txt",
+          "phase": "normal",
+          "elapsedMs": 196.8816149965278,
+          "sha256": "df6c190c16e21fcc6d326aef447cf2905882e10a4ba00549104b3335689c83d1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-030.txt",
+          "phase": "normal",
+          "elapsedMs": 202.0509249996394,
+          "sha256": "708a91892d6201cf1c6dadc77265343788231a5c5bb5df9710d690a7e2ba71a4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-031.txt",
+          "phase": "normal",
+          "elapsedMs": 198.60920200153487,
+          "sha256": "de3130836aa2c811efb0b4731971b5bc0b192c3f588a17bb2f71577da5520257"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 4393.833016998542,
+      "claimReadyMs": 9254.41189299454,
+      "pod": {
+        "workspaceId": "workspace-b2db9c0d5b5e442581ab6fa3fa8b769b",
+        "attemptId": "attempt-e380acb223394b24945ac34059043567",
+        "podUid": "d9d9bb31-c11f-4d2e-83e4-cea6d0e8cdc7",
+        "sandboxId": "50d1532cf8f6be87",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-b2db9c0d5b5e442581ab6fa3fa8b769b",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "ioWindowMs": 12799.585428001592,
+      "operationsPerSecondInIoWindow": 5.000161947432103,
+      "resourceSample": {
+        "rssKiB": 37560,
+        "cpuSeconds": 1.2
+      }
+    },
+    {
+      "scenario": "partial-change",
+      "repeat": 1,
+      "files": 8,
+      "initialBytes": 32768,
+      "datasetSha256": "28692ccccf73094358ede4a03b0ba2abb0f0265d82086cf71b1e2b1166bb9f59",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 215.39764299814124,
+          "sha256": "d7676d1ea6722d301a2749ee26a85a3baf6bef360073c7dfbc177a74f7e08eb2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 198.3588660004898,
+          "sha256": "42561fc1f5494b9d70cffb0e7745620e6eefbf6930c7926185375b33fadb36d4"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 199.41664100042544,
+          "sha256": "4c867323b41853ba441d7dce8d940cc6712f2ab616968314c73058e31b195b06"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 205.22899000206962,
+          "sha256": "0df1d6aaf8e9d4c52a611b64872ef44a694920a527cae26712275b62fd4039f1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 194.83299500279827,
+          "sha256": "6ebc2de4598f6dee679cf4716d1c3e72070e2b20112b611321bbdd87cfc08b5d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 201.1381119955331,
+          "sha256": "e8e186675d1a5fc072a4747040cca9e95c43bcb70130455f60c0117995a32abf"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 199.6676250055316,
+          "sha256": "68df2b2cc53799ff40790a117748f09dbeb6cc01bd5ffbcafad8def2e80e465a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 202.89952700113645,
+          "sha256": "67d03520f28c9d8959ebb6f3094e21e9c641b46f98ee7b15191ddda2b627177d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "update",
+          "elapsedMs": 196.90004799485905,
+          "sha256": "acada3f94dd22815a2ef7522421a621411b454253dbcb9a477e7ff733a61ebc4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 185.80475300404942,
+          "sha256": "acada3f94dd22815a2ef7522421a621411b454253dbcb9a477e7ff733a61ebc4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 200.4585659960867,
+          "sha256": "42561fc1f5494b9d70cffb0e7745620e6eefbf6930c7926185375b33fadb36d4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 199.87896000384353,
+          "sha256": "4c867323b41853ba441d7dce8d940cc6712f2ab616968314c73058e31b195b06"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 200.55526599753648,
+          "sha256": "0df1d6aaf8e9d4c52a611b64872ef44a694920a527cae26712275b62fd4039f1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 201.04547799564898,
+          "sha256": "6ebc2de4598f6dee679cf4716d1c3e72070e2b20112b611321bbdd87cfc08b5d"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 197.89890099491458,
+          "sha256": "e8e186675d1a5fc072a4747040cca9e95c43bcb70130455f60c0117995a32abf"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 201.5723309959867,
+          "sha256": "68df2b2cc53799ff40790a117748f09dbeb6cc01bd5ffbcafad8def2e80e465a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 200.57305600494146,
+          "sha256": "67d03520f28c9d8959ebb6f3094e21e9c641b46f98ee7b15191ddda2b627177d"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 5192.703783002798,
+      "claimReadyMs": 2056.8430190032814,
+      "pod": {
+        "workspaceId": "workspace-7ce52b07959a4157b18af008e1202737",
+        "attemptId": "attempt-df9fd339418f4529a726d90e21c23c16",
+        "podUid": "9dd259ad-9c76-42fb-b737-c98032babd5c",
+        "sandboxId": "a8884f69d7015890",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-7ce52b07959a4157b18af008e1202737",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "changedFiles": 1,
+      "changedFileFraction": 0.125,
+      "ioWindowMs": 3401.7732400025125,
+      "operationsPerSecondInIoWindow": 4.99739365343101,
+      "resourceSample": {
+        "rssKiB": 37940,
+        "cpuSeconds": 1.35
+      }
+    },
+    {
+      "scenario": "few-files",
+      "repeat": 2,
+      "files": 4,
+      "initialBytes": 4096,
+      "datasetSha256": "23bc5b078b6c0e11335e8738679af52383e4bd5de1d8b581b49ba9a36e054a9a",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 214.61477300181286,
+          "sha256": "b1cb709790ce548dfe4bc24a6081c1a5a52515f2d6b41601bd13f8f378c31dab"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 197.06629199936287,
+          "sha256": "ba74337058062d8508c12dec85635d925f013d6917c87a1171763306dfc023f3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 203.31508800154552,
+          "sha256": "922250db11c83bac8dab312039e94d596c8d1804ce91d337dfbffb59fc2b5da2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 201.62567700026557,
+          "sha256": "7707f55746e6dbc6e0bf78b06dae7f786a4be0ccf6bead44e02ba23813313515"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 183.5354169961647,
+          "sha256": "b1cb709790ce548dfe4bc24a6081c1a5a52515f2d6b41601bd13f8f378c31dab"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 200.04675499512814,
+          "sha256": "ba74337058062d8508c12dec85635d925f013d6917c87a1171763306dfc023f3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 201.38813499943353,
+          "sha256": "922250db11c83bac8dab312039e94d596c8d1804ce91d337dfbffb59fc2b5da2"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 198.95322299998952,
+          "sha256": "7707f55746e6dbc6e0bf78b06dae7f786a4be0ccf6bead44e02ba23813313515"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 4400.651614996605,
+      "claimReadyMs": 13040.791908999381,
+      "pod": {
+        "workspaceId": "workspace-8cee2848bcdb4bfe98acb5a67a8d9745",
+        "attemptId": "attempt-4a2b58630b1b49c692c0c44c2b484588",
+        "podUid": "f1298bbd-9eae-424c-80e7-576b01970a17",
+        "sandboxId": "f1463930624d72c5",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-8cee2848bcdb4bfe98acb5a67a8d9745",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "ioWindowMs": 1600.5996149979183,
+      "operationsPerSecondInIoWindow": 4.998126905091381,
+      "resourceSample": {
+        "rssKiB": 37928,
+        "cpuSeconds": 1.5
+      }
+    },
+    {
+      "scenario": "many-small-files",
+      "repeat": 2,
+      "files": 32,
+      "initialBytes": 8192,
+      "datasetSha256": "27c5fbdf6ff437abdb27369f3732fa6fb8fa1d701b98ea4a8f84888b2cbd2e54",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 216.36970400140854,
+          "sha256": "705b5706fa2054d4bd08548e062e37c25323ee666c7328942173d4d3f02bb2fd"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 199.29852999484865,
+          "sha256": "8c6fc0f9461ef809f37e316e7c94c17c5e9aad9673279359fa2249bf67543a9e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 198.09141400037333,
+          "sha256": "a9cd73ce37c2577ca56e9779f4a7333cdbf22910d7261b52dde08b0f2b274eab"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 199.18074199813418,
+          "sha256": "6eb619cf468efa0e340d6bd837e92ca3300d7861db35d782425814bd18bcea42"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 203.9501979961642,
+          "sha256": "b6ee44f7548794873f66aea22bb6bbf6c6480b4c7c7ffb7fb87cd4fc9e6dfbd3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 195.86729499860667,
+          "sha256": "9a0297ab6f85e786c218c5edb55f53c9f9e2ab6e1b03d374c1d429b384573da0"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 202.36140999622876,
+          "sha256": "a65ba6157dca46192535ac6058334e5a13aab303a2d635efc0a5e6e25374cec3"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 199.8345780011732,
+          "sha256": "4d9e9b8c410e640d5699b2f308fcb3d32b3bffe3fcf72b70c61665091d125a7d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-008.txt",
+          "phase": "normal",
+          "elapsedMs": 198.75476699962746,
+          "sha256": "5cefc181a1aa7cbc2d607feade5a124f331920310642004174951e5975807274"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-009.txt",
+          "phase": "normal",
+          "elapsedMs": 199.3652769961045,
+          "sha256": "12b692d114ccedc34bc98a6ff7217ba547b9467ce0273e96726c0351d610cc20"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-010.txt",
+          "phase": "normal",
+          "elapsedMs": 200.73641199996928,
+          "sha256": "c9d00ee00f1d56b6638f2d92f28ccd173077aecd2ced74402dc69303796f9e7b"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-011.txt",
+          "phase": "normal",
+          "elapsedMs": 199.13946300221141,
+          "sha256": "1c76bfcff5a07e01c20d5dc1893ad148bbb5112714a239232581f432e798f11f"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-012.txt",
+          "phase": "normal",
+          "elapsedMs": 203.07434700225713,
+          "sha256": "06ebab284db636f1dce3832633437e1e44b0622ebeb402c3a75bb5f3c3b945a6"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-013.txt",
+          "phase": "normal",
+          "elapsedMs": 196.91261099796975,
+          "sha256": "b261a65b134e15183a484e522941414394fe7e77344ddfde03b0f3b1d8cde93a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-014.txt",
+          "phase": "normal",
+          "elapsedMs": 200.37410599616123,
+          "sha256": "711333a76bc21775d8635bb9ea1b500584790670525a89f84b1492831adf161e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-015.txt",
+          "phase": "normal",
+          "elapsedMs": 200.89241999812657,
+          "sha256": "7017286afc2d7792faeef643b3c542621928ae52dd7efd36a203a06243ca7c7c"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-016.txt",
+          "phase": "normal",
+          "elapsedMs": 202.65498200024012,
+          "sha256": "a9a1e15ca8e8bd3ebba520f07d423b79f4d70c8f729343fdd22e393905494d35"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-017.txt",
+          "phase": "normal",
+          "elapsedMs": 202.38227299705613,
+          "sha256": "53aba6eb2960e8a3585bc1ebdb42f054e947a6b8830262b102c66263cef61c54"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-018.txt",
+          "phase": "normal",
+          "elapsedMs": 196.85468100215076,
+          "sha256": "ae55b4169bfaf1ba5f41ad7f274274b49beb42e3daf4f6d770f2e29824764971"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-019.txt",
+          "phase": "normal",
+          "elapsedMs": 199.9771740011056,
+          "sha256": "e08780cd3d33193cb6ac3fcfa72f31e3fb6bf1d5cbe1a59cf22d291bf860d7ac"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-020.txt",
+          "phase": "normal",
+          "elapsedMs": 197.89894700079458,
+          "sha256": "ab71fd177a5bbe779ead713dfc4d7b94ba490b4b268ba3b68101ad0c02b2da12"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-021.txt",
+          "phase": "normal",
+          "elapsedMs": 202.02484099718276,
+          "sha256": "c71e4c08806b8ff042cc59ae327e038a26ea4e2af38af9a5175aadbec508309a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-022.txt",
+          "phase": "normal",
+          "elapsedMs": 201.78163599484833,
+          "sha256": "e3ca06d6c29d3fde4724e440230dba97c090487414880516d6f27f006b661a0e"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-023.txt",
+          "phase": "normal",
+          "elapsedMs": 196.5411880009924,
+          "sha256": "a883265882a0d8a88b7afc0fd87ae2dfef8c046fa08338148c7d1c56f2baf70f"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-024.txt",
+          "phase": "normal",
+          "elapsedMs": 199.79548600531416,
+          "sha256": "0fe227bf21d2edff6d98867d7e81b5acc296b558e8b92263015d11c46c5349e1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-025.txt",
+          "phase": "normal",
+          "elapsedMs": 198.97353800479323,
+          "sha256": "936a9c08468590c6a9d4fb1eedcd3ce369d872d05c577ec84a14ac1f96dee888"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-026.txt",
+          "phase": "normal",
+          "elapsedMs": 199.7045230018557,
+          "sha256": "f421c27c95956e609ea1995ee41189154e21b9c26d9dd8c2d16a2f99ac683767"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-027.txt",
+          "phase": "normal",
+          "elapsedMs": 201.39335600106278,
+          "sha256": "ce7c93ddb14bcf78cd5153723707e218dc8eb4f668c0931d0ac43258148ba839"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-028.txt",
+          "phase": "normal",
+          "elapsedMs": 200.57138799893437,
+          "sha256": "5e6b1d9100c92b0884b9035a2306253aa9e1158b0ef3b5642d3e2e1d58eb8ad2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-029.txt",
+          "phase": "normal",
+          "elapsedMs": 199.3282809999073,
+          "sha256": "df6c190c16e21fcc6d326aef447cf2905882e10a4ba00549104b3335689c83d1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-030.txt",
+          "phase": "normal",
+          "elapsedMs": 199.28587499452988,
+          "sha256": "708a91892d6201cf1c6dadc77265343788231a5c5bb5df9710d690a7e2ba71a4"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-031.txt",
+          "phase": "normal",
+          "elapsedMs": 201.2045540031977,
+          "sha256": "de3130836aa2c811efb0b4731971b5bc0b192c3f588a17bb2f71577da5520257"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 186.90151299961144,
+          "sha256": "705b5706fa2054d4bd08548e062e37c25323ee666c7328942173d4d3f02bb2fd"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 199.19356599712046,
+          "sha256": "8c6fc0f9461ef809f37e316e7c94c17c5e9aad9673279359fa2249bf67543a9e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 203.56292399810627,
+          "sha256": "a9cd73ce37c2577ca56e9779f4a7333cdbf22910d7261b52dde08b0f2b274eab"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 196.97700400138274,
+          "sha256": "6eb619cf468efa0e340d6bd837e92ca3300d7861db35d782425814bd18bcea42"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 203.82608699583216,
+          "sha256": "b6ee44f7548794873f66aea22bb6bbf6c6480b4c7c7ffb7fb87cd4fc9e6dfbd3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 203.07673700153828,
+          "sha256": "9a0297ab6f85e786c218c5edb55f53c9f9e2ab6e1b03d374c1d429b384573da0"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 194.38752099813428,
+          "sha256": "a65ba6157dca46192535ac6058334e5a13aab303a2d635efc0a5e6e25374cec3"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 200.82520799769554,
+          "sha256": "4d9e9b8c410e640d5699b2f308fcb3d32b3bffe3fcf72b70c61665091d125a7d"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-008.txt",
+          "phase": "normal",
+          "elapsedMs": 198.49696999881417,
+          "sha256": "5cefc181a1aa7cbc2d607feade5a124f331920310642004174951e5975807274"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-009.txt",
+          "phase": "normal",
+          "elapsedMs": 201.95971700013615,
+          "sha256": "12b692d114ccedc34bc98a6ff7217ba547b9467ce0273e96726c0351d610cc20"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-010.txt",
+          "phase": "normal",
+          "elapsedMs": 231.16722900158493,
+          "sha256": "c9d00ee00f1d56b6638f2d92f28ccd173077aecd2ced74402dc69303796f9e7b"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-011.txt",
+          "phase": "normal",
+          "elapsedMs": 166.9772860041121,
+          "sha256": "1c76bfcff5a07e01c20d5dc1893ad148bbb5112714a239232581f432e798f11f"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-012.txt",
+          "phase": "normal",
+          "elapsedMs": 199.35242599603953,
+          "sha256": "06ebab284db636f1dce3832633437e1e44b0622ebeb402c3a75bb5f3c3b945a6"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-013.txt",
+          "phase": "normal",
+          "elapsedMs": 200.12297300127102,
+          "sha256": "b261a65b134e15183a484e522941414394fe7e77344ddfde03b0f3b1d8cde93a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-014.txt",
+          "phase": "normal",
+          "elapsedMs": 200.34856200072682,
+          "sha256": "711333a76bc21775d8635bb9ea1b500584790670525a89f84b1492831adf161e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-015.txt",
+          "phase": "normal",
+          "elapsedMs": 200.19875100115314,
+          "sha256": "7017286afc2d7792faeef643b3c542621928ae52dd7efd36a203a06243ca7c7c"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-016.txt",
+          "phase": "normal",
+          "elapsedMs": 199.5876919972943,
+          "sha256": "a9a1e15ca8e8bd3ebba520f07d423b79f4d70c8f729343fdd22e393905494d35"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-017.txt",
+          "phase": "normal",
+          "elapsedMs": 202.04549800109817,
+          "sha256": "53aba6eb2960e8a3585bc1ebdb42f054e947a6b8830262b102c66263cef61c54"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-018.txt",
+          "phase": "normal",
+          "elapsedMs": 199.0442530004657,
+          "sha256": "ae55b4169bfaf1ba5f41ad7f274274b49beb42e3daf4f6d770f2e29824764971"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-019.txt",
+          "phase": "normal",
+          "elapsedMs": 199.35405399883166,
+          "sha256": "e08780cd3d33193cb6ac3fcfa72f31e3fb6bf1d5cbe1a59cf22d291bf860d7ac"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-020.txt",
+          "phase": "normal",
+          "elapsedMs": 199.6548140014056,
+          "sha256": "ab71fd177a5bbe779ead713dfc4d7b94ba490b4b268ba3b68101ad0c02b2da12"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-021.txt",
+          "phase": "normal",
+          "elapsedMs": 199.1149419991416,
+          "sha256": "c71e4c08806b8ff042cc59ae327e038a26ea4e2af38af9a5175aadbec508309a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-022.txt",
+          "phase": "normal",
+          "elapsedMs": 205.5290740026976,
+          "sha256": "e3ca06d6c29d3fde4724e440230dba97c090487414880516d6f27f006b661a0e"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-023.txt",
+          "phase": "normal",
+          "elapsedMs": 195.02400400233455,
+          "sha256": "a883265882a0d8a88b7afc0fd87ae2dfef8c046fa08338148c7d1c56f2baf70f"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-024.txt",
+          "phase": "normal",
+          "elapsedMs": 201.68954999826383,
+          "sha256": "0fe227bf21d2edff6d98867d7e81b5acc296b558e8b92263015d11c46c5349e1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-025.txt",
+          "phase": "normal",
+          "elapsedMs": 199.22338799369754,
+          "sha256": "936a9c08468590c6a9d4fb1eedcd3ce369d872d05c577ec84a14ac1f96dee888"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-026.txt",
+          "phase": "normal",
+          "elapsedMs": 198.87574300082633,
+          "sha256": "f421c27c95956e609ea1995ee41189154e21b9c26d9dd8c2d16a2f99ac683767"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-027.txt",
+          "phase": "normal",
+          "elapsedMs": 202.51184399967315,
+          "sha256": "ce7c93ddb14bcf78cd5153723707e218dc8eb4f668c0931d0ac43258148ba839"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-028.txt",
+          "phase": "normal",
+          "elapsedMs": 197.35693699476542,
+          "sha256": "5e6b1d9100c92b0884b9035a2306253aa9e1158b0ef3b5642d3e2e1d58eb8ad2"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-029.txt",
+          "phase": "normal",
+          "elapsedMs": 198.9638719969662,
+          "sha256": "df6c190c16e21fcc6d326aef447cf2905882e10a4ba00549104b3335689c83d1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-030.txt",
+          "phase": "normal",
+          "elapsedMs": 200.66949000465684,
+          "sha256": "708a91892d6201cf1c6dadc77265343788231a5c5bb5df9710d690a7e2ba71a4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-031.txt",
+          "phase": "normal",
+          "elapsedMs": 201.19888400222408,
+          "sha256": "de3130836aa2c811efb0b4731971b5bc0b192c3f588a17bb2f71577da5520257"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 5193.710106999788,
+      "claimReadyMs": 6248.425687001145,
+      "pod": {
+        "workspaceId": "workspace-eb93b4739977485bbee72f5521aa7c0a",
+        "attemptId": "attempt-5cf492991ad14366a7f447ef0e06fa46",
+        "podUid": "aa88f2b6-c7ae-40f9-a1b3-1c1048f6ee37",
+        "sandboxId": "21b4753bcda8f1cf",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-eb93b4739977485bbee72f5521aa7c0a",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "ioWindowMs": 12802.17510699731,
+      "operationsPerSecondInIoWindow": 4.999150493186067,
+      "resourceSample": {
+        "rssKiB": 38260,
+        "cpuSeconds": 1.87
+      }
+    },
+    {
+      "scenario": "partial-change",
+      "repeat": 2,
+      "files": 8,
+      "initialBytes": 32768,
+      "datasetSha256": "28692ccccf73094358ede4a03b0ba2abb0f0265d82086cf71b1e2b1166bb9f59",
+      "operations": [
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 215.9163050018833,
+          "sha256": "d7676d1ea6722d301a2749ee26a85a3baf6bef360073c7dfbc177a74f7e08eb2"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 195.14753299881704,
+          "sha256": "42561fc1f5494b9d70cffb0e7745620e6eefbf6930c7926185375b33fadb36d4"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 196.71614300023066,
+          "sha256": "4c867323b41853ba441d7dce8d940cc6712f2ab616968314c73058e31b195b06"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 201.86609200027306,
+          "sha256": "0df1d6aaf8e9d4c52a611b64872ef44a694920a527cae26712275b62fd4039f1"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 200.41824199870462,
+          "sha256": "6ebc2de4598f6dee679cf4716d1c3e72070e2b20112b611321bbdd87cfc08b5d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 202.00812800612766,
+          "sha256": "e8e186675d1a5fc072a4747040cca9e95c43bcb70130455f60c0117995a32abf"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 212.0753990020603,
+          "sha256": "68df2b2cc53799ff40790a117748f09dbeb6cc01bd5ffbcafad8def2e80e465a"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 184.7361119944253,
+          "sha256": "67d03520f28c9d8959ebb6f3094e21e9c641b46f98ee7b15191ddda2b627177d"
+        },
+        {
+          "tool": "write_file",
+          "path": "reports/file-000.txt",
+          "phase": "update",
+          "elapsedMs": 204.3023290025303,
+          "sha256": "acada3f94dd22815a2ef7522421a621411b454253dbcb9a477e7ff733a61ebc4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-000.txt",
+          "phase": "normal",
+          "elapsedMs": 186.40917900484055,
+          "sha256": "acada3f94dd22815a2ef7522421a621411b454253dbcb9a477e7ff733a61ebc4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-001.txt",
+          "phase": "normal",
+          "elapsedMs": 198.94984999700682,
+          "sha256": "42561fc1f5494b9d70cffb0e7745620e6eefbf6930c7926185375b33fadb36d4"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-002.txt",
+          "phase": "normal",
+          "elapsedMs": 200.20535500225378,
+          "sha256": "4c867323b41853ba441d7dce8d940cc6712f2ab616968314c73058e31b195b06"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-003.txt",
+          "phase": "normal",
+          "elapsedMs": 199.77638699492672,
+          "sha256": "0df1d6aaf8e9d4c52a611b64872ef44a694920a527cae26712275b62fd4039f1"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-004.txt",
+          "phase": "normal",
+          "elapsedMs": 200.33346499985782,
+          "sha256": "6ebc2de4598f6dee679cf4716d1c3e72070e2b20112b611321bbdd87cfc08b5d"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-005.txt",
+          "phase": "normal",
+          "elapsedMs": 198.1253560006735,
+          "sha256": "e8e186675d1a5fc072a4747040cca9e95c43bcb70130455f60c0117995a32abf"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-006.txt",
+          "phase": "normal",
+          "elapsedMs": 201.54054799786536,
+          "sha256": "68df2b2cc53799ff40790a117748f09dbeb6cc01bd5ffbcafad8def2e80e465a"
+        },
+        {
+          "tool": "read_file",
+          "path": "reports/file-007.txt",
+          "phase": "normal",
+          "elapsedMs": 199.1141700054868,
+          "sha256": "67d03520f28c9d8959ebb6f3094e21e9c641b46f98ee7b15191ddda2b627177d"
+        }
+      ],
+      "passed": true,
+      "prepareMs": 5192.47028499376,
+      "claimReadyMs": 2243.6660029998166,
+      "pod": {
+        "workspaceId": "workspace-a38cfce2e9534b64a507a47daa803526",
+        "attemptId": "attempt-1fdfb6b419e84971af3be5dc3367e1fc",
+        "podUid": "7e345142-e772-40f6-acf3-101b74cd7a9d",
+        "sandboxId": "0ff5e001579c6753",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-a38cfce2e9534b64a507a47daa803526",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "changedFiles": 1,
+      "changedFileFraction": 0.125,
+      "ioWindowMs": 3397.7658949952456,
+      "operationsPerSecondInIoWindow": 5.003287608790301,
+      "resourceSample": {
+        "rssKiB": 38060,
+        "cpuSeconds": 2.02
+      }
+    }
+  ],
+  "environment": {
+    "cpuCount": 12,
+    "controllerKernel": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "pythonVersion": "3.12.14",
+    "cpuModel": "AMD Ryzen 5 9600X 6-Core Processor",
+    "nodeKernel": "6.6.87.2-microsoft-standard-WSL2",
+    "nfsImageId": "sha256:504f663c8f65a3fb88640b8c5523c82fb6275a0bf0a6ff3f7fed427384c8db61",
+    "dockerVersion": "29.8.0",
+    "binarySha256": "0929dc28769812262f1d3d28bf4a0523b4096e5147257b82a859483a0a021953",
+    "deployment": "Docker Desktop single kind node; NFS on same host"
+  },
+  "cachePolicy": "sequential warm process;2 list RPC warmups per Pod; read-after-write; no kernel cache drop",
+  "networkScope": "NFS container eth0 counters, including mount/metadata/protocol/observation traffic; not internet traffic or application payload bytes",
+  "backgroundCondition": "serial",
+  "backgroundScope": "caller-declared project test scheduling; host/Kubernetes background not fully isolated",
+  "resourceScope": "Go/controller process CPU and RSS endpoints, NFS cgroup CPU and memory endpoints; not peak or whole-system CPU",
+  "limits": "small synthetic UTF-8 workspaces; no arbitrary shell from model; not production throughput/SLA; V2 not measured here",
+  "network": {
+    "before": {
+      "rx_bytes": 7945736,
+      "tx_bytes": 7869308
+    },
+    "after": {
+      "rx_bytes": 9576238,
+      "tx_bytes": 9703914
+    },
+    "delta": {
+      "rx_bytes": 1630502,
+      "tx_bytes": 1834606
+    }
+  },
+  "resource": {
+    "cpuSeconds": 1.9999999999999998,
+    "rssEndpointSamplesKiB": [
+      32896,
+      38188,
+      36044,
+      37308,
+      37168,
+      37652,
+      37560,
+      37940,
+      37928,
+      38260,
+      38060
+    ],
+    "nfs": {
+      "before": {
+        "cpuSeconds": 5.601122,
+        "memoryBytes": 13656064,
+        "scope": "container cgroup v2 cumulative CPU and current charged memory; not peak"
+      },
+      "after": {
+        "cpuSeconds": 6.34166,
+        "memoryBytes": 15028224,
+        "scope": "container cgroup v2 cumulative CPU and current charged memory; not peak"
+      },
+      "cpuSeconds": 0.7405379999999999
+    },
+    "controller": {
+      "before": {
+        "rssKiB": 287084,
+        "cpuSeconds": 8.77
+      },
+      "after": {
+        "rssKiB": 287340,
+        "cpuSeconds": 9.17
+      },
+      "cpuSeconds": 0.40000000000000036
+    }
+  },
+  "summary": {
+    "few-files": {
+      "prepare": {
+        "samples": 3,
+        "p50Ms": 4400.651614996605,
+        "p95Ms": 5116.711760604085,
+        "minMs": 4224.757187999785,
+        "maxMs": 5196.273999004916,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "claimReady": {
+        "samples": 3,
+        "p50Ms": 2265.5691879990627,
+        "p95Ms": 11963.269636899347,
+        "minMs": 2256.8600280064857,
+        "maxMs": 13040.791908999381,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "write_file:normal": {
+        "samples": 12,
+        "p50Ms": 200.30597949880757,
+        "p95Ms": 219.6138144525321,
+        "minMs": 101.28683299990371,
+        "maxMs": 225.72375400341116,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "write_file:update": {
+        "samples": 0
+      },
+      "read_file:normal": {
+        "samples": 12,
+        "p50Ms": 199.49998899755883,
+        "p95Ms": 203.73199565001414,
+        "minMs": 183.5354169961647,
+        "maxMs": 205.0276180016226,
+        "quantileMethod": "linear interpolation on observed samples"
+      }
+    },
+    "many-small-files": {
+      "prepare": {
+        "samples": 3,
+        "p50Ms": 5193.710106999788,
+        "p95Ms": 5380.098303397244,
+        "minMs": 4393.833016998542,
+        "maxMs": 5400.808102996962,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "claimReady": {
+        "samples": 3,
+        "p50Ms": 9254.41189299454,
+        "p95Ms": 10141.728482800681,
+        "minMs": 6248.425687001145,
+        "maxMs": 10240.319215001364,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "write_file:normal": {
+        "samples": 96,
+        "p50Ms": 199.6874315009336,
+        "p95Ms": 207.88671624904964,
+        "minMs": 189.634782000212,
+        "maxMs": 216.36970400140854,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "write_file:update": {
+        "samples": 0
+      },
+      "read_file:normal": {
+        "samples": 96,
+        "p50Ms": 199.69751750249998,
+        "p95Ms": 204.81003200075065,
+        "minMs": 166.9772860041121,
+        "maxMs": 231.16722900158493,
+        "quantileMethod": "linear interpolation on observed samples"
+      }
+    },
+    "partial-change": {
+      "prepare": {
+        "samples": 3,
+        "p50Ms": 5192.703783002798,
+        "p95Ms": 5373.324517504079,
+        "minMs": 5192.47028499376,
+        "maxMs": 5393.393488004222,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "claimReady": {
+        "samples": 3,
+        "p50Ms": 2243.6660029998166,
+        "p95Ms": 9267.99505790259,
+        "minMs": 2056.8430190032814,
+        "maxMs": 10048.476064002898,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "write_file:normal": {
+        "samples": 24,
+        "p50Ms": 200.77817699711886,
+        "p95Ms": 215.838505701322,
+        "minMs": 184.7361119944253,
+        "maxMs": 217.51217899873154,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "write_file:update": {
+        "samples": 3,
+        "p50Ms": 204.3023290025303,
+        "p95Ms": 205.33297930232948,
+        "minMs": 196.90004799485905,
+        "maxMs": 205.44749600230716,
+        "quantileMethod": "linear interpolation on observed samples"
+      },
+      "read_file:normal": {
+        "samples": 24,
+        "p50Ms": 199.82767349938513,
+        "p95Ms": 201.5675635462685,
+        "minMs": 184.5000559987966,
+        "maxMs": 202.25013500021305,
+        "quantileMethod": "linear interpolation on observed samples"
+      }
+    }
+  },
+  "timestamp": "2026-10-18T04:14:20.446867+00:00"
+}

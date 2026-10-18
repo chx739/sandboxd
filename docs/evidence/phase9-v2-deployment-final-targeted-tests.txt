@@ -1,0 +1,28 @@
+test_changed_pod_uid_is_rejected (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_changed_secret_refused_without_overwrite (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_changed_storage_address_stops (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_cli_views_are_read_only_and_reject_changed_endpoint (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_expired_lease_cannot_prove_stop (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_failed_pod_keeps_original_intent (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_fixed_views_contain_no_credentials_or_free_arguments (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_fresh_then_repeated_init_preserves_all_identities_and_bytes (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_lost_create_ack_reconciles_same_pod_without_reinit (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_missing_credentials_never_rotated_after_submit (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_missing_submitted_pod_stops_without_recreating (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_moved_control_directory_or_wrong_claim_rejected (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_owner_ready_interruption_retries_binding_only (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_parallel_initializer_lock_refused (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_prior_history_not_adopted (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_state_checksum_corruption_rejected (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_symlink_directory_and_broad_permissions_rejected (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_unhealthy_node_stops_then_same_pod_can_be_reconciled (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_unready_configuration_view_does_not_advance_initialization (agentd.tests.test_workspace_deployment.DeploymentTests) ... ok
+test_cluster_gate_fails_before_install_or_build (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+test_existing_tags_preserved_but_current_server_and_renderer_rebuilt (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+test_failed_build_does_not_replace_previous_server (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+test_first_install_builds_only_fixed_images_and_helpers (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 2.642s
+
+OK

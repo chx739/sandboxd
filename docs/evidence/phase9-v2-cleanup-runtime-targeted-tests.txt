@@ -1,0 +1,20 @@
+=== RUN   TestCleanupDurableGlobalBarrierAndProofBeforeRelease
+--- PASS: TestCleanupDurableGlobalBarrierAndProofBeforeRelease (0.05s)
+=== RUN   TestCleanupFailureRetryKeepsTargetAndFreeze
+--- PASS: TestCleanupFailureRetryKeepsTargetAndFreeze (0.07s)
+=== RUN   TestCleanupRejectsWrongResultsAndUnknownStop
+=== RUN   TestCleanupRejectsWrongResultsAndUnknownStop/wrong-owner
+=== RUN   TestCleanupRejectsWrongResultsAndUnknownStop/bad-success
+=== RUN   TestCleanupRejectsWrongResultsAndUnknownStop/wrong-snapshot
+=== RUN   TestCleanupRejectsWrongResultsAndUnknownStop/wrong-version
+=== RUN   TestCleanupRejectsWrongResultsAndUnknownStop/unknown-pod
+--- PASS: TestCleanupRejectsWrongResultsAndUnknownStop (0.21s)
+    --- PASS: TestCleanupRejectsWrongResultsAndUnknownStop/wrong-owner (0.04s)
+    --- PASS: TestCleanupRejectsWrongResultsAndUnknownStop/bad-success (0.05s)
+    --- PASS: TestCleanupRejectsWrongResultsAndUnknownStop/wrong-snapshot (0.04s)
+    --- PASS: TestCleanupRejectsWrongResultsAndUnknownStop/wrong-version (0.04s)
+    --- PASS: TestCleanupRejectsWrongResultsAndUnknownStop/unknown-pod (0.04s)
+=== RUN   TestCleanupPruneAndMarkerProtection
+--- PASS: TestCleanupPruneAndMarkerProtection (0.05s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/sandbox	0.399s

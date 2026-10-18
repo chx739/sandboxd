@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "scope": "Independent journal/hash/live inventory/read-data audit of same actual acceptance experiment; no new service scenario, task or deletion",
+  "sourceSha256": "bfbb68e3b528f080f8a5ebcb3f7d1acad925e79bd388a3f93997cfc478a89884",
+  "journalRecords": {
+    "go": 55,
+    "checkpoints": 11,
+    "tasks": 21
+  },
+  "journalPrefixRecords": {
+    "/home/hx/.local/share/sandboxd/deployments/acceptance-778e77ca3a334597bcac2370c2d51031/go-control/workspaces.jsonl": 12,
+    "/home/hx/.local/share/sandboxd/deployments/acceptance-778e77ca3a334597bcac2370c2d51031/agent-control/checkpoints/checkpoints.jsonl": 4,
+    "/home/hx/.local/share/sandboxd/deployments/acceptance-778e77ca3a334597bcac2370c2d51031/agent-control/tasks.jsonl": 14
+  },
+  "nativeRetainedSnapshotIds": [
+    "4105b15cb1782b711585a78cf85c99691eccc301d12390cb52ce05e352a07a28",
+    "a8b0ec067e01af4f0260bd5497ff39b734522991e04d28c00c1b224d491725e0"
+  ],
+  "forgottenSnapshotId": "628f98287a2c041a222dfe95a1dfb7ae8e3165e60d49fb71cf2af9f8f6aac492",
+  "sourceFileSha256": "4af7120f7678079022bc96c35c61d9382ae901f5884eddfb56721cb9f2dd6218",
+  "externalModelCalls": 0,
+  "formalV2AcceptanceComplete": false
+}

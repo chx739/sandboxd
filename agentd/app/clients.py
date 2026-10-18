@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import math
 import os
 import re
 import stat
@@ -143,12 +144,61 @@ class SandboxdClient:
             headers=self._headers,
         )
 
+    async def get_workspace_backup(self, workspace_id: str) -> HTTPResult:
+        if not isinstance(workspace_id,str) or not re.fullmatch(r"workspace-[a-f0-9]{32}",workspace_id):
+            raise ValueError("invalid backup workspace")
+        return await _bounded_request(self._client,"GET",self._base_url+"/api/v1/workspaces/"+workspace_id+"/backup",headers=self._headers)
+
+    async def workspace_backup(self, action: str, binding: dict[str, Any], checkpoint_id: str,
+                               job_id: str, *, timeout: float = 90.0) -> HTTPResult:
+        """可信协调器固定动作；不是模型工具，不接镜像、仓库或自由argv。"""
+        if action not in {"reserve","start","wait","abort","finish"}:
+            raise ValueError("unsupported fixed backup action")
+        if (not isinstance(binding,dict) or not isinstance(binding.get("workspaceId"),str)
+                or not re.fullmatch(r"workspace-[a-f0-9]{32}",binding["workspaceId"])
+                or not isinstance(checkpoint_id,str) or not re.fullmatch(r"cp-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9]{15}",checkpoint_id)
+                or not isinstance(job_id,str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,45}",job_id)
+                or isinstance(timeout,bool) or not isinstance(timeout,(int,float)) or not math.isfinite(timeout) or not 0<timeout<=90):
+            raise ValueError("invalid bounded backup request")
+        return await _bounded_request(self._client,"POST",self._base_url+"/api/v1/workspaces/"+binding["workspaceId"]+"/backup/"+action,
+                                      headers=self._headers,timeout=35.0 if action in {"abort","finish"} else timeout+2,
+                                      json={"binding":binding,"checkpointId":checkpoint_id,"jobId":job_id,"timeoutMs":max(1,int(timeout*1000))})
+
     async def claim_workspace(self, workspace_id: str, task_id: str, attempt_id: str) -> HTTPResult:
         return await _bounded_request(
             self._client, "POST", self._base_url + "/api/v1/workspaces/" + workspace_id + "/claim",
             headers=self._headers, timeout=190.0,
             json={"taskId": task_id, "attemptId": attempt_id},
         )
+
+    async def get_workspace_restore(self, workspace_id: str) -> HTTPResult:
+        if not isinstance(workspace_id,str) or not re.fullmatch(r"workspace-[a-f0-9]{32}",workspace_id):
+            raise ValueError("invalid restore workspace")
+        return await _bounded_request(self._client,"GET",self._base_url+"/api/v1/workspaces/"+workspace_id+"/restore",headers=self._headers)
+
+    async def workspace_restore(self, action: str, target: dict[str, str], checkpoint_id: str,
+                                job_id: str, source: dict[str, str], *, timeout: float = 90.0) -> HTTPResult:
+        """固定恢复协调请求；目标/来源是身份，不接凭据、Pod配置或任意argv。"""
+        if action not in {"reserve","start","wait","abort","finish","fail"}:
+            raise ValueError("unsupported fixed restore action")
+        if (not isinstance(target,dict) or set(target)!={"workspaceId","sessionId","branchId"}
+                or any(not isinstance(v,str) for v in target.values())
+                or not re.fullmatch(r"workspace-[a-f0-9]{32}",target["workspaceId"])
+                or not re.fullmatch(r"session-[a-f0-9]{16}",target["sessionId"])
+                or not re.fullmatch(r"branch-[a-f0-9]{32}",target["branchId"])
+                or not isinstance(checkpoint_id,str) or not re.fullmatch(r"cp-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9]{15}",checkpoint_id)
+                or not isinstance(job_id,str) or not re.fullmatch(r"restore-[a-z0-9][a-z0-9-]{0,37}",job_id)
+                or isinstance(timeout,bool) or not isinstance(timeout,(int,float)) or not math.isfinite(timeout) or not 0<timeout<=90):
+            raise ValueError("invalid bounded restore scope/identity/timeout")
+        if (not isinstance(source,dict) or set(source)!={"snapshotId","manifestSha256","repositoryCryptoId","imageRef","imageId"}
+                or any(not isinstance(v,str) for v in source.values())
+                or any(not re.fullmatch(r"[a-f0-9]{64}",source[key]) for key in ("snapshotId","manifestSha256","repositoryCryptoId"))
+                or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9._:/@+-]{0,511}",source["imageRef"])
+                or not re.fullmatch(r"(?:sha256:[a-f0-9]{64}|[a-zA-Z0-9][a-zA-Z0-9._:/@+-]{0,430}@sha256:[a-f0-9]{64})",source["imageId"])):
+            raise ValueError("invalid fixed restore source")
+        return await _bounded_request(self._client,"POST",self._base_url+"/api/v1/workspaces/"+target["workspaceId"]+"/restore/"+action,
+                                      headers=self._headers,timeout=35.0 if action in {"abort","finish","fail"} else timeout+2,
+                                      json={"sessionId":target["sessionId"],"branchId":target["branchId"],"checkpointId":checkpoint_id,"jobId":job_id,"source":source,"timeoutMs":max(1,int(timeout*1000))})
 
     async def release_workspace(self, binding: dict[str, Any]) -> HTTPResult:
         return await _bounded_request(

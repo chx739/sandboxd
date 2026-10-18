@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-18T03:16:51.742664+00:00",
+  "baseCommit": "a96a9bc096fd43bacf380d99979736bc4eab0ae4",
+  "previousGoalTurnClassification": "progress: repository binding implementation, regression evidence and pushed PR verified",
+  "scope": "Local trusted Go cleanup execution/state-machine and Operator API tests; fake Kubernetes only, not real restic or joint Python reference-policy acceptance.",
+  "externalModelCalls": 0,
+  "newServiceStarts": 0,
+  "actualStorageOperations": 0,
+  "formalV2AcceptanceComplete": false,
+  "failureHistory": {
+    "reports": [
+      "phase9-v2-cleanup-runtime-final-v2-race-tests.txt",
+      "phase9-v2-cleanup-runtime-final-v3-race-tests.txt"
+    ],
+    "cause": "Unowned backend was rejected but malformed pseudo-workspace produced HTTP500 rather than expected409. Added owner/binding preflight; final-v4 passes. No deletion or unauthorized success."
+  },
+  "remaining": [
+    "Python unique control-directory binding and trusted operator coordinator",
+    "Actual new dedicated repository joint GC/restart/lock/reference/retained restore acceptance",
+    "Fixed-workload performance and traffic",
+    "Unified restic startup and complete V2 ten-item audit"
+  ],
+  "sources": [
+    {
+      "path": "internal/sandbox/cleanup_barrier.go",
+      "sha256": "28043301cd7903f73d2f19d55aa2cf838dedff16fd9e8b6536c755c838a5cb0d"
+    },
+    {
+      "path": "internal/sandbox/cleanup_runtime.go",
+      "sha256": "59a8a11d9444d82ed437ed52e461fc25611b7113b4faac8cf6ef6f8dd18b4e82"
+    },
+    {
+      "path": "internal/sandbox/cleanup_runtime_test.go",
+      "sha256": "15e0f0dc260f1be6f3c97dc0839109365b751195f5fe2109b02605805f3a45e9"
+    },
+    {
+      "path": "internal/api/cleanup_handler.go",
+      "sha256": "7f56868468394023136fda4b6a32169a0ef618b68941eaac42ea4ed34b616cb7"
+    },
+    {
+      "path": "internal/api/cleanup_handler_test.go",
+      "sha256": "c4d7a37eb1b99eb59fba7a1e4899cc5d6a416a43e17e1ed93c8a440fe4ac945c"
+    },
+    {
+      "path": "internal/sandbox/workspace_registry.go",
+      "sha256": "8bc8b20e73261f1043ac759c20e6821186762a8ff3b09639382bf44501479df0"
+    },
+    {
+      "path": "internal/sandbox/workspace_barrier.go",
+      "sha256": "e8dffb1f58652e49d1ed39d2d1fb74c4df258f7ce7409c4b9d79feb4b3badd05"
+    },
+    {
+      "path": "internal/sandbox/backup_runtime.go",
+      "sha256": "917c597c579cd29cb7336beffe54d15e49db7f91715d5b05e93aa9b40091c7b9"
+    },
+    {
+      "path": "internal/api/server.go",
+      "sha256": "ef542ca2d1392e8e3da831a98d7380876f3038f2956d26a667b7557e9cb1b550"
+    },
+    {
+      "path": "internal/api/backup_handler.go",
+      "sha256": "78a9622ab978de9887c0e0cf0b9007133cec265f0d874c260cdaba3c6f9df78e"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-race-tests.txt",
+      "sha256": "6f5f8e699eff785f86928f2fd3df3d9b64f6aa489d3b7a7dcc5acfdb6b188459"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-v2-race-tests.txt",
+      "sha256": "a07af437194acf9716ca2db1ffb6c37f70dffd2057da3f31d5ae75ff21ec594c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-v3-race-tests.txt",
+      "sha256": "020b96dc490f25c23c74861da680a03f10dd20531ef1c0447892e1c2e58546a1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-v4-race-tests.txt",
+      "sha256": "9618663d4f528079d779e592278766558c74930f658562567bcf53382de9c8e2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-full-go-tests.txt",
+      "sha256": "cce03bd77a22e130da5eee0f036dfad56e6a879482f9dba9611727e728a55685"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-initial-tests.txt",
+      "sha256": "99e1d8aeb8596877b7f341a1b7381ed21a283b8d9c524aada83d311a73f01e75"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-race-tests.txt",
+      "sha256": "c5e270b75eef7838d58e0e6e149cec02418a36cd690514d8ce3b47cab2d60b7e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-targeted-tests.txt",
+      "sha256": "f4a19cd4b4d34ae4e9d4dd0ecd0a1e064e7be97c1338a8b01fc1e08d1f87f7de"
+    }
+  ]
+}

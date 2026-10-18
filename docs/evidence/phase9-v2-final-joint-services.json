@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "scope": "final three joint deterministic Replay cases against existing Milvus2.5.10/OpenSearch and cached local models; no reindex, external model, or real K8s lifecycle",
+  "before": [
+    {
+      "id": "3429d827d556ac9d6ea73f911b5f0a76d25e47c958eb5ce27c2d4ffa0b09aeb2",
+      "name": "/sandboxd-rag-etcd-1",
+      "project": "sandboxd-rag",
+      "image": "quay.io/coreos/etcd:v3.5.18",
+      "imageId": "sha256:d0a641d5fbcc89678c931a61b7de7b8a1cf097149f135c9c73bc81d076a1494b",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    },
+    {
+      "id": "907f7a31ec7bea0c9f3b5005e3ede6e7ef717e5e549427850e8415a2bf7364e5",
+      "name": "/sandboxd-rag-minio-1",
+      "project": "sandboxd-rag",
+      "image": "minio/minio:RELEASE.2023-03-20T20-16-18Z",
+      "imageId": "sha256:6d770d7f255cda1f18d841ffc4365cb7e0d237f6af6a15fcdb587480cd7c3b93",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    },
+    {
+      "id": "8d6c42b7c03105917c4350b4347108bc0b91a1954415b54175d1a3e32e3b07d6",
+      "name": "/sandboxd-rag-milvus-1",
+      "project": "sandboxd-rag",
+      "image": "milvusdb/milvus:v2.5.10",
+      "imageId": "sha256:02e1d60d71ab60f435c60076f4fed2abe59602ecd5e18dcfe229c8c558c4379d",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    },
+    {
+      "id": "41fa1e3d310fca98cd0fef6be241d51b12af27a34dae06856564cafb375197fd",
+      "name": "/sandboxd-logs-opensearch-1",
+      "project": "sandboxd-logs",
+      "image": "opensearchproject/opensearch:2.19.6",
+      "imageId": "sha256:e321cb03c643874c42240458a618db56bc1e4fc143b10c41bec653542bc6851b",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    }
+  ],
+  "after": [
+    {
+      "id": "3429d827d556ac9d6ea73f911b5f0a76d25e47c958eb5ce27c2d4ffa0b09aeb2",
+      "name": "/sandboxd-rag-etcd-1",
+      "project": "sandboxd-rag",
+      "image": "quay.io/coreos/etcd:v3.5.18",
+      "imageId": "sha256:d0a641d5fbcc89678c931a61b7de7b8a1cf097149f135c9c73bc81d076a1494b",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    },
+    {
+      "id": "907f7a31ec7bea0c9f3b5005e3ede6e7ef717e5e549427850e8415a2bf7364e5",
+      "name": "/sandboxd-rag-minio-1",
+      "project": "sandboxd-rag",
+      "image": "minio/minio:RELEASE.2023-03-20T20-16-18Z",
+      "imageId": "sha256:6d770d7f255cda1f18d841ffc4365cb7e0d237f6af6a15fcdb587480cd7c3b93",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    },
+    {
+      "id": "8d6c42b7c03105917c4350b4347108bc0b91a1954415b54175d1a3e32e3b07d6",
+      "name": "/sandboxd-rag-milvus-1",
+      "project": "sandboxd-rag",
+      "image": "milvusdb/milvus:v2.5.10",
+      "imageId": "sha256:02e1d60d71ab60f435c60076f4fed2abe59602ecd5e18dcfe229c8c558c4379d",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    },
+    {
+      "id": "41fa1e3d310fca98cd0fef6be241d51b12af27a34dae06856564cafb375197fd",
+      "name": "/sandboxd-logs-opensearch-1",
+      "project": "sandboxd-logs",
+      "image": "opensearchproject/opensearch:2.19.6",
+      "imageId": "sha256:e321cb03c643874c42240458a618db56bc1e4fc143b10c41bec653542bc6851b",
+      "state": "exited",
+      "paused": false,
+      "health": "unhealthy"
+    }
+  ],
+  "startedIds": [
+    "3429d827d556ac9d6ea73f911b5f0a76d25e47c958eb5ce27c2d4ffa0b09aeb2",
+    "907f7a31ec7bea0c9f3b5005e3ede6e7ef717e5e549427850e8415a2bf7364e5",
+    "8d6c42b7c03105917c4350b4347108bc0b91a1954415b54175d1a3e32e3b07d6",
+    "41fa1e3d310fca98cd0fef6be241d51b12af27a34dae06856564cafb375197fd"
+  ],
+  "externalModelCalls": 0,
+  "healthyBeforeReplay": [
+    {
+      "id": "3429d827d556ac9d6ea73f911b5f0a76d25e47c958eb5ce27c2d4ffa0b09aeb2",
+      "name": "/sandboxd-rag-etcd-1",
+      "project": "sandboxd-rag",
+      "image": "quay.io/coreos/etcd:v3.5.18",
+      "imageId": "sha256:d0a641d5fbcc89678c931a61b7de7b8a1cf097149f135c9c73bc81d076a1494b",
+      "state": "running",
+      "paused": false,
+      "health": "healthy"
+    },
+    {
+      "id": "907f7a31ec7bea0c9f3b5005e3ede6e7ef717e5e549427850e8415a2bf7364e5",
+      "name": "/sandboxd-rag-minio-1",
+      "project": "sandboxd-rag",
+      "image": "minio/minio:RELEASE.2023-03-20T20-16-18Z",
+      "imageId": "sha256:6d770d7f255cda1f18d841ffc4365cb7e0d237f6af6a15fcdb587480cd7c3b93",
+      "state": "running",
+      "paused": false,
+      "health": "healthy"
+    },
+    {
+      "id": "8d6c42b7c03105917c4350b4347108bc0b91a1954415b54175d1a3e32e3b07d6",
+      "name": "/sandboxd-rag-milvus-1",
+      "project": "sandboxd-rag",
+      "image": "milvusdb/milvus:v2.5.10",
+      "imageId": "sha256:02e1d60d71ab60f435c60076f4fed2abe59602ecd5e18dcfe229c8c558c4379d",
+      "state": "running",
+      "paused": false,
+      "health": "healthy"
+    },
+    {
+      "id": "41fa1e3d310fca98cd0fef6be241d51b12af27a34dae06856564cafb375197fd",
+      "name": "/sandboxd-logs-opensearch-1",
+      "project": "sandboxd-logs",
+      "image": "opensearchproject/opensearch:2.19.6",
+      "imageId": "sha256:e321cb03c643874c42240458a618db56bc1e4fc143b10c41bec653542bc6851b",
+      "state": "running",
+      "paused": false,
+      "health": "healthy"
+    }
+  ],
+  "jointReportSha256": "bb080bfca83efad564080d696800ef8ec11a22b2ae5ff3a73349fe89adf96dce",
+  "jointReportKeys": [
+    "kind",
+    "logSnapshotHash",
+    "modelCalls",
+    "jev",
+    "sandbox",
+    "externalModelCalls",
+    "scope",
+    "passed",
+    "count",
+    "cases"
+  ]
+}

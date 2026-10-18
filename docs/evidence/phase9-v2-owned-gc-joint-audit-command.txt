@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_gc_joint_audit.py", line 143, in <module>
+    args = parser.parse_args(); audit(args.source, args.output)
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_gc_joint_audit.py", line 84, in audit
+    submitted = next(datetime.fromisoformat(r["timestamp"]) for r in states if r["data"]["phase"] == "submitted")
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_gc_joint_audit.py", line 84, in <genexpr>
+    submitted = next(datetime.fromisoformat(r["timestamp"]) for r in states if r["data"]["phase"] == "submitted")
+ValueError: Invalid isoformat string: '2026-10-18T03:47:58.103606248Z'

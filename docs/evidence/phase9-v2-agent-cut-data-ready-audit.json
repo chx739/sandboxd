@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "source": "phase9-v2-agent-cut-data-ready.json",
+  "sha256": "f2080f02a7f99dc056e0068d9fbb096c8a865178a38e6fdfa803e7ca46fb7a38",
+  "checks": {
+    "actualSigkill": true,
+    "sameTaskScopeAndOriginalBudgets": true,
+    "originalCallsPreserved": true,
+    "twoAttemptsStopped": true,
+    "writeOnce": true,
+    "snapshotIdentityRetained": true,
+    "uncommittedFailedAndNoHeadSkip": true,
+    "actualRunsc": true,
+    "originalSessionPrefix": true,
+    "noPaidModelOrManualResume": true
+  },
+  "passed": true,
+  "scope": "independent raw-report consistency check; does not create another service run"
+}

@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "scope": "independent read-only journal checksum/sequence and restore ordering audit; not another service experiment",
+  "reportSha256": "eeb4473810d9addf2b7480dbd3eec73f6c0d9fafd464a668cdd8773967322002",
+  "checks": [
+    {
+      "restoreId": "restore-bef8e165ae0f42b795f4d9a86792b143",
+      "pythonStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ],
+      "goProofBeforeReleaseBeforeClaim": true,
+      "taskSucceededAndStopped": true,
+      "uniqueReserve": true
+    },
+    {
+      "restoreId": "restore-fdd5af916ebe4ba1b752916e505db08d",
+      "pythonStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ],
+      "goProofBeforeReleaseBeforeClaim": true,
+      "taskSucceededAndStopped": true,
+      "uniqueReserve": true
+    }
+  ],
+  "externalModelCalls": 0
+}

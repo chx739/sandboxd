@@ -1,0 +1,28 @@
+{"operation": "init", "passed": true, "podUid": "05a51e58-2c3b-44d8-a3df-ee7c986fe051"}
+{"operation": "backup", "passed": true, "podUid": "8f63aea2-cef0-4d9b-a9c3-2d19fed71e7f"}
+{"operation": "backup", "passed": true, "podUid": "504f9ab4-fc92-4bc7-ae83-bdbc1290a69a"}
+{"operation": "backup", "passed": true, "podUid": "646389cb-88c4-4bf2-84ca-8274750b4ada"}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_backup_component.py", line 242, in <module>
+    main()
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_backup_component.py", line 237, in main
+    report = asyncio.run(run(args.output))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_backup_component.py", line 203, in run
+    result = await operation(restored, "restore", snapshot=snapshot["snapshotId"], manifest=snapshot["manifest"]["sha256"])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_backup_component.py", line 159, in operation
+    "runAsUser": pod["spec"]["securityContext"]["runAsUser"], "readonlySource": pod["spec"]["containers"][0]["volumeMounts"][0]["readOnly"],
+                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'readOnly'

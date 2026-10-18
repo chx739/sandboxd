@@ -1,0 +1,32 @@
+test_bad_proof_cannot_forget_or_finish (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_bad_proof_cannot_forget_or_finish) ... Executing <Task finished name='Task-1' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.107 seconds
+ok
+test_failure_no_automatic_retry_and_explicit_fixed_target_attempt (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_failure_no_automatic_retry_and_explicit_fixed_target_attempt) ... Executing <Task finished name='Task-6' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.107 seconds
+ok
+test_fake_cut_points_preserve_request_and_no_repeated_start (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_fake_cut_points_preserve_request_and_no_repeated_start) ... Executing <Task finished name='Task-11' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.111 seconds
+ok
+test_forget_protocol_order_terminal_idempotence_and_rebuild (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_forget_protocol_order_terminal_idempotence_and_rebuild) ... Executing <Task finished name='Task-16' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.110 seconds
+ok
+test_operator_client_rejects_nonloopback_and_free_actions (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_operator_client_rejects_nonloopback_and_free_actions) ... Executing <Task finished name='Task-21' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.113 seconds
+Executing <Task finished name='Task-22' coro=<CleanupTests.test_operator_client_rejects_nonloopback_and_free_actions() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:170> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.531 seconds
+ok
+test_pending_blocks_save_restore_and_competing_plan (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_pending_blocks_save_restore_and_competing_plan) ... Executing <Task finished name='Task-26' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.107 seconds
+ok
+test_stale_preview_cancels_only_before_durable_intent (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_stale_preview_cancels_only_before_durable_intent) ... Executing <Task finished name='Task-31' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.108 seconds
+ok
+test_unique_directory_claim_clone_and_old_adoption_refused (agentd.tests.test_checkpoint_cleanup.CleanupTests.test_unique_directory_claim_clone_and_old_adoption_refused) ... Executing <Task finished name='Task-36' coro=<CleanupTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoint_cleanup.py:65> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.108 seconds
+ok
+test_admin_preview_readonly_and_live_writer_refused (agentd.tests.test_checkpoint_retention.RetentionTests.test_admin_preview_readonly_and_live_writer_refused) ... ok
+test_corrupt_forget_cannot_delete_head_even_with_valid_checksum (agentd.tests.test_checkpoint_retention.RetentionTests.test_corrupt_forget_cannot_delete_head_even_with_valid_checksum) ... ok
+test_entire_unprotected_alias_group_becomes_unavailable (agentd.tests.test_checkpoint_retention.RetentionTests.test_entire_unprotected_alias_group_becomes_unavailable) ... ok
+test_failed_uncommitted_alias_and_other_crypto_repository (agentd.tests.test_checkpoint_retention.RetentionTests.test_failed_uncommitted_alias_and_other_crypto_repository) ... ok
+test_forget_tombstone_rebuild_no_restore_and_no_new_save (agentd.tests.test_checkpoint_retention.RetentionTests.test_forget_tombstone_rebuild_no_restore_and_no_new_save) ... ok
+test_heads_explicit_pins_and_stale_preview (agentd.tests.test_checkpoint_retention.RetentionTests.test_heads_explicit_pins_and_stale_preview) ... ok
+test_invalid_retention_replay_refused (agentd.tests.test_checkpoint_retention.RetentionTests.test_invalid_retention_replay_refused) ... ok
+test_preparing_and_bad_session_ref_block_preview (agentd.tests.test_checkpoint_retention.RetentionTests.test_preparing_and_bad_session_ref_block_preview) ... ok
+test_restore_and_uncommitted_source_protection (agentd.tests.test_checkpoint_retention.RetentionTests.test_restore_and_uncommitted_source_protection) ... ok
+test_snapshot_alias_protected_across_logical_repository_names (agentd.tests.test_checkpoint_retention.RetentionTests.test_snapshot_alias_protected_across_logical_repository_names) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 2.696s
+
+OK

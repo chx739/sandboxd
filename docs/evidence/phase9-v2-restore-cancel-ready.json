@@ -1,0 +1,120 @@
+{
+  "passed": false,
+  "phase": "cancel-ready",
+  "mode": "real-agent-tcp-restore-window-fault",
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-restore-fault/56c4c30b3a51405db9889ebbad3cce1e",
+  "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+  "restoreId": "restore-d247bccdff8d42b18f9b551e2eb51f5c",
+  "manualResumeCalls": 0,
+  "binarySha256": "4b2ca6b93e84ee6dbc8a1bed15a4a28a0e6ca37d7bea20e821782ff74fb67fcb",
+  "scope": "own Agent SIGKILL and plain restart, or fixture-gated real Start then HTTP cancel; Go/storage stay running; no GC/Live",
+  "taskId": "task-070254be2a06684b",
+  "cutPoint": {
+    "phase": "cancel-ready",
+    "pid": 251852,
+    "restoreId": "restore-d247bccdff8d42b18f9b551e2eb51f5c",
+    "taskId": "task-070254be2a06684b",
+    "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+    "status": "RESERVED"
+  },
+  "before": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic joint checkpoint cut"
+      },
+      "fingerprint": "ad554637cd5b2775c390a55908efe4d8",
+      "labels": {
+        "cluster": "local-kind",
+        "namespace": "sandboxd-target",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-daee9f2248d84ba585e4ddb2727d3dc8",
+        "claimRequested": false,
+        "ownerStopped": false,
+        "podUid": null,
+        "sandboxId": null,
+        "startedAt": "2026-10-18T01:00:17.334283+00:00"
+      }
+    ],
+    "branchId": "branch-e6b7525b2f8d47fbbc6bfb73a99ff60b",
+    "calls": {},
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": null,
+    "deadline": "2026-10-18T01:03:27.334283+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": null,
+    "schemaVersion": 2,
+    "sessionId": "session-eba92e76c2add765",
+    "status": "running",
+    "taskId": "task-070254be2a06684b",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-18T01:00:17.334283+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": null
+    },
+    "workspaceId": "workspace-c1b97e9699e24745bbfe01a99420baf7"
+  },
+  "restoreBefore": {
+    "branchId": "branch-e6b7525b2f8d47fbbc6bfb73a99ff60b",
+    "createdAt": "2026-10-18T01:00:17.321635+00:00",
+    "failure": null,
+    "restoreId": "restore-d247bccdff8d42b18f9b551e2eb51f5c",
+    "sessionId": "session-eba92e76c2add765",
+    "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+    "status": "RESERVED",
+    "taskId": "task-070254be2a06684b",
+    "workspaceId": "workspace-c1b97e9699e24745bbfe01a99420baf7"
+  },
+  "barrierBefore": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-c1b97e9699e24745bbfe01a99420baf7",
+    "checkpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+    "operation": "restore",
+    "access": {
+      "workspaceId": "",
+      "taskId": "",
+      "attemptId": "",
+      "sandboxId": "",
+      "generation": 0
+    },
+    "jobId": "restore-d247bccdff8d42b18f9b551e2eb51f5c",
+    "podName": "workspace-backup-restore-d247bccdff8d42b18f9b551e2eb51f5c",
+    "podUid": "9f4d3d95-d543-4540-9640-ed4219011a03",
+    "phase": "identified",
+    "job": {
+      "imageRef": "sandboxd-restic:0.18.1-v2",
+      "secretName": "restic-96b2e21e6af74376",
+      "endpointIp": "172.23.0.4"
+    },
+    "restoreSource": {
+      "snapshotId": "bc7d29c7a043a243ede7d33ccade6758d341dcce9c357f3905663da843e2145f",
+      "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+      "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1"
+    }
+  },
+  "maintenance": {
+    "podUid": "9f4d3d95-d543-4540-9640-ed4219011a03",
+    "podName": "workspace-backup-restore-d247bccdff8d42b18f9b551e2eb51f5c",
+    "actualRuntimeType": "io.containerd.runsc.v1",
+    "imageId": ""
+  },
+  "cancelAccepted": true,
+  "failure": {
+    "type": "AssertionError",
+    "message": "旧执行者未确认停止：trusted checkpoint request did not complete; reconcile original job"
+  }
+}

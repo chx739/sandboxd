@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "scope": "immutable production/fixture/test sources unchanged since 332-test regression and final-checks; only closing progress/learning text changed, no service experiment repeated",
+  "sourceSha256": {
+    "agentd/workspace_deployment.py": "89adaab7c613748365f79eab4a1b4bf58b251cd638b551d1921586c6e393ba35",
+    "agentd/workspace_deployment_audit.py": "0ead49f467e56f17ba36cacb38bd904b45ebc19b3c66790c41ab611260b5c1c4",
+    "agentd/workspace_entry_demo.py": "7e3504ba5a6e8085ef3689e927236533aa070eab0e184e73d5d914e23482c460",
+    "agentd/tests/test_workspace_deployment.py": "7b08c6a1180c35712ecc57f4a3136bff831937156d73212324bf6a965ed7f523",
+    "hack/workspace.sh": "45cf59842b63191dbfe4e5b8a44631abffaf2169fe5bf07e48d4760c1f004731"
+  },
+  "priorFinalChecksSha256": "92ae121989c5c031eeab9bf8035cc28678c8a7d152b6e257ac14df8077970c88",
+  "closingDocumentationChanged": [
+    "docs/PROGRESS.md",
+    "docs/47-联合检查点与restic-MinIO学习手册.md"
+  ],
+  "reports": {
+    "docs/evidence/phase9-v2-deployment-audit-command.txt": "5e7015e367951ed59e1a2d0092b0ac0bc3f2c0e2f30a52fe8eee785fa110b180",
+    "docs/evidence/phase9-v2-deployment-audit.json": "7aa87b7c84473eb3ea760f6e725cb181e8119410bb228b3608f20e17595902a9",
+    "docs/evidence/phase9-v2-deployment-entry-command.txt": "ff767c19650fbda332fc6b5a14e1264398ec7453f40f94f71014553d9be601d8",
+    "docs/evidence/phase9-v2-deployment-entry.json": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9",
+    "docs/evidence/phase9-v2-deployment-final-checks.json": "92ae121989c5c031eeab9bf8035cc28678c8a7d152b6e257ac14df8077970c88",
+    "docs/evidence/phase9-v2-deployment-final-targeted-tests.txt": "a76b34375f68c41b3dd4f45f5f3ab458e896bbc81fafbab7b2751fe0cdeb5a39",
+    "docs/evidence/phase9-v2-deployment-full-python-tests.txt": "0376abcf51430b16f1c0bdac3af5c985cfc0994962d408c4dfc40e11de4b3cc1",
+    "docs/evidence/phase9-v2-deployment-init-command.txt": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f",
+    "docs/evidence/phase9-v2-deployment-initial-tests.txt": "926c521c60e4e5a1f4493d33ef5e71db400626c35ae6895b9fc707c239f4bb25",
+    "docs/evidence/phase9-v2-deployment-reinit-command.txt": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f",
+    "docs/evidence/phase9-v2-deployment-status.json": "6540e99f5a0218f0db9898fe3cf0a3cabc9fdf2d1f8ba74e6bb028614554f25f"
+  },
+  "externalModelCalls": 0,
+  "formalV2AcceptanceComplete": false
+}

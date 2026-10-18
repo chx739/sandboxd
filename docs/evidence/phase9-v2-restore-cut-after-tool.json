@@ -1,0 +1,156 @@
+{
+  "passed": false,
+  "phase": "after-tool",
+  "mode": "real-agent-tcp-restore-window-fault",
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-restore-fault/a94ffef4b63a4c6d800a86864964441e",
+  "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+  "restoreId": "restore-8bb347c24c3e4f8da91976cf6c6207be",
+  "manualResumeCalls": 0,
+  "binarySha256": "4b2ca6b93e84ee6dbc8a1bed15a4a28a0e6ca37d7bea20e821782ff74fb67fcb",
+  "scope": "own Agent SIGKILL and plain restart, or fixture-gated real Start then HTTP cancel; Go/storage stay running; no GC/Live",
+  "taskId": "task-93d3940835b46bc8",
+  "businessBefore": {
+    "workspaceId": "workspace-ccba8a83be2640418ef52a8555f70b1a",
+    "attemptId": "attempt-dfcfa6e9b5b24457a332f90a017a80f6",
+    "podUid": "48e4af87-aeeb-413a-8ce6-b431b9df7141",
+    "sandboxId": "283f827631dcc299",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-ccba8a83be2640418ef52a8555f70b1a",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "cutPoint": {
+    "phase": "after-tool",
+    "pid": 250186,
+    "restoreId": "restore-8bb347c24c3e4f8da91976cf6c6207be",
+    "taskId": "task-93d3940835b46bc8",
+    "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+    "status": "ATTACHED"
+  },
+  "before": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic joint checkpoint cut"
+      },
+      "fingerprint": "ad554637cd5b2775c390a55908efe4d8",
+      "labels": {
+        "cluster": "local-kind",
+        "namespace": "sandboxd-target",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-dfcfa6e9b5b24457a332f90a017a80f6",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "48e4af87-aeeb-413a-8ce6-b431b9df7141",
+        "sandboxId": "283f827631dcc299",
+        "startedAt": "2026-10-18T00:50:59.021248+00:00"
+      }
+    ],
+    "branchId": "branch-982621a6d63f45ff824a2b9f273b6322",
+    "calls": {
+      "call-2998b3fb0ae0407eb8b3ea011abc13be": {
+        "attemptId": "attempt-dfcfa6e9b5b24457a332f90a017a80f6",
+        "expectedNewSha256": "81dafdb165679a41e3abcae3a3e5e25568f106863759672f5fbc4d29dd6e9812",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "report.md",
+        "state": "finished"
+      },
+      "call-c89f21e6f2d14f1a89f526d7883be6d7": {
+        "attemptId": "attempt-dfcfa6e9b5b24457a332f90a017a80f6",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-b25217b75fe1b78e",
+    "deadline": "2026-10-18T00:53:10.928074+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "d17c37f79c4404fac51938372ec8b637fbc861e8b86569566dfaa7b57ddbbc62",
+      "model": "restore-fault-replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-eba92e76c2add765",
+    "status": "running",
+    "taskId": "task-93d3940835b46bc8",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-18T00:50:59.021248+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-18T00:51:10.928074+00:00"
+    },
+    "workspaceId": "workspace-ccba8a83be2640418ef52a8555f70b1a"
+  },
+  "restoreBefore": {
+    "branchId": "branch-982621a6d63f45ff824a2b9f273b6322",
+    "createdAt": "2026-10-18T00:50:59.007750+00:00",
+    "failure": null,
+    "restoreId": "restore-8bb347c24c3e4f8da91976cf6c6207be",
+    "sessionId": "session-eba92e76c2add765",
+    "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+    "status": "ATTACHED",
+    "taskId": "task-93d3940835b46bc8",
+    "workspaceId": "workspace-ccba8a83be2640418ef52a8555f70b1a"
+  },
+  "barrierBefore": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-ccba8a83be2640418ef52a8555f70b1a",
+    "checkpointId": "cp-ea87167e252a4d0e930a311322f7106d",
+    "operation": "backup",
+    "access": {
+      "workspaceId": "workspace-ccba8a83be2640418ef52a8555f70b1a",
+      "taskId": "task-93d3940835b46bc8",
+      "attemptId": "attempt-dfcfa6e9b5b24457a332f90a017a80f6",
+      "sandboxId": "283f827631dcc299",
+      "generation": 1
+    },
+    "jobId": "backup-ea87167e252a4d0e930a311322f7106d",
+    "podName": "workspace-backup-backup-ea87167e252a4d0e930a311322f7106d",
+    "podUid": "d6ed4956-124b-4963-a6f8-e181233a4462",
+    "phase": "released",
+    "stopReason": "containers-terminated",
+    "job": {
+      "imageRef": "sandboxd-restic:0.18.1-v2",
+      "secretName": "restic-96b2e21e6af74376",
+      "endpointIp": "172.23.0.4"
+    }
+  },
+  "maintenance": {
+    "podUid": "0acb947a-631b-4512-afc4-7cc4ce2d5617",
+    "podName": "workspace-backup-restore-8bb347c24c3e4f8da91976cf6c6207be",
+    "actualRuntimeType": "io.containerd.runsc.v1",
+    "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58"
+  },
+  "kill": {
+    "signal": "SIGKILL",
+    "returnCode": -9,
+    "osStopConfirmed": true
+  },
+  "killToReadyMs": 53303.267182993295,
+  "failure": {
+    "type": "AssertionError",
+    "message": ""
+  }
+}

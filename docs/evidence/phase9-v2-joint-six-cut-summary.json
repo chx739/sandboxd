@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "realCases": [
+    {
+      "phase": "reserved",
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2.json",
+      "sha256": "2f8157365a5f1f6e4162a61b70efe209481b0b788bc48db0485831311af29525",
+      "passed": true,
+      "statusBeforeKill": "Go reserved only; no Python checkpoint",
+      "statusAfterRestart": "no manufactured checkpoint",
+      "finalRevision": 2,
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "originalBudgetAndDeadlinePreserved": true,
+      "killToAgentReadyMs": 55176.11048500112,
+      "killToVerificationMs": 72445.32959799835
+    },
+    {
+      "phase": "preparing",
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing.json",
+      "sha256": "bd5f52d38244407805e2400e900651c2605a1b104cfa1a8425e5807ffcd99d8e",
+      "passed": true,
+      "statusBeforeKill": "PREPARING",
+      "statusAfterRestart": "FAILED",
+      "finalRevision": 2,
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "originalBudgetAndDeadlinePreserved": true,
+      "killToAgentReadyMs": 55281.38250399934,
+      "killToVerificationMs": 71626.3315430042
+    },
+    {
+      "phase": "before-data-ready",
+      "path": "docs/evidence/phase9-v2-agent-cut-before-data-ready.json",
+      "sha256": "7517a4fd3a02c7b0399eed21c1418accee872cb12e8b5f79e9729f354343789f",
+      "passed": true,
+      "statusBeforeKill": "PREPARING",
+      "statusAfterRestart": "FAILED",
+      "finalRevision": 2,
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "originalBudgetAndDeadlinePreserved": true,
+      "killToAgentReadyMs": 54865.63688499882,
+      "killToVerificationMs": 72153.67001399864
+    },
+    {
+      "phase": "data-ready",
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready.json",
+      "sha256": "f2080f02a7f99dc056e0068d9fbb096c8a865178a38e6fdfa803e7ca46fb7a38",
+      "passed": true,
+      "statusBeforeKill": "DATA_READY",
+      "statusAfterRestart": "FAILED",
+      "finalRevision": 2,
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "originalBudgetAndDeadlinePreserved": true,
+      "killToAgentReadyMs": 57013.96639599989,
+      "killToVerificationMs": 73746.6582900015
+    },
+    {
+      "phase": "before-commit",
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit.json",
+      "sha256": "8245784802faa8c2f4e130f33fa15fe4e5ffac322b19980dc7418d2f77d49f51",
+      "passed": true,
+      "statusBeforeKill": "DATA_READY",
+      "statusAfterRestart": "FAILED",
+      "finalRevision": 2,
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "originalBudgetAndDeadlinePreserved": true,
+      "killToAgentReadyMs": 55903.55913700478,
+      "killToVerificationMs": 71971.31366200483
+    },
+    {
+      "phase": "committed",
+      "path": "docs/evidence/phase9-v2-agent-cut-committed.json",
+      "sha256": "c4499a841484584309f894b1d9efebd6cd4c65219d0385c609d8a1b0ef45280e",
+      "passed": true,
+      "statusBeforeKill": "COMMITTED",
+      "statusAfterRestart": "COMMITTED",
+      "finalRevision": 3,
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "originalBudgetAndDeadlinePreserved": true,
+      "killToAgentReadyMs": 50588.47627799696,
+      "killToVerificationMs": 66022.02409299935
+    }
+  ],
+  "externalModelCalls": 0,
+  "scope": "six real Agent process cut points; Go/storage remained available; replay model; does not verify historical restore/GC/storage failure",
+  "formalV2AcceptanceComplete": false
+}

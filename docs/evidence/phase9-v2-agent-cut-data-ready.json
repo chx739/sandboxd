@@ -1,0 +1,1197 @@
+{
+  "mode": "real-agentd-sigkill-at-joint-checkpoint",
+  "phase": "data-ready",
+  "passed": true,
+  "externalModelCalls": 0,
+  "manualResumeCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57a05462b9bc4f38a2b5a251c4ec4cfe",
+  "apiRequests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks",
+      "statusCode": 202
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/task-e5b6498c42cf833a",
+      "statusCode": 200
+    }
+  ],
+  "scope": "Agent process cut point with actual Go/gVisor/NFS/restic/MinIO; not historical restore/GC or Go process crash",
+  "taskId": "task-e5b6498c42cf833a",
+  "cutPoint": {
+    "phase": "data-ready",
+    "pid": 211088,
+    "checkpointId": "cp-d2349512ae5042049c9e902000186357",
+    "status": "DATA_READY",
+    "headCheckpointId": null,
+    "timestamp": "2026-10-17T22:45:43.562043+00:00"
+  },
+  "stateBeforeKill": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic joint checkpoint cut"
+      },
+      "fingerprint": "ad554637cd5b2775c390a55908efe4d8",
+      "labels": {
+        "cluster": "local-kind",
+        "namespace": "sandboxd-target",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "da83deca-ee3a-4882-9f44-605f346ee041",
+        "sandboxId": "e580af13773644cd",
+        "startedAt": "2026-10-17T22:45:19.693527+00:00"
+      }
+    ],
+    "branchId": "branch-8099eed1a0674c87bb6a62b474faa3e2",
+    "calls": {
+      "call-234188df52594387b6d1b504a7b99114": {
+        "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-9a928125e7d94d7e89eb8356ef58a4f1": {
+        "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+        "expectedNewSha256": "c267c431c06f7f079e7547e0e6b7360a25a023596939e1fe6c72cd69d65c29cd",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "report.md",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-bc65b2c46c9f496a",
+    "deadline": "2026-10-17T22:47:37.234586+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "dfdfe6caf6e1971bbb7ac238dea207c64e5d5fa277aaf3bfa6df1fc998d8292b",
+      "model": "checkpoint-process-replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-7c078453024923d0",
+    "status": "running",
+    "taskId": "task-e5b6498c42cf833a",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T22:45:19.693527+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T22:45:37.234586+00:00"
+    },
+    "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52"
+  },
+  "podBeforeKill": {
+    "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52",
+    "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+    "podUid": "da83deca-ee3a-4882-9f44-605f346ee041",
+    "sandboxId": "e580af13773644cd",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-b2a563ae47d84b0a8e70cf8ec853ef52",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "barrierAtCut": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52",
+    "checkpointId": "cp-d2349512ae5042049c9e902000186357",
+    "operation": "backup",
+    "access": {
+      "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52",
+      "taskId": "task-e5b6498c42cf833a",
+      "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+      "sandboxId": "e580af13773644cd",
+      "generation": 1
+    },
+    "jobId": "backup-d2349512ae5042049c9e902000186357",
+    "podName": "workspace-backup-backup-d2349512ae5042049c9e902000186357",
+    "podUid": "1688247b-1d90-4bd8-a07f-8f13838a4eb8",
+    "phase": "stopped",
+    "stopReason": "containers-terminated",
+    "job": {
+      "imageRef": "sandboxd-restic:0.18.1-v1",
+      "secretName": "restic-96b2e21e6af74376",
+      "endpointIp": "172.23.0.4"
+    }
+  },
+  "maintenanceAtCut": {
+    "podUid": "1688247b-1d90-4bd8-a07f-8f13838a4eb8",
+    "podName": "workspace-backup-backup-d2349512ae5042049c9e902000186357",
+    "actualRuntimeType": "io.containerd.runsc.v1",
+    "imageId": "sha256:d84a466326ed959920fee751772ddfed5bfd0e766a4fa76c552d5063f0911b64"
+  },
+  "kill": {
+    "signal": "SIGKILL",
+    "returnCode": -9,
+    "osStopConfirmed": true
+  },
+  "checkpointAtRestart": {
+    "checkpointId": "cp-d2349512ae5042049c9e902000186357",
+    "committedAt": null,
+    "createdAt": "2026-10-17T22:45:37.466303+00:00",
+    "data": {
+      "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+      "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+      "repositoryId": "repo-component",
+      "snapshotId": "470b59045d831dd71611a4a9facd1544efcc02041f303cdd2035850e9f92c3ed"
+    },
+    "failure": null,
+    "identity": {
+      "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+      "branchId": "branch-8099eed1a0674c87bb6a62b474faa3e2",
+      "generation": 1,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "podUid": "da83deca-ee3a-4882-9f44-605f346ee041",
+      "sandboxId": "e580af13773644cd",
+      "sessionId": "session-7c078453024923d0",
+      "sessionNodeId": "node-bc65b2c46c9f496a",
+      "sessionRef": {
+        "bytes": 4567,
+        "nodeId": "node-bc65b2c46c9f496a",
+        "path": "session-refs/64ad4a3bcc30a737791c6d4e393f9134db3414b7941e1c69f6492a248567fc89.json",
+        "schemaVersion": 1,
+        "sessionId": "session-7c078453024923d0",
+        "sha256": "64ad4a3bcc30a737791c6d4e393f9134db3414b7941e1c69f6492a248567fc89"
+      },
+      "taskId": "task-e5b6498c42cf833a",
+      "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52"
+    },
+    "parentCheckpointId": null,
+    "revision": null,
+    "schemaVersion": 1,
+    "status": "DATA_READY"
+  },
+  "killToAgentReadyMs": 57013.96639599989,
+  "checkpointAfterRestart": {
+    "checkpointId": "cp-d2349512ae5042049c9e902000186357",
+    "committedAt": null,
+    "createdAt": "2026-10-17T22:45:37.466303+00:00",
+    "data": {
+      "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+      "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+      "repositoryId": "repo-component",
+      "snapshotId": "470b59045d831dd71611a4a9facd1544efcc02041f303cdd2035850e9f92c3ed"
+    },
+    "failure": "backup_failed",
+    "identity": {
+      "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+      "branchId": "branch-8099eed1a0674c87bb6a62b474faa3e2",
+      "generation": 1,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "podUid": "da83deca-ee3a-4882-9f44-605f346ee041",
+      "sandboxId": "e580af13773644cd",
+      "sessionId": "session-7c078453024923d0",
+      "sessionNodeId": "node-bc65b2c46c9f496a",
+      "sessionRef": {
+        "bytes": 4567,
+        "nodeId": "node-bc65b2c46c9f496a",
+        "path": "session-refs/64ad4a3bcc30a737791c6d4e393f9134db3414b7941e1c69f6492a248567fc89.json",
+        "schemaVersion": 1,
+        "sessionId": "session-7c078453024923d0",
+        "sha256": "64ad4a3bcc30a737791c6d4e393f9134db3414b7941e1c69f6492a248567fc89"
+      },
+      "taskId": "task-e5b6498c42cf833a",
+      "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52"
+    },
+    "parentCheckpointId": null,
+    "revision": null,
+    "schemaVersion": 1,
+    "status": "FAILED"
+  },
+  "finalCheckpoint": {
+    "checkpointId": "cp-58cafdd59ced41cc9706508b3f164ca5",
+    "committedAt": "2026-10-17T22:46:54.671662+00:00",
+    "createdAt": "2026-10-17T22:46:48.338506+00:00",
+    "data": {
+      "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+      "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+      "repositoryId": "repo-component",
+      "snapshotId": "ca4fef0c20c26190c411e47ccb96fa9d8381bcf64a139edeb9c40e2f14c82f18"
+    },
+    "failure": null,
+    "identity": {
+      "attemptId": "attempt-483ce07021a3415c90db6048eb641f14",
+      "branchId": "branch-8099eed1a0674c87bb6a62b474faa3e2",
+      "generation": 2,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "podUid": "56176adb-8d05-4737-95d6-86948ac1bdd6",
+      "sandboxId": "45e6580a01c8afea",
+      "sessionId": "session-7c078453024923d0",
+      "sessionNodeId": "node-e5151dcdc1b8798c",
+      "sessionRef": {
+        "bytes": 7390,
+        "nodeId": "node-e5151dcdc1b8798c",
+        "path": "session-refs/4342d99533093149aa0513bb760e0562ec662b1980043be734b2884b36bb3295.json",
+        "schemaVersion": 1,
+        "sessionId": "session-7c078453024923d0",
+        "sha256": "4342d99533093149aa0513bb760e0562ec662b1980043be734b2884b36bb3295"
+      },
+      "taskId": "task-e5b6498c42cf833a",
+      "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52"
+    },
+    "parentCheckpointId": "cp-03279ad7d91f44d59aa48729d9bdd491",
+    "revision": 2,
+    "schemaVersion": 1,
+    "status": "COMMITTED"
+  },
+  "visibleToolCallIds": [
+    "write-once",
+    "read-after-restart"
+  ],
+  "stateAfterRestart": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic joint checkpoint cut"
+      },
+      "fingerprint": "ad554637cd5b2775c390a55908efe4d8",
+      "labels": {
+        "cluster": "local-kind",
+        "namespace": "sandboxd-target",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "da83deca-ee3a-4882-9f44-605f346ee041",
+        "sandboxId": "e580af13773644cd",
+        "startedAt": "2026-10-17T22:45:19.693527+00:00",
+        "stopReason": "containers-terminated"
+      },
+      {
+        "attemptId": "attempt-483ce07021a3415c90db6048eb641f14",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "56176adb-8d05-4737-95d6-86948ac1bdd6",
+        "sandboxId": "45e6580a01c8afea",
+        "startedAt": "2026-10-17T22:46:40.673576+00:00",
+        "stopReason": "containers-terminated"
+      }
+    ],
+    "branchId": "branch-8099eed1a0674c87bb6a62b474faa3e2",
+    "calls": {
+      "call-1b115ab1281349329ad3960f9ae2b725": {
+        "attemptId": "attempt-483ce07021a3415c90db6048eb641f14",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-234188df52594387b6d1b504a7b99114": {
+        "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-9a928125e7d94d7e89eb8356ef58a4f1": {
+        "attemptId": "attempt-d88a43e478a3442483cb782315469b3d",
+        "expectedNewSha256": "c267c431c06f7f079e7547e0e6b7360a25a023596939e1fe6c72cd69d65c29cd",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "report.md",
+        "state": "finished"
+      },
+      "call-a82aa35f5a1f4d909ce54d3dce86f351": {
+        "attemptId": "attempt-483ce07021a3415c90db6048eb641f14",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-c9ab5caacce44e1882fc624c24035b57": {
+        "attemptId": "attempt-483ce07021a3415c90db6048eb641f14",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "read_file",
+        "path": "report.md",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-e5151dcdc1b8798c",
+    "deadline": "2026-10-17T22:47:37.234586+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "dfdfe6caf6e1971bbb7ac238dea207c64e5d5fa277aaf3bfa6df1fc998d8292b",
+      "model": "checkpoint-process-replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-7c078453024923d0",
+    "status": "succeeded",
+    "taskId": "task-e5b6498c42cf833a",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-17T22:45:19.693527+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-17T22:45:37.234586+00:00"
+    },
+    "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52"
+  },
+  "finalWorkspace": {
+    "schemaVersion": 1,
+    "workspaceId": "workspace-b2a563ae47d84b0a8e70cf8ec853ef52",
+    "sessionId": "session-7c078453024923d0",
+    "branchId": "branch-8099eed1a0674c87bb6a62b474faa3e2",
+    "generation": 2,
+    "phase": "released",
+    "owner": {
+      "taskId": "task-e5b6498c42cf833a",
+      "attemptId": "attempt-483ce07021a3415c90db6048eb641f14",
+      "sandboxId": "45e6580a01c8afea",
+      "podName": "sandbox-45e6580a01c8afea",
+      "podUid": "56176adb-8d05-4737-95d6-86948ac1bdd6",
+      "nodeName": "sandboxd-control-plane",
+      "createSubmitted": true,
+      "stopConfirmed": true
+    },
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "stopReason": "containers-terminated"
+  },
+  "fileSha256": "c267c431c06f7f079e7547e0e6b7360a25a023596939e1fe6c72cd69d65c29cd",
+  "sessionPrefixPreserved": true,
+  "killToVerificationMs": 73746.6582900015
+}

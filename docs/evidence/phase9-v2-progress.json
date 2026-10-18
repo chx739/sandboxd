@@ -1,0 +1,1146 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M5-complete",
+  "formalV2AcceptanceComplete": true,
+  "externalModelCalls": 0,
+  "componentReport": "phase9-v2-backup-component-v3.json",
+  "componentScope": "trusted backend component only; no Agent/session joint checkpoint or production write barrier acceptance",
+  "goBarrierScope": "Real trusted backup execution, registry close/reopen, file/claim exclusion, termination proof and explicit finish verified; no process SIGKILL or Agent joint commit claim",
+  "requirements": [
+    {
+      "id": "V2-01",
+      "status": "verified",
+      "note": "真实文件快照/恢复与权限、大小、hash元数据；加上当前owned联合保存",
+      "sources": [
+        "phase9-v2-backup-component-v3.json",
+        "phase9-v2-deployment-entry.json",
+        "phase9-v2-deployment-audit.json"
+      ]
+    },
+    {
+      "id": "V2-02",
+      "status": "verified",
+      "note": "合成新增/修改/管理员删除后的两版真实恢复；不是新增模型删除工具",
+      "sources": [
+        "phase9-v2-backup-component-v3.json"
+      ]
+    },
+    {
+      "id": "V2-03",
+      "status": "verified",
+      "note": "真实Agent ASGI/Go TCP两条历史分支，不冒称Agent TCP或进程内存恢复",
+      "sources": [
+        "phase9-v2-restore-branches-component.json",
+        "phase9-v2-restore-branches-audit.json"
+      ]
+    },
+    {
+      "id": "V2-04",
+      "status": "verified",
+      "note": "六个真实Agent SIGKILL切点，Go/存储保持在线；实际持久日志重读",
+      "sources": [
+        "phase9-v2-joint-six-cut-summary.json",
+        "phase9-v2-agent-cut-reserved-v2.json",
+        "phase9-v2-agent-cut-preparing.json",
+        "phase9-v2-agent-cut-before-data-ready.json",
+        "phase9-v2-agent-cut-data-ready.json",
+        "phase9-v2-agent-cut-before-commit.json",
+        "phase9-v2-agent-cut-committed.json"
+      ]
+    },
+    {
+      "id": "V2-05",
+      "status": "verified",
+      "note": "真实MinIO不可用/Wait超时、排他锁exit11、不可读文件exit3；失败夹具另存排除",
+      "sources": [
+        "phase9-v2-storage-failure-matrix.json",
+        "phase9-v2-storage-minio-outage.json",
+        "phase9-v2-storage-repository-lock.json",
+        "phase9-v2-storage-partial-file-v2.json"
+      ]
+    },
+    {
+      "id": "V2-06",
+      "status": "verified",
+      "note": "同一真实Coordinator.save请求立即重试；后端原组件亦重复相同checkpoint请求",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-acceptance-audit.json",
+        "phase9-v2-backup-component-v3.json"
+      ]
+    },
+    {
+      "id": "V2-07",
+      "status": "verified",
+      "note": "真实Go缺失snapshot/错误manifest/实际CRI与期望imageID不符，Agent引用校验失败与遗忘拒绝；未测试S3 pack位翻转",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-acceptance-audit.json"
+      ]
+    },
+    {
+      "id": "V2-08",
+      "status": "verified",
+      "note": "活动Session/原目录拒绝，加两新空历史目标及精确会话/文件对应",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-restore-branches-component.json",
+        "phase9-v2-restore-branches-audit.json"
+      ]
+    },
+    {
+      "id": "V2-09",
+      "status": "verified",
+      "note": "新专属仓库实际受控forget/prune、保护拒绝、管理及Go中断、锁冲突与保留文件恢复；不删除旧数据",
+      "sources": [
+        "phase9-v2-owned-gc-joint.json",
+        "phase9-v2-owned-gc-joint-audit.json",
+        "phase9-v2-owned-gc-joint-preview-audit.json"
+      ]
+    },
+    {
+      "id": "V2-10",
+      "status": "verified",
+      "note": "历史恢复后已执行CAS写，再真实Agent TCP SIGKILL接续；不是新Task重发预算",
+      "sources": [
+        "phase9-v2-restore-cut-after-tool-v2.json",
+        "phase9-v2-restore-fault-four-case-audit-v2.json"
+      ]
+    }
+  ],
+  "remaining": [],
+  "evidence": [
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-diagnosis-budget-tests.txt",
+      "sha256": "efed1e2ba6e2a38606902ba45d80398159fe5d2fecf29181120139332b37f92e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-final-boundary-tests.txt",
+      "sha256": "5d737eda47653d316fe81e220a4f7603cec32e78c7cba776987654cf20f7a6fb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-final-full-tests.txt",
+      "sha256": "ff1b519902e7534f4aeddf53001a8f763722467ad84197e6658090da026fcc03"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-freshness-final-tests.txt",
+      "sha256": "39ab28efaa7a613feaf15ba921f0422523b90bad0120743bc79318ece0269c39"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-full-tests.txt",
+      "sha256": "598a16f1e99ad99dd4d5220a0768aa7c8b4c2fbf16bcbae099ceabf5560daeda"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-initial-tests.txt",
+      "sha256": "409289162e94331d1fe4ceace77b993a99fa422d9093192b3ac523fbd303c947"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-late-control-tests.txt",
+      "sha256": "4f191249609d483d79406906569203c5fa97df0c7192d5ca27030b61cb8d9353"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-late-control-v2-tests.txt",
+      "sha256": "1a945894bd69d7647d0002e79e0f78d831166a8d97f317f41568a8cd8157f7bc"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-latest-full-tests.txt",
+      "sha256": "4ab634ca3fcb3bf333d47619d283b4fad0ef6e761d8ef5e95830fab0222fbb91"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-module-status.json",
+      "sha256": "580970be99b7b87e5cebe87ca7d08e9d7eda670be68ef9857309a1d08409ca28"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-preflight-final-tests.txt",
+      "sha256": "d73e906b091cbf4cf2aa8ab68df92726c7279108321343c00c3a40b39ce8bc96"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-recovery-final-tests.txt",
+      "sha256": "0463cdac6ad72e3b722e16df53371a92468ea96e40c29e003b33f676e7c4e978"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-checkpoint-task-scope-tests.txt",
+      "sha256": "4045e21a0c90fe5b9fb664e34b0a5ff3265f59bf3a8ed4738fb268caf7f537d3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit-audit.json",
+      "sha256": "c78e67e980daf7390b75cd8c39dd35bb02549ac4fe9dcbcdad85a9c6019804b3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit-tests.txt",
+      "sha256": "ac5f919a8640f565243eddee9f0fce52e02c0ef7ff3d8fd13eb322b2b67f39b6"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-commit.json",
+      "sha256": "8245784802faa8c2f4e130f33fa15fe4e5ffac322b19980dc7418d2f77d49f51"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-data-ready-tests.txt",
+      "sha256": "85b1d0177ae15f01ef5bc50dad9d3f241a252aa7099b986e66ede9aec21a3a6e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-before-data-ready.json",
+      "sha256": "7517a4fd3a02c7b0399eed21c1418accee872cb12e8b5f79e9729f354343789f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-committed-audit.json",
+      "sha256": "520894b74e9c6add71dea632bcce4389107a5b491ab3fa1d30d4c0d2a8e3d071"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-committed-tests.txt",
+      "sha256": "07974a5bdbe5d693f238a6ac44c917100cbe0abceb36c25d0e57d8ead0d2f047"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-committed.json",
+      "sha256": "c4499a841484584309f894b1d9efebd6cd4c65219d0385c609d8a1b0ef45280e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready-audit.json",
+      "sha256": "8ab15c5e57b02455eb3420df717681017d5b3d91a1ff60b3d84af89bd31b188b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready-tests.txt",
+      "sha256": "a809204c0056a6462a4592df32f3169c7afa46461ef1ed591f98d6d8ca465587"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-data-ready.json",
+      "sha256": "f2080f02a7f99dc056e0068d9fbb096c8a865178a38e6fdfa803e7ca46fb7a38"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing-audit.json",
+      "sha256": "b720e470a5baa8c089ec9fff5c33d27b0a2134df2342c332a810a7166203b5af"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing-tests.txt",
+      "sha256": "9b67f5f3dc138b631fe5bbf1526867b74571a8d70ec657a77f9de52f24a077e5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-preparing.json",
+      "sha256": "bd5f52d38244407805e2400e900651c2605a1b104cfa1a8425e5807ffcd99d8e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-preflight.json",
+      "sha256": "729fe46f27d91817e1881476bbc52801c418d27dd4cc52b023d25fef0ee224ef"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-tests.txt",
+      "sha256": "c40af65a13d9857c8f82427620ecfaed173d64986f35fa039016e8bc6e070314"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2-audit.json",
+      "sha256": "565024df7a7a95c0fa500c7b42956779f05c831646661a16022fbb1a4a00230d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2-tests.txt",
+      "sha256": "706209549dcfa7b0c6619961f4d518082c02e0725a43b93935c4054aa3fa8f4c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-cut-reserved-v2.json",
+      "sha256": "2f8157365a5f1f6e4162a61b70efe209481b0b788bc48db0485831311af29525"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-tests.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v2-tests.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v2.json",
+      "sha256": "d6c44cd9922afbf88e52fd6c1f0548c1a7938d35ce4c9f331ba08a4fc10dc54d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v3-tests.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint-v3.json",
+      "sha256": "1c370b3b10b20c00f23e99206f313a3a89c7ac9c8d1bcab6d595c09b5a11a5fb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-agent-joint-checkpoint.json",
+      "sha256": "3ab4bf159bcdf24fead6dc578857f1f71b9ba1db95c4029043cc1f3317c1d509"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-client-tests.txt",
+      "sha256": "5db0438d56678ebc2c551bbe67811b4302c8c658ae5e47a25ef67999301b0768"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-tests.txt",
+      "sha256": "45ff6c3b87204b8b84b6b13e66d3fc570095bbcaa52b4a743c8316ad3af17f6b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v2-tests.txt",
+      "sha256": "939d33734bded5a42ac6eb82df660f30affc4e86d5ea594590803dcfea05b8f4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v2.json",
+      "sha256": "8b833c17eb0ebbea9a5626e5f93d824398f987842b9c3a3071fbe57744d09661"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v3-tests.txt",
+      "sha256": "a8924c574eb1db6dbe41366ae18b406b6b4dedf9d381f9e5b30db3b91689328c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component-v3.json",
+      "sha256": "2a09851abf0667b0da2c43464d7c963bd011b4bbfde601bc67276afe6d46cd42"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-component.json",
+      "sha256": "caa9d603de942d811481df61831c718e766946c5b298bba2f9e6411c063f4f8c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-foundation-final-tests.txt",
+      "sha256": "31c269e55b20e4546b7725732410513af77ee98628478078fef5f501e005bfd8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-foundation-tests.txt",
+      "sha256": "7ab05cf0e022bb1228afe71cc8d089886a876ed4fe99765b283856e45a9058a2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-component-tests.txt",
+      "sha256": "9bb37a761bf699447342ba48d5c9debdb0aab4d630d7d7dbf0a9913c322dcd7f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-component.json",
+      "sha256": "9f949d69466197cb8c1341153afa350abdc8380886d9c5a7c4519a94fdcb4328"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-final-go-tests.txt",
+      "sha256": "41840e1d03840f56491509d01d9a91b236f6e25002b7625b8a8e054e5d08a33d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-full-go-tests.txt",
+      "sha256": "84e6f5c50af637b30065b5cf7a44a69d56cbd6f6194c51baeca44c5c84a865b0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-go-tests.txt",
+      "sha256": "718d358f549bd64b8459b92317163f8d9c407c1e6b67d9c7bfe00e423b101976"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-backup-http-module-status.json",
+      "sha256": "eb66036384754d9c350326f097edf7978273b488a7733cca14fd3e05606002bd"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-barrier-regression-tests.txt",
+      "sha256": "fcdd4f6ac9ac811e3905c7385c09b59df0ed9090ceefbdbc153707bf6135e458"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-final-boundary-tests.txt",
+      "sha256": "47d5b1733e785cc6cf3d1ca724a4c1d772ad8e204b77d1ad22436f46ce3850bc"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-full-regression-tests.txt",
+      "sha256": "7254635c705b1101f3a946381a90c7219f26098c5b0fe028035f08b22632c570"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-initial-tests.txt",
+      "sha256": "9cc4184bd0e32b57e16c95f08e2b6e21fb78f8d74dfbbf97eaa562ceeb2e15fc"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-module-status.json",
+      "sha256": "fd6164a97c9d9832cdd1dd3421035ef723f8c451755710c37cab77afc20e3616"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-publication-final-tests.txt",
+      "sha256": "98bd503c0ce19dba48ba7301059c89965341c8dced868d7d4bd0a851ee4a6508"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-checkpoint-reserve-go-tests.txt",
+      "sha256": "153345752e8fbfe96fa623f6fdddb3b30ebe9220123ed31c6729d8b2d851a8c9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-component-v2-postfailure.json",
+      "sha256": "f343dc8ba7305d5bf220f5cb4f9144a7f9108ca8b589db3449ffea964d10b168"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-tests.txt",
+      "sha256": "cc7a80cb84be2feb82146b7dd566c69e35fe3fc6236378717c1a4c0c20e5ce56"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v2-tests.txt",
+      "sha256": "9bb37a761bf699447342ba48d5c9debdb0aab4d630d7d7dbf0a9913c322dcd7f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v2.json",
+      "sha256": "103907addd0f63e5b7b6a25b119ee7d47d4aed07968cd673cb533384e81a3bf8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v3-tests.txt",
+      "sha256": "9bb37a761bf699447342ba48d5c9debdb0aab4d630d7d7dbf0a9913c322dcd7f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component-v3.json",
+      "sha256": "0ce8f28b40dcfef2aa9de4bb222beb31139ad952eae4fc1543c5f1bb25c8f4a7"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-component.json",
+      "sha256": "a3f84971e91eb902bab2b5c0daa6023f46c8324f1f7bb3959bba64eaa420cf69"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-final-regression-tests.txt",
+      "sha256": "6ef512f77c909abee1a73d7ccd6f988d35fa498eb4c30bd944f2c5b598b19f13"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-finish-regression-tests.txt",
+      "sha256": "290f22a96e6d5b1c3d7bfada0a1b2a86c743d4d862200ce39b158eafc30d7501"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-go-full-tests.txt",
+      "sha256": "2180159130bdb4235fbf259e66c27f6dce7ec6821208143c1396d180977e75fb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-postfailure.json",
+      "sha256": "a6effb2c5783f7bb0c2f821af5ed86ef2abb32f367111e07caefea989245f107"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-runtime-observation.json",
+      "sha256": "c6b5ab2b00c555f0d75ca291cd9a02354383d57240b17b6607e1b20b0cc66355"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-executor-unit-tests.txt",
+      "sha256": "5b535548f08bef73b83dace9ccabf4da1d43cbbbc64c2dc1aad9195a7a37d36f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-go-full-regression-tests.txt",
+      "sha256": "eb3ea8737bd4e23af8ba8095c65877051c73ce65252a00cf237fb47e634877eb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-final-tests.txt",
+      "sha256": "efc989329c7c4cd5c5241b149b936ddf75199449c9a9d4778d84d374c345b62b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-final-v2-tests.txt",
+      "sha256": "a1d558d52b16f4b60c03caa72c0f095c652f747327e35dd54d180d8fec34eed8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-tests.txt",
+      "sha256": "ca7dbc6833eb94d5ede98d66e2a4c4efc96d9783e9bff5ee1dd42c814c73c347"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-fixture-v2-tests.txt",
+      "sha256": "4c6a2463c8015dd24ace97b4f2f1b44915e3ca240c2b21fea681572d16cf12d0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-full-tests.txt",
+      "sha256": "8cc900e333c7dab2ee1170bfd9cf98ba1ef04e781570f81a7731e7e840abe66e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-fault-module-status.json",
+      "sha256": "63f76087976822d713ce5e121e4c062409887534754a1b1dd04c4cb2bb9b35d9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-six-cut-summary.json",
+      "sha256": "9d47beed63b43c8cced632852168f3c6183c5273feeb1b8457799f9ab99a8da9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-joint-six-cut-tests.txt",
+      "sha256": "b46b8f9729016fbaf5736ccd85e10a46113b5735648700f5549160e77105fa34"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-image-build-tests.txt",
+      "sha256": "64990e1d09280e34f5d591bbcf6d6ef3d11ad837c65b1ab3f2a98145e06eb5c8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-image-load-tests.txt",
+      "sha256": "c5525172a3c9aeab676b27a284da742d8eddcca802a57e50d1c6ce770ce9add6"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-install-tests.txt",
+      "sha256": "12afe4add748efcfc75125f2b3f510a9f3d1c833febc956c3246b094438c619c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restic-tool.json",
+      "sha256": "ae0acfa865c44bd26a4b890f3bfb21495d36e62cec4005069d9f95c68b897950"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-final-race-tests.txt",
+      "sha256": "ee01ccbec45f093fcab333b62900edc9a0e3d36b7ed02d88440df3c20cca20a8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-full-go-tests.txt",
+      "sha256": "9571a83709b4b5f273fdfe6fe4bc4b15bd3314e745f0217bb5b9493c405247a5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-module-status.json",
+      "sha256": "1ba536b9156451f8a590b6f2f9fa370b85207cd4fbb9ca0c19ca57ae69f00831"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-race-tests.txt",
+      "sha256": "abe443869614387b3fd81c758a39cbe5b1d7c65536fca106dcea191647f150e4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-targeted-tests.txt",
+      "sha256": "54ca00e9ecc8d50ef9249dc37e75969479f1e7169b8327a6924640e7b92f1709"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-control-tests.txt",
+      "sha256": "2f74d53fc73a6256659042051c352d68267c69fd01de1fff4ac19e06f2001f27"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-image-build.txt",
+      "sha256": "1fb084ef053f1f7fb8358ae13be4d304bd58bc68457c0d7362b5b31ee99b977b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-image-load.txt",
+      "sha256": "d6868f11245da854edad0446834df3f0a673e87b3e029cd433b4ae76af48763e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-component-audit.json",
+      "sha256": "e30453a602f2066419acab871104455387e8a9f7655ba7867c0401318f08fce2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-component.json",
+      "sha256": "108ad575c8490dacbfdb7590aa3e85c134d873313bc457ec55aa70f0fd38b372"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-final-full-go-tests.txt",
+      "sha256": "02bdc2d4c5a0679500e392740be636f4a06a106df31056ab4b70cb604c5fa199"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-final-race-tests.txt",
+      "sha256": "56af4a43dc8ed4ceba944c8a31b97d6708daa8423b732a386e3e80e36abee280"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-full-go-tests.txt",
+      "sha256": "db3464470604be3bb6e68491a66d0c455783c4b9af9ac5c8919d10b7e097da9c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-initial-tests.txt",
+      "sha256": "b9d9649c68d64e5f4e24661b85655acb90dbbd65f238be310f302347211d723e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-module-status.json",
+      "sha256": "ca7486ee6c37b1d456be63e5e522dd40b76a9946df38132b7c223e63132b039d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-reconcile-audit.json",
+      "sha256": "bbea23803471e39829b5c18396910acc3c6de90a4f901e31122285a1020c4738"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-runtime-reconcile.json",
+      "sha256": "07a18c3e7c0dd75072a30561aa7c478d61bbc055058dd82fcab499cf45db5f9f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-client-tests.txt",
+      "sha256": "5de280c33ce1b2b3c6fe4258fe8fa71359bf0e5b1e856a8db34e68dd5d9a6597"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-component-tests.txt",
+      "sha256": "69df83aea0ed24edc99580525fcf6c2775600d991e188889da67e6c0c1ecf184"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-component.json",
+      "sha256": "17d71866c62ce8c9a2cd9a63bf4a69ffe928945ac63e87de8830995f4896dea1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-final-go-tests.txt",
+      "sha256": "633bc52b1c377cfca5d0ca7e9de764f335a5affef6bfbef8ea616328788bc6fa"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-final-v2-go-tests.txt",
+      "sha256": "398edc44532efe8ca66e525dc63ab8e33a4a46f570898a00701be1341507e298"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-full-go-tests.txt",
+      "sha256": "a7284367d8826bca6b6abb3692ce6a1dc9e1ca1687f7cb25d0702e259d7fc738"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-initial-go-tests.txt",
+      "sha256": "02bc54bdd55faae0b5dd5cff61e3fa7a4fea0df52bdec63630d8a0ed45346e4f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-http-full-python-tests.txt",
+      "sha256": "6505103688323ef08b669ac5b8a680cecdd444270ce294516e09c3a728bdb46f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-final-tests.txt",
+      "sha256": "573cd905d590c0daa209daa9b79c07b90ccdc022dd58638af71b97d13e0aae99"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-retained-compat.json",
+      "sha256": "2ca8c0c4800d10aa22561ec2ac1833a725ac46cfacbfa5485119c7eb000d95de"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-tests.txt",
+      "sha256": "1d4ab4749f434a8ce363cbba389f7ced7a916c3dcbe50625e9ada253857dad75"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-full-python-tests.txt",
+      "sha256": "3acdbd74a37be556a53b7128e93f47afb3364d242dad07eaac42c19526628ca9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-final-tests.txt",
+      "sha256": "00173213a0bd8b7e1b7b5170b5fdb83b707f56df6f6aef9337555bb2e1654090"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-full-python-tests.txt",
+      "sha256": "7df2ae158d1b47b041df61e5f6160f3f07b47e08547f2743e12b047d31c08ce3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-initial-tests.txt",
+      "sha256": "433dfff5a6acf99b13a0983ead959685507ff18ac8b84b5a2528f119f275d201"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-latest-tests.txt",
+      "sha256": "acea853c571ee5e7f222e3a33f4881aa5928dac7aea6b625ff91cd27d4e7322a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-branches-audit.json",
+      "sha256": "8607c5021394f3c010568d17de5d07c7b952c189c45ad9384a426e3465aa5e65"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-branches-component-tests.txt",
+      "sha256": "a5440de78d82e67beb07314e2b6d883f912a54ea227ce3a1d21115684834f86e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-branches-component.json",
+      "sha256": "eeb4473810d9addf2b7480dbd3eec73f6c0d9fafd464a668cdd8773967322002"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-routing-full-python-tests.txt",
+      "sha256": "4da249b9daff73a614ef62ab22d4fb968366fa79731ca8a54d7174803cec6db1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-routing-tests.txt",
+      "sha256": "8c1078fb3b7cc235c14ca9102ba9bea32afa7854428738ae51900c85d842495f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool-tests.txt",
+      "sha256": "7cc0bae9ef23af41e676262d0f2d9734570e73a4a0a3ab598fe3d2a3455e6b48"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool-v2-tests.txt",
+      "sha256": "aba2dcdef506e3511c7a2359888f7846359a933411997bcfe10d73e0a3bf8253"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool-v2.json",
+      "sha256": "37762635993679e0a27d140eb5fd93679fc2343a1d442295919d3d939c02c552"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool.json",
+      "sha256": "e9da05105d9cb1d5411a558ea9fe6e2421530a7f18ba8da9f0084c15921fb8c1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-before-attached-tests.txt",
+      "sha256": "a6c5c45e02f0ebb1112db149d2153e7d442e4a4f7ff3d33ab24664785c3b8799"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-before-attached.json",
+      "sha256": "25db7ac9f77483ed7c9ea2ce0f3fcbdc51bf12a7534071b806d48d27355525f9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-files-ready-tests.txt",
+      "sha256": "c25f3823eed82916f7265ce2abb4aed7279d34eebf75f7e6e51d72f49e25ed4d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-files-ready.json",
+      "sha256": "267cedfcdccb284704af3df069840bb638dda0bbbeb56016704ad63bf2e37175"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready-tests.txt",
+      "sha256": "9670eeaee08c7d350e7648c08f5fbb18a757416f368181d3559440dc97795845"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready-v2-tests.txt",
+      "sha256": "a8f4c22ad021ad94560a5f635a24300d3f9850ccba8b675b7be55ee477a675d1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready-v2.json",
+      "sha256": "e8d7f4fcf61f4183a2a54ad91095ed3e58c990ffe6b7c5a34dececc7ea39fe1b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready.json",
+      "sha256": "2b0697713ceb87a732a8dfaa6acdbf3b8050904ecd61ef05c947330daaae77b1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-audit.json",
+      "sha256": "b97850f36d5d825170445013fc9682a0bab026c4ed0a26936d819d417e8cd122"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-fixture-final-tests.txt",
+      "sha256": "1f813ecb31d0724f0459fb72005e309abc5aec462ab6d40339ee7128706a7cbf"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-fixture-tests.txt",
+      "sha256": "34b6ebbcf2dbcd99b993dc661b23a33ac80944a71c4b6b438e78ce5161efdf3a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-four-case-audit-v2.json",
+      "sha256": "7497f3e56e205b2544b9b26f3a94ffbd03d71eca1e4e6ebe9dc94c7621e4a543"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-four-case-audit.json",
+      "sha256": "e3c57bf54f0ea4c83d6fb12889ad8228b0bff864e0a8a139e0064b2de12a3626"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-full-python-tests.txt",
+      "sha256": "556a868e6d0fc89f36c8cf7b0b9d78842ad1dcad0cf42f6253b1db25585d2ea5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-latest-full-python-tests.txt",
+      "sha256": "37117df636d20babf1145536454fdbf2cc6362586fe19d35da1e07c776a2b90d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-cas-final-go-tests.txt",
+      "sha256": "dbf4eb8444420aaecc604b3ec13fa0410059a7a1018b97e1de83014d27e100f9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-cas-go-tests.txt",
+      "sha256": "7981871e862cbd8c5716c473d1966f1edd33f6b034928003dc926548ab39784f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-cas-observed-go-tests.txt",
+      "sha256": "481cbfe0cc91e71c7b8c2ce52af105275c0d5235c3a9f26bc729d1a7dff2c2eb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-full-go-tests.txt",
+      "sha256": "1c035c03c23434768a10dce03d057f28c87c8a93edea3e7dc9804c87a812576d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-final-checks.json",
+      "sha256": "0251134236500fa1c13563e2ea2ba23a236d9b884f20d11d9789e2617f6e2c0f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-final-related-tests.txt",
+      "sha256": "127fffa576f94c0af37a6ecd3377c6e097427483f0148967a82c454efa05ef03"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-fixture-tests.txt",
+      "sha256": "49c4c120a2dd08a3aa7054936e60c04c96ac8e4f1f99446be69a479590944a81"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-related-tests.txt",
+      "sha256": "10c46d70c812464b5bdead8e29564ac27fed71b2bf00fb4f4d1a2ec5ce06e359"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage-audit.json",
+      "sha256": "ee48d72020f5192fd185a5be7b416c04d754200c87cf5f24ece0b2c000dbd2b4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage-command.txt",
+      "sha256": "13a4c5f5123e102e17520c19601992d08666029210d3629e9101970ad49e723a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage-live.json",
+      "sha256": "a9d5663e3e2b674e23f1648f4de13fe091ddc341e1fd31634e9626a632157572"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage.json",
+      "sha256": "21280469b3bc6ffe7712603bccb19bc9e58740a5ea19d58dbd7d9f112fa5707c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-lock-final-checks.json",
+      "sha256": "e85e69463ec432f82f3a5bb8b9140224e05a93d35ad27e5e14531e7ffb1d292f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-lock-fixture-tests.txt",
+      "sha256": "b677f2516accbbda471d7429521bd68a6aa0c520c23b7d65c2c27ad4831de0e4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-lock-related-tests.txt",
+      "sha256": "d51c42f55ed93459aeaa62367426763fd11273a3f25a8ccb18682858e7a5acb5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-repository-lock-audit.json",
+      "sha256": "ee5a65aef7b110818ee0e5afae126a9ed6884ab41bd6b7f07645cd8857ebca84"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-repository-lock-command.txt",
+      "sha256": "15002444e8ba66c107875b7038dbb43430b88377a50b5fe35f28bd666d756fcf"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-repository-lock.json",
+      "sha256": "21f0183924c21b5fdaf33e43530fa0c4a75459c31e3bb1de851ed55801274ed4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-partial-backup-final-checks.json",
+      "sha256": "a25d941d65b6bbf44fc566371bd1b1ac2385338294b62325cedf66b43c729661"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-partial-backup-fixture-tests.txt",
+      "sha256": "5cb7472945ff5eacbc8a750605d2668941636473ff62af30cb7ab346b75e2dcb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-partial-backup-visible-fixture-tests.txt",
+      "sha256": "5cb7472945ff5eacbc8a750605d2668941636473ff62af30cb7ab346b75e2dcb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-failure-matrix.json",
+      "sha256": "73ee62d98d23d4619cad5c938a5833c5aec150c11105391cf230f7dfb9c9c611"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-final-full-python-tests.txt",
+      "sha256": "0891ca072a93984acff226230ff63f32848e5610306ab34f58252307a61552da"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-command.txt",
+      "sha256": "e4a4536e5b0b12dfccbca590ba8aec7de1ce2fdf6f526c75d3e01b0103413e16"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-v2-audit.json",
+      "sha256": "eda171013d5fde1abbbebb6462d133e896517b880845572ac831629cfd0dd001"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-v2-command.txt",
+      "sha256": "6e68576032474f5d82f0cba186ef1993c2a2399c295390dcc940e9edf78539e3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file-v2.json",
+      "sha256": "8203e0ffc5c5d4cf13ae9612027ee7d9238d384b70fc51f8ea63c6ef6ceb7357"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-partial-file.json",
+      "sha256": "42836228b9b17a4e92f577229262adc1aecc21e3a56b19612f3623f2405ccc02"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-control-tests.txt",
+      "sha256": "441b52f4023df2b8b162e112ff9be97464d8fc46060e1b10a3fcd53ba81f76d2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-final-checks.json",
+      "sha256": "1531854a0c3ee6390e53dbcecfb5590565e978c0d8b383a08572a8ec8466f6af"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-full-python-tests.txt",
+      "sha256": "913effb1830efe5aebdb890233704f995d0589ff453a77d8bb822e4ec0e9cbca"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-retention-retained-preview.json",
+      "sha256": "facb3ce8dc7def7c0d94854c250eeb4b246451a9a21cd522c23b25bd09c77695"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-cleanup-component-audit.json",
+      "sha256": "01c83db79d4c8bc13a5b9a7401b97631cf17e1205685d45f442e28ace2bf2216"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-cleanup-component-command.txt",
+      "sha256": "9d95f557be528b444335b508d91aa7862c86eb433e01180728543ad3a9c58911"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-cleanup-component.json",
+      "sha256": "ba537681876ca5fe5cd3483725a8a23fe1356d913ae6464954fc48efd4e94c18"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-final-checks.json",
+      "sha256": "b7f838968e71ec23efd5f842d8c4f84f8e7cf264a1eca0aa9cb7fe87d9b11fe6"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-helper-final-race-tests.txt",
+      "sha256": "dca4908c93bded9fbb4775050b72242e5dd17778a62be411b5d4958b4b80c18e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-helper-full-go-tests.txt",
+      "sha256": "72caa941e60b7ad27c4aa047070853d07d6a69af15ecf237770cb5c9cb4b609a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-helper-go-tests.txt",
+      "sha256": "aec27d0c71abd9c7b2964fa44c688cd8a93a8e3d00dc36816dccda9b511d42fe"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-image-build.json",
+      "sha256": "7245422b837f333ba30fd6947d0bc9ab2ff54804b9a6fa7b1c7c95e074f6cc88"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-final-race-tests.txt",
+      "sha256": "baf20f512bb895fd944bbcb18cafb2f65b329e41a48414644453fa5ec6418d65"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-full-go-tests.txt",
+      "sha256": "30d15cf400701ba7ca57f7936e1940f922704d814d3705e0825436e66afe1472"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-race-tests.txt",
+      "sha256": "7e047705ab515e016e9c42a7e4f79c355a79f78aa1dfe3025ab89865c027d430"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-tests.txt",
+      "sha256": "1dc3ee304aff9773fc86338aae88feb0326e5af653f14f2684ab9b728f8c1ab0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-audit.json",
+      "sha256": "91268752404378f550edced4d5d42120a5cc991e972711e742bf4ffad3274596"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-race-tests.txt",
+      "sha256": "6f5f8e699eff785f86928f2fd3df3d9b64f6aa489d3b7a7dcc5acfdb6b188459"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-v2-race-tests.txt",
+      "sha256": "a07af437194acf9716ca2db1ffb6c37f70dffd2057da3f31d5ae75ff21ec594c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-v3-race-tests.txt",
+      "sha256": "020b96dc490f25c23c74861da680a03f10dd20531ef1c0447892e1c2e58546a1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-v4-race-tests.txt",
+      "sha256": "9618663d4f528079d779e592278766558c74930f658562567bcf53382de9c8e2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-full-go-tests.txt",
+      "sha256": "cce03bd77a22e130da5eee0f036dfad56e6a879482f9dba9611727e728a55685"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-initial-tests.txt",
+      "sha256": "99e1d8aeb8596877b7f341a1b7381ed21a283b8d9c524aada83d311a73f01e75"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-race-tests.txt",
+      "sha256": "c5e270b75eef7838d58e0e6e149cec02418a36cd690514d8ce3b47cab2d60b7e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-targeted-tests.txt",
+      "sha256": "f4a19cd4b4d34ae4e9d4dd0ecd0a1e064e7be97c1338a8b01fc1e08d1f87f7de"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-audit.json",
+      "sha256": "bc99eb8f37a6be647dfb2bc647418f9a4c89150d1b3e4e8e6ff2c346822930b9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-checks.json",
+      "sha256": "544f9e014f413e234f0bb3bb581b96d9e05b37112103685fa4fe6cb262aecfa1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-targeted-tests.txt",
+      "sha256": "a77af7191913724dccb18503fbbc84d0bfb0b86b00152b4be72216cc8c00bb19"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-v2-targeted-tests.txt",
+      "sha256": "6682e4c4bdf9706ac6788c22172c777a2e012df62b56c8054d1472cf2409974f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-full-python-tests.txt",
+      "sha256": "fb6d985a5fb9472eb9e78ba0918e6381ad8ad11cf44f39b263da4e87626c7a67"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-initial-tests.txt",
+      "sha256": "0fb5f2ddda1bf2b7b525df107d45bd9ba843f78c12e23351964c600d7bab2f1d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-audit.json",
+      "sha256": "558c920218772e03e48c844a88532d35df789b5b9656ce4e399bf534d24abfb1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-checks.json",
+      "sha256": "520bbae6bb1a80e2b8809ccea263d172844fce01b57e40931e494ce6a4968cc2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-audit-command.txt",
+      "sha256": "b1087664d9e7b9531dad76f3f3d7fa4b33861c406edab618bdc9a2776beff774"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-audit-v2-command.txt",
+      "sha256": "6e833c045535c530c4102d0c907507f2cc6119810cf5306e3d1c17519cac9ff1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-audit.json",
+      "sha256": "f85f689ad58932aa0bc8e85fff05dee9c232d8a7198aea372e187259123475df"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-command.txt",
+      "sha256": "f6e05445eed78ed5e8bab29a378c4d79fc0601f9829f9abc257e6236d956262b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-final-checks.json",
+      "sha256": "c9fad54260ca0e7b5dca91b52559ffdcffb88af7d8f3e27e66e4d4ab6a464693"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-full-python-tests.txt",
+      "sha256": "5264f22241c915a822b4882cd59563b938529fe1d36566d4a3e8451ac4aa5c21"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-preview-audit.json",
+      "sha256": "97db8facc4e0400f018b7a97f0b1cae379a47b2ec7d21b91b21656f46b984dd7"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint-preview.json",
+      "sha256": "ecb8b49eb9ac5703b2098bc351cb8c82599b06213b377d1612ee91607a39a7f5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-gc-joint.json",
+      "sha256": "081265cebee261bff177ceb1a67ba6040f4eb580f5664b0cf8bd8c7be461b17f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-audit-command.txt",
+      "sha256": "63e0b5e85a67479d11d0bdaffdec7026b00b1d5d80937837f99abcdc8f4d03ba"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-audit.json",
+      "sha256": "27cdf646c8a4e8b03c562fbc75c225b12e2eebc2af4fcb3e316fa483c3562d6c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-command.txt",
+      "sha256": "e05c48e509d05a4af496c0b83700c5e989903a752d3b8ba8e31d349f0098797d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-final-checks.json",
+      "sha256": "0e20cf28c004e01f90d1f97dfaf230b429c663d28ad7e0e1138959e6532a3698"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-unit-tests.txt",
+      "sha256": "25eb4a05aa0c27b0af6830cb75cdcd72d4af6446bc141d1edd3f374029852e58"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-v1.json",
+      "sha256": "ee45f6c2d5740eb63175b82e325e0942b2acd3a289b1e0be25631c54d398419d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload.json",
+      "sha256": "2fb72810c892ff9744338c35059ca42ec6baa5f48cc2b17593e2924c9ea66cae"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-unified-storage-build-command.txt",
+      "sha256": "cfa14263b43474a57b634a1057fb05f43b6e3ebda520ab582786949116723042"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-unified-storage-build-tests.txt",
+      "sha256": "88afb0a3c04dbe0a04548384f2544edc26f9011de6a8f64fe6c253bd9c7730a0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-unified-storage-build.json",
+      "sha256": "013409886a1a09f638c22fb424a737bf7cd3f54a3b6c2ba65f397bc3fc272214"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-audit-command.txt",
+      "sha256": "5e7015e367951ed59e1a2d0092b0ac0bc3f2c0e2f30a52fe8eee785fa110b180"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-audit.json",
+      "sha256": "7aa87b7c84473eb3ea760f6e725cb181e8119410bb228b3608f20e17595902a9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-entry-command.txt",
+      "sha256": "ff767c19650fbda332fc6b5a14e1264398ec7453f40f94f71014553d9be601d8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-entry.json",
+      "sha256": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-final-checks.json",
+      "sha256": "92ae121989c5c031eeab9bf8035cc28678c8a7d152b6e257ac14df8077970c88"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-final-targeted-tests.txt",
+      "sha256": "a76b34375f68c41b3dd4f45f5f3ab458e896bbc81fafbab7b2751fe0cdeb5a39"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-final-v2-checks.json",
+      "sha256": "662a735bd2bd185ca4adf12686cbd8876a20e373e2348e200f40f6f174e02540"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-full-python-tests.txt",
+      "sha256": "0376abcf51430b16f1c0bdac3af5c985cfc0994962d408c4dfc40e11de4b3cc1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-init-command.txt",
+      "sha256": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-initial-tests.txt",
+      "sha256": "926c521c60e4e5a1f4493d33ef5e71db400626c35ae6895b9fc707c239f4bb25"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-reinit-command.txt",
+      "sha256": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-status.json",
+      "sha256": "6540e99f5a0218f0db9898fe3cf0a3cabc9fdf2d1f8ba74e6bb028614554f25f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-audit-command.txt",
+      "sha256": "397b2feee8b71a03ff6806786d9241dae0973513b103ffe6f13e281fd14ff3f1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-audit.json",
+      "sha256": "1fb56fd28bb27e233a47fc7cc255e2fb8aea645239583c72bc06ed8b74970735"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-fixture-tests.txt",
+      "sha256": "2324ca976ed4090f7f6119f2af89c75c58594f38d178ac937e465e1df0d1fc7a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-full-python-tests.txt",
+      "sha256": "8fac12036634f141ba2e053a63b0053cd9bdad1c14d71b9feecbfa017466f194"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-refusals-command.txt",
+      "sha256": "1f0344f17b82c95f7610209a19cf3bbce55120b32a40c407bee110f567d398cb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-acceptance-refusals.json",
+      "sha256": "bfbb68e3b528f080f8a5ebcb3f7d1acad925e79bd388a3f93997cfc478a89884"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-benchmark-entry-help.txt",
+      "sha256": "44bcd9a0e516849bac6baac6db899b78c5e581b82e3f26e40beb7a4c14ca36a2"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-entry-targeted-tests.txt",
+      "sha256": "33b07234dc1e97079a684fc11a6d0a81585efb90ca58d7b70bae9f7b72efab0f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-command.txt",
+      "sha256": "e91ce98b2827ea82f87484b3de4203bd3dc51886e3408475daac1af1c3bab66e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-replay.json",
+      "sha256": "bb080bfca83efad564080d696800ef8ec11a22b2ae5ff3a73349fe89adf96dce"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-services.json",
+      "sha256": "96aa9e7ff38b610e9cfcd0a5a7fdb7bda7d023e8444b156f2a0d84ed47ef555c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-joint-wrapper-command.txt",
+      "sha256": "1749c9dc5dc1a5ed89f270aacc05ed275463314acc4242a621ba3fa607af4113"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-final-python-tests.txt",
+      "sha256": "cbeccbcff65446c1378be7769fb2c1c152a3c08aee2e5d0a5a05c5ee2e02d7ee"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-requirement-audit-command.txt",
+      "sha256": "7f823f6195bad4b14170e8737d669a722b7a1c46c046db42bf5439c05a17f7b1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-requirement-audit.json",
+      "sha256": "32f393766f85ed1a9c2231bde8503d7c53b9ddc6a3420c981b82de79d219ba2c"
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-final-local-audit.json",
+      "sha256": "64d802542cb8ff946c17c2db7c86bdfddbbaba129aeffb248f2d5dc16fe782bb"
+    },
+    {
+      "path": "docs/evidence/phase9-workspace-final-acceptance.json",
+      "sha256": "fe5da42b8c1b5f20c790948939f61d9dbdd4f32d467104c63b8a08d776a706e1"
+    }
+  ],
+  "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
+  "backupHTTPScope": "Go HTTP fixture over real loopback TCP + actual gVisor/NFS/restic/MinIO; no Python Agent coordinator",
+  "agentJointCheckpointScope": "Real TaskStore/Runner/Go HTTP/gVisor/NFS/restic/MinIO normal complete tool groups and Runtime final diagnosis verified; process fault/restore/GC acceptance pending",
+  "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json",
+  "agentFaultScope": "Six actual Agent SIGKILL cut points verified (reserved, preparing, before-data-ready, data-ready, before-commit, committed); Go/storage stayed available; restore API/full matrix not yet complete",
+  "restoreControlScope": "prior synthetic control-module evidence retained; current actual executor evidence recorded in restoreExecutorScope; HTTP/Session integration pending",
+  "restoreExecutorScope": "actual trusted Go/gVisor/NFS/restic/MinIO component restored new empty target and rejected wrong expected repository before writes; no HTTP/Session historical branch/Task resume acceptance yet",
+  "repositoryBindingScope": "Go journal pins owned repository/controller/marker/Secret name/endpoint on fresh control log only; rejects downgrade and foreign restore source; local Go and fake Kube tests passed. Python unique control-root ownership, persistent GC barrier, admin HTTP and joint cleanup not implemented.",
+  "cleanupRuntimeScope": "Go persistent global cleanup barrier, owned fixed operations, stored result proof, bounded stop/UID cleanup, explicit same-target retry and Operator-only routes verified locally with fake Kubernetes; actual joint cleanup and Python coordinator not yet verified.",
+  "cleanupCoordinatorScope": "Independent operator-only Python process, same-journal repository binding/execution cursors, fixed local crypto-to-directory claim, reference recheck/PREPARED/Go proof/FORGOTTEN/Finish protocol, explicit bounded attempt retry and startup gate verified with local Fake/MockTransport; actual joint storage acceptance pending.",
+  "actualJointCleanupScope": "Actual Replay Agent five CPs, local protected references, Go Operator fixed GC, Python metadata, admin/Go SIGKILL after durable proof, real lock conflict/explicit retry, prune and retained pinned file restore verified; not new historical Task resume or performance benchmark.",
+  "fixedWorkloadPerformanceScope": "Actual V1/V2 each9 serial fixed-dataset trials, nine fresh owned repositories, 18 backups/9 verified restores, dataset/manifest/324 Go journal/counter/quantile audit, network/packed/raw-data/apparent storage/CPU/memory endpoints recorded. Backend batch microbenchmark only; no production Agent-total or public billing extrapolation; unified startup/full V2 audit pending.",
+  "unifiedStorageBuildReport": "phase9-v2-unified-storage-build.json",
+  "unifiedStorageBuildScope": "Actual cached restic verification, original Docker IDs preserved, current Go/server renderer build and kind loading; four Fake shell contracts. No fresh repository initialization or Agent startup acceptance.",
+  "unifiedDeploymentReport": "phase9-v2-deployment-entry.json",
+  "unifiedDeploymentAudit": "phase9-v2-deployment-audit.json",
+  "unifiedDeploymentScope": "Fresh owned repository persistent init/reuse, directory claim and actual unified Shell Go+Agent TCP/SIGKILL same-Task recovery with 3 committed checkpoints, unchanged budgets and native read-data; init fault windows are Fake protocol tests, not real initializer SIGKILL.",
+  "localAcceptanceComplete": true,
+  "publicationPending": false,
+  "requirementAuditReport": "phase9-v2-requirement-audit.json",
+  "finalLocalAcceptanceAudit": "phase9-workspace-final-local-audit.json",
+  "finalAcceptanceReport": "phase9-workspace-final-acceptance.json",
+  "implementationCommit": "4ba0d6ab12e736e8bca2d124fc50eb57a7560ecc",
+  "pullRequest": "https://github.com/chx739/sandboxd/pull/3"
+}

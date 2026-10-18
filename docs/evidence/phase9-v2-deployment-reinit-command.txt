@@ -1,0 +1,25 @@
+CPU: 12
+可用内存: 20509 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   28G  929G   3% /
+C:\             932G  804G  128G  87% /mnt/c
+运行中的 Docker 容器: 3
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+{
+  "phase": "READY",
+  "owner": {
+    "controllerId": "controller-d3afca43b7264ff9b8935ffa9ebf7cec",
+    "ownerSnapshotId": "8a9fa70448cf17977ed41c6567b9f44d2482f7b052efcddbca8369987ede9262",
+    "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2"
+  },
+  "secretName": "restic-8bbec1bf3da64f5985bc1e57e701d8ea",
+  "root": {
+    "device": 2096,
+    "directory": "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47",
+    "inode": 2505
+  },
+  "nfsIp": "172.23.0.3",
+  "minioIp": "172.23.0.4"
+}

@@ -1,0 +1,21 @@
+CPU: 12
+可用内存: 20503 MiB
+已用 swap: 0 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G   27G  929G   3% /
+C:\             932G  804G  129G  87% /mnt/c
+运行中的 Docker 容器: 3
+资源检查通过，可继续执行单节点、低并发 Demo。
+集群保护检查通过：context=kind-sandboxd, node=sandboxd-control-plane
+restic 0.18.1 compiled with go1.25.1 on linux/amd64
+复用已有镜像 sandboxd-workspace:runtime-v1.5（不证明与新源码相同；升级须另用新版本）：
+sha256:8e1abdb6e17c11c98fb04f7ad707d748a35c199c9fc80fabbec300a60c7fb465
+复用已有镜像 sandboxd-restic:0.18.1-v3（不证明与新源码相同；升级须另用新版本）：
+sha256:086857d7cf9eb5df85db094a2bba38011e4a2a68d8adccdf3b0554ca82e25623
+Image: "sandboxd-workspace:runtime-v1.5" with ID "sha256:8e1abdb6e17c11c98fb04f7ad707d748a35c199c9fc80fabbec300a60c7fb465" not yet present on node "sandboxd-control-plane", loading...
+Image: "sandboxd-restic:0.18.1-v3" with ID "sha256:086857d7cf9eb5df85db094a2bba38011e4a2a68d8adccdf3b0554ca82e25623" not yet present on node "sandboxd-control-plane", loading...
+构建输入保留：/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/.cache/workspace-storage-build-3oNWBXPQ
+a693c4e77275cc1576b25fe1900dcd43187141d19ae3afc715226ec8444d9b6f  /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/.cache/workspace-storage-build-3oNWBXPQ/workspace-sandboxd
+f91619498c4d99878035aa7500b6f3fc590b02d332700c439af7b594816e3324  /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/.cache/workspace-storage-build-3oNWBXPQ/workspace-backup-pod-owned
+[sandboxd-workspace:runtime-v1.5] sha256:8e1abdb6e17c11c98fb04f7ad707d748a35c199c9fc80fabbec300a60c7fb465
+[sandboxd-restic:0.18.1-v3] sha256:086857d7cf9eb5df85db094a2bba38011e4a2a68d8adccdf3b0554ca82e25623

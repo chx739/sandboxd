@@ -1,0 +1,11 @@
+{
+  "version": "restic 0.18.1 compiled with go1.25.1 on linux/amd64",
+  "release": "v0.18.1",
+  "source": "https://github.com/restic/restic/releases/tag/v0.18.1",
+  "archiveSha256": "680838f19d67151adba227e1570cdd8af12c19cf1735783ed1ba928bc41f363d",
+  "checksumsSha256": "517eafa3c5ca0b8dcfdc5bcfd870f32315949f282a376a709d68f465ce8bb8c9",
+  "binarySha256": "01143daba61a1dc8afb0cb3d03ba83e6b118f55b6b146b27473a09efc3df13d6",
+  "path": "/home/hx/.local/share/sandboxd-tools/restic-0.18.1/restic",
+  "verification": "official HTTPS assets plus published SHA256; no GPG signature verification claimed",
+  "downloadBytes": 10140623
+}

@@ -1,0 +1,23 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 251852}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_restore_fault_demo.py", line 315, in <module>
+    if __name__ == "__main__":main()
+                              ^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_restore_fault_demo.py", line 310, in main
+    report = asyncio.run(run(args.output, args.phase, args.source_report, args.secret_name, args.minio_ip))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/workspace_restore_fault_demo.py", line 210, in run
+    assert task["status"] == expected_status, task.get("error")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 旧执行者未确认停止：trusted checkpoint request did not complete; reconcile original job

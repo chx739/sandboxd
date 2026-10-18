@@ -1,0 +1,375 @@
+{
+  "passed": true,
+  "mode": "offline-v2-requirement-evidence-audit",
+  "requirements": [
+    {
+      "id": "V2-01",
+      "status": "verified",
+      "scope": "真实文件快照/恢复与权限、大小、hash元数据；加上当前owned联合保存",
+      "sources": [
+        "phase9-v2-backup-component-v3.json",
+        "phase9-v2-deployment-entry.json",
+        "phase9-v2-deployment-audit.json"
+      ],
+      "checks": [
+        "完整64位snapshot ID",
+        "两份恢复manifest与原快照完全一致",
+        "实际runsc/nonroot",
+        "当前部署三份Session/文件联合COMMITTED"
+      ]
+    },
+    {
+      "id": "V2-02",
+      "status": "verified",
+      "scope": "合成新增/修改/管理员删除后的两版真实恢复；不是新增模型删除工具",
+      "sources": [
+        "phase9-v2-backup-component-v3.json"
+      ],
+      "checks": [
+        "新增added.txt",
+        "删除remove-synthetic.txt",
+        "report.md内容变化",
+        "两新空目标恢复清单分别相等、无另一版残留"
+      ]
+    },
+    {
+      "id": "V2-03",
+      "status": "verified",
+      "scope": "真实Agent ASGI/Go TCP两条历史分支，不冒称Agent TCP或进程内存恢复",
+      "sources": [
+        "phase9-v2-restore-branches-component.json",
+        "phase9-v2-restore-branches-audit.json"
+      ],
+      "checks": [
+        "两独立workspace/branch",
+        "Session精确父链及来源CP",
+        "首份parent/source与revision1",
+        "兄弟文件和上下文隔离",
+        "原Task/head/文件保留"
+      ]
+    },
+    {
+      "id": "V2-04",
+      "status": "verified",
+      "scope": "六个真实Agent SIGKILL切点，Go/存储保持在线；实际持久日志重读",
+      "sources": [
+        "phase9-v2-joint-six-cut-summary.json",
+        "phase9-v2-agent-cut-reserved-v2.json",
+        "phase9-v2-agent-cut-preparing.json",
+        "phase9-v2-agent-cut-before-data-ready.json",
+        "phase9-v2-agent-cut-data-ready.json",
+        "phase9-v2-agent-cut-before-commit.json",
+        "phase9-v2-agent-cut-committed.json"
+      ],
+      "checks": [
+        "未提交点不能成为恢复点",
+        "COMMITTED保留",
+        "同Task/预算/时钟",
+        "重开JSONL校验与head/revision一致"
+      ]
+    },
+    {
+      "id": "V2-05",
+      "status": "verified",
+      "scope": "真实MinIO不可用/Wait超时、排他锁exit11、不可读文件exit3；失败夹具另存排除",
+      "sources": [
+        "phase9-v2-storage-failure-matrix.json",
+        "phase9-v2-storage-minio-outage.json",
+        "phase9-v2-storage-repository-lock.json",
+        "phase9-v2-storage-partial-file-v2.json"
+      ],
+      "checks": [
+        "head保持revision1",
+        "下一点FAILED且无DATA_READY",
+        "abort/finish确认",
+        "失败与孤立snapshot保留，不当成功"
+      ]
+    },
+    {
+      "id": "V2-06",
+      "status": "verified",
+      "scope": "同一真实Coordinator.save请求立即重试；后端原组件亦重复相同checkpoint请求",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-acceptance-audit.json",
+        "phase9-v2-backup-component-v3.json"
+      ],
+      "checks": [
+        "checkpoint/snapshot/revision相同",
+        "仅幂等Finish",
+        "Go/CP日志未追加",
+        "每点唯一COMMITTED",
+        "仓库未产生重复snapshot"
+      ]
+    },
+    {
+      "id": "V2-07",
+      "status": "verified",
+      "scope": "真实Go缺失snapshot/错误manifest/实际CRI与期望imageID不符，Agent引用校验失败与遗忘拒绝；未测试S3 pack位翻转",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-acceptance-audit.json"
+      ],
+      "checks": [
+        "缺失和错误manifest目标仍为空/不可认领",
+        "镜像不符拒绝绑定及文件工具、旧写入者停止",
+        "坏Session引用409且原件恢复",
+        "遗忘409/历史200",
+        "无邻近或latest替代"
+      ]
+    },
+    {
+      "id": "V2-08",
+      "status": "verified",
+      "scope": "活动Session/原目录拒绝，加两新空历史目标及精确会话/文件对应",
+      "sources": [
+        "phase9-v2-acceptance-refusals.json",
+        "phase9-v2-restore-branches-component.json",
+        "phase9-v2-restore-branches-audit.json"
+      ],
+      "checks": [
+        "活动来源Agent/Go均409",
+        "原Task/CP/Go前缀和文件未改",
+        "显式恢复创建独立workspace",
+        "同一来源完整Session/文件，不覆盖原目录"
+      ]
+    },
+    {
+      "id": "V2-09",
+      "status": "verified",
+      "scope": "新专属仓库实际受控forget/prune、保护拒绝、管理及Go中断、锁冲突与保留文件恢复；不删除旧数据",
+      "sources": [
+        "phase9-v2-owned-gc-joint.json",
+        "phase9-v2-owned-gc-joint-audit.json",
+        "phase9-v2-owned-gc-joint-preview-audit.json"
+      ],
+      "checks": [
+        "head/pin/保留恢复源保护",
+        "PREPARED先于提交、FORGOTTEN先于放行",
+        "同GC/job对账与精确目标重试",
+        "四保留snapshot/read-data",
+        "只读预览文件字节/ctime/mode不变"
+      ]
+    },
+    {
+      "id": "V2-10",
+      "status": "verified",
+      "scope": "历史恢复后已执行CAS写，再真实Agent TCP SIGKILL接续；不是新Task重发预算",
+      "sources": [
+        "phase9-v2-restore-cut-after-tool-v2.json",
+        "phase9-v2-restore-fault-four-case-audit-v2.json"
+      ],
+      "checks": [
+        "原调用槽/预算/时钟不回滚",
+        "CAS写仅1次、restore仅提交1次",
+        "ATTACHED及来源可追溯",
+        "两个attempt均停止",
+        "最新NFS文件未回退旧快照"
+      ]
+    }
+  ],
+  "publicEvidenceSha256": {
+    "docs/evidence/phase9-v2-backup-component-v3.json": "2a09851abf0667b0da2c43464d7c963bd011b4bbfde601bc67276afe6d46cd42",
+    "docs/evidence/phase9-v2-deployment-entry.json": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9",
+    "docs/evidence/phase9-v2-deployment-audit.json": "7aa87b7c84473eb3ea760f6e725cb181e8119410bb228b3608f20e17595902a9",
+    "docs/evidence/phase9-v2-restore-branches-component.json": "eeb4473810d9addf2b7480dbd3eec73f6c0d9fafd464a668cdd8773967322002",
+    "docs/evidence/phase9-v2-restore-branches-audit.json": "8607c5021394f3c010568d17de5d07c7b952c189c45ad9384a426e3465aa5e65",
+    "docs/evidence/phase9-v2-joint-six-cut-summary.json": "9d47beed63b43c8cced632852168f3c6183c5273feeb1b8457799f9ab99a8da9",
+    "docs/evidence/phase9-v2-agent-cut-reserved-v2.json": "2f8157365a5f1f6e4162a61b70efe209481b0b788bc48db0485831311af29525",
+    "docs/evidence/phase9-v2-agent-cut-preparing.json": "bd5f52d38244407805e2400e900651c2605a1b104cfa1a8425e5807ffcd99d8e",
+    "docs/evidence/phase9-v2-agent-cut-before-data-ready.json": "7517a4fd3a02c7b0399eed21c1418accee872cb12e8b5f79e9729f354343789f",
+    "docs/evidence/phase9-v2-agent-cut-data-ready.json": "f2080f02a7f99dc056e0068d9fbb096c8a865178a38e6fdfa803e7ca46fb7a38",
+    "docs/evidence/phase9-v2-agent-cut-before-commit.json": "8245784802faa8c2f4e130f33fa15fe4e5ffac322b19980dc7418d2f77d49f51",
+    "docs/evidence/phase9-v2-agent-cut-committed.json": "c4499a841484584309f894b1d9efebd6cd4c65219d0385c609d8a1b0ef45280e",
+    "docs/evidence/phase9-v2-storage-failure-matrix.json": "73ee62d98d23d4619cad5c938a5833c5aec150c11105391cf230f7dfb9c9c611",
+    "docs/evidence/phase9-v2-storage-minio-outage.json": "21280469b3bc6ffe7712603bccb19bc9e58740a5ea19d58dbd7d9f112fa5707c",
+    "docs/evidence/phase9-v2-storage-repository-lock.json": "21f0183924c21b5fdaf33e43530fa0c4a75459c31e3bb1de851ed55801274ed4",
+    "docs/evidence/phase9-v2-storage-partial-file-v2.json": "8203e0ffc5c5d4cf13ae9612027ee7d9238d384b70fc51f8ea63c6ef6ceb7357",
+    "docs/evidence/phase9-v2-acceptance-refusals.json": "bfbb68e3b528f080f8a5ebcb3f7d1acad925e79bd388a3f93997cfc478a89884",
+    "docs/evidence/phase9-v2-acceptance-audit.json": "1fb56fd28bb27e233a47fc7cc255e2fb8aea645239583c72bc06ed8b74970735",
+    "docs/evidence/phase9-v2-owned-gc-joint.json": "081265cebee261bff177ceb1a67ba6040f4eb580f5664b0cf8bd8c7be461b17f",
+    "docs/evidence/phase9-v2-owned-gc-joint-audit.json": "f85f689ad58932aa0bc8e85fff05dee9c232d8a7198aea372e187259123475df",
+    "docs/evidence/phase9-v2-owned-gc-joint-preview-audit.json": "97db8facc4e0400f018b7a97f0b1cae379a47b2ec7d21b91b21656f46b984dd7",
+    "docs/evidence/phase9-v2-restore-cut-after-tool-v2.json": "37762635993679e0a27d140eb5fd93679fc2343a1d442295919d3d939c02c552",
+    "docs/evidence/phase9-v2-restore-fault-four-case-audit-v2.json": "7497f3e56e205b2544b9b26f3a94ffbd03d71eca1e4e6ebe9dc94c7621e4a543"
+  },
+  "retainedControlJournals": {
+    "/home/hx/.local/share/sandboxd/workspace-backup/components/982cbcbf875b4c3596236ecd4f41031a/go-control/workspaces.jsonl": {
+      "records": 34,
+      "sha256": "7a9ebf31fd9f135c688cb74037e976ca5bb744da305252c2fce752e38e20d4bc"
+    },
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/go-control/workspaces.jsonl": {
+      "records": 32,
+      "sha256": "ef8c0243e9a990f7b9f5ba1ada76fde3dc7609c250acd21e972c29fe64a52679"
+    },
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 10,
+      "sha256": "f73a5810d7454337da89a69794d16f931e994b5c73071d1deb12acc217a32f14"
+    },
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/agent-control/tasks.jsonl": {
+      "records": 35,
+      "sha256": "b6993f1dc608c06cbc01ac9e2cffc1cf1e279b495ce26a67b71deab8e8eb2fa6"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-restore-branch/9b3963bd246f42d8ac2f6da8e21d8167/go-control/workspaces.jsonl": {
+      "records": 57,
+      "sha256": "ae3055da1b693297ae2e813430ae18e2259ca76707bbe5beb98b36e3b5c76bf4"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-restore-branch/9b3963bd246f42d8ac2f6da8e21d8167/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 30,
+      "sha256": "c5cd20a8dc351e0a6639834cece0c1b5e0d6f0b96dc604470efdae641ebf638d"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-restore-branch/9b3963bd246f42d8ac2f6da8e21d8167/agent-control/tasks.jsonl": {
+      "records": 83,
+      "sha256": "9945325674e4da979b7f45e505f226f091ae727c110d0440786523372aaa2c31"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/8239ce04467b47b897e213f9e97a4afc/go-control/workspaces.jsonl": {
+      "records": 29,
+      "sha256": "05ce06a7765c8f20e14acea0cfb4acdde71b5737a2ec15e46f39d06b636a1f69"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/8239ce04467b47b897e213f9e97a4afc/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 6,
+      "sha256": "a0621374321addbf5a227dc3a6f6ad1a58d6a7524fc8246186273d478a80e779"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/8239ce04467b47b897e213f9e97a4afc/agent-control/tasks.jsonl": {
+      "records": 34,
+      "sha256": "ab85929bde92e2f942ec69a96ba59e355db654947a2d367686e19b225d0a243c"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/c7081643017348fe848c9428c805de08/go-control/workspaces.jsonl": {
+      "records": 29,
+      "sha256": "20d457bc8e18b9a6668770f7ca5171236cb7a1bb4667927dca99da3b08f41817"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/c7081643017348fe848c9428c805de08/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 8,
+      "sha256": "920ae503a614b69d84881b5587e8c9aab3895d9239f11ec19bb4be85ec04a6d8"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/c7081643017348fe848c9428c805de08/agent-control/tasks.jsonl": {
+      "records": 34,
+      "sha256": "0b2a69a70c8853663a1fda45f25acebef0865b76f692aa12a542472396c4c11e"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/ae1d1e1341ff4b65ad6f961185496cf4/go-control/workspaces.jsonl": {
+      "records": 31,
+      "sha256": "843b30c5e53df1cb0d12bd77d6d8eb4b8de125fa64ac46c2737c02dfa1457187"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/ae1d1e1341ff4b65ad6f961185496cf4/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 8,
+      "sha256": "8235811583439b9251aa9efaf21861f9ea0c5f28cfb84a327bc00f85ecb15f1c"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/ae1d1e1341ff4b65ad6f961185496cf4/agent-control/tasks.jsonl": {
+      "records": 34,
+      "sha256": "f41db376e3bba1bdc7edb0f8ea13acf9feb76176ff2c59403039d62ee4b52c90"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57a05462b9bc4f38a2b5a251c4ec4cfe/go-control/workspaces.jsonl": {
+      "records": 31,
+      "sha256": "b017772fcc03a9f3999ce4d73f14e0de24babecf3696660acaf0f6e33ee70090"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57a05462b9bc4f38a2b5a251c4ec4cfe/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 9,
+      "sha256": "d928a24ccae8827872b6a2e24046e9968ad432c7779d8d75d84aebab7627f82b"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57a05462b9bc4f38a2b5a251c4ec4cfe/agent-control/tasks.jsonl": {
+      "records": 34,
+      "sha256": "9bc75d35a35ed2ec1ba78b6ec7499978dabd916f7a31d122c9b83a22eb16eca4"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57e772b53f3041379a1a16e21dc90f44/go-control/workspaces.jsonl": {
+      "records": 31,
+      "sha256": "2db7dd702e0ea7fe8aaeb3123472c3f6c781187fec3ecb4c97f8f8102f6dda62"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57e772b53f3041379a1a16e21dc90f44/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 9,
+      "sha256": "dcf949c8b3ee33efc844b3e4b3eee75a4ac463075d892af0ccc60702ebd19a3d"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/57e772b53f3041379a1a16e21dc90f44/agent-control/tasks.jsonl": {
+      "records": 34,
+      "sha256": "9b9983db958f25df459406f4d3ef3a57e8e4d29a7b4b89bc048736a6e8258988"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/fe05721272e54c5da507703a2eb44ac6/go-control/workspaces.jsonl": {
+      "records": 31,
+      "sha256": "0b294e51e092afe19362d721f61a3e70df2651aeb72e6de71f7549f2ecc3257d"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/fe05721272e54c5da507703a2eb44ac6/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 9,
+      "sha256": "0312fa3647e2410bfec8ff2ea9ff80644bdec32c3a4faea3ec7fa877758b385e"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-checkpoint-fault/fe05721272e54c5da507703a2eb44ac6/agent-control/tasks.jsonl": {
+      "records": 34,
+      "sha256": "b38949634af4fb8d333423337ff8e8b581e616fda8aebc5f33521ee41e918d0d"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/f02bb9c329b84f209161cb9dd3b7e7cb/go-control/workspaces.jsonl": {
+      "records": 19,
+      "sha256": "edc82251436df9e2fe57db6cc5008f9a1135ed9c5c9c845470687e930efa63e1"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/f02bb9c329b84f209161cb9dd3b7e7cb/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 5,
+      "sha256": "7d78aadd9322829e416cb2ae802ce1d85a13f9601193b06680b0fb05455b8a42"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/f02bb9c329b84f209161cb9dd3b7e7cb/agent-control/tasks.jsonl": {
+      "records": 24,
+      "sha256": "34bc9bf159d156c2369585c2a9cee633bd0d660246d7d6192f3d21a54bcf1f94"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/1b7d5b976b444140bb607bb997d9f0e6/go-control/workspaces.jsonl": {
+      "records": 19,
+      "sha256": "38af3498b0c6db60d49e5c86fbd92cc41df0c44db5589cf31cbfdfe0995187b8"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/1b7d5b976b444140bb607bb997d9f0e6/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 5,
+      "sha256": "5d2329863c8ea0e249f4fd5ddff1bf8cc94760c90bb9d5977765da90fffb479d"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/1b7d5b976b444140bb607bb997d9f0e6/agent-control/tasks.jsonl": {
+      "records": 24,
+      "sha256": "ba2fa65eff8ab6f5d8ec252de049250b55222d4fa1dc0c8eb9e876f525ce47d4"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/b3ace7d196104a329c95f8af391182c4/go-control/workspaces.jsonl": {
+      "records": 19,
+      "sha256": "1f24c272b33d39bd458039dd5738c902f38201f1d238f3da9cec3081f1022db3"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/b3ace7d196104a329c95f8af391182c4/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 5,
+      "sha256": "982b2353c573c445f20a7295c35225d1286e4999ba08afd05a59c06c6ad47c10"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-storage-fault/b3ace7d196104a329c95f8af391182c4/agent-control/tasks.jsonl": {
+      "records": 27,
+      "sha256": "7bcc53f9417d285cf8732652ecb0444e38777bac2995511d185b6eea4b8a7122"
+    },
+    "/home/hx/.local/share/sandboxd/deployments/acceptance-778e77ca3a334597bcac2370c2d51031/go-control/workspaces.jsonl": {
+      "records": 55,
+      "sha256": "f6251d0539960e6445d235d6b1b4b642cbb7f518073e93a42fc5799bd75dd00d"
+    },
+    "/home/hx/.local/share/sandboxd/deployments/acceptance-778e77ca3a334597bcac2370c2d51031/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 11,
+      "sha256": "b6ad1e23cab6e95c393b2fb363f31c6446df6d197c99da3005086b907d99ca5a"
+    },
+    "/home/hx/.local/share/sandboxd/deployments/acceptance-778e77ca3a334597bcac2370c2d51031/agent-control/tasks.jsonl": {
+      "records": 21,
+      "sha256": "b2720c013f0f6b1830b4b09285fb0d74cd222585a4836f0bd514dc6843c025a8"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/go-control/workspaces.jsonl": {
+      "records": 85,
+      "sha256": "05dcf6228fae8c8f06a10735bd4a56ec6c51e62a92b5b326ba07996c86fc3d77"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 30,
+      "sha256": "2d4d022afdfa68e8272ef5682a30cc635161c2e05e26884c9a776f347a72808d"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced/agent-control/tasks.jsonl": {
+      "records": 42,
+      "sha256": "167d3803d5a8f92c78a2442ee5e266199bf485122f90bc27783492d27b97d544"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-restore-fault/fe9428399c3145a8a82c545661f0ce31/go-control/workspaces.jsonl": {
+      "records": 33,
+      "sha256": "3b064b32ba548f6f17d76ffe815b3967ec01f417bdcb3c2ad78a462e896f334e"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-restore-fault/fe9428399c3145a8a82c545661f0ce31/agent-control/checkpoints/checkpoints.jsonl": {
+      "records": 18,
+      "sha256": "abcb1c122ea9e95f6bfdf965ccddbfcf9965ca6db7dfefe2e5f322d529ebd99b"
+    },
+    "/home/hx/.local/share/sandboxd/workspace-restore-fault/fe9428399c3145a8a82c545661f0ce31/agent-control/tasks.jsonl": {
+      "records": 61,
+      "sha256": "7185a31be33f274a32d13df54287dc999970ebcb7dc57ec22ab8f7ba216061ae"
+    }
+  },
+  "priorEvidenceHashesVerified": 235,
+  "matrixRequirementsVerified": 10,
+  "scope": "Document43 ten-item V2 evidence coverage plus current retained journal checksums; no new service experiment. Full installation/regression/documentation/PR delivery acceptance audited separately.",
+  "externalModelCalls": 0,
+  "formalV2AcceptanceComplete": false
+}

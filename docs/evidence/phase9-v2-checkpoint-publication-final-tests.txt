@@ -1,0 +1,42 @@
+test_cancel_before_commit_blocks_and_after_commit_does_not_rewind (agentd.tests.test_checkpoints.CheckpointTests.test_cancel_before_commit_blocks_and_after_commit_does_not_rewind) ... ok
+test_commit_ack_after_later_cancel_is_idempotent (agentd.tests.test_checkpoints.CheckpointTests.test_commit_ack_after_later_cancel_is_idempotent) ... ok
+test_complete_invalid_transition_refused_even_with_valid_checksum (agentd.tests.test_checkpoints.CheckpointTests.test_complete_invalid_transition_refused_even_with_valid_checksum) ... ok
+test_deadline_and_owner_changes_block_commit (agentd.tests.test_checkpoints.CheckpointTests.test_deadline_and_owner_changes_block_commit) ... ok
+test_duplicate_boundary_and_partial_hash_rejected (agentd.tests.test_checkpoints.CheckpointTests.test_duplicate_boundary_and_partial_hash_rejected) ... ok
+test_failed_append_does_not_publish_head (agentd.tests.test_checkpoints.CheckpointTests.test_failed_append_does_not_publish_head) ... Executing <Task finished name='Task-26' coro=<CheckpointTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoints.py:24> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.103 seconds
+ok
+test_head_conflict_and_revision_only_on_commit (agentd.tests.test_checkpoints.CheckpointTests.test_head_conflict_and_revision_only_on_commit) ... Executing <Task finished name='Task-31' coro=<CheckpointTests.asyncSetUp() done, defined at /mnt/c/users/administrator/documents/chatgpt/codex/sandboxd/agentd/tests/test_checkpoints.py:24> result=None created at /home/hx/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py:100> took 0.103 seconds
+ok
+test_mutable_image_and_invalid_scope_rejected_before_prepare (agentd.tests.test_checkpoints.CheckpointTests.test_mutable_image_and_invalid_scope_rejected_before_prepare) ... ok
+test_pending_boundary_rebuild_and_cancel_commit_lock_order (agentd.tests.test_checkpoints.CheckpointTests.test_pending_boundary_rebuild_and_cancel_commit_lock_order) ... ok
+test_prefix_immutable_complete_and_branch_isolated (agentd.tests.test_checkpoints.CheckpointTests.test_prefix_immutable_complete_and_branch_isolated) ... ok
+test_prefix_publication_failure_retry_keeps_complete_reference (agentd.tests.test_checkpoints.CheckpointTests.test_prefix_publication_failure_retry_keeps_complete_reference) ... ok
+test_prepare_data_ready_not_restore_points_after_restart (agentd.tests.test_checkpoints.CheckpointTests.test_prepare_data_ready_not_restore_points_after_restart) ... ok
+test_ref_corruption_missing_scope_symlink_and_escape_fail (agentd.tests.test_checkpoints.CheckpointTests.test_ref_corruption_missing_scope_symlink_and_escape_fail) ... ok
+test_retries_same_id_do_not_append_duplicate_commit (agentd.tests.test_checkpoints.CheckpointTests.test_retries_same_id_do_not_append_duplicate_commit) ... ok
+test_truncated_tail_ignored_then_repaired_without_duplicate_head (agentd.tests.test_checkpoints.CheckpointTests.test_truncated_tail_ignored_then_repaired_without_duplicate_head) ... ok
+test_cancel_is_durable_and_precedes_rebind (agentd.tests.test_recovery.RecoveryLedgerTests.test_cancel_is_durable_and_precedes_rebind) ... ok
+test_commands_have_durable_ids_and_consumption_boundary (agentd.tests.test_recovery.RecoveryLedgerTests.test_commands_have_durable_ids_and_consumption_boundary) ... ok
+test_deadline_includes_downtime (agentd.tests.test_recovery.RecoveryLedgerTests.test_deadline_includes_downtime) ... ok
+test_failed_fsync_does_not_publish_state (agentd.tests.test_recovery.RecoveryLedgerTests.test_failed_fsync_does_not_publish_state) ... ok
+test_recovery_is_bounded (agentd.tests.test_recovery.RecoveryLedgerTests.test_recovery_is_bounded) ... ok
+test_redaction_and_unconfirmed_write_metadata (agentd.tests.test_recovery.RecoveryLedgerTests.test_redaction_and_unconfirmed_write_metadata) ... ok
+test_restart_preserves_identity_deadline_and_reservations (agentd.tests.test_recovery.RecoveryLedgerTests.test_restart_preserves_identity_deadline_and_reservations) ... ok
+test_stale_attempt_and_rerouting_are_rejected (agentd.tests.test_recovery.RecoveryLedgerTests.test_stale_attempt_and_rerouting_are_rejected) ... ok
+test_terminal_tasks_do_not_resurrect (agentd.tests.test_recovery.RecoveryLedgerTests.test_terminal_tasks_do_not_resurrect) ... ok
+test_termination_evidence_cannot_be_a_lease_or_deleted_object (agentd.tests.test_recovery.RecoveryLedgerTests.test_termination_evidence_cannot_be_a_lease_or_deleted_object) ... ok
+test_uncertain_reservation_consumes_budget (agentd.tests.test_recovery.RecoveryLedgerTests.test_uncertain_reservation_consumes_budget) ... ok
+test_workspace_ownership_is_not_just_task_identity (agentd.tests.test_recovery.RecoveryLedgerTests.test_workspace_ownership_is_not_just_task_identity) ... ok
+test_attempt_cannot_select_old_complete_boundary_with_latest_files (agentd.tests.test_session_attempts.SessionAttemptTests.test_attempt_cannot_select_old_complete_boundary_with_latest_files) ... ok
+test_attempt_start_is_idempotent_but_rebinding_identity_is_rejected (agentd.tests.test_session_attempts.SessionAttemptTests.test_attempt_start_is_idempotent_but_rebinding_identity_is_rejected) ... ok
+test_attempt_view_reads_old_linear_snapshot_as_legacy (agentd.tests.test_session_attempts.SessionAttemptTests.test_attempt_view_reads_old_linear_snapshot_as_legacy) ... ok
+test_attempt_views_share_lock_and_reject_invalid_ids (agentd.tests.test_session_attempts.SessionAttemptTests.test_attempt_views_share_lock_and_reject_invalid_ids) ... ok
+test_incomplete_tool_group_is_audited_but_not_loaded_by_new_attempt (agentd.tests.test_session_attempts.SessionAttemptTests.test_incomplete_tool_group_is_audited_but_not_loaded_by_new_attempt) ... ok
+test_legacy_records_remain_readable_without_rewriting (agentd.tests.test_session_attempts.SessionAttemptTests.test_legacy_records_remain_readable_without_rewriting) ... ok
+test_same_task_new_attempt_keeps_complete_prefix_without_duplicates (agentd.tests.test_session_attempts.SessionAttemptTests.test_same_task_new_attempt_keeps_complete_prefix_without_duplicates) ... ok
+test_stale_attempt_cannot_append_or_reactivate_after_switch (agentd.tests.test_session_attempts.SessionAttemptTests.test_stale_attempt_cannot_append_or_reactivate_after_switch) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 2.401s
+
+OK

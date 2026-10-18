@@ -1,0 +1,47 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from restic.Dockerfile
+#1 transferring dockerfile: 434B 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/curlimages/curl:8.12.1@sha256:88a9abad9d958340e48564f9bdcdaa29916a2984be59314da709f8bbc0eef6f7
+#2 DONE 2.8s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B 0.0s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/4] FROM docker.io/curlimages/curl:8.12.1@sha256:88a9abad9d958340e48564f9bdcdaa29916a2984be59314da709f8bbc0eef6f7
+#5 resolve docker.io/curlimages/curl:8.12.1@sha256:88a9abad9d958340e48564f9bdcdaa29916a2984be59314da709f8bbc0eef6f7 0.0s done
+#5 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 35.10MB 0.3s done
+#4 DONE 0.4s
+
+#6 [2/4] COPY --chmod=0555 restic /usr/local/bin/restic
+#6 CACHED
+
+#7 [3/4] COPY --chmod=0555 sandbox-restic /usr/local/bin/sandbox-restic
+#7 DONE 0.2s
+
+#8 [4/4] RUN echo '01143daba61a1dc8afb0cb3d03ba83e6b118f55b6b146b27473a09efc3df13d6  /usr/local/bin/restic' | sha256sum -c -
+#8 0.223 /usr/local/bin/restic: OK
+#8 DONE 0.3s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 0.3s done
+#9 exporting manifest sha256:60bd623091302ca311b98197676dba4af257738cec179c9c6257115c04d5bdf3 0.0s done
+#9 exporting config sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58 0.0s done
+#9 exporting attestation manifest sha256:bab123027d8252136c306faeae3fcd63e53242918f1f17b07f542c7349786f91
+#9 exporting attestation manifest sha256:bab123027d8252136c306faeae3fcd63e53242918f1f17b07f542c7349786f91 0.1s done
+#9 exporting manifest list sha256:0d07dc6898e243106416570c005bd094ef86dec618cd57ef2c25677351468705 0.1s done
+#9 naming to docker.io/library/sandboxd-restic:0.18.1-v2
+#9 naming to docker.io/library/sandboxd-restic:0.18.1-v2 done
+#9 unpacking to docker.io/library/sandboxd-restic:0.18.1-v2
+#9 unpacking to docker.io/library/sandboxd-restic:0.18.1-v2 0.2s done
+#9 DONE 0.8s

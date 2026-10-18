@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "source": "docs/evidence/phase9-v2-fixed-workload.json",
+  "sourceSha256": "2fb72810c892ff9744338c35059ca42ec6baa5f48cc2b17593e2924c9ea66cae",
+  "auditSha256": "c47df9b70ab1aa352efca66652965ddbd597bbe18457a34b09a93c8bc4ce9681",
+  "v1Trials": 9,
+  "v2Trials": 9,
+  "independentRepositories": 9,
+  "snapshots": 18,
+  "goJournalRecords": 324,
+  "scope": "Offline independent dataset/manifest/hash/protocol/counter/quantile recomputation of same experiment; no new service/restore/performance run"
+}

@@ -1,0 +1,1 @@
+{"passed": true, "cases": 2, "scope": "two historical branch restores via actual ASGI handlers and local services; no Agent TCP, SIGKILL, GC or Live LLM"}

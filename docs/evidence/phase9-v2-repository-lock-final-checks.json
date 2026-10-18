@@ -1,0 +1,17 @@
+{
+  "mode": "local-post-repository-lock-checks",
+  "passed": true,
+  "syntaxValid": true,
+  "gitDiffCheck": true,
+  "generatedCredentialValuesChecked": 3,
+  "filesScanned": 10,
+  "credentialMatches": 0,
+  "podCounts": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "minioRunningAndUnpaused": true,
+  "agentAndGoPortsIdle": true,
+  "ownedCheckProcessExited": true,
+  "scope": "only generated project storage credentials, not a general secret detection guarantee"
+}

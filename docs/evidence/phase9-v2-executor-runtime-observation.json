@@ -1,0 +1,13 @@
+{
+  "maintenancePodUid": "80174ec2-72ed-47d2-8ad2-980f7a3e59be",
+  "matchingCRISandboxes": 0,
+  "passedComponent": true,
+  "runtimeTypes": [],
+  "observationNote": "crictl pods has no -a on this version; initial read-only observation command rejected; corrected without restarting work",
+  "runningProjectContainers": [
+    "sandboxd-workspace-backup-minio-1",
+    "sandboxd-workspace-nfs-1",
+    "sandboxd-control-plane"
+  ],
+  "remainingStoragePods": []
+}

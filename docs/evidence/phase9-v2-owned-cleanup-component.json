@@ -1,0 +1,756 @@
+{
+  "mode": "actual-owned-restic-helper-gvisor-minio-component",
+  "passed": true,
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-owned-cleanup/b531b08b95664c12b48703459a0acd8a",
+  "secretName": "restic-ac83cca39ad049fc",
+  "scope": "New synthetic repository only; direct trusted admin Pods and manual quiescence. No Go cleanup barrier/Operator HTTP/Session retention coordinator acceptance.",
+  "operations": [
+    {
+      "operation": "init-owned",
+      "podUid": "3ddec54d-3606-4f78-aa00-f5697d64d074",
+      "podName": "workspace-backup-owned-2ca1746c01bf404c",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "ok": true,
+        "operation": "init-owned",
+        "owner": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "controllerId": "controller-93e403096aae4e85a935c3164586daab",
+          "ownerSnapshotId": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4"
+        },
+        "repository": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "repositoryVersion": 2
+        },
+        "resticVersion": "0.18.1"
+      }
+    },
+    {
+      "operation": "backup",
+      "podUid": "60e2af98-3369-475d-a989-b6e041684dad",
+      "podName": "workspace-backup-owned-0dd2cd09560d45c1",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "checkpointId": "cp-cff624e72a52487e9e85ed7c76f6afd7",
+        "manifest": {
+          "files": [
+            {
+              "path": "report.md",
+              "bytes": 28,
+              "mode": 384,
+              "sha256": "249ca0b107cb574623c3807a61bc362ee9d4d40f3d90380edbcb7cf703eafaf4"
+            }
+          ],
+          "sha256": "024cd74ef5f9f25fe0320d0a0e369509c019332e4f8b96f36ae6d00b78f1f562",
+          "entries": 1,
+          "bytes": 28
+        },
+        "ok": true,
+        "operation": "backup",
+        "repository": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "repositoryVersion": 2
+        },
+        "resticVersion": "0.18.1",
+        "snapshotId": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d",
+        "summary": {
+          "data_added": 685,
+          "data_added_packed": 674,
+          "data_blobs": 1,
+          "dirs_changed": 0,
+          "dirs_new": 1,
+          "dirs_unmodified": 0,
+          "files_changed": 0,
+          "files_new": 1,
+          "files_unmodified": 0,
+          "total_bytes_processed": 28,
+          "total_duration": 0.754729153,
+          "total_files_processed": 1,
+          "tree_blobs": 2
+        }
+      }
+    },
+    {
+      "operation": "backup",
+      "podUid": "73f9c49c-1ca3-432b-b272-952073accc83",
+      "podName": "workspace-backup-owned-fb07b49540014a13",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "checkpointId": "cp-f59aa83a5c414a0d92520c3e5ea33bcf",
+        "manifest": {
+          "files": [
+            {
+              "path": "report.md",
+              "bytes": 28,
+              "mode": 384,
+              "sha256": "8bb2bba8a36353bfdf726ab1aef763d77c5f7c0795bd15569a3d40d0a6d78fd6"
+            }
+          ],
+          "sha256": "3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5",
+          "entries": 1,
+          "bytes": 28
+        },
+        "ok": true,
+        "operation": "backup",
+        "repository": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "repositoryVersion": 2
+        },
+        "resticVersion": "0.18.1",
+        "snapshotId": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e",
+        "summary": {
+          "data_added": 685,
+          "data_added_packed": 675,
+          "data_blobs": 1,
+          "dirs_changed": 1,
+          "dirs_new": 0,
+          "dirs_unmodified": 0,
+          "files_changed": 1,
+          "files_new": 0,
+          "files_unmodified": 0,
+          "total_bytes_processed": 28,
+          "total_duration": 0.723155889,
+          "total_files_processed": 1,
+          "tree_blobs": 2
+        }
+      }
+    },
+    {
+      "operation": "forget",
+      "podUid": "9cd36202-1247-4d6c-8b00-bd6a7433efde",
+      "podName": "workspace-backup-owned-7106e098d0ae4e39",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 1,
+      "expectedFailure": true,
+      "result": {
+        "error": "ownership marker is protected",
+        "ok": false,
+        "outcomeUncertain": true
+      }
+    },
+    {
+      "operation": "forget",
+      "podUid": "da134445-8669-4141-9491-a47ecd87cf83",
+      "podName": "workspace-backup-owned-0816518264934168",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 1,
+      "expectedFailure": true,
+      "result": {
+        "error": "cleanup repository identity mismatch",
+        "ok": false,
+        "outcomeUncertain": true
+      }
+    },
+    {
+      "operation": "forget",
+      "podUid": "e6aab701-49b3-40af-89ae-e7b69358dd6f",
+      "podName": "workspace-backup-owned-cab60a89d35141df",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 1,
+      "expectedFailure": true,
+      "result": {
+        "error": "foreign or invalid repository snapshot",
+        "ok": false,
+        "outcomeUncertain": true
+      }
+    },
+    {
+      "operation": "snapshots",
+      "podUid": "f3693ae1-ec95-44f5-a959-6c32da835046",
+      "podName": "workspace-backup-owned-190f6792b86d47d8",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "ok": true,
+        "operation": "snapshots",
+        "resticVersion": "0.18.1",
+        "result": [
+          {
+            "hostname": "sandboxd-owner",
+            "id": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4",
+            "paths": [
+              "/tmp/sandboxd-owner.json"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "3a2bfd6c",
+            "summary": {
+              "backup_end": "2026-10-18T02:38:56.472909254Z",
+              "backup_start": "2026-10-18T02:38:55.697363895Z",
+              "data_added": 748,
+              "data_added_packed": 733,
+              "data_blobs": 1,
+              "dirs_changed": 0,
+              "dirs_new": 1,
+              "dirs_unmodified": 0,
+              "files_changed": 0,
+              "files_new": 1,
+              "files_unmodified": 0,
+              "total_bytes_processed": 80,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "sandboxd-owner-marker",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:38:55.697363895Z",
+            "tree": "413959d7aceef7f5c9c08f2ebaf4df913ce8721cf90b7cc88bfaa482962e7579"
+          },
+          {
+            "excludes": [
+              "/workspace/.sandboxd-lock",
+              ".sandboxd-tmp-*"
+            ],
+            "hostname": "sandboxd-workspace",
+            "id": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d",
+            "paths": [
+              "/workspace"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "872c050a",
+            "summary": {
+              "backup_end": "2026-10-18T02:39:06.917686114Z",
+              "backup_start": "2026-10-18T02:39:06.162956908Z",
+              "data_added": 685,
+              "data_added_packed": 674,
+              "data_blobs": 1,
+              "dirs_changed": 0,
+              "dirs_new": 1,
+              "dirs_unmodified": 0,
+              "files_changed": 0,
+              "files_new": 1,
+              "files_unmodified": 0,
+              "total_bytes_processed": 28,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "checkpoint:cp-cff624e72a52487e9e85ed7c76f6afd7",
+              "manifest:024cd74ef5f9f25fe0320d0a0e369509c019332e4f8b96f36ae6d00b78f1f562",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:39:06.162956908Z",
+            "tree": "d3f072212403a6c962506ef9ac735cf8a274736605130c5af6d7eddf90df1b54"
+          },
+          {
+            "excludes": [
+              "/workspace/.sandboxd-lock",
+              ".sandboxd-tmp-*"
+            ],
+            "hostname": "sandboxd-workspace",
+            "id": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e",
+            "parent": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d",
+            "paths": [
+              "/workspace"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "34349239",
+            "summary": {
+              "backup_end": "2026-10-18T02:39:19.155688138Z",
+              "backup_start": "2026-10-18T02:39:18.43253226Z",
+              "data_added": 685,
+              "data_added_packed": 675,
+              "data_blobs": 1,
+              "dirs_changed": 1,
+              "dirs_new": 0,
+              "dirs_unmodified": 0,
+              "files_changed": 1,
+              "files_new": 0,
+              "files_unmodified": 0,
+              "total_bytes_processed": 28,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "checkpoint:cp-f59aa83a5c414a0d92520c3e5ea33bcf",
+              "manifest:3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:39:18.43253226Z",
+            "tree": "0f6f9ddafb4ff0d83dcdf651e06026ac158411b99750273067b7b98d233b7304"
+          }
+        ]
+      }
+    },
+    {
+      "operation": "forget",
+      "podUid": "2d15d9d6-06af-4c1e-87fd-38030d4548c4",
+      "podName": "workspace-backup-owned-37b4d8ddff7644bb",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "alreadyAbsent": false,
+        "forgotten": true,
+        "ok": true,
+        "operation": "forget",
+        "owner": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "controllerId": "controller-93e403096aae4e85a935c3164586daab",
+          "ownerSnapshotId": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4"
+        },
+        "resticVersion": "0.18.1",
+        "snapshotId": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d"
+      }
+    },
+    {
+      "operation": "forget",
+      "podUid": "686fb9b5-496a-48c9-94b4-e8b75c01c480",
+      "podName": "workspace-backup-owned-715eec61defd4647",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "alreadyAbsent": true,
+        "forgotten": true,
+        "ok": true,
+        "operation": "forget",
+        "owner": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "controllerId": "controller-93e403096aae4e85a935c3164586daab",
+          "ownerSnapshotId": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4"
+        },
+        "resticVersion": "0.18.1",
+        "snapshotId": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d"
+      }
+    },
+    {
+      "operation": "prune",
+      "podUid": "9f3823cd-b3c3-4be2-8554-736f8ca67026",
+      "podName": "workspace-backup-owned-126e1bf0825a4782",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "ok": true,
+        "operation": "prune",
+        "outputBytes": 708,
+        "outputSha256": "0d2d874179e2d153ea29dee0a2ca3b57b92c3ad36fe3ee8203cf587e87974442",
+        "owner": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "controllerId": "controller-93e403096aae4e85a935c3164586daab",
+          "ownerSnapshotId": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4"
+        },
+        "pruned": true,
+        "resticVersion": "0.18.1"
+      }
+    },
+    {
+      "operation": "check",
+      "podUid": "4480493b-18cc-4c42-b488-8e007ef37739",
+      "podName": "workspace-backup-owned-a70cc4b4bda5438d",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "ok": true,
+        "operation": "check",
+        "resticVersion": "0.18.1",
+        "result": {
+          "broken_packs": null,
+          "message_type": "summary",
+          "num_errors": 0,
+          "suggest_prune": false,
+          "suggest_repair_index": false
+        }
+      }
+    },
+    {
+      "operation": "snapshots",
+      "podUid": "c2cce5d4-572c-442e-9ae5-730a8e77578e",
+      "podName": "workspace-backup-owned-056029dc98f048db",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "ok": true,
+        "operation": "snapshots",
+        "resticVersion": "0.18.1",
+        "result": [
+          {
+            "hostname": "sandboxd-owner",
+            "id": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4",
+            "paths": [
+              "/tmp/sandboxd-owner.json"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "3a2bfd6c",
+            "summary": {
+              "backup_end": "2026-10-18T02:38:56.472909254Z",
+              "backup_start": "2026-10-18T02:38:55.697363895Z",
+              "data_added": 748,
+              "data_added_packed": 733,
+              "data_blobs": 1,
+              "dirs_changed": 0,
+              "dirs_new": 1,
+              "dirs_unmodified": 0,
+              "files_changed": 0,
+              "files_new": 1,
+              "files_unmodified": 0,
+              "total_bytes_processed": 80,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "sandboxd-owner-marker",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:38:55.697363895Z",
+            "tree": "413959d7aceef7f5c9c08f2ebaf4df913ce8721cf90b7cc88bfaa482962e7579"
+          },
+          {
+            "excludes": [
+              "/workspace/.sandboxd-lock",
+              ".sandboxd-tmp-*"
+            ],
+            "hostname": "sandboxd-workspace",
+            "id": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e",
+            "parent": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d",
+            "paths": [
+              "/workspace"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "34349239",
+            "summary": {
+              "backup_end": "2026-10-18T02:39:19.155688138Z",
+              "backup_start": "2026-10-18T02:39:18.43253226Z",
+              "data_added": 685,
+              "data_added_packed": 675,
+              "data_blobs": 1,
+              "dirs_changed": 1,
+              "dirs_new": 0,
+              "dirs_unmodified": 0,
+              "files_changed": 1,
+              "files_new": 0,
+              "files_unmodified": 0,
+              "total_bytes_processed": 28,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "checkpoint:cp-f59aa83a5c414a0d92520c3e5ea33bcf",
+              "manifest:3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:39:18.43253226Z",
+            "tree": "0f6f9ddafb4ff0d83dcdf651e06026ac158411b99750273067b7b98d233b7304"
+          }
+        ]
+      }
+    },
+    {
+      "operation": "restore",
+      "podUid": "7598fc9b-7af3-4cbc-90ad-251a21c6450b",
+      "podName": "workspace-backup-owned-0e70e12678de4901",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "manifest": {
+          "files": [
+            {
+              "path": "report.md",
+              "bytes": 28,
+              "mode": 384,
+              "sha256": "8bb2bba8a36353bfdf726ab1aef763d77c5f7c0795bd15569a3d40d0a6d78fd6"
+            }
+          ],
+          "sha256": "3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5",
+          "entries": 1,
+          "bytes": 28
+        },
+        "ok": true,
+        "operation": "restore",
+        "repository": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "repositoryVersion": 2
+        },
+        "resticVersion": "0.18.1",
+        "snapshotId": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e"
+      }
+    },
+    {
+      "operation": "backup",
+      "podUid": "dff78ca7-8c47-406d-a1f5-64404376625c",
+      "podName": "workspace-backup-owned-0c5b1ca312f44f29",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "checkpointId": "cp-47958bf1fb264bbf9438a244fb333898",
+        "manifest": {
+          "files": [
+            {
+              "path": "report.md",
+              "bytes": 28,
+              "mode": 384,
+              "sha256": "8bb2bba8a36353bfdf726ab1aef763d77c5f7c0795bd15569a3d40d0a6d78fd6"
+            }
+          ],
+          "sha256": "3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5",
+          "entries": 1,
+          "bytes": 28
+        },
+        "ok": true,
+        "operation": "backup",
+        "repository": {
+          "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+          "repositoryVersion": 2
+        },
+        "resticVersion": "0.18.1",
+        "snapshotId": "3ccd8688464946568ad2d504e983dbbd61c729e0430adca3d1b497413d6bd344",
+        "summary": {
+          "data_added": 0,
+          "data_added_packed": 0,
+          "data_blobs": 0,
+          "dirs_changed": 0,
+          "dirs_new": 0,
+          "dirs_unmodified": 1,
+          "files_changed": 0,
+          "files_new": 0,
+          "files_unmodified": 1,
+          "total_bytes_processed": 28,
+          "total_duration": 0.681993199,
+          "total_files_processed": 1,
+          "tree_blobs": 0
+        }
+      }
+    },
+    {
+      "operation": "prune",
+      "podUid": "a3612d8d-bc66-4090-8242-9828c8b43398",
+      "podName": "workspace-backup-owned-4b8844b79d7045cb",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": false,
+      "exitCode": 1,
+      "expectedFailure": true,
+      "result": {
+        "error": "foreign or invalid repository snapshot",
+        "ok": false,
+        "outcomeUncertain": true
+      }
+    },
+    {
+      "operation": "snapshots",
+      "podUid": "9475d2b2-46c2-4197-8957-195332ec31fb",
+      "podName": "workspace-backup-owned-ade4b1db1c0e4740",
+      "runtimeType": "io.containerd.runsc.v1",
+      "imageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+      "workspaceMounted": true,
+      "exitCode": 0,
+      "expectedFailure": false,
+      "result": {
+        "ok": true,
+        "operation": "snapshots",
+        "resticVersion": "0.18.1",
+        "result": [
+          {
+            "hostname": "sandboxd-owner",
+            "id": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4",
+            "paths": [
+              "/tmp/sandboxd-owner.json"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "3a2bfd6c",
+            "summary": {
+              "backup_end": "2026-10-18T02:38:56.472909254Z",
+              "backup_start": "2026-10-18T02:38:55.697363895Z",
+              "data_added": 748,
+              "data_added_packed": 733,
+              "data_blobs": 1,
+              "dirs_changed": 0,
+              "dirs_new": 1,
+              "dirs_unmodified": 0,
+              "files_changed": 0,
+              "files_new": 1,
+              "files_unmodified": 0,
+              "total_bytes_processed": 80,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "sandboxd-owner-marker",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:38:55.697363895Z",
+            "tree": "413959d7aceef7f5c9c08f2ebaf4df913ce8721cf90b7cc88bfaa482962e7579"
+          },
+          {
+            "excludes": [
+              "/workspace/.sandboxd-lock",
+              ".sandboxd-tmp-*"
+            ],
+            "hostname": "sandboxd-workspace",
+            "id": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e",
+            "parent": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d",
+            "paths": [
+              "/workspace"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "34349239",
+            "summary": {
+              "backup_end": "2026-10-18T02:39:19.155688138Z",
+              "backup_start": "2026-10-18T02:39:18.43253226Z",
+              "data_added": 685,
+              "data_added_packed": 675,
+              "data_blobs": 1,
+              "dirs_changed": 1,
+              "dirs_new": 0,
+              "dirs_unmodified": 0,
+              "files_changed": 1,
+              "files_new": 0,
+              "files_unmodified": 0,
+              "total_bytes_processed": 28,
+              "total_files_processed": 1,
+              "tree_blobs": 2
+            },
+            "tags": [
+              "checkpoint:cp-f59aa83a5c414a0d92520c3e5ea33bcf",
+              "manifest:3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5",
+              "controller:controller-93e403096aae4e85a935c3164586daab"
+            ],
+            "time": "2026-10-18T02:39:18.43253226Z",
+            "tree": "0f6f9ddafb4ff0d83dcdf651e06026ac158411b99750273067b7b98d233b7304"
+          },
+          {
+            "excludes": [
+              "/workspace/.sandboxd-lock",
+              ".sandboxd-tmp-*"
+            ],
+            "hostname": "sandboxd-workspace",
+            "id": "3ccd8688464946568ad2d504e983dbbd61c729e0430adca3d1b497413d6bd344",
+            "parent": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e",
+            "paths": [
+              "/workspace"
+            ],
+            "program_version": "restic 0.18.1",
+            "short_id": "3ccd8688",
+            "summary": {
+              "backup_end": "2026-10-18T02:40:38.053659598Z",
+              "backup_start": "2026-10-18T02:40:37.371666331Z",
+              "data_added": 0,
+              "data_added_packed": 0,
+              "data_blobs": 0,
+              "dirs_changed": 0,
+              "dirs_new": 0,
+              "dirs_unmodified": 1,
+              "files_changed": 0,
+              "files_new": 0,
+              "files_unmodified": 1,
+              "total_bytes_processed": 28,
+              "total_files_processed": 1,
+              "tree_blobs": 0
+            },
+            "tags": [
+              "checkpoint:cp-47958bf1fb264bbf9438a244fb333898",
+              "manifest:3729d5aa3873dbd1d5daaf62aaadb881a5a1c649bf61551a6e0eaca0dfbfa2a5"
+            ],
+            "time": "2026-10-18T02:40:37.371666331Z",
+            "tree": "0f6f9ddafb4ff0d83dcdf651e06026ac158411b99750273067b7b98d233b7304"
+          }
+        ]
+      }
+    }
+  ],
+  "cleanup": [],
+  "owner": {
+    "repositoryCryptoId": "a63bc99a38e8327b717561cf8c10b0cbd88dfa137ae43d58172affb4d87e4e62",
+    "controllerId": "controller-93e403096aae4e85a935c3164586daab",
+    "ownerSnapshotId": "3a2bfd6c48e23933fdf1328f074782a9da104913efcd11b8c50e9154a06db0b4"
+  },
+  "removedSyntheticSnapshotId": "872c050a294fff666a9ede894aa61f916b2bb45534ba242db14e9bdfbaaf969d",
+  "retainedSnapshotId": "343492392a16b1aea6f89d2fa60ad4110503d56bb4fd64ee6ea9b51041f5715e",
+  "foreignSyntheticSnapshotId": "3ccd8688464946568ad2d504e983dbbd61c729e0430adca3d1b497413d6bd344",
+  "remainingFileSha256": "8bb2bba8a36353bfdf726ab1aef763d77c5f7c0795bd15569a3d40d0a6d78fd6",
+  "businessPods": [
+    {
+      "workspaceId": "workspace-a6c7eb33d149437898b24dda30325ecb",
+      "attemptId": "attempt-3792ebcbedd245c287719eae6a1f05bc",
+      "podUid": "52293bf0-4e67-4727-8358-9f9fdb8cb407",
+      "sandboxId": "67816d89333eba73",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-a6c7eb33d149437898b24dda30325ecb",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    {
+      "workspaceId": "workspace-a6c7eb33d149437898b24dda30325ecb",
+      "attemptId": "attempt-3b13f2fde67741e1a0df75a263cdde9f",
+      "podUid": "ae1d82b3-18dd-4e07-b3ce-6b8346ece21c",
+      "sandboxId": "85a575fa32d062c2",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-a6c7eb33d149437898b24dda30325ecb",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    },
+    {
+      "workspaceId": "workspace-013894f64f6d4d1aa03581d59673b824",
+      "attemptId": "attempt-50c241c00514468db6600c318d220a26",
+      "podUid": "919ecdee-079b-4443-951b-f1e6d78fec4b",
+      "sandboxId": "c78ff7ded56a9c81",
+      "runtimeClass": "gvisor",
+      "runAsUser": 65532,
+      "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+      "imageRef": "sandboxd-workspace:runtime-v1.5",
+      "nfsMount": {
+        "source": "172.23.0.3:/workspaces/workspace-013894f64f6d4d1aa03581d59673b824",
+        "fstype": "nfs4",
+        "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+      },
+      "gvisorStartup": "[   0.000000] Starting gVisor..."
+    }
+  ],
+  "normalForgetPruneAndRestore": true,
+  "markerAndForeignOwnershipProtected": true,
+  "repositoryPurpose": "new isolated synthetic prefix; intentionally foreign-tagged final snapshot; do not reuse as deployment",
+  "retainedMaintenancePods": []
+}

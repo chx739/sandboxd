@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "scope": "final local regression, retained deployment/control hashes, storage-secret scan and exact project cleanup; full V2 matrix remains incomplete",
+  "fullPythonTests": {
+    "count": 332,
+    "seconds": 320.665,
+    "sha256": "0376abcf51430b16f1c0bdac3af5c985cfc0994962d408c4dfc40e11de4b3cc1"
+  },
+  "podCounts": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "portsIdle": [
+    8080,
+    8090,
+    10880,
+    18090
+  ],
+  "containers": {
+    "sandboxd-control-plane": "true false",
+    "sandboxd-workspace-nfs-1": "true false",
+    "sandboxd-workspace-backup-minio-1": "true false"
+  },
+  "runningContainerNames": [
+    "sandboxd-workspace-backup-minio-1",
+    "sandboxd-workspace-nfs-1",
+    "sandboxd-control-plane"
+  ],
+  "sourceAndReportSha256": {
+    "agentd/workspace_deployment.py": "89adaab7c613748365f79eab4a1b4bf58b251cd638b551d1921586c6e393ba35",
+    "agentd/workspace_deployment_audit.py": "0ead49f467e56f17ba36cacb38bd904b45ebc19b3c66790c41ab611260b5c1c4",
+    "agentd/workspace_entry_demo.py": "7e3504ba5a6e8085ef3689e927236533aa070eab0e184e73d5d914e23482c460",
+    "agentd/tests/test_workspace_deployment.py": "7b08c6a1180c35712ecc57f4a3136bff831937156d73212324bf6a965ed7f523",
+    "hack/workspace.sh": "45cf59842b63191dbfe4e5b8a44631abffaf2169fe5bf07e48d4760c1f004731",
+    "AGENTS.md": "6e3116a7acef257547aed27a68a8ba9457af8c1e1f0c07b609dd79434340b3e4",
+    "GOAL.md": "edff7856e61e42c391b8b1bf4f07f859ed03c4eb26e7e26eb562e9087f53ee37",
+    "docs/PROGRESS.md": "8fb2fed6ca06d21896946cdf87b5ffe73b4cebcbf9e05c5eab7ed88d9781d198",
+    "docs/README.md": "858bf42a0540189c77af27b61d846203f2447bca7f953ee8cc62fd4b283f2658",
+    "docs/24-项目全景与心智模型.md": "4b9995ad7d8115aaf4bc9526d8107c31c470811c9084757159bb76ff1482ddae",
+    "docs/47-联合检查点与restic-MinIO学习手册.md": "a08f7b0e98a1419d923c3db37e9f9d634e1388fce11286a7358672c4283455c4",
+    "docs/48-检查点引用保护与受控清理.md": "845ff41c15f05a66a2f01fb3ca96003eb6ca0eeba2ab180d23fe2d7a1a907331",
+    "deploy/workspace/README.md": "576fd12e66a80a3d720f65a9ba490e96b7afb1257ed5af250bf47286f525ec05",
+    "docs/evidence/phase9-v2-deployment-audit-command.txt": "5e7015e367951ed59e1a2d0092b0ac0bc3f2c0e2f30a52fe8eee785fa110b180",
+    "docs/evidence/phase9-v2-deployment-audit.json": "7aa87b7c84473eb3ea760f6e725cb181e8119410bb228b3608f20e17595902a9",
+    "docs/evidence/phase9-v2-deployment-entry-command.txt": "ff767c19650fbda332fc6b5a14e1264398ec7453f40f94f71014553d9be601d8",
+    "docs/evidence/phase9-v2-deployment-entry.json": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9",
+    "docs/evidence/phase9-v2-deployment-final-targeted-tests.txt": "a76b34375f68c41b3dd4f45f5f3ab458e896bbc81fafbab7b2751fe0cdeb5a39",
+    "docs/evidence/phase9-v2-deployment-full-python-tests.txt": "0376abcf51430b16f1c0bdac3af5c985cfc0994962d408c4dfc40e11de4b3cc1",
+    "docs/evidence/phase9-v2-deployment-init-command.txt": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f",
+    "docs/evidence/phase9-v2-deployment-initial-tests.txt": "926c521c60e4e5a1f4493d33ef5e71db400626c35ae6895b9fc707c239f4bb25",
+    "docs/evidence/phase9-v2-deployment-reinit-command.txt": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f",
+    "docs/evidence/phase9-v2-deployment-status.json": "6540e99f5a0218f0db9898fe3cf0a3cabc9fdf2d1f8ba74e6bb028614554f25f"
+  },
+  "userDocumentSha256": {
+    "32-Agent记忆检索与路由学习手册.md": "80bf3d7a08124a40480c7532ae9d374f669d1b29571f50aac6d97266f92895a7",
+    "34-Codex风格分层记忆学习手册.md": "6d69af87f3966a2ee4c6599b4d954efb37f6fd7eb8fd57515d8c0d5dc203c75f"
+  },
+  "storageSecretValuesScanned": 3,
+  "publicFilesScanned": 23,
+  "secretMatches": 0,
+  "entryScriptScope": {
+    "executedSha256": "1435a54d32b611e5be36752ee4ff49aab24c70512ad9615aa614be1678fe5649",
+    "currentSha256": "45cf59842b63191dbfe4e5b8a44631abffaf2169fe5bf07e48d4760c1f004731",
+    "onlyDifference": "status-v2 help description; executable Go/Agent branches unchanged, reconstructed hash verified"
+  },
+  "externalModelCalls": 0,
+  "formalV2AcceptanceComplete": false
+}

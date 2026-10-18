@@ -1,0 +1,3 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 248964}
+{"stage": "agentd-process-started", "number": 2, "pid": 249301}
+{"passed": true, "phase": "files-ready", "output": "docs/evidence/phase9-v2-restore-cut-files-ready.json"}

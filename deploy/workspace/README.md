@@ -1,6 +1,6 @@
 # NFS V1 部署与验收
 
-当前状态：M3，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2未开始。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
+当前状态：M4进行中，V1矩阵14/14、显式迁移与统一启动已通过真实验收；小规模性能基线9/9通过，V1单节点MVP具备交付证据，V2真实restic/MinIO后端及Agent联合检查点正常保存已验证，故障/恢复与正式验收尚未完成，见[47](../../docs/47-联合检查点与restic-MinIO学习手册.md)。逐项证据见docs/evidence/phase9-workspace-recovery.md与phase9-v1-acceptance-progress.json。
 
 - 服务端：官方 Registry 在本环境超时，使用 nfs.Dockerfile 从固定 Debian 摘要和 Ganesha4.3-2 包构建，单独 Docker 容器，不运行动态 Provisioner。
 - 协议：NFSv4.1/TCP 2049；客户端也必须明确指定 nfsvers=4.1。
@@ -208,6 +208,7 @@ agentd/.venv/bin/python -m agentd.workspace_migration_demo --nfs-server "$SANDBO
 | 本地回归 | `bash hack/workspace.sh test` | Python冻结依赖，不请求模型 |
 | 独立存储验收 | `bash hack/workspace.sh verify migration` | 真实Go/gVisor/NFS，使用合成数据；10880需空闲 |
 | 全套存储夹具 | `bash hack/workspace.sh verify all` | 串行，不与正常8080/8090业务任务共享实验窗口；部分场景临时暂停专属NFS/删除自己的Pod/强杀自己的agentd |
+| V1/V2固定后端比较 | `bash hack/workspace.sh benchmark-v2 --repeats 3 --output .cache/<新报告>.json` | 先build-storage、NFS/专属MinIO和私有凭据就绪；10880空闲，默认当前构建Go，显式--binary可选历史版本；历史数值见46，不外推生产 |
 | 三类联合回放 | `bash hack/workspace.sh joint --output .cache/joint.json` | 既有Milvus2.5.10/OpenSearch与缓存模型须先就绪；离线模型缓存，脚本不启动数据库、不重建索引 |
 
 `agent`固定NFS+Replay、Jev关闭；若环境要求live则直接拒绝。它会移除Operator Token环境变量，Python只获得Agent凭据。`go`使用当前固定runtime-v1.5，须先按原安装流程将该镜像载入本项目kind、部署Calico/gVisor/RBAC等基础能力；统一入口不替代这些前置安装。
@@ -270,3 +271,65 @@ bash hack/workspace.sh benchmark --repeats 3 --background-condition serial --out
 ```
 
 两个实验串行；入口实验要求8080/8090空闲，性能实验要求10880及项目工作区空闲。测量口径、缓存、资源/网络边界和原始结果见[46](../../docs/46-工作区恢复性能与流量测量.md)。serial是调用者对项目调度的声明，不保证宿主没有其他后台工作。
+
+## V2 可选联合检查点
+
+### 固定镜像与可信二进制准备
+
+已有kind/Calico/gVisor基础环境时，从仓库根目录执行：
+
+```bash
+bash hack/workspace.sh build-storage
+```
+
+该入口先检查资源及项目集群、校验固定restic0.18.1下载/二进制，再准备`runtime-v1.5`与`restic:0.18.1-v3`两个镜像。已有tag只inspect复用；缺失时按固定Dockerfile构建。它不覆盖旧镜像、不删除数据卷，保留本次构建输入。当前Go服务与固定Pod渲染器始终从源码构建，分别安装到`.cache/workspace-sandboxd`与`.cache/workspace-backup-pod-owned`，最后加载镜像到项目kind。
+
+复用已有tag不证明镜像来自当前源码；修改helper需明确新版本和兼容检查，不能用这个入口静默升级历史任务。首次无缓存构建可能下载固定基础镜像/restic/Go模块；当前实际验证的是缓存资产校验、已有镜像复用、Go编译及kind加载，原始结果见[安装入口证据](../../docs/evidence/phase9-v2-unified-storage-build.json)。4项命令契约测试使用Fake工具，不能代替首次真实镜像构建。
+
+**此命令只准备镜像和二进制。** 新部署继续执行下面的`init-v2`。未指定部署目录的旧shell restic路径仍使用v2镜像；已有历史共享仓库保留，不自动收编。
+
+### 新专属V2部署：初始化、启动与重启
+
+前置条件：项目kind/Calico/gVisor/RBAC、NFS与专属MinIO已经按本目录及文档47安装；MinIO使用独立`backup-compose.yml`，仓库外私有配置为`~/.local/share/sandboxd/workspace-backup/minio-credentials.json`（`access/secret`），须与该服务实际凭据相同。`init-v2`不启动或重置已有存储，不改RAG MinIO。Go/Python服务所需的四个不同Token仍由仓库外环境提供。
+
+```bash
+export SANDBOXD_WORKSPACE_DEPLOYMENT_DIR="$HOME/.local/share/sandboxd/deployments/my-v2"
+bash hack/workspace.sh init-v2 --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR"
+bash hack/workspace.sh status-v2 --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR"
+```
+
+目录必须是上述原生Linux `deployments`下的一个新私有目录。初始化创建唯一`owned-deploy/<UUID>`仓库前缀、不可变Secret及Owner；状态/密码私有持久化，业务Pod不会得到仓库凭据。重复`init-v2`核对并复用原身份，不生成第二个初始化Pod。提交结果不明时仅查询原Pod；原Pod缺失、失败、UID/spec变化或无法证明停止时拒绝继续，不能删目录后当作恢复。
+
+两个终端均设置相同`SANDBOXD_WORKSPACE_DEPLOYMENT_DIR`，仓库外配置原有Token，然后先Go、后Agent：
+
+```bash
+bash hack/workspace.sh go
+```
+
+```bash
+export AGENTD_SANDBOXD_URL=http://127.0.0.1:8080
+bash hack/workspace.sh agent
+```
+
+部署目录生成的Go/Agent控制路径、restic模式与逻辑仓库ID必须一致；旧环境若显式配置了不同目录/`off`模式/仓库ID，入口会拒绝，请核对后移除冲突项。不得改Owner或重置原目录来绕过检查。正常重启使用同一环境与同一目录；原Task/attempt/预算语义不变。Agent入口移除Operator Token及存储凭据环境，固定Replay/路由关闭。
+
+`go-args/agent-env`是调用时只读配置视图；仅固定字段，不执行配置内容，不使用`eval/source`。Go启动还核对当前NFS/MinIO地址；地址改变须显式迁移，不自动重指向其他存储。本机目录claim只针对单WSL部署，不能宣传为多主机锁或HA。
+
+实际通过统一入口启动与Agent SIGKILL恢复的演示（只用**已初始化且尚无Task的新目录**）：
+
+```bash
+bash hack/workspace.sh entry --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR" \
+  --output .cache/owned-entry.json
+```
+
+这条命令运行固定合成Replay，会强杀自己启动的Agent一次；要求8080/8090及工作区实验窗口空闲。已有业务目录只用于日常启动，不重跑此夹具；旧输出/数据不覆盖。实际结果、独立审计与局限见[文档47 §19](../../docs/47-联合检查点与restic-MinIO学习手册.md#19-owned-v2统一部署与启动恢复)。
+
+NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工具组与最终诊断的同步联合保存；默认off。可信Go另需固定维护镜像、专用仓库Secret名称与MinIO私网地址，凭据不能交给业务Pod/模型。安装、两终端启动、独立真实演示及未验收范围见[文档47 §7](../../docs/47-联合检查点与restic-MinIO学习手册.md#7-agent完整边界自动保存与最终诊断接续)。不因有备份就认为历史分支恢复、NFS高可用或自动GC已经实现。
+
+### V2联合提交进程切点
+
+[文档47 §8](../../docs/47-联合检查点与restic-MinIO学习手册.md#8-联合提交切点的真实agent进程实验)提供独立真实SIGKILL夹具：`python -m agentd.workspace_checkpoint_fault_demo --phase <固定切点> --secret-name <专属Secret名称> --minio-ip <已核对私网IP> --output <新报告路径>`。使用项目venv，从仓库根目录执行；每次只操作自己启动的Agent进程，保留全部数据。可选reserved/preparing/before-data-ready/data-ready/before-commit/committed，必须串行；已执行范围按逐个报告核对，不把单个切点当作全部V2完成。默认生产服务没有切点开关。
+
+### V2可信文件恢复组件
+
+已新增固定维护镜像`sandboxd-restic:0.18.1-v2`及`hack/workspace-restore-runtime-smoke`，实际NFS/MinIO新空目标恢复与错误仓库身份写入前拒绝已通过；安装、运行及保留控制目录对账命令见[文档47 §10](../../docs/47-联合检查点与restic-MinIO学习手册.md#10-可信恢复执行器与真实nfsminio验收)。受限restore HTTP与Python历史分支随后已接线，两分支真实服务验收见[文档47 §13](../../docs/47-联合检查点与restic-MinIO学习手册.md#13-taskstoreagent-api与真实历史分支)；off/V1仍不恢复历史文件，完整故障与清理验收待完成。

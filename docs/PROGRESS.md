@@ -10,14 +10,240 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前分支：
 
-    codex/workspace-nfs-v1（基于 281111d；前置 PR #1 仍 OPEN，后续 PR 明确依赖）
+    codex/workspace-restic-v2（基于V1 9c91c9b；前置PR#2依赖PR#1，均未合并）
 
 当前里程碑：
 
-    Phase 9 M3：NFS V1单节点MVP的矩阵14/14、迁移、统一启动/联合回放与性能基线完成；M4/V2未开始；Goal active
+    Phase 9 M5已交付：V1 14/V2 10、最终339 Python、三类联合Replay、性能/安装/交付证据通过；实现4ba0d6a已发布PR#3，未合并
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：工作区目标最终交付
+
+- 有效实现4ba0d6ab12e736e8bca2d124fc50eb57a7560ecc已推送，实际PR#3 HEAD与本地一致，OPEN/DRAFT，base=codex/workspace-nfs-v1，仍依赖PR#2→#1；不自动合并。最后只追加本交付记录和状态文档，不改已验证源码、原始实验或用户docs32/docs34。
+- 最终交付原件phase9-workspace-final-acceptance.json关联本地门禁、十项审计、已发布实现/PR身份与限制；252份证据hash逐项核对。V1 14/14、V2 10/10；Go源码/锁与2a09349相同，最终Python339/339（309.394秒）；三类真实本地存储联合Replay3/3，模型/路由/生命周期的Fake边界在原件注明，外部模型0。
+- 再核对最终实现源码SHA与回归后未变，workspace.sh的go/agent分支与实际owned启动验收时逐字相同，新增仅性能入口/帮助；实际benchmark-v2 --help与10项定向测试通过。历史性能18备份/9恢复/两组各9次及数据/模型/版本、资源/流量原件保留，不为更好数字重跑。
+- 系统保持三项目容器（kind/NFS/独立MinIO）运行；四个临时RAG/日志依赖恢复原停止状态，ES/其他旧容器未启动。业务/维护Pod0，8080/8090/10880/18090空闲；新验收CP1合成快照已按Operator协议遗忘，marker/head和所有旧数据/卷/控制记录/未遗忘snapshot/Secret保留。该目录不是fresh夹具，正常继续用原部署目录，不能删除后冒充恢复。
+- 当前学习/演示/限制入口为文档49、deploy/workspace/README与文档45～48，根README/导航已更新。Goal收尾时仅核对最后状态文档推送与工作区/远端，不再自动新增功能、Live模型或生产HA实验。Phase8尚未授权的真实模型和人工审核是独立待办，不用本轮Replay代替，也不挪用旧预算。
+- **本目标无剩余实现或验收项。** 后续按用户新指令工作，保留用户两份未提交文档；本轮目标完成不表示Phase8或整个项目全部完成。
+
+### 2026-10-18：V2十项证据审计通过，最终交付收尾
+
+- 起点e9d4445，仍为codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未改。上轮owned持久初始化/真实统一入口接续/332回归/推送为进展；本轮补workspace_checkpoint_acceptance、独立原始证据审计与五项夹具契约测试，真实运行前5/5、0.047秒通过，不改生产Agent/Go权限或工具。
+- 新原生部署acceptance-778e77ca3a334597bcac2370c2d51031、独立owned-deploy前缀的真实-refusals通过：同一Coordinator.save立即重试，只多一次幂等Finish，CP/snapshot/revision及Go/CP日志不变；首个完整保存窗口，活动Session API409/活动目录Go409且源文件/日志不改。源Task固定Replay2模型槽/1写工具，最后CP2为head。
+- 三个新目标真实验证：不存在snapshot和错误manifest在写入前失败、目标空且claim409；错误imageID在真实恢复文件后，实际CRI身份与期望不同，绑定/文件工具409，最后通过Go确认Pod停止。另在本轮新Session引用上注入坏字节（原件先另存），API409后恢复原件；关闭Agent lifespan后，可信管理员只遗忘本轮CP1非head新合成快照，重开API恢复409、历史消息200，head CP2/原Task/Session/文件不变。未改旧仓库或image tag，未模拟S3 pack位翻转；ASGI夹具不冒充Agent TCP或管理员独立OS进程。
+- 独立-acceptance-audit通过：Go55/CP11/Task21条checksum/序号、原日志前缀、来源/目标/实际镜像及停止证明一致；实际仓库只余marker+head两份snapshot，正常check --read-data通过，项目业务/维护Pod空。原始-refusals/-command/-audit/-audit-command保留，不重跑原实验。
+- workspace_v2_audit已逐项核对文档43十项条件、235份先前证据hash及43份保留Go/CP/Task日志，机器结果phase9-v2-requirement-audit.json为10/10；不是再做服务实验或整体交付完成。V1矩阵14/14及附加安装/迁移/性能的48个引用hash也已复核，旧矩阵pendingV2字段保留为历史。新增文档49为当前逐项证据/交付门禁入口。
+- 完整Python337/337、314.139秒通过-acceptance-full-python-tests。随后发现性能脚本隐含依赖历史.cache二进制名：已修补为统一build-storage的默认Go产物/固定原生restic，提供--binary保留显式历史选择，并接workspace.sh benchmark-v2。新增两项路径/缺依赖前置测试，相关10/10、0.047秒通过-final-entry-targeted-tests。历史9+9性能原件不改、不重算数字。
+- 最后三类联合回放已真实3/3通过-final-joint-replay.json：实际Milvus2.5.10/OpenSearch+缓存E5/BGE、脚本模型/Fake路由与生命周期，外部模型0。四个依赖先核对project/image/原停止状态，按原ID临时启动，结束后全部恢复停止；服务前后和健康记录-final-joint-services及两份command保留，不重建索引、不启动ES或其他旧容器。
+- 最终完整Python339/339、309.394秒通过-final-python-tests，原生session27846实际退出0，沿原句柄等待完慢记忆CLI后收取；包括最后两项性能默认路径测试。Go internal/cmd/go.mod/go.sum与2a09349完全相同，先前全Go结果适用；没有伪称本轮再跑Go测试。统一benchmark-v2 --help亦实际加载并显示--binary参数，不运行新性能样本。
+- phase9-workspace-final-local-audit.json已通过全范围本地门禁：V1 14项/48条引用（去重后另计）、V2十项及43保留日志hash、339回归、3/3联合回放/原服务ID停回、18快照/9+9性能、实际统一安装/启动/原Go源码与镜像身份、AST/shell/文档链接围栏、用户两文档hash、3实际存储值字面/Base64零匹配、业务/维护Pod0和四端口空闲。本地验收已完成，publicationPending=true；不在PR发布前提前结束Goal。
+- **第一项下一步**：提交推送当前已验证实现/文档/原始证据，核对远端PR#3的HEAD、base依赖和未合并状态，再保存最终交付记录并做Goal完成审计。新验收目录已有Task/遗忘记录，不能作为fresh目录复跑；原源文件/未遗忘快照/控制数据全保留。Phase8 Live/人工审核独立待办保留，本轮不借用其预算。
+
+### 2026-10-18：owned V2初始化与统一入口接续已真实通过
+
+- 起点4e7930a，仍为codex/workspace-restic-v2/草稿PR#3（前置PR#2→PR#1，不合并）；用户docs32/docs34保持。上轮固定构建入口/实证/推送为进展，本轮新增独立workspace_deployment及初始化状态机、只读配置视图、Shell init-v2/status-v2和owned Go/Agent分支；不新增Agent工具或付费调用。
+- 固定新私有部署根/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47，对应全新owned-deploy前缀/immutable Secret/controller/owner marker；原Go/Agent目录身份、密码、初始化job先持久化。PLANNED→SECRET_READY→INIT_SUBMITTED→OWNER_READY→READY，未知结果只查原Pod，缺失/失败/UID/spec变化不盲目init；证明先落盘再目录绑定/同UID清理。默认NFS运行、旧共享/污染仓库均保留。
+- 实际init-v2、重复同目录init及status成功，原始-init-command/-reinit-command/-status保留；重复不产生第二个init Pod。真实统一Shell Go+Agent TCP/SIGKILL自动接续通过-deployment-entry.json：同Task原预算/时钟/deadline/provider不变、2attempt/不同Pod UID，4模型槽含在途预留、写文件仅1次、恢复读hash/原Session前缀正确，3个COMMITTED/revision1～3/同Owner/无pending。Agent环境Operator及合成存储canary均移除，未放入真实存储凭据。kill→API59,617.37ms、→核查89,464.54ms是单样本，含挂载盘导入/刻意等待/同步备份，不当生产RTO。
+- 独立标准库部署审计-audit及-command已通过：Go32/CP10/Task35条checksum/seq、claim/原预算/父链/服务端文件hash一致；实际专属仓库marker+3份业务snapshot及正常check --read-data通过，业务/维护Pod0。没有重新运行任务或删snapshot，不是初始化进程故障实验、历史分支或完整十项验收。
+- 本地初批19/19、1.697秒，最终相关23/23、2.642秒通过-initial-tests/-final-targeted-tests；初始化确认丢失、缺Pod、绑定中断、错误身份/失败/过期Lease/目录/锁等是Fake协议验证。完整Python332/332、320.665秒通过-full-python-tests，原生session95959实际退出0；未因记忆CLI导入等待而重启，旧306项不冒充本轮成绩，各批有重叠不相加。
+- 入口原始报告保留执行当时Shell SHA；最终仅status-v2帮助文字一行有差异，按单行重构已核对Go/Agent执行分支未变，不为统一hash重跑服务。Go生产源码未改，当前新缓存二进制仍为4e7930a批次构建；新的目录/凭据/快照/全部日志保留。
+- 收尾-final-checks实际通过：332项原文/部署原始日志hash一致，三项目容器running且非paused，业务/维护Pod0、8080/8090/10880/18090空闲，3个实际存储凭据字面/Base64在23份本轮公开文件零命中，用户两份文档hash保持。该检查点捕获当时文档hash；后续仅补本文最终回归记录和证据索引，不把动态文档hash当不可变源码证明。源码/原始报告最终固定值另在-final-v2-checks，避免文档自引用。
+- 本批有效实现dbc63f3已推送，实际PR#3 HEAD核对一致，仍OPEN/DRAFT、base=codex/workspace-nfs-v1；PR正文已追加真实结果与缺口，不合并。235份证据索引hash逐项复核通过，最终固定源码与332回归后未变。工作区仅余用户docs32/docs34修改，真实实验子进程和测试session均终态，原三存储/节点容器保留运行；原生新部署及四份仓库snapshot不清理。此后只补本恢复记录，不改实现或原始成绩。
+- **第一项下一步**：对文档43十项逐一审计现有真实报告和原始账本，重点核查V2-07缺失/校验/镜像拒绝、V2-08活动来源拒绝及V2-06同保存请求幂等的实际证据，缺项补独立真实服务验收。统一部署已有真实证据，不能再写成全部待实现；完整Goal保持active，不将任何可选夹具未运行自动扩大为新目标。新部署目录已有Task，日常启动可复用，entry合成夹具不复跑此目录。
+
+### 2026-10-18：统一存储构建入口已真实验证
+
+- 起点8727abc，codex/workspace-restic-v2/草稿PR#3实际OPEN、base=codex/workspace-nfs-v1，前置PR#2→PR#1；用户docs32/docs34 hash保持。上轮流量解释与只读检查未改变验收状态，本轮新增hack/build-workspace-storage.sh和workspace.sh build-storage，推进统一V2安装入口，不重跑已完成性能实验。
+- 串行真实执行build-storage通过：resource available20,503MiB/swap0、项目单节点检查；固定restic0.18.1缓存校验、已有runtime-v1.5和restic-v3镜像复用（Docker ID未变）、当前Go服务及固定Pod渲染器重编译、kind加载通过。构建输入.cache/workspace-storage-build-3oNWBXPQ保留；默认.cache/workspace-sandboxd现为此批源码构建的新二进制，不再使用旧缓存。历史owned-cleanup可信缓存与其他镜像/证据均保留。
+- 原始phase9-v2-unified-storage-build-command.txt、-build.json记录实际Docker/CRI身份、二进制hash与业务/维护Pod0；4/4标准库Fake命令契约测试通过-build-tests.txt，覆盖已有tag不覆盖/首次命令/编译失败保留旧服务/集群门禁。Fake首次路径不是无缓存真实Docker构建，本轮不启动Agent或初始化仓库、不新增存储故障、不调用外部模型；不能当统一V2启动验收。
+- 两份用户文档hash已复核不变，原数据/卷/Secret/快照保留。部署README加入命令、前置条件和未接线边界；当前旧shell restic路径仍为v2，不因准备v3镜像就声称owned默认运行已切换。整体formalV2AcceptanceComplete保持false。
+- **第一项下一步**：新私有部署目录中的fresh Owner/bootstrap持久状态机，固定Secret/prefix/init job，重启不盲目init或收编旧历史；绑定Python检查点目录和Go参数后真实执行统一Go/Agent restic入口。再按文档43全部十项逐项审计/相关回归及PR交付，Goal保持完整active。
+
+### 2026-10-18：固定V1/V2后端性能与流量通过
+
+- 起点fec103c，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实GC/故障/恢复/审计及PR为进展；本轮新增workspace_checkpoint_benchmark、独立标准库审计和3项纯逻辑测试。复用seed20261018及few4×1KiB/many32×256B/partial8×4KiB、2次list预热、暖读、单并发，不清内核缓存，不并发项目测试/安装。
+- phase9-v2-fixed-workload-v1.json与主JSON各9/9真实通过；同一Go二进制、NFS部署、固定数据/hash。V2每试验全新独立仓库/Owner/Secret/控制目录，18次实际备份、9次初版恢复全量hash验证；无模型调用或删除。V1复用Go进程，V2逐仓库启动Go，prepare/claim不作纯归因；批量后端备份不是默认Agent每工具组联合CP，receipt显式sessionBound=false。
+- 首次备份RPC P50三场景6.664/8.040/7.822秒，后续7.092/7.879/7.680秒；含prepare/claim/hash核验/release的恢复P50约14.6/14.6/15.4秒。后续packed新增0/0/5446字节，少量数据不变也有MinIO约62KB RX和70KB TX、NFS元数据开销，不将容器流量当公网或纯PUT。原始资源/网络端点、压缩统计、owner基线与du表观仓库字节全部保留，未测峰值/对象请求数/生产QPS。
+- 独立-fixed-workload-audit通过：两组固定数据、全部manifest/hash、324条Go日志、9个独立crypto、18个不同snapshot、阶段/恢复来源、计数差和分位数重算。性能结束后相关7/7、0.018秒纯逻辑回归通过-unit-tests；不把旧完整306项冒称本轮新运行。数据、快照、Secret及控制根保留。文档46 §7～8有方法、表格和限制，明确本轮读RPC变化不可直接归因备份提速。
+- 收尾-fixed-workload-final-checks通过：项目三容器运行无暂停，业务/维护Pod0，10880/18090空闲；9个新仓库各保留owner+2业务snapshot。11个实际存储凭据字面/Base64在13份本轮公开文件零命中，220份证据hash逐项通过，AST/diff通过，用户docs32/docs34 hash与前批一致。整个V2完成标记仍false。
+- 本批有效提交009e7f5；已完成的基准与独立审计原件保持，Go生产/可信缓存、依赖锁未改，未下载新包。不把后端batch RPC或容器端点统计当Agent端到端/峰值/公网账单；恢复当前工作从hack/workspace.sh的restic入口接线开始。
+- **第一项下一步**：统一restic安装/启动入口接fresh Owner/bootstrap和可复现配置，保留旧共享数据不收编，再按文档43十项逐一核对原始证据/命令/回归并更新PR。性能目标已取得本机小规模实证，不重复试验筛数字、不扩大为生产HA；Goal保持完整active。
+
+### 2026-10-18：新专属仓库真实联合GC通过
+
+- 起点61bdb39，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮Python管理协议/目录归属、本地回归和PR为进展；本轮新增workspace_gc_joint_demo及独立标准库审计，start_go管理夹具显式Owner/Operator参数，旧调用默认不变。新owned-joint/UUID仓库及controller/Secret/控制目录，完全不复用旧共享或故意污染夹具。
+- phase9-v2-owned-gc-joint.json真实通过：Agent Replay经实际Go/runsc/NFS/restic/MinIO创建5份联合CP（5模型槽/4工具槽），head/pin/保留取消计划来源3类拒绝；新第1点在真实Wait/Go证明后实际管理员SIGKILL+Go SIGKILL，沿原GC/job/Pod UID仅Wait+Finish对账，无后端重跑。原Task已成功后才注入管理员故障，不宣称unfinished Agent跨Go故障自动接续。原Task/Session字节与deadline/calls不改，活动NFS仍version3。
+- 新第3点实际排他check锁使清理Wait503/helper1，PREPARED冻结；有效另一工作区备份Reserve409。正常CONT/INT释放自己的锁后，固定snapshot显式attempt2/newjob成功，备份Reserve200；无force unlock，内部restic退出码未采集。实际prune后，从pin的第2点恢复新空NFS并经RPC读回version2/hash；这是保留文件恢复，不是新历史分支Task。只遗忘本次新第1/3点，COMMITTED历史和全部旧数据保留。
+- 独立-owned-gc-joint-audit通过：CP30/Go85/Task42条checksum/序号、Session引用父链、claim及原文件hash；核对PREPARED→submitted→Go证明→FORGOTTEN→released顺序（时间规范为微秒并结合协议，不以墙钟代替因果）。实际仓库恰留owner marker+第2/4/5点4个snapshot，crypto/controller/专属前缀和正常read-data检查通过。初次系统Python不识别Go RFC3339Nano的Z/9位小数而失败，原-audit-command保留；显式兼容后-v2-command通过，没有重跑原实验或改日志。
+- 真实checkpoint_admin preview通过-owned-gc-joint-preview及-preview-audit：10个控制/引用/claim文件hash/ctime/mode不变，5组均不可再清理，无pending；允许读atime变化。最终完整Python306/306、297.056秒通过-full-python-tests，Go生产代码未改不重跑旧Go。真实实验后available20,521MiB、swap0、业务/维护Pod空；服务关闭，所有剩余仓库数据/Secret/目录/日志保留，外部模型0。
+- 收尾-owned-gc-joint-final-checks通过：AST、项目三容器健康/无暂停、Pod0/端口10880与18090空闲、MinIO200，4个实际凭据的字面/Base64在15份本轮公开文件零命中。213份证据hash逐项通过，进度矩阵仅V2-09按上述实证置verified，整体formalV2AcceptanceComplete仍false；其余项继续逐项审计，不用本轮成绩替代全部目标。
+- 本批有效提交7d71580；实际控制根workspace-gc-joint/ad67caa100fd4ff78f830bac6e935ced、目录claim、Secret和余下4个snapshot保留，fixture默认每次新UUID，不用原目录重跑删除实验。可信Go缓存未替换，用户两份文档hash与前批一致。下一步直接从固定负载性能开始，不重复本轮已完成的清理实现。
+- **第一项下一步**：固定同条件NFS V1与V2性能/流量、实际上传/去重/占用与恢复成本，再接统一restic启动（新Owner bootstrap，旧共享只保留），最后按文档43全部十项审核与PR交付。V2-09有完整真实候选证据，其他未审计项和性能不缩减；Goal保持active。文档48 §12为本批命令/结果/边界。
+
+### 2026-10-18：独立Python管理协调器与目录归属
+
+- 起点ed8f8f2，codex/workspace-restic-v2/草稿PR#3；用户docs32/docs34保留。上一轮Go持久GC/Operator及回归/PR为进展；本轮接同CP日志repository.binding和cleanup.execution、独立管理客户端/CLI及协调器，不向agentd服务或模型工具提供Operator身份。
+- 绑定完整Owner及原生私有目录路径/设备/inode；固定本机repository-controllers/crypto.json独占登记，另一个控制目录/复制账本拒绝，已有CP历史和Session引用不收编。不是跨主机排他/HA，目录或claim损坏不强行修复。PENDING持久化GC/job后才Reserve，复核引用并PREPARED后Start；同owner/完整目标/Go持久证明核验后FORGOTTEN→Finish→DONE。失败保持冻结，显式retry先落盘新attempt再远端调用，响应丢失沿原nextJob对账。
+- 初始18/18、2.696秒通过-cleanup-coordinator-initial-tests；随后相关34/34、6.818秒通过-final-targeted-tests。完整Python303/303、312.634秒通过-full-python-tests；最后补启动门/只读预览/异常关闭测试及client close嵌套finally，由最终-v2-targeted报告单独核验，不把303说成包含后补全部测试。CLI默认错误不打印HTTP异常链，客户端仅loopback/固定动作/有界响应、无重定向/环境代理/自动重试。
+- 最终相关38/38、7.624秒通过phase9-v2-cleanup-coordinator-final-v2-targeted-tests.txt，含本批14项新测试及旧引用/保存协调器回归；303完整与38相关有重叠、不相加。完整进程一直等待原session结束，没有因观察超时重启。源代码/文档diff及AST检查通过，用户两份文档hash与前批一致。
+- 有效实现78bde50；收尾-final-checks核对7份源代码hash、204份证据hash及既有可信Go缓存二进制hash一致，未启动该服务。无新依赖/下载、原始日志保留；当前真实联合GC仍未执行，不能把本批Fake控制结果当后端删除证明。
+- 预览另列Owner/pendingExecutions，引用plan SHA原投影不变。维护PENDING阻止新CP/恢复，restic服务在Worker前拒绝启动以保留原Task/预算，Runner选模型/路由前再次预检。Fake切点明确是合成协议异常，不冒称实际SIGKILL/restic结果；未启动新服务、访问实际仓库或调用外部模型。
+- **第一项下一步**：使用新干净专属仓库和.cache/workspace-sandboxd-owned-cleanup，真实走目录绑定→Session/文件联合CP→管理员引用复核→Go屏障/Operator→实际forget/prune→保留版本恢复；加入中断/锁冲突及原目录不变证据，不能复用旧共享或故意污染夹具。再完成固定性能/流量、统一V2启动和十项完整审计。文档48 §11为管理代码/命令入口，Goal保持完整active。
+
+### 2026-10-18：持久GC执行与Operator入口本地闭环
+
+- 起点a96a9bc，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮持久仓库绑定、回归和PR推送属于进展；本轮复用维护Pod/WorkspaceBarrier新增forget/prune固定执行、全局互斥、结果证明落盘、显式同目标新job重试及Operator专属HTTP。关联ID不创建NFS目录，管理Pod仍无业务PVC，Agent无此API权限/模型工具。
+- reserve只冻结；Wait核验真实Pod结果后fsync CleanupResult；Finish要求已有证明，可跨“删Pod后”窗口重启。未知/非零/超时仍冻结，retry须旧Pod确定停止并清理同UID；防止旧请求释放新job、历史gcId或旧jobId复用。尚未提交Pod且尚未写PREPARED时，管理员可cancel-reservation撤销过期计划；Go能证明never-submitted，上层未PREPARED条件须由后续可信协调器保证，不能把此接口当通用失败解冻。
+- 本地新增Runtime7项/API3项顶层测试，覆盖持久冻结、正反互斥、坏结果、证明恢复、非法完整日志、历史ID、预留撤销和管理员权限。最终phase9-v2-cleanup-runtime-final-v4-race-tests.txt的sandbox/API通过，Go全项目-full-go-tests通过。final-v2/v3保留同一错误映射失败：旧未归属后端已拒绝但返回500，应409；修复预留前Owner检查后通过，没有实际删除或越权。初轮/targeted等仅对应当时代码，不冒称包含后补场景。
+- 本批仅本地逻辑/fake Kubernetes，新服务0/实际仓库操作0/外部模型0；未改Python、不重跑旧292，原数据/镜像/仓库/快照/卷保留。available20,526MiB、swap0，未启动故障实验。文档48 §10记录固定接口、代码顺序、边界和后续验收；完整V2仍不宣称完成。
+- 有效实现2a09349；新缓存.cache/workspace-sandboxd-owned-cleanup已构建但未启动，旧二进制保留，hash见-cleanup-runtime-final-checks。当前198份证据hash逐项通过；源码/文档diff检查通过。两份原始失败报告各保留一行空白尾空格，整体diff仅这2条已知告警，不改写原始日志以凑格式通过。用户docs32/docs34 hash与前批一致。
+- **第一项下一步**：独立Python管理协调器绑定唯一控制目录，持锁核验引用、Go Reserve后复核并fsync PREPARED、固定Start/Wait、FORGOTTEN后Finish；崩溃从同GC/job对账，PREPARED后不撤销，锁冲突不强解。随后新专属干净仓库真实联合验收，不复用旧共享或故意污染夹具。性能流量、统一restic入口、十项最终审计仍保持完整待办。
+
+### 2026-10-18：Go持久仓库绑定与owned备份接线
+
+- 起点da46dcf，codex/workspace-restic-v2/草稿PR#3仍OPEN，base为codex/workspace-nfs-v1；保留用户docs32/docs34。上轮为流量答疑/源码检查，没有新增性能成绩；本轮新增实际代码和回归证据。Goal保持完整active。
+- 新repository.binding只允许全新Go控制日志，fsync固定controller/repo crypto/owner marker、Secret名称和MinIO IP；重启相同配置幂等，拒绝换绑定、漏Owner降级及旧工作区自动收编。三项可信部署参数完整校验，BackupRuntime实际构造backup-owned并核对成功结果crypto，恢复来源错仓库在预留前拒绝。旧未绑定模式默认保留；没有给Agent新增执行参数或删除接口。
+- 初轮3项顶层定向通过phase9-v2-repository-binding-tests.txt；后增配置及恢复来源重建测试，最终config/helper/sandbox/API race全部通过-final-race-tests，Go全项目通过-full-go-tests。均为本地逻辑/fake Kubernetes，无实际Pod或MinIO操作，不重跑Python、不把旧292当本批成绩。资源available20,557MiB/swap0/根盘930GiB。
+- -audit记录8份代码hash及4份测试原文，当前进度188份证据hash逐项核验通过；初次证据收集器因Go ok后的空格格式误拒，修正解析而未改原测试或重跑。外部模型0、新服务0、删除0；原仓库/卷/快照保留。仓库绑定只约束该Go日志，不宣称已完成Python控制目录唯一归属或跨部署排他。
+- **第一项下一步**：复用维护Pod生命周期补持久全局GC屏障与可信Operator专属入口，再完成Python控制目录归属/PREPARED→真实后端→FORGOTTEN协调器、新专属干净仓库的引用保护/中断/锁冲突验收。性能流量、统一V2入口、完整十项审计仍待完成。文档48 §9为本批代码阅读入口。
+
+### 2026-10-18：owned helper与新专用仓库实际forget/prune组件通过
+
+- 本批有效实现9d50421（起点d02c3fe），codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮本地引用/预览、292回归及PR为进展；本轮增加可信Go helper的仓库归属与固定init-owned/backup-owned/forget/prune契约，管理Pod不挂业务NFS，未开放Agent API/模型工具，默认运行仍为v2镜像。
+- fresh init创建不可删除的owner marker snapshot，绑定controller UUID/repo crypto/marker完整ID；验证标记内容及全部快照归属，拒绝旧未标记/其他controller/歧义标签。forget只处理完整精确ID并核对剩余集合，缺失目标幂等确认；prune正常取restic锁、不unlock，操作后标记与快照集合不变。helper不是head/pin授权器，仍需控制层计划及管理员入口。
+- 固定0.18.1资产构建新v3镜像并载入kind，旧v1/v2保留；Docker inspect Id086857...、实际CRI0253fd...分列，构建输入hash见-owned-image-build。Go相关初轮通过，新增歧义标签/无业务卷测试后最终race(helper/sandbox/API)和Go全项目通过；Python生产代码未改，不用旧292冒充新组件执行成绩。
+- 资源available20,608MiB、swap0、根盘930GiB、业务/维护Pod空。phase9-v2-owned-cleanup-component.json真实通过：全新owned-cleanup/UUID前缀，16次实际runsc操作、4次预期拒绝（marker、错repo、错controller、未归属snapshot）；仅删除本次新建的第一个合成版本，重试/实际prune/read-data检查/剩余版本恢复均通过。业务写入经旧已验证Go文件RPC、源owner停止后再备份；独立-audit核对操作/集合/新前缀，不计另一实验。原所有仓库/卷/旧快照保留，最后故意未归属合成版本保留，不复用该污染夹具仓库作部署。外部模型0。
+- 收尾-owned-final-checks核对语法/diff、业务/维护Pod及10880/18090清空，4个生成存储凭据在19份本轮文件无匹配；4次helper非零是预期拒绝，未发生未预期失败。构建缓存/旧镜像、新仓库owner-binding、Secret及所有剩余数据保留。
+- **第一项下一步**：把该helper接入可信Go持久全局GC屏障与管理员专属入口、唯一控制目录绑定和PREPARED/FORGOTTEN协调器，再做引用保护/中断/锁冲突端到端真实验收；组件直接管理员Pod/主动停止源写入者，不是完整管理协议。性能流量、统一restic入口、十项最终审计仍待完成，Goal active。文档48 §8为本批续作入口。
+
+### 2026-10-18：引用保护、只读预览与遗忘控制协议
+
+- 本批有效实现12c8042（起点0a1d640），codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实部分失败、282项完整回归和PR为进展；本轮推进受控清理所需本地控制层。CheckpointLedger新增同JSONL的pin与forget事件，按crypto ID+完整snapshot聚合所有逻辑别名/检查点引用，保护分支头、保留恢复源和显式pin；保存/恢复/清理进行中、FAILED带data及坏Session引用阻止清理。
+- 管理预览返回稳定内容SHA，prepare_forget重新核查同计划并fsync整组PREPARED；先停止文件恢复资格再允许未来后端执行，同ID幂等、改绑定/过期拒绝。未知结果保持PREPARED，重建后仍拒绝恢复/新保存；FORGOTTEN保留原COMMITTED历史及节点树，按旧node选恢复点过滤不可用项。complete_forget当前仅合成测试使用，没有HTTP/CLI apply、实际后端删除或prune。
+- 新checkpoint_admin固定preview/pin/unpin；同目录agentd文件锁占用拒绝，不自动建目录、不调用外部服务。DurableJournal新增只读模式，不chmod/追加/修断尾，保持排他锁；写入默认语义保留。初批相关42/42、6.612秒通过，后补3项共享组/坏事件/未提交别名测试，最终完整Python292/292、335.307秒通过phase9-v2-retention-full-python-tests.txt；FORGOTTEN为合成控制验证，不是实际删除成绩。
+- 实际retained-preview已通过：此前真实两分支控制目录的9份日志/引用文件hash、ctime、mode完全不变；8个快照组4组保护、4组仅本地引用候选，含恢复来源保护。是实际离线CLI与旧控制数据兼容证据，不是新的存储服务删除验收。收尾-final-checks再次核对9份文件不变、语法/diff、3个生成存储凭据在13份本轮文件无匹配。未启动新Pod，原目录/快照/卷/Secret和所有数据保留，外部模型0。文档48为当前清理续作入口。
+- **第一项下一步**：可信Go固定forget/prune与跨维护操作串行屏障、管理协调器及新专用合成仓库真实清理/恢复/锁冲突验收；再做性能流量、统一restic入口与完整V2矩阵。不得拿控制层方法或eligible候选代替删除授权/后端证明。Goal active。
+
+### 2026-10-18：真实restic部分不可读与孤立快照验证
+
+- 本批有效实现29c6960（起点fc937a4），codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实锁实验/回归/提交/PR为进展；本轮补V2-05最后的部分文件失败。新PartialBackup管理夹具只触碰本次新UUID工作区合成report.md，复用固定镜像/Go/同步提交协议；新增固定partial-file模式，不扩大Agent工具权限。
+- 运行前available20,623MiB、swap0、根盘930GiB、业务/维护Pod空，原三容器运行。初轮phase9-v2-storage-partial-file.json失败保留：后端卷chmod未证明维护客户端读失败，实际三次COMMITTED、Task succeeded，不能计部分失败；原权限/服务恢复，快照和控制日志全保留。修正经可信kind节点既有NFS挂载SETATTR，验证挂载/PodUID/合成hash；在helper进入当前cp的真实snapshots子命令后chmod，再从维护Pod确认报告Permission denied而另一文件可读，才放行MinIO。不是调整生产提交规则或放开业务Pod权限。
+- 新目录-v2真实通过：内部restic退出3/helper1、实际runsc/v2镜像；第二点cp-625c... PREPARING→FAILED，无DATA_READY/恢复入口、原head/revision1不变；1attempt/2模型槽/3工具槽、无再次写/调模型。故障启动至failed6,858.55ms；观察exit3后、业务挂载释放前恢复原权限，独立150秒看门狗与finally后端兜底保留，MinIO恢复。旧快照dump报告与NFS hash一致；新孤立不完整快照8d8126...可读文件存在/报告缺失，明确保留不forget。
+- -v2-audit核对原始Go/Python19/27/5条checksum/seq、原loop deadline/timing/calls和真实停止→释放，不是第三次实验。夹具初轮13/13与客户端可见性修正13/13均0.013秒；后加两个恢复兜底断言，最终完整Python282/282、290.392秒通过phase9-v2-storage-final-full-python-tests.txt。-final-checks确认两轮文件均600/UID65532、Pod/监听清空、MinIO正常、语法/diff与3个生成存储凭据在15份本轮文件无匹配。storage-failure-matrix汇总三个真实存储场景、排除首轮未触发不可读失败夹具，不计新实验/完整验收。文档47 §17记录命令、失败/修正、源码来源、角色权限与数据保留边界。
+- **第一项下一步**：受控清理预览/引用保护/forget-prune，固定条件V1/V2性能流量、统一restic入口与完整十项证据审计/回归。三个真实存储异常分开保留；V2完整Goal active，不能因V2-05子场景齐备宣称整体完成。
+
+### 2026-10-18：真实restic排他仓库锁冲突通过
+
+- 本批有效实现214d1e5（起点640868a），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一目标轮有真实MinIO超时、提交与PR证据，属于进展；本轮推进剩余真实锁场景。存储夹具增加固定repository-lock模式，默认minio保留；生产Runtime/Go/镜像未改，不增加Agent工具或自由restic入口。
+- 新workspace_repository_lock管理夹具校验restic0.18.1二进制SHA、项目Secret/MinIO/loopback端口映射和来源crypto ID，真实check --read-data取得排他锁后只SIGSTOP自身进程；waitpid确认、独立150秒PID+starttime看门狗与finally正常CONT/INT退出，锁列表为空才算释放。桥接IP的管理侧无凭据健康探测不可达，改用同容器已发布localhost9002；不是修改业务NFS/MinIO架构。不会强制unlock或删除对象。
+- 资源检查available20,629MiB、swap0、根盘930GiB，业务/维护Pod空，原三容器运行。phase9-v2-storage-repository-lock.json真实通过：原cp-45fa... COMMITTED/revision1保持，第二点cp-d264... PREPARING→FAILED；Wait503、真实restic退出11/helper退出1，实际runsc/v2镜像一致；锁仍活跃时核查原恢复头/Session引用/报告hash、1attempt/2模型槽/2工具槽。持锁后备份启动至failed4,473.75ms，不含管理取锁时间；随后正常释放自己的锁，目录/快照/Secret/控制日志保留，外部模型0。
+- -audit报告校验三个原始日志19/24/5条checksum/seq，单次submitted及真实stopped证明→released顺序、原loop deadline/timing和calls保持；不是第二次服务实验。夹具8/8、0.005秒通过，最终相关协调器回归27/27、3.876秒通过-repository-lock-related-tests；未重跑旧267全量。-final-checks确认持锁进程退出、Pod/端口清空、MinIO正常、语法/diff与3个生成存储凭据在10份本轮文件无匹配。文档47 §16记录来源、命令、锁与Go屏障分工；失败实际发生在备份前快照查询阶段，不冒充上传中途失败。
+- **第一项下一步**：真实部分文件备份失败；受控清理预览/引用保护/forget-prune；固定条件V1/V2性能流量、统一restic入口、完整十项证据审计及回归。V2-05已覆盖真实MinIO不可用/默认Wait超时和真实排他锁，不把尚未执行的部分失败当完成；Goal active。
+
+### 2026-10-18：真实MinIO不可用与默认备份等待超时通过
+
+- 本批有效实现fadd414（起点2244d86），当前codex/workspace-restic-v2/草稿PR#3 OPEN、base=codex/workspace-nfs-v1，远端与本地已核对；用户docs32/docs34保留。上一轮仅回答流量问题、未推进代码，本轮按未完成存储故障继续。新增管理夹具workspace_storage_fault_demo，先保存真实COMMITTED，再在第二点PREPARING后暂停专属MinIO；固定容器名/Compose标签/不可变ID校验，独立150秒看门狗和finally恢复，不改生产Runtime/Go、时钟、调用预算或权限。
+- 运行前available20,647MiB、swap用量0、根盘930GiB、业务/维护Pod空；只有kind/NFS/专属MinIO运行。phase9-v2-storage-minio-outage.json真实通过：第二点wait默认90秒在90,001.83ms返回504，abort/finish200，暂停至failed93,483.74ms；原COMMITTED head/revision1保持、第二点FAILED、无pending、owner停止，2模型槽/2工具槽、1attempt、NFS报告hash一致；断言时MinIO仍paused，随后恢复健康HTTP200，Pod/端口清理，数据全部保留，外部模型0。
+- 故障中-live报告核实维护实际runsc/v2镜像/UID65532；独立-audit报告核对Go/Python三个控制日志19/24/5条checksum/seq、PREPARING→DATA_READY→COMMITTED及下一点PREPARING→FAILED顺序、最终Task/calls、原loop deadline/timing与owner停止。只读审计不是第二次服务成绩；本批没有再次恢复旧快照内容。文档47 §15记录命令、范围及学习讲法。
+- 本地夹具3/3、0.002秒与相关22/22、4.034秒通过；随后增强unpause后必须真实nonpaused才停止看门狗并增加第4项单测，最终23/23、3.988秒通过-final-related-tests。生产代码未变，不宣称旧267项覆盖新夹具。收尾-final-checks语法/diff、Pod/监听清理、MinIO状态通过；3个生成存储凭据在11份本轮文件无匹配。本批真实故障与仓库锁/部分文件失败/GC分开，V2-05只覆盖MinIO不可用及Wait超时，完整Goal active。
+- **第一项下一步**：真实仓库锁与部分文件失败，受控清理预览/引用保护/forget-prune、固定条件V1/V2性能流量、统一restic入口及完整V2矩阵。新夹具保留原始失败资料、所有卷/快照/控制目录；不强制unlock、不删除旧对象。
+
+### 2026-10-18：恢复窗口TCP故障与取消四场景通过
+
+- 本批有效实现5f17541（起点b321274），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。新增workspace_restore_fault_demo，仅自身子进程包装真实方法，固定started/files-ready/before-attached/attached/after-tool/cancel-ready；普通第二进程自动接续原Task，Go/storage不重启，默认旧进程入口不变。after-tool采用CAS写入与来源快照不同的新内容，验证最新文件和非零调用预算；取消用真实Start后的有界异步门，不伪造慢存储。
+- 资源检查：可用内存20,628MiB，swap使用0，根盘931GiB，项目业务/维护Pod与10880/18090监听均空。真实files-ready已通过phase9-v2-restore-cut-files-ready.json：OS确认SIGSTOP再SIGKILL(-9)，普通Agent原目录进入attempt2，原Task/request/目标、claim时钟/限额保留，2模型槽/1只读工具、restore submitted一次、hash/完整配对正确。kill→ready60,576.28ms、→核查76,505.82ms；外部模型0。
+- after-tool首轮原生Task实际succeeded、2attempt、原loop deadline/timing与已用调用逐项不变，但夹具把pre-loop claim deadline和loop deadline比较而AssertionError。原phase9-v2-restore-cut-after-tool.json及日志保留，Go/Pod正常清理；修正独立verify_phase_clocks并加单测，未改变Runtime/时钟/预算，新目录-v2重跑通过：旧loop起点/deadline/timing和旧调用逐项不变，2模型/1次CAS写，attempt2新业务UID不同、恢复submitted一次，NFS新hash81dafd...未退回来源；kill→ready57,122.93ms、→核查68,486.01ms。
+- 本地夹具首轮21/21、3.807秒与下一轮22/22、3.531秒通过；时钟修复后完整267/267、298.700秒通过phase9-v2-restore-fault-latest-full-python-tests.txt；此前完整266/266、291.314秒保留，不冒称含后改动。文档47 §14记录命令/故障范围/失败原因。目录、快照、卷、Secret和原控制日志保留；Goal active。
+- 真实cancel-ready首轮失败：API一度interrupted、Go清理503，停止未确认时未继续认领/模型；finally可信对账后Task cancelled、calls空、Pod清空，不把清理当验收通过。首轮唯一API原因未捕获；复核补强Go已停止维护Pod的finalizer CAS，重新核对固定UID/Spec/RV，最多3次；持续失败/UID替换保持冻结，阶段日志不含秘密。4个合成子场景及sandbox/API race通过；初版测试UID/string比较编译失败保留，修正后通过。新独立Go二进制.cache/workspace-sandboxd-restore-cleanup已构建，旧版本保留；cancel-ready-v2真实通过：HTTP取消后2,503.38ms，1attempt/calls空/无业务Pod，目标GoClaim409、默认原分支节点正确；本轮无CAS重试日志，不能归因首轮唯一原因。Go全项目通过。
+- before-attached真实通过：Session已选旧节点但ATTACHED前强杀，普通Agent原目录attempt2完成绑定；restore只提交一次、状态/父链/hash一致，kill→ready54,866.48ms、→核查71,379.09ms。四场景严格原始日志审计采用phase9-v2-restore-fault-four-case-audit-v2.json；初稿无效节点比较被严格COMMITTED源节点相等验证替代，原件保留，不计第五次服务成绩。最终业务/维护Pod与端口均空，仅原三容器运行，数据全保留。
+- **第一项下一步**：started/attached独立切点未执行；下一步推进存储异常/仓库锁、引用清理、性能和统一入口/完整矩阵。不得把已实现的六阶段都填成通过。
+
+
+### 2026-10-18：Task/API历史分支接线与真实两分支通过
+
+- 本批有效实现f0930f5（起点82a6b2d），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未动。RestoreCoordinator/TaskStore/main新增明确checkpoint+UUIDv4请求接口及状态查询；旧node branch在restic模式找唯一COMMITTED版本，off/V1仍拒绝历史文件恢复。先固定来源引用和queued Task以接受取消，Worker再恢复/验证/FILES_READY/ATTACHED，之后才允许Runner认领业务Pod/调用模型。Session有未完成Task时拒绝切换路线。
+- 同Task原claim/loop时钟和预算保留，恢复整段90秒且不超过原deadline；重启复用原job/目标、先核查旧执行者，未知停止阻止新attempt；ATTACHED后沿最新NFS继续，不重新restore覆盖新文件。来源已RESERVED但Task缺失启动补建原ID；后续状态缺原Task拒绝。取消和ATTACHED短锁排序，启动queued投影有旧活跃attempt时先显示cancelling，不提前终态。
+- phase9-v2-restore-branches-component.json真实2场景通过（69,547.90ms）：实际Agent ASGI处理器/TaskStore/Runner→真实Go TCP/gVisor/NFS/restic/MinIO，从同一旧点创建两条独立路线；第一条新增branch-only文件，第二条目录及精确Session父链没有兄弟内容。原Task账本/来源分支head/原控制文件hash不变，首份parent=来源、revision1，最终head分别3/2；新模型槽3/2、工具槽2/1，全部固定Replay、外部模型0。维护实际runsc、业务镜像/gVisor启动与NFS hash核对；不是Agent TCP/SIGKILL/GC实验。
+- 独立Go/Python原始控制日志checksum/seq及proof→release→claim顺序审计通过phase9-v2-restore-branches-audit.json，不计为第三个服务成绩。实验后两命名空间无Pod，10880/18090无监听，仅kind/NFS/专属MinIO运行；目录/快照/卷/Secret/日志保留。运行前内存可用20,696MiB、swap使用0、根盘931GiB。
+- 初轮定向52/52、10.589秒及下一批55/55、11.551秒通过；后来增加节点歧义/最新文件恢复和启动取消缓存修复，完整Python258/258、290.382秒通过phase9-v2-restore-store-full-python-tests.txt（含当时9项恢复Task用例）；后加启动取消缓存修复与第10项用例由最新定向58/58、12.618秒覆盖phase9-v2-restore-store-latest-tests.txt，不冒称258包含后改动。统一入口restic维护镜像固定改为v2，shell语法与完整启动验收分开；细节见文档47 §13。
+- 收尾补失败路由：未ATTACHED/失败恢复Task不成为默认resume工作区；默认上下文和Session查询按最后可用Task的持久完整节点选择，避免Session已选旧节点但ATTACHED前失败时把旧上下文与原分支最新文件混用。新增窗口测试最终59/59、12.697秒通过phase9-v2-restore-store-routing-tests.txt；最终完整Python260/260、288.855秒通过phase9-v2-restore-store-routing-full-python-tests.txt，覆盖最终代码。真实两分支报告不冒充此故障窗口的真实服务实验。
+- **第一项下一步**：接真实恢复窗口取消/进程切点、存储异常/仓库锁，然后管理清理预览/引用保护/受控forget-prune、性能和统一入口/完整矩阵。历史正常分支已验证，完整Goal active。
+
+
+### 2026-10-18：历史恢复来源与分支检查点关系控制模块
+
+- 本批有效实现c20cb06（起点2836588），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。本批新增同检查点JSONL的checkpoint.restore事件：RESERVED→FILES_READY→ATTACHED/FAILED，首次固定source和新branch/workspace/task，幂等与重建；不接远程动作或模型工具。
+- 分支头和保留恢复请求来源形成protected_checkpoints投影，失败也保留来源；尚无解除引用/forget-prune/管理清理，不冒称已完成清理验收。只有ATTACHED建立分支来源，首份检查点parent指向来源、revision从1起，核对来源Session父链/目标workspace/task。协调器保存无新head时读取持久来源，不改Task预算。
+- 首轮定向34/34、5.804秒通过phase9-v2-restore-reference-tests.txt；此后追加来源前移/非法完整日志等检查，最终35/35、6.079秒通过phase9-v2-restore-reference-final-tests.txt；完整Python249/249、289.899秒通过phase9-v2-restore-reference-full-python-tests.txt，已核对包含本批六项恢复控制测试；各批有重叠，不相加。全部为本地合成逻辑，不当真实Session分支或存储服务验收。 新解析器只读重建既有真实Agent切点控制日志通过phase9-v2-restore-reference-retained-compat.json：原COMMITTED点/分支head revision3一致，JSONL与Session引用字节不变；不是新增文件恢复。
+- **第一项下一步**：历史恢复协调器/TaskStore/API接线，严格先来源引用→新空目标可信恢复→FILES_READY→Task绑定→ATTACHED→入队，重启按原请求对账。真实取消/存储故障、清理、性能和完整V2十项仍待完成；Goal active。
+
+
+### 2026-10-18：恢复HTTP与Python客户端真实链路通过
+
+- 本批有效实现44b18c1（起点531b358），当前codex/workspace-restic-v2，草稿PR#3仍OPEN且base=codex/workspace-nfs-v1；依赖PR#2→PR#1、不合并。用户docs32/docs34不修改、不暂存。
+- 新受限restore GET与六种POST动作接入可信执行器；Agent Token、目标scope/完整来源固定、未知字段拒绝，客户端有界且不自动重试。不增加LLM工具或执行配置入口。finish先要求stopped，再核验真实结果，不将30秒独立清理窗口用于等待执行中的restore；取消请求context后的abort/fail单测通过。
+- phase9-v2-restore-http-component.json真实两场景通过：Python客户端→实际Go HTTP→runsc/NFS/restic/MinIO。正常新空目录文件hash/manifest及原业务镜像匹配；错误期望repo写入前失败，目录仍为空、成功自报和claim拒绝、清理后目标仍隔离。实际401/400/409、重复finish均核查。不是Session历史分支、模型调用或真实连接中断实验。
+- Go全项目通过；最后API/sandbox race通过phase9-v2-restore-http-final-v2-go-tests.txt，含最终断连context测试（早先full不冒称包含它）。Python客户端相关14/14、0.634秒通过；完整Python243/243、352.315秒通过phase9-v2-restore-http-full-python-tests.txt，包含本批客户端测试。证据见文档47 §11。外部模型0，原目录/卷/快照/Secret保留。
+- **第一项下一步**：实现精确Session父链、持久历史恢复与活动来源引用保护，再做真实存储异常、清理及性能。当前文件恢复HTTP已通，V2十项完整验收仍未完成，Goal active。
+
+
+### 2026-10-18：可信恢复执行器与真实组件通过
+
+- 本批有效实现a1eaab9已推送至草稿PR#3（基线7f2f911，依赖PR#2→PR#1，不合并），用户docs32/docs34保留。复用BackupRuntime维护Pod/终止证明，新增ReserveRestore/StartRestore/FinishRestore；没有restore HTTP/模型工具。helper四参数restore绑定完整repo crypto ID，config匹配在写入前；旧三参数管理组件保留兼容。
+- 增加持久核验证明：Wait结果核对后先verifyRestore fsync，stopped仍冻结；再清理Pod、completeRestore记录来源并放行。修复“清理Pod后、来源提交前”失去核验结果的窗口；已落盘证明允许缺Pod清理重试，无证明仍拒绝。不信调用方success自报，失败目标隔离保留。
+- 新维护镜像restic0.18.1-v2已从缓存固定基础/已校验restic构建并载入kind，v1与业务runtime-v1.5保留。Docker inspect Id=sha256:0d07dc6898e243106416570c005bd094ef86dec618cd57ef2c25677351468705，实际CRI imageID=sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58，类型分别记录，见文档47 §10。
+- 真实phase9-v2-restore-runtime-component.json通过：从此前真实合成COMMITTED快照恢复到新空NFS目录，manifest/完整ID/业务imageID核对；新业务Pod读报告与NFS服务端hash一致，维护/业务CRI均runsc。错误期望仓库ID在写入前拒绝，目标仍为空、claim拒绝，清理后隔离保留。不是Secret轮换/历史会话分支/真实模型实验。
+- 原控制目录-reconcile已验证幂等，日志hash不变，report与audit单列，不记作新故障成绩。对账入口首次编译误用List、修正为Records后构建通过。新组件失败输出仅记录stage，不输出raw Secret/CRI env；仅操作自己保留的native UUID目录。
+- 新Runtime4项顶层（含三个身份不匹配子场景）、helper契约1项及原控制模块回归，helper/sandbox/API初始及最终race通过，Go全项目最终phase9-v2-restore-runtime-final-full-go-tests.txt通过。本批Python生产代码未改，未重跑全量，不冒称旧239项覆盖本批。资源可用内存20,680MiB、swap使用0、根盘931GiB；实验后两项目namespace无Pod，仅kind/NFS/专属MinIO运行，所有目录/快照/卷/Secret/日志保留，外部模型0。
+- **第一项下一步**：受限restore HTTP/客户端，并接Session精确父链与历史分支管理；完整COMMITTED来源、目标新branch/workspace、原Task调用审计/预算/取消不可回滚，活动恢复源先做引用保护。然后真实存储异常/仓库锁、受控forget/prune与性能。当前仅可信文件恢复组件通过，Python会话分支仍未实现；Goal active。
+
+### 2026-10-18：六个提交切点已验证；恢复目标控制模块已测试
+
+- 本批有效实现cb4ce37已推送至草稿PR#3（起点c70251d，依赖PR#2→PR#1，不合并），用户docs32/docs34未暂存。已核对项目仅kind/NFS/专属MinIO，业务/维护Pod空闲，可用内存约20.7GiB/swap用量0/根盘931GiB。
+- preparing和before-commit两轮真实SIGKILL均通过，原始报告phase9-v2-agent-cut-preparing.json、-before-commit.json；前者PREPARING→FAILED，后者DATA_READY→FAILED，最终head均revision2；原Task/预算/截止时间、文件hash及工具配对继续核验。没有更换Go服务二进制。
+- 审计发现仍需“备份已成功、DATA_READY未写入”的即时切点，新增before-data-ready管理夹具包装及测试，已真实通过phase9-v2-agent-cut-before-data-ready.json：备份结果完整但Python点仍为PREPARING/data=null；重启后FAILED、最终revision2，kill→API ready54,865.64ms、→核查72,153.67ms。父进程仅通过原job Wait只读核对实际备份结果，不启动新备份，不将快照自动当成恢复点；外部模型0。不能因为其他五个切点通过就提前勾选完整协议。
+- 新Go RestoreSource/目标隔离/恢复来源固定逻辑：专用新空目标的metadata预留、失败未核验目标禁止认领、全局维护可释放给其他工作区；成功路径先写restoredFrom再释放verified屏障，中间重开仍冻结；认领固定业务imageRef/实际imageID。保留旧零值JSON格式与旧日志读取，不修改旧目录。尚未接可信restic恢复执行器/HTTP/分支，纯逻辑测试不冒称真实恢复。
+- sandbox/API本地及race通过，最终追加来源发布中间窗口后race再次通过；Go全项目通过phase9-v2-restore-control-full-go-tests.txt。新模块5项测试为合成身份/状态机；既往Python239项不冒充本批夹具更改覆盖，最新Python定向19/19、3.617s通过phase9-v2-joint-six-cut-tests.txt。文档47 §9记录能力边界。
+- 六个实际切点报告及预算/调用/恢复头只读复核汇总phase9-v2-joint-six-cut-summary.json已保存，所有报告通过，业务/维护Pod与10880/18090监听均为空，仅kind/NFS/专属MinIO保留。**第一项下一步**：接可信restore执行器；必须在写入前核对仓库crypto身份、实际空目标，成功后核对snapshot/manifest和业务镜像，失败目标保持隔离。再接Session精确分支/引用保护、真实取消/存储故障和同条件性能。完整Goal active。
+
+### 2026-10-18：联合检查点进程切点（3个真实切点已验证）
+
+- 本批有效实现9a6e519（起点56285fc，推送至草稿PR#3，依赖PR#2→PR#1，不合并）；新增workspace_checkpoint_fault_demo及测试，复用workspace_process_demo.start_agent默认V1行为，显式restic模式才使用切点子进程。仅管理夹具包裹真实方法，不添加生产故障开关、不改账本/时钟、不使用外部模型。
+- 切点固定为reserved、preparing、data-ready、before-commit、committed；标记文件fsync/原子发布后SIGSTOP，父进程waitpid确认再SIGKILL(-9)，第二进程普通create_app原目录自动接续。Go不重启，本批不是Go崩溃或历史快照恢复证据。
+- 首个真实data-ready通过：phase9-v2-agent-cut-data-ready.json；原点DATA_READY拒绝恢复，重启后FAILED且原snapshot身份保留，最终head revision2；同Task/会话/分支/工作区、原deadline/limits/timing/provider不变，原调用表逐项保留、写/读各1次，2attempt旧owner均停止，Session前缀与NFS hash一致。实际维护CRI runsc；kill→API ready57,013.97ms、→最终核查73,746.66ms，含挂载盘启动/清理，不是生产RTO。
+- 首次夹具单测因Mock PID不是整数而打印JSON失败，原始29项1error保留；修正后29/29、7.051s通过。随后增加reserved测试与完整回归，结果单列，不能将旧29项冒称覆盖新用例。
+- committed已通过（原COMMITTED保留，最终revision3，kill→ready50,588.48ms、→核查66,022.02ms）；reserved-v2也通过（原Go屏障存在/Python记录始终无伪造，最终revision2，kill→ready55,176.11ms、→核查72,445.33ms）。首轮reserved仅端口预检EADDRINUSE即终止，未创建实验Task；当时唯一根因未证实，后续无监听者，probe支持REUSEADDR并用实际监听拒绝测试验证；原失败输出和preflight整理保留，新路径重跑。执行前资源可用内存约20,714MiB、swap用量0、根盘931GiB，项目业务/维护Pod空闲。当前运行时不覆盖输出、不重复启动；进程是否仍活由实际执行句柄/系统进程判断，不能凭本文判定停止。
+- 本批完整239/239、282.089s通过phase9-v2-joint-fault-full-tests.txt；端口probe后改动最终5/5、0.068s覆盖，中间4项报告保留，不冒称239项包含后改动。三个raw报告均有独立hash/一致性审计。业务/维护Pod已清理，仅kind/NFS/专属MinIO保留，工作区/快照/PV/PVC/控制日志/Secret未删，外部模型0。**第一项下一步**：补preparing/before-commit真实切点；再推进真实取消/MinIO故障、可信restore新空目录与镜像身份、历史分支、引用清理和同条件性能。V2十项完整验收尚未完成，Goal active；用户docs32/docs34不纳入。
+
+### 2026-10-18：Agent联合保存接线与最终诊断恢复
+
+- 本批实现fb426a7已提交并推送（前置有效HEAD d85aa2d），当前仍为codex/workspace-restic-v2/草稿PR#3，base为未合并V1 PR#2；后者依赖PR#1。用户docs32/docs34原有修改保留，不暂存。
+- 新CheckpointCoordinator按Reserve→Session引用/PREPARING→Start/Wait→DATA_READY→核对Go停止屏障/owner→短锁COMMITTED→Finish执行；Runner/Loop只挂完整工具组和已持久化最终诊断，初始化告警不备份。设置AGENTD_CHECKPOINT_MODE=restic选择，默认off；禁用后端在claim/模型调用前失败。main生命周期关闭检查点账本；统一shell入口已加模式和配置检查，但restic shell分支尚未整套执行。
+- 最终公开诊断独立于模型原文，保存在Runtime来源元数据+原Task ID的节点。Provider伪造标记被剥离；同Task最终备份中断接续可不重调模型，手动新Task仍真实进入Loop。恢复时及备份后复核60秒状态时效，过期追加历史诊断，最多一次额外检查点，原预算/deadline不变。独立128Ki字符结构化诊断持久化预算避免半个JSON，不扩大模型上下文或Session引用上限。
+- 最终备份窗口已接受的steer/follow-up与成功提交在同一接受锁排序；有未注入命令就同Task新attempt接续，不吞命令、不重放写入。仍受原额度、deadline及恢复次数上限，取消优先。
+- 三轮真实正常路径均成功：phase9-v2-agent-joint-checkpoint.json、-v2.json、-v3.json；最后一轮27,881.23ms，实际TaskStore/Runner/Go HTTP/gVisor/NFS/restic/专属MinIO，3个COMMITTED点、完整Session引用/父链/revision/snapshot及文件hash一致，3模型槽/2工具槽，维护Pod实际CRI均runsc；外部模型0。前两轮对应先前代码，第三轮覆盖最终时效修复。业务/维护Pod经Go清理，原生控制目录、工作区、PV/PVC、snapshot和Secret保留。
+- 回归分批：最初完整223/223；随后完整231/231、288.359s通过（启动后增加的预检/诊断预算/时效不冒称由它覆盖）；最新定向52/52、9.409s通过，含恢复过期、备份等待过期、Provider标记、手动新Task、late follow-up和大诊断。首次late-control命令误写不存在的test_runtime模块，原始FAILED留存；修正后33/33通过。最终代码完整回归235/235、295.378s通过，原文phase9-v2-agent-checkpoint-latest-full-tests.txt；本批还检查Python编译、shell语法、9份Markdown链接/围栏及diff，最终测试文件仅去掉末尾多余空行，无逻辑改动。
+- 环境再核对：Docker仅kind控制节点、项目NFS、专属MinIO运行；可用内存20,536MiB，swap总6,144MiB/已用0，Linux根盘约931GiB可用。NFS/MinIO地址仍172.23.0.3/.4，仅本次观察，后续重新核对。真实夹具使用.cache/workspace-sandboxd-v2，不覆盖旧Go二进制；使用既有专用仓库Secret名称，不输出凭据。
+- 流量分析写入文档46 §6：manifest前后各全读一次，restic去重不消除源扫描；当前配额64MiB/512项，单文件256KiB。本机容器网络不等于公网流量。V2同条件流量/性能尚未实测，不宣称提速。
+- **第一项下一步**：串行补真实V2进程切点/取消/MinIO故障及原预算对账；再实现可信restore屏障、新空NFS工作区与不可变镜像校验、精确历史分支、引用保护/清理预览/受控forget-prune，最后同条件V1/V2性能与十项完整验收。正常联合保存和Fake故障测试不能替代这些证据；Goal保持active。
+
+以下为历史批次恢复记录，遇到状态冲突以上述最新批次、实际代码和原始报告为准。
+
+- 当前有效实现提交c0697af（PR#3，承接8c1b967）。新增受限备份HTTP与Python客户端：Go启动三项完整配置才启用，默认V1关闭；Agent Token保护、Operator拒绝，动作仅reserve/start/wait/abort/finish，不接受镜像/仓库/argv。wait超时不清屏障，abort/finish独立清理；Python有界参数/结果且不自动重试，不注册模型工具。
+- 真实phase9-v2-backup-http-component.json通过，采用实际Server loopback HTTP＋Go可信执行器＋gVisor/NFS/restic/MinIO；注册表重开后Files/Claim仍拒绝，显式Finish后内容/hash一致，清理前actualRuntimeType=io.containerd.runsc.v1。Go API/配置/Runtime最终race与Go全项目通过；Python客户端/远程文件/检查点26/26、1.948秒（MockTransport）通过。不是Python Agent联合检查点或SIGKILL验收；原工作区/快照/Secret保留，模型调用0。
+
+- 当前有效实现提交6c14c68（PR#3，承接e8443ff）。新增CheckpointLedger与不可变SessionReferences：所选完整父链复制/hash/私有权限，PREPARING→DATA_READY→COMMITTED/FAILED，单条COMMITTED投影head/revision，幂等与边界ID查询、断尾/坏行检查。RecoveryLedger.commit_checkpoint与cancel共用短锁，核对原Task截止时间、节点、attempt和Go owner/generation/image，不修改预算。初始12项本地测试通过；完整Python214/214、285.135秒通过phase9-v2-checkpoint-full-regression-tests.txt，含线程取消/提交顺序与兄弟分支检查。随后镜像格式/作用域硬化由最终34项定向（2.140秒）覆盖，phase9-v2-checkpoint-final-boundary-tests.txt；不将214冒称包含后改动或把测试数相加。
+- 引用发布最终修正：初稿link发布在崩溃后可能残留第二个硬链接导致拒读，改为单写入者下fsync临时文件→原子rename→fsync目录；目标已存在只验证，不用副本掩盖损坏。新增发布/目录fsync中断重试测试与相关回归35/35、2.401秒通过phase9-v2-checkpoint-publication-final-tests.txt；先前214/34批次不冒称含此后改动。
+- Go BackupRuntime新增Reserve：只fsync冻结、不创建Pod，再由后续协调器保存Session引用/PREPARING；sandbox/API race通过phase9-v2-checkpoint-reserve-go-tests.txt。新检查点模块尚未接HTTP/Runner，所有十项V2正式验收仍pending；本批未新增真实存储/外部模型调用。
+
+- 当前有效实现提交1448c82（V2草稿PR#3；以下说明承接e74aacc）。接入BackupRuntime可信备份执行器：维护配置持久固定，submitted先落盘、精确Pod/UID/spec/finalizer核对、终止+节点健康证明、Wait保留屏障、Abort有界、Finish幂等；源备份仍只读，尚未接restore/HTTP/Agent。执行器7项顶层逻辑测试（含子用例）、六包race及Go全项目通过；最后Finish幂等改动由sandbox/API race单列覆盖，不冒称先前全量包含后改动。
+- 实际维护执行器探测：首轮备份成功但即时读取失败，原失败与同job后续对账保留；第二轮通过但事后CRI已回收；第三轮phase9-v2-executor-component-v3.json整体成功且清理前实际runtimeType=io.containerd.runsc.v1。注册表重开后写/认领仍拒绝、等待结果后仍冻结、显式Finish后内容/hash一致，业务owner和维护Pod已正常清理。不是进程SIGKILL或Session联合提交；原数据/快照/Secret/卷保留，外部模型0。
+
+- V2分支已从9c91c9b创建，90d9c22已提交并推送、草稿[PR #3](https://github.com/chx739/sandboxd/pull/3)已创建并附到当前聊天；base=codex/workspace-nfs-v1，依赖PR#2→PR#1，不合并。该批模块：固定restic安装、只读manifest、受限backuphelper/CLI、gVisor维护Pod构造/定向MinIO网络策略、独立MinIO Compose与组件夹具。学习/后续持久屏障约束见文档47；尚未接Agent自动检查点，不将内存mutex当崩溃后屏障。
+- restic0.18.1官方资产约10.14MB下载并校验，phase9-v2-restic-tool.json；新sandboxd-restic:0.18.1-v1已构建/载入kind，不覆盖业务runtime-v1.5。相关Go/race通过phase9-v2-backup-foundation-tests.txt。专属MinIO项目sandboxd-workspace-backup已启动，localhost9002，独立卷/私有本机凭据，不触碰RAG MinIO。当前是隔离本机HTTP，TLS未测。
+- 三轮真实组件探测均已终止：首轮缺TypeMeta；第二轮备份/首恢复实际成功但夹具读取省略的readOnly=false字段失败，两份失败报告保留；修复后phase9-v2-backup-component-v3.json整体通过，8个操作均真实runsc，两个文件版本恢复至两个新空目录、重复后端请求复用snapshot。业务/维护Pod已清理，源目录/快照/Secret/卷保留。后端通过不等于V2联合检查点完成，十项正式验收仍pending。
+- 本轮新增Go持久屏障模块：workspace.barrier与owner共用Go独占JSONL，reserved→submitted→identified→stopped→released，Files/Claim在重启后仍拒绝；提交结果不明、错误UID/旧CAS不能解除，停止业务owner仍可执行。8项逻辑测试与六包race通过phase9-v2-barrier-regression-tests.txt；全项目Go测试通过phase9-v2-go-full-regression-tests.txt；尚未接维护执行器，不把逻辑测试称为真实屏障验收。旧V1日志兼容；出现V2事件的控制目录不能再交给旧V1二进制写入，旧解析器将拒绝未知事件。
 - 规格：[43](43-工作区持久化与恢复实施约束-NFS-v1与restic-MinIO-v2.md)；完整目标：[44](44-工作区恢复目标模式Prompt.md)。先 V1 最新状态、再 V2 restic/MinIO 历史快照，不改 NFS 运行主路径。
 - 已检查：PR #1 为 OPEN，HEAD=281111d，base=main。新建 codex/workspace-nfs-v1；用户原有 docs32/docs34 修改仍未暂存、不纳入新提交。
 - 本轮环境与旧快照不同：Ubuntu 22.04.5、可用内存约 22 GiB、swap=0、Linux 根盘约 935 GiB 可用。Python3.12/uv 存在；系统 Go 为 1.25.1，项目要求 1.26.5，需使用隔离工具链与缓存。
@@ -69,7 +295,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 - 固定负载serial基线9/9通过、267次读写，phase9-nfs-fixed-workload-serial.json；NFS容器收发合计3462282字节（约3.30MiB，含挂载/元数据/协议，非公网）。文件读写P50约199–201ms，Go/NFS/控制器端点CPU与内存已记录，不是峰值。首次并行探索另存phase9-nfs-fixed-workload.json，不混算。学习/硬件/数据/完整表见文档46。
 - 最终全量Python201/201、288.476秒通过，phase9-python-benchmark-final-regression-tests.txt；此前200/280.764秒与负载夹具3项原文保留，不相加。统一joint入口3/3通过，phase9-entry-joint-replay.json，实际Milvus2.5.10/OpenSearch+缓存E5/BGE，脚本模型/Fake路由与生命周期；4个已有服务临时启动后全部停回原状态，ES未启动，未导入/重建索引，外部模型0。
 - 当前V1的14项验收及迁移/安装启动/小规模性能有证据，M3可交付审查；verify all本批次未整套重跑，首次联网安装未重复，现有各场景原始证据与缓存安装分开。V2未开始，完整Goal保持active。上一有效HEAD=cd871aa，仍更新draft PR#2（依赖PR#1），不合并；用户docs32/docs34未纳入。
-- 第一项下一步：核对PR#2远端最新HEAD与本批次交付，然后从其最新HEAD另开codex/workspace-restic-v2依赖分支；检查固定restic版本/校验和与专属MinIO仓库、可信执行器和联合检查点。V2继续在NFS运行，全部10项尚未执行，完整Goal active。
+- 历史下一步（本批正常保存已接线）：日志、Session引用、受限HTTP及客户端已实现，接完整边界自动保存协调器与Runner/Loop可选入口，再接取消/启动对账；必须先冻结再复制Session/PREPARING，保持原Task预算；只挂完整工具组和已持久化的最终诊断，跳过Loop初始化告警边界，最终公开安全降级诊断与模型原文分开保留。随后接restore新空工作区屏障、历史分支与引用保护。V2分支已创建，不重复M0或重跑已终止组件。V2继续在NFS运行，十项完整验收均pending，完整Goal active。
 - 环境恢复：kind-sandboxd/Calico/gVisor和sandboxd-workspace-nfs-1正在运行；NFS172.23.0.3（后续核对不能写死）。M0合成Pod sandbox-workspace-probe已正常删除，PVC/PV及NFS文件保留，删除后服务端hash仍匹配；手动节点根挂载/var/lib/sandboxd-nfs-probe已卸载，不删除NFS数据卷。
 - Go镜像最新sandboxd-workspace:runtime-v1.5已载入kind，旧runtime-v1～v1.4保留，均含文件与目录初始化helper。Go组件元数据持久于 /home/hx/.local/share/sandboxd/workspace-runtime-smoke/workspaces.jsonl，各轮组件的业务/维护Pod均已正常清理，PV/PVC与文件保留；后续启动真正服务用独立workspace-control目录，不能把合成元数据误当业务任务。
 - 已落实接线不变量：原claim/loop时间锚点持久化，不重新发190/120秒；没收到claim响应不等于从未发送，Go确认旧owner停止后才记Python owner_stopped。Session按task+attempt组织增量，旧记录不改写。部署默认后端已迁移，SIGKILL与预算已有后续真实证据；旧文件显式迁移与当前状态见本节后续记录/文档45 §7，原始数据保留。

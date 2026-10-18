@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-18T03:37:19.530012+00:00",
+  "baseCommit": "ed8f8f2095b230ed88d604c6e69a7f4eedfd4617",
+  "previousGoalTurnClassification": "progress: durable Go cleanup and Operator API implemented, tested and pushed; this turn adds Python coordinator and local ownership",
+  "scope": "Synthetic Python control journals, Fake maintenance backend and MockTransport only; no actual storage/Go HTTP/SIGKILL acceptance. Fixed local controller catalogue patched to per-test /tmp directory.",
+  "externalModelCalls": 0,
+  "newServiceStarts": 0,
+  "actualStorageOperations": 0,
+  "formalV2AcceptanceComplete": false,
+  "regressionScope": "Full303 covers core production changes; subsequent service-start/readonly-preview/close-failure tests and nested-finally adjustment covered by final38. Overlapping runs are not added.",
+  "note": "A documentation orchestration expression had a syntax error before evaluation, retried successfully; no test or source state changed in that failed tool evaluation.",
+  "sources": [
+    {
+      "path": "agentd/app/runtime/maintenance.py",
+      "sha256": "5122bcc8cd5925b9e7fa072adf70eff509cbe815e1378339d9ecafeebfd4dfcc"
+    },
+    {
+      "path": "agentd/checkpoint_cleanup.py",
+      "sha256": "ef4b89b62360e96ca96652b33edfec0383a9f91d7f239f5cacd2d9359f8c1f19"
+    },
+    {
+      "path": "agentd/app/runtime/checkpoints.py",
+      "sha256": "ce20af25d48a661b2fde1a1716e66a878ba0344f412ffe53a069e3c207ae101d"
+    },
+    {
+      "path": "agentd/app/runtime/checkpoint_coordinator.py",
+      "sha256": "7cc2bbe0f064da4e52e8bd6ef17994a909e4c77a754cfb659fa917a4b26f2112"
+    },
+    {
+      "path": "agentd/app/main.py",
+      "sha256": "129d22050dce204abeedb24e3a27e58910015e769e3fe5ed56d538e9c5680326"
+    },
+    {
+      "path": "agentd/checkpoint_admin.py",
+      "sha256": "a334d8a1e7418e09937632641dd24f2281c891f54c229bb3c45856df9688c302"
+    },
+    {
+      "path": "agentd/tests/test_checkpoint_cleanup.py",
+      "sha256": "d5dfec34953863707b8eb57b449c21008f2213859033de2d026589b23b7b3c74"
+    }
+  ],
+  "reports": [
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-targeted-tests.txt",
+      "sha256": "a77af7191913724dccb18503fbbc84d0bfb0b86b00152b4be72216cc8c00bb19",
+      "tests": 34,
+      "seconds": 6.818
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-final-v2-targeted-tests.txt",
+      "sha256": "6682e4c4bdf9706ac6788c22172c777a2e012df62b56c8054d1472cf2409974f",
+      "tests": 38,
+      "seconds": 7.624
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-full-python-tests.txt",
+      "sha256": "fb6d985a5fb9472eb9e78ba0918e6381ad8ad11cf44f39b263da4e87626c7a67",
+      "tests": 303,
+      "seconds": 312.634
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-coordinator-initial-tests.txt",
+      "sha256": "0fb5f2ddda1bf2b7b525df107d45bd9ba843f78c12e23351964c600d7bab2f1d",
+      "tests": 18,
+      "seconds": 2.696
+    }
+  ],
+  "remaining": [
+    "New dedicated clean repository actual joint cleanup/reference/lock/restart/retained restore acceptance",
+    "Fixed-workload performance and traffic",
+    "Unified V2 startup",
+    "Complete ten-item V2 requirement audit"
+  ]
+}

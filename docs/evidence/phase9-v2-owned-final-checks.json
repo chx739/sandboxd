@@ -1,0 +1,15 @@
+{
+  "mode": "owned-helper-component-post-checks",
+  "passed": true,
+  "syntaxValid": true,
+  "gitDiffCheck": true,
+  "generatedStorageCredentialValuesChecked": 4,
+  "filesScanned": 19,
+  "credentialMatches": 0,
+  "podCounts": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "agentAndGoPortsIdle": true,
+  "scope": "New synthetic backend component only; no Go durable GC or Operator/Session integration claim"
+}

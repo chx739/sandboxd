@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "mode": "real-python-client-go-http-gvisor-nfs-restic-minio-restore",
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-restore-http/4b1a1033d5344b138cd4f75791456824",
+  "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+  "cases": [
+    {
+      "kind": "normal",
+      "passed": true,
+      "target": {
+        "workspaceId": "workspace-0588bce8a3d94481b46fd897d0b13dab",
+        "sessionId": "session-eba92e76c2add765",
+        "branchId": "branch-5b1ba03d96fd4dfe98fff64013c2a3e0"
+      },
+      "maintenance": {
+        "podUid": "332bec51-af67-4524-8432-218472d07378",
+        "podName": "workspace-backup-restore-edeef8aeb2d14e118ae2e1950d53f7d5",
+        "actualRuntimeType": "io.containerd.runsc.v1",
+        "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58"
+      },
+      "business": {
+        "workspaceId": "workspace-0588bce8a3d94481b46fd897d0b13dab",
+        "attemptId": "attempt-a",
+        "podUid": "2317c9e9-2f67-4f08-bd61-ec034c90da6d",
+        "sandboxId": "92aeb8f323323637",
+        "runtimeClass": "gvisor",
+        "runAsUser": 65532,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "nfsMount": {
+          "source": "172.23.0.3:/workspaces/workspace-0588bce8a3d94481b46fd897d0b13dab",
+          "fstype": "nfs4",
+          "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+        },
+        "gvisorStartup": "[   0.000000] Starting gVisor..."
+      },
+      "fileSha256": "c267c431c06f7f079e7547e0e6b7360a25a023596939e1fe6c72cd69d65c29cd",
+      "restoreResult": {
+        "snapshotId": "bc7d29c7a043a243ede7d33ccade6758d341dcce9c357f3905663da843e2145f",
+        "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+        "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+        "maintenanceImageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+        "podUid": "332bec51-af67-4524-8432-218472d07378"
+      },
+      "finishIdempotent": true
+    },
+    {
+      "kind": "wrong-expected-repository",
+      "passed": true,
+      "target": {
+        "workspaceId": "workspace-12bef63ff7d54204af71c4e408981841",
+        "sessionId": "session-eba92e76c2add765",
+        "branchId": "branch-bc78e5c644b443c6ac3e6d6e2131bf05"
+      },
+      "maintenance": {
+        "podUid": "c0b15379-d8c0-42be-b218-11df77de0725",
+        "podName": "workspace-backup-restore-f5ab9906b4e5433395c19b3a62638d90",
+        "actualRuntimeType": "io.containerd.runsc.v1",
+        "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58"
+      },
+      "targetEmpty": true,
+      "claimRejected": true,
+      "callerSuccessRejected": true
+    }
+  ],
+  "binarySha256": "4b2ca6b93e84ee6dbc8a1bed15a4a28a0e6ca37d7bea20e821782ff74fb67fcb",
+  "scope": "actual limited HTTP/client file restore only; no Session branch, model or GC",
+  "anonymousRejected": true
+}

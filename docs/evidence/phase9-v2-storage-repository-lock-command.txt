@@ -1,0 +1,1 @@
+{"stage": "storage-fault-after-first-commit", "checkpointId": "cp-d26468d97cea4b02a7c4b9766d34242f", "faultType": "RepositoryLock"}

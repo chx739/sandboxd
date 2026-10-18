@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "mode": "independent-owned-joint-evidence-and-live-inventory-audit",
+  "sourceReport": "docs/evidence/phase9-v2-owned-gc-joint.json",
+  "sourceReportSha256": "081265cebee261bff177ceb1a67ba6040f4eb580f5664b0cf8bd8c7be461b17f",
+  "fixtureSha256": "a26ddaa6adeaae374264d6b301cd60e76479745f8c1927063cbfcc8e56081d98",
+  "auditSha256": "c21f91bb3013fef536b254cf54564978044096e664e4b9a67c0cc070247a95dd",
+  "journalRecords": {
+    "pythonCheckpoints": 30,
+    "goControl": 85,
+    "tasks": 42
+  },
+  "protocol": [
+    {
+      "gcId": "gc-54e9ec543dba4281b2309855ed5c1531",
+      "attempts": 1,
+      "jobIds": [
+        "cleanup-54e9ec543dba4281b2309855ed5c1531"
+      ],
+      "snapshotId": "4fa273aa6a95a547690071578cbc013c1a2309cc2dd7a64922ecdd779f2504f8",
+      "preparedBeforeSubmitAndForgottenBeforeRelease": true
+    },
+    {
+      "gcId": "gc-b58a49816767472b9688020dee46ded6",
+      "attempts": 2,
+      "jobIds": [
+        "cleanup-b58a49816767472b9688020dee46ded6",
+        "gcjob-406f3ec130f8460da97560af7358209a"
+      ],
+      "snapshotId": "39d27a09a23b3030f9817af4879087f5799aa94534a88347dcb8492453ad9189",
+      "preparedBeforeSubmitAndForgottenBeforeRelease": true
+    }
+  ],
+  "nativeRepositoryCryptoIdMatches": true,
+  "freshDedicatedPrefixVerified": true,
+  "actualRetainedSnapshotIds": [
+    "25f9c080deae190abace6751bdbe3d908e6584248c101d5b2cf7f71483a294d4",
+    "397cdae80b0e3cd8ae4d8ae2e61cc73079cd49498bddd6fcf3f7be85895376f6",
+    "9cd729707a99616b2c961bd89c0d1af9ef1ebcd4aed931f6dc3f59e7e956c23c",
+    "b15c0f08238ef9f80eb91df325c5b66a4173cf0085bb9e52a3b4c3ae5847acae"
+  ],
+  "readDataCheck": {
+    "exitCode": 0,
+    "outputBytes": 194,
+    "outputSha256": "595c4fe14490dddbf293f802876fd4ea2cfad13632f4af2bd54a77e9f5bff53b"
+  },
+  "destructiveCalls": 0,
+  "externalModelCalls": 0,
+  "scope": "Audit of the same actual joint experiment plus native inventory/read-data check; not a second recovery experiment or performance benchmark."
+}

@@ -22,6 +22,10 @@ from .plugins import build_builtin_registry
 from .plugins.knowledge import KnowledgePlugin
 from .plugins.logs import LogsPlugin
 from .router import JevChoiceSource, ModelPrice, ModelRouter
+from .runtime.checkpoint_coordinator import CheckpointCoordinator
+from .runtime.checkpoints import CheckpointLedger, CheckpointConflict
+from .runtime.durable import JournalCorrupt
+from .runtime.session_refs import SessionReferences
 from .store import (
     ControlKind,
     QueueFullError,
@@ -102,6 +106,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     logs_plugin = LogsPlugin(cfg.logs_file) if cfg.logs_file is not None else None
     plugins = build_builtin_registry(memory_store, knowledge_plugin, logs_plugin)
+    if cfg.workspace_backend == "nfs" and cfg.recovery_dir is None:
+        raise ValueError("NFS mode requires a durable recovery directory")
+    if cfg.checkpoint_mode != "off" and (cfg.checkpoint_mode != "restic" or cfg.workspace_backend != "nfs"):
+        raise ValueError("joint checkpoint mode requires durable NFS")
+    store = TaskStore(cfg.trace_dir, recovery_dir=cfg.recovery_dir if cfg.workspace_backend == "nfs" else None)
+    checkpoints = None
+    checkpoint_ledger = None
+    try:
+        if cfg.checkpoint_mode == "restic":
+            refs = SessionReferences(cfg.recovery_dir / "checkpoints")
+            checkpoint_ledger = CheckpointLedger(cfg.recovery_dir / "checkpoints/checkpoints.jsonl",refs)
+            # 管理员清理中断时先拒绝启动Worker，保留原Task/预算供对账后自动接续。
+            checkpoint_ledger.assert_maintenance_idle()
+            checkpoints = CheckpointCoordinator(sandboxd,checkpoint_ledger,refs,cfg.checkpoint_repository_id)
+            store.configure_checkpoints(checkpoints)
+    except BaseException:
+        if checkpoint_ledger is not None:
+            checkpoint_ledger.close()
+        store.close()
+        raise
     runner = AgentRunner(
         prometheus,
         sandboxd,
@@ -111,10 +135,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         workspace_root=cfg.workspace_dir,
         memory_store=memory_store,
         model_router=model_router,
+        checkpoints=checkpoints,
     )
-    if cfg.workspace_backend == "nfs" and cfg.recovery_dir is None:
-        raise ValueError("NFS mode requires a durable recovery directory")
-    store = TaskStore(cfg.trace_dir, recovery_dir=cfg.recovery_dir if cfg.workspace_backend == "nfs" else None)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
@@ -127,6 +149,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 await worker
             except asyncio.CancelledError:
                 pass
+            if checkpoints is not None:
+                checkpoints.close()
             store.close()
             await prometheus.close()
             await sandboxd.close()
@@ -373,10 +397,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             task = await store.resume(session_id, node_id)
         except TaskNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
-        except (ValueError, TaskConflictError) as exc:
+        except (ValueError, TaskConflictError, CheckpointConflict) as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         except QueueFullError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except (OSError, JournalCorrupt) as exc:
+            raise HTTPException(status_code=409, detail="恢复来源缺失或校验失败") from exc
+        restore = store.restore_for_task(task.task_id)
         return JSONResponse(
             status_code=202,
             content={
@@ -384,6 +411,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "sessionId": task.session_id,
                 "status": task.status,
                 "branchedFrom": node_id,
+                **({"restoreId": restore["restoreId"], "checkpointId": restore["sourceCheckpointId"],
+                    "branchId": task.branch_id, "workspaceId": task.workspace_id} if restore is not None else {}),
             },
         )
 
@@ -394,5 +423,31 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/api/v1/sessions/{session_id}/branch/{node_id}", status_code=202)
     async def branch_session(session_id: str, node_id: str, request: Request) -> JSONResponse:
         return await start_session_branch(session_id, node_id, request)
+
+    @app.post("/api/v1/sessions/{session_id}/checkpoints/{checkpoint_id}/restore/{restore_id}", status_code=202)
+    async def restore_checkpoint(session_id: str, checkpoint_id: str, restore_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            task = await store.restore_checkpoint(session_id, checkpoint_id, restore_id)
+            progress = store.restore_progress(session_id, restore_id)
+        except QueueFullError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except (ValueError, TaskConflictError, CheckpointConflict) as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except (OSError, JournalCorrupt) as exc:
+            raise HTTPException(status_code=409, detail="恢复来源缺失或校验失败") from exc
+        return JSONResponse(status_code=202, content={"taskId": task.task_id, "sessionId": task.session_id,
+                    "branchId": task.branch_id, "workspaceId": task.workspace_id, "restoreId": restore_id,
+                    "status": task.status, "restoreStatus": progress["status"], "checkpointId": checkpoint_id})
+
+    @app.get("/api/v1/sessions/{session_id}/restores/{restore_id}")
+    async def get_restore(session_id: str, restore_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(store.restore_progress(session_id, restore_id))
+        except (TaskNotFoundError, CheckpointConflict) as exc:
+            raise HTTPException(status_code=404, detail="restore not found") from exc
+        except TaskConflictError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
 
     return app

@@ -1,0 +1,30 @@
+{
+  "mode": "independent-readonly-raw-journal-audit",
+  "passed": true,
+  "sourceReportSha256": "21280469b3bc6ffe7712603bccb19bc9e58740a5ea19d58dbd7d9f112fa5707c",
+  "journals": [
+    {
+      "path": "go-control/workspaces.jsonl",
+      "records": 19,
+      "sha256": "edc82251436df9e2fe57db6cc5008f9a1135ed9c5c9c845470687e930efa63e1",
+      "checksumAndSequenceValid": true
+    },
+    {
+      "path": "agent-control/tasks.jsonl",
+      "records": 24,
+      "sha256": "34bc9bf159d156c2369585c2a9cee633bd0d660246d7d6192f3d21a54bcf1f94",
+      "checksumAndSequenceValid": true
+    },
+    {
+      "path": "agent-control/checkpoints/checkpoints.jsonl",
+      "records": 5,
+      "sha256": "7d78aadd9322829e416cb2ae802ce1d85a13f9601193b06680b0fb05455b8a42",
+      "checksumAndSequenceValid": true
+    }
+  ],
+  "exactCheckpointTransitions": true,
+  "lastTaskFailedAndCallsPreserved": true,
+  "loopTimingAndDeadlineUnchanged": true,
+  "ownerStopConfirmed": true,
+  "scope": "same MinIO outage experiment; not a second service run"
+}
