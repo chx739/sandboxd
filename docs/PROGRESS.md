@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：owned helper与新专用仓库实际forget/prune组件通过
 
-- 起点d02c3fe，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮本地引用/预览、292回归及PR为进展；本轮增加可信Go helper的仓库归属与固定init-owned/backup-owned/forget/prune契约，管理Pod不挂业务NFS，未开放Agent API/模型工具，默认运行仍为v2镜像。
+- 本批有效实现9d50421（起点d02c3fe），codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮本地引用/预览、292回归及PR为进展；本轮增加可信Go helper的仓库归属与固定init-owned/backup-owned/forget/prune契约，管理Pod不挂业务NFS，未开放Agent API/模型工具，默认运行仍为v2镜像。
 - fresh init创建不可删除的owner marker snapshot，绑定controller UUID/repo crypto/marker完整ID；验证标记内容及全部快照归属，拒绝旧未标记/其他controller/歧义标签。forget只处理完整精确ID并核对剩余集合，缺失目标幂等确认；prune正常取restic锁、不unlock，操作后标记与快照集合不变。helper不是head/pin授权器，仍需控制层计划及管理员入口。
 - 固定0.18.1资产构建新v3镜像并载入kind，旧v1/v2保留；Docker inspect Id086857...、实际CRI0253fd...分列，构建输入hash见-owned-image-build。Go相关初轮通过，新增歧义标签/无业务卷测试后最终race(helper/sandbox/API)和Go全项目通过；Python生产代码未改，不用旧292冒充新组件执行成绩。
 - 资源available20,608MiB、swap0、根盘930GiB、业务/维护Pod空。phase9-v2-owned-cleanup-component.json真实通过：全新owned-cleanup/UUID前缀，16次实际runsc操作、4次预期拒绝（marker、错repo、错controller、未归属snapshot）；仅删除本次新建的第一个合成版本，重试/实际prune/read-data检查/剩余版本恢复均通过。业务写入经旧已验证Go文件RPC、源owner停止后再备份；独立-audit核对操作/集合/新前缀，不计另一实验。原所有仓库/卷/旧快照保留，最后故意未归属合成版本保留，不复用该污染夹具仓库作部署。外部模型0。
