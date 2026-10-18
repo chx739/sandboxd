@@ -508,7 +508,54 @@ agentd/.venv/bin/python -m agentd.workspace_restore_branch_demo \
 
 **第一项下一步**：增加真实恢复窗口取消/进程切点和存储异常/锁；再接引用保护驱动的管理预览与受控forget/prune、同条件性能、统一restic入口及完整矩阵。历史正常分支已通不等于所有故障已验证。
 
-## 14. 官方参考与版本
+## 14. 历史恢复窗口的真实Agent TCP故障实验
+
+`agentd.workspace_restore_fault_demo`仅在自己启动的第一个Agent子进程包装真实方法。固定阶段：started、files-ready、before-attached、attached、after-tool、cancel-ready。生产Runtime没有新增故障开关，旧进程演示默认启动命令保持不变。
+
+SIGKILL阶段先发布私有fsync标记，再SIGSTOP；父进程用waitpid确认OS已暂停，才向该Popen子进程发送SIGKILL并检查-9。第二进程是普通uvicorn/create_app，使用原控制目录自动找回同Task，不调用resume接口、不重新POST任务。Go、NFS和MinIO始终保持运行，不能把此实验说成Go进程崩溃或存储故障。
+
+cancel-ready阶段在真实Go Start后用夹具异步门等待，事件循环仍响应HTTP；父进程调用既有cancel API。门受60秒及原90秒/Task窗口限制；这是为了确定性复现并发取消的观测位置，不宣称自然发生了慢存储或网络故障。
+
+### 复现命令与输入
+
+前提同§13：项目服务、v2维护镜像、固定Go二进制、当前仓库中的真实COMMITTED来源报告；新环境先按§10生成`.cache/restore-source.json`。10880/18090须空闲，每次报告使用新路径；不要在并行进程中重用同一控制目录。
+
+```bash
+export GOMODCACHE=/tmp/sandboxd-workspace-go-mod GOCACHE=/tmp/sandboxd-workspace-go-build
+export PATH="$HOME/.local/bin:$PATH"
+go build -o .cache/workspace-sandboxd-restore-cleanup ./cmd/sandboxd
+agentd/.venv/bin/python -m agentd.workspace_restore_fault_demo \
+  --phase files-ready --source-report .cache/restore-source.json \
+  --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" \
+  --output .cache/restore-cut-files-ready-new.json
+# after-tool验证已有新文件/已用调用；cancel-ready验证真实HTTP取消。
+# started/before-attached/attached也是可选切点，有命令不等于已执行。
+```
+
+每次复制本夹具来源目录到新的原生UUID控制目录，原控制文件hash必须保持；不复制业务文件来冒充恢复。恢复和后续文件访问均走真实Go/gVisor/NFS/restic/专属MinIO。只读监测完整控制日志、校验checksum/seq，不抢活动Agent的写锁；维护CRI原始inspect含Secret环境，只保存runtimeType/UID/镜像等白名单。
+
+### 当前结果与分段时钟
+
+- `phase9-v2-restore-cut-files-ready.json`通过：FILES_READY后SIGKILL，原Task自动进入attempt2，原请求/目标不变，Go restore只submitted一次；调用槽2模型/1只读工具，文件hash匹配所选快照，完整消息调用/结果配对。kill→API ready60,576.28ms，→核查76,505.82ms，含Windows挂载盘Python启动和观测，不是生产RTO。
+- 首轮`phase9-v2-restore-cut-after-tool.json`夹具失败，原报告/日志保留。只读复核显示运行时Task已succeeded、2attempt，故障前后loop deadline/timing及已用调用逐项一致；错误是夹具把此前claim阶段的截止时间也与loop截止时间比较。修正`verify_phase_clocks`分别核对独立窗口，新增拒绝真实时钟变化的单测；不是放宽Runtime预算或修改时钟。新目录重跑`phase9-v2-restore-cut-after-tool-v2.json`通过：写入与来源快照不同的新版本后强杀，普通进程进入attempt2；旧loop起点/deadline/timing及全部旧调用逐项不变，2模型槽/1次CAS写、恢复submitted一次，旧业务UID停止后新UID不同，文件hash为81dafdb165679a41e3abcae3a3e5e25568f106863759672f5fbc4d29dd6e9812，未回退为来源hash。kill→ready57,122.93ms，→核查68,486.01ms。不把失败首轮当通过。
+- `phase9-v2-restore-cut-before-attached.json`通过：Session已选择旧节点、ATTACHED前SIGKILL，普通进程原目录attempt2完成绑定；FILES_READY前后状态幂等、恢复submitted一次、完整父链和hash一致。kill→ready54,866.48ms，→核查71,379.09ms。started/attached两个独立切点本轮未执行。
+- 既有时钟语义保留：FILES_READY切点尚未开始loop，必须保留原claim起点及190秒窗口，之后首次进入loop才开始原120秒窗口；after-tool已经进入loop，故障前后loop起点、截止时间必须完全相同。所有旧调用记录都必须保留，不能用重启补回额度。
+
+### 真实取消首轮与Go清理重试
+
+首轮`phase9-v2-restore-cancel-ready.json`整体失败：实时API一度显示interrupted，Go清理请求返回503；停止证明未完全完成时没有继续认领或运行模型。夹具finally的显式可信对账随后完成停止/释放，原Task最终cancelled，调用表为空、无遗留Pod；不能拿最后清理成功替代自动取消验收。
+
+已确认失败发生在Go停止/清理流程，但首轮没有API阶段细节，不能断言唯一根因。代码复核补强了停止证明已持久化后的finalizer CAS：Kubelet更新状态会改变RV，每次冲突都重新核对固定Pod UID、完整Spec和新RV，最多3次；持续失败或UID被替换不释放屏障、不删除替换Pod。没有放宽停止证明，也不取消仓库锁。增加不含秘密的阶段/重试reason日志。
+
+4个合成子场景（409一次、422一次、持续冲突、UID替换）验证重试及拒绝边界；sandbox/API race通过`phase9-v2-restore-cleanup-cas-observed-go-tests.txt`。首次Go测试只有UID/string类型比较导致编译失败，原文保留，转换类型后通过；没有伪报首轮成绩。新服务二进制使用独立`.cache/workspace-sandboxd-restore-cleanup`，旧restore-http及v2维护镜像保留。真实取消新目录-v2重跑`phase9-v2-restore-cancel-ready-v2.json`通过：实际HTTP取消202后2,503.38ms完成核查，1attempt、calls空、无业务Pod，Go失败目标claim409、原分支默认节点正确；不靠finally补救才成功。该轮没有CAS重试日志，因此仍不把CAS归为首轮唯一根因。Go全项目通过`phase9-v2-restore-cleanup-full-go-tests.txt`；单测补强不证明首轮的唯一API错误原因。
+
+### 夹具测试与能力边界
+
+首轮21/21、3.807秒通过；加入after-tool后22/22、3.531秒通过。时钟断言修复后的完整Python267/267、298.700秒通过`phase9-v2-restore-fault-latest-full-python-tests.txt`；此前266/266、291.314秒属于修复前，单列不相加。上述本地单测使用mock信号/子进程/CRI，不能当真实故障成绩；真实报告和失败报告单列。四个已通过场景的独立只读审计见`phase9-v2-restore-fault-four-case-audit-v2.json`：原始Go/Python日志checksum/seq、原调用保留、停止/请求序列，以及before-attached选择节点严格等于COMMITTED来源。初版四场景审计的节点比较无效，保留原件，采用v2的严格相等检查，不用初稿证明节点绑定。审计不计作额外服务实验，未执行阶段保留待办。
+
+这里没有启动外部模型，所有模型为固定Replay；正常/取消/失败均保留目录、快照、Secret和控制日志。未知停止证明仍阻止接管，不删除Pod对象或改generation来冒充fencing。后续还需实际存储失败/仓库锁、受控清理和引用保护、同条件性能、统一入口及完整V2矩阵。
+
+## 15. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

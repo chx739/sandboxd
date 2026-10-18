@@ -55,14 +55,14 @@
     {
       "id": "V2-10",
       "status": "pending",
-      "note": "manual new Task continuation and original source audit unchanged verified with real services; interrupted current-Task budget/latest-state behavior covered locally, real restore-window fault proof pending"
+      "note": "actual Agent TCP restored Task SIGKILL after committed CAS write preserves nonzero calls, exact loop timing/deadline and latest file; one restore submission and one write, new business UID, complete parent-chain verified; whole V2 completion audit pending"
     }
   ],
   "remaining": [
     "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "Actual Agent TCP/restic unified startup and restore-window cancellation/process-cut recovery; normal ASGI TaskStore historical branch integration verified",
-    "Historical branch faults: preserve current Task budget/cancel during interrupted restore and prove no snapshot overwrite or old side-effect replay with actual services",
+    "Unified restic shell startup, remaining restore started/attached cuts and real storage failure/lock cases; actual Agent TCP files-ready/after-tool/before-attached SIGKILL and cancellation verified",
+    "Final requirement-by-requirement V2 matrix, storage faults and reference-aware cleanup; actual current Task nonzero call budget, exact loop deadline, latest-file preservation and one write verified after SIGKILL",
     "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
     "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
     "actual unified shell startup restic-mode execution"
@@ -563,6 +563,98 @@
     {
       "path": "docs/evidence/phase9-v2-restore-store-routing-tests.txt",
       "sha256": "8c1078fb3b7cc235c14ca9102ba9bea32afa7854428738ae51900c85d842495f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool-tests.txt",
+      "sha256": "7cc0bae9ef23af41e676262d0f2d9734570e73a4a0a3ab598fe3d2a3455e6b48"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool-v2-tests.txt",
+      "sha256": "aba2dcdef506e3511c7a2359888f7846359a933411997bcfe10d73e0a3bf8253"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool-v2.json",
+      "sha256": "37762635993679e0a27d140eb5fd93679fc2343a1d442295919d3d939c02c552"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-after-tool.json",
+      "sha256": "e9da05105d9cb1d5411a558ea9fe6e2421530a7f18ba8da9f0084c15921fb8c1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-before-attached-tests.txt",
+      "sha256": "a6c5c45e02f0ebb1112db149d2153e7d442e4a4f7ff3d33ab24664785c3b8799"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-before-attached.json",
+      "sha256": "25db7ac9f77483ed7c9ea2ce0f3fcbdc51bf12a7534071b806d48d27355525f9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-files-ready-tests.txt",
+      "sha256": "c25f3823eed82916f7265ce2abb4aed7279d34eebf75f7e6e51d72f49e25ed4d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cut-files-ready.json",
+      "sha256": "267cedfcdccb284704af3df069840bb638dda0bbbeb56016704ad63bf2e37175"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready-tests.txt",
+      "sha256": "9670eeaee08c7d350e7648c08f5fbb18a757416f368181d3559440dc97795845"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready-v2-tests.txt",
+      "sha256": "a8f4c22ad021ad94560a5f635a24300d3f9850ccba8b675b7be55ee477a675d1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready-v2.json",
+      "sha256": "e8d7f4fcf61f4183a2a54ad91095ed3e58c990ffe6b7c5a34dececc7ea39fe1b"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cancel-ready.json",
+      "sha256": "2b0697713ceb87a732a8dfaa6acdbf3b8050904ecd61ef05c947330daaae77b1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-audit.json",
+      "sha256": "b97850f36d5d825170445013fc9682a0bab026c4ed0a26936d819d417e8cd122"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-fixture-final-tests.txt",
+      "sha256": "1f813ecb31d0724f0459fb72005e309abc5aec462ab6d40339ee7128706a7cbf"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-fixture-tests.txt",
+      "sha256": "34b6ebbcf2dbcd99b993dc661b23a33ac80944a71c4b6b438e78ce5161efdf3a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-four-case-audit-v2.json",
+      "sha256": "7497f3e56e205b2544b9b26f3a94ffbd03d71eca1e4e6ebe9dc94c7621e4a543"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-four-case-audit.json",
+      "sha256": "e3c57bf54f0ea4c83d6fb12889ad8228b0bff864e0a8a139e0064b2de12a3626"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-full-python-tests.txt",
+      "sha256": "556a868e6d0fc89f36c8cf7b0b9d78842ad1dcad0cf42f6253b1db25585d2ea5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-fault-latest-full-python-tests.txt",
+      "sha256": "37117df636d20babf1145536454fdbf2cc6362586fe19d35da1e07c776a2b90d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-cas-final-go-tests.txt",
+      "sha256": "dbf4eb8444420aaecc604b3ec13fa0410059a7a1018b97e1de83014d27e100f9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-cas-go-tests.txt",
+      "sha256": "7981871e862cbd8c5716c473d1966f1edd33f6b034928003dc926548ab39784f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-cas-observed-go-tests.txt",
+      "sha256": "481cbfe0cc91e71c7b8c2ce52af105275c0d5235c3a9f26bc729d1a7dff2c2eb"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-cleanup-full-go-tests.txt",
+      "sha256": "1c035c03c23434768a10dce03d057f28c87c8a93edea3e7dc9804c87a812576d"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

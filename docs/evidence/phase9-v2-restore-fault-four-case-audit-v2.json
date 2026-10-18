@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "scope": "read-only checksum/sequence and four real reports; strict source-node equality additionally verified for before-attached",
+  "externalModelCalls": 0,
+  "cases": [
+    {
+      "report": "phase9-v2-restore-cut-files-ready.json",
+      "sha256": "267cedfcdccb284704af3df069840bb638dda0bbbeb56016704ad63bf2e37175",
+      "phase": "files-ready",
+      "status": "succeeded",
+      "attempts": 2,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "oldCallsPreserved": true,
+      "requestStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ]
+    },
+    {
+      "report": "phase9-v2-restore-cut-after-tool-v2.json",
+      "sha256": "37762635993679e0a27d140eb5fd93679fc2343a1d442295919d3d939c02c552",
+      "phase": "after-tool",
+      "status": "succeeded",
+      "attempts": 2,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "oldCallsPreserved": true,
+      "requestStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ]
+    },
+    {
+      "report": "phase9-v2-restore-cancel-ready-v2.json",
+      "sha256": "e8d7f4fcf61f4183a2a54ad91095ed3e58c990ffe6b7c5a34dececc7ea39fe1b",
+      "phase": "cancel-ready",
+      "status": "cancelled",
+      "attempts": 1,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "oldCallsPreserved": true,
+      "requestStates": [
+        "RESERVED",
+        "FAILED"
+      ]
+    },
+    {
+      "report": "phase9-v2-restore-cut-before-attached.json",
+      "sha256": "25db7ac9f77483ed7c9ea2ce0f3fcbdc51bf12a7534071b806d48d27355525f9",
+      "phase": "before-attached",
+      "status": "succeeded",
+      "attempts": 2,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "sessionSelectionBeforeUncommittedAttachRecorded": true,
+      "requestStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ],
+      "sourceSessionNodeId": "node-7ecfa81234f2b982",
+      "selectedSessionNodeId": "node-7ecfa81234f2b982",
+      "selectionMatchesExactCommittedSource": true,
+      "beforeStatus": "FILES_READY",
+      "afterStatus": "ATTACHED"
+    }
+  ],
+  "retainedFailures": [
+    "phase9-v2-restore-cut-after-tool.json",
+    "phase9-v2-restore-cancel-ready.json"
+  ],
+  "supersedesAudit": "phase9-v2-restore-fault-four-case-audit.json"
+}

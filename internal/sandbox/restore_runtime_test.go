@@ -3,12 +3,18 @@ package sandbox
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
 	corev1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/client-go/kubernetes/fake"
+	clienttesting "k8s.io/client-go/testing"
 )
 
 const restoreTarget = "workspace-22222222222222222222222222222222"
@@ -146,5 +152,66 @@ func TestRestoreRuntimeCannotChangeConfiguredBusinessImage(t *testing.T) {
 	source.ImageRef = "another-image"
 	if _, err := b.ReserveRestore(context.Background(), restoreTarget, testCheckpointID, "restore-a", source); err == nil {
 		t.Fatal("changed business image accepted")
+	}
+}
+
+func TestRestoreCleanupRetriesFinalizerCASAndRechecksUID(t *testing.T) {
+	for _, mode := range []string{"conflict-once", "invalid-once", "conflict-always", "replacement"} {
+		t.Run(mode, func(t *testing.T) {
+			b, client, source := restoreRuntimeFixture(t)
+			ctx := context.Background()
+			barrier, err := b.StartRestore(ctx, restoreTarget, testCheckpointID, "restore-a", source)
+			if err != nil {
+				t.Fatal(err)
+			}
+			completedRestoreFixture(t, b, client, barrier, source)
+			stopped, err := b.Abort(ctx, barrier)
+			if err != nil {
+				t.Fatal(err)
+			}
+			patches, deletes := 0, 0
+			client.PrependReactor("patch", "pods", func(action clienttesting.Action) (bool, runtime.Object, error) {
+				patches++
+				if mode == "replacement" && patches == 1 {
+					object, err := client.Tracker().Get(corev1.SchemeGroupVersion.WithResource("pods"), StorageNamespace, barrier.PodName)
+					if err != nil {
+						t.Fatal(err)
+					}
+					pod := object.(*corev1.Pod).DeepCopy()
+					pod.UID = "replacement-uid"
+					client.Tracker().Update(corev1.SchemeGroupVersion.WithResource("pods"), pod, StorageNamespace)
+				}
+				if patches == 1 || mode == "conflict-always" {
+					if mode == "invalid-once" {
+						return true, nil, apierrors.NewInvalid(schema.GroupKind{Kind: "Pod"}, barrier.PodName,
+							field.ErrorList{field.Invalid(field.NewPath("metadata", "resourceVersion"), "1", "test failed")})
+					}
+					return true, nil, apierrors.NewConflict(schema.GroupResource{Resource: "pods"}, barrier.PodName, errors.New("synthetic status resourceVersion update"))
+				}
+				return false, nil, nil
+			})
+			client.PrependReactor("delete", "pods", func(action clienttesting.Action) (bool, runtime.Object, error) {
+				deletes++
+				options := action.(clienttesting.DeleteAction).GetDeleteOptions()
+				if options.Preconditions == nil || options.Preconditions.UID == nil || string(*options.Preconditions.UID) != stopped.PodUID {
+					t.Fatal("cleanup lost original UID precondition")
+				}
+				return false, nil, nil
+			})
+			_, err = b.FinishRestore(ctx, stopped, false)
+			if mode == "conflict-once" || mode == "invalid-once" {
+				if err != nil || patches != 2 || deletes != 1 {
+					t.Fatal(err, patches, deletes)
+				}
+			} else {
+				if err == nil || deletes != 0 || (mode == "conflict-always" && patches != 3) {
+					t.Fatal(err, patches, deletes)
+				}
+				current, _ := b.workspace.registry.Barrier(restoreTarget)
+				if current.Phase != "stopped" {
+					t.Fatal("failed cleanup released barrier", current)
+				}
+			}
+		})
 	}
 }

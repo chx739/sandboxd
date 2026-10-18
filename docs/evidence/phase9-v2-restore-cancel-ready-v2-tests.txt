@@ -1,0 +1,2 @@
+{"stage": "agentd-process-started", "number": 1, "pid": 255208}
+{"passed": true, "phase": "cancel-ready", "output": "docs/evidence/phase9-v2-restore-cancel-ready-v2.json"}

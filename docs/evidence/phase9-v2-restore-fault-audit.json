@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "scope": "read-only raw Go/Python journal checksum, sequence and reported-state audit; not extra service runs",
+  "externalModelCalls": 0,
+  "cases": [
+    {
+      "report": "phase9-v2-restore-cut-files-ready.json",
+      "sha256": "267cedfcdccb284704af3df069840bb638dda0bbbeb56016704ad63bf2e37175",
+      "phase": "files-ready",
+      "status": "succeeded",
+      "attempts": 2,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "oldCallsPreserved": true,
+      "requestStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ]
+    },
+    {
+      "report": "phase9-v2-restore-cut-after-tool-v2.json",
+      "sha256": "37762635993679e0a27d140eb5fd93679fc2343a1d442295919d3d939c02c552",
+      "phase": "after-tool",
+      "status": "succeeded",
+      "attempts": 2,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "oldCallsPreserved": true,
+      "requestStates": [
+        "RESERVED",
+        "FILES_READY",
+        "ATTACHED"
+      ]
+    },
+    {
+      "report": "phase9-v2-restore-cancel-ready-v2.json",
+      "sha256": "e8d7f4fcf61f4183a2a54ad91095ed3e58c990ffe6b7c5a34dececc7ea39fe1b",
+      "phase": "cancel-ready",
+      "status": "cancelled",
+      "attempts": 1,
+      "restoreSubmittedOnce": true,
+      "allAttemptsStopped": true,
+      "oldCallsPreserved": true,
+      "requestStates": [
+        "RESERVED",
+        "FAILED"
+      ]
+    }
+  ],
+  "retainedFailures": [
+    "phase9-v2-restore-cut-after-tool.json",
+    "phase9-v2-restore-cancel-ready.json"
+  ]
+}

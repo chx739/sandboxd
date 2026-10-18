@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"reflect"
 	"regexp"
 	"slices"
@@ -182,7 +183,7 @@ func (b *BackupRuntime) observe(ctx context.Context, expected WorkspaceBarrier) 
 	}
 	if containersStopped(pod) {
 		if err := b.workspace.healthyNode(ctx, pod.Spec.NodeName); err != nil {
-			return barrier, err
+			return barrier, fmt.Errorf("%w: maintenance stop node health", err)
 		}
 		return b.workspace.registry.stopBarrier(barrier, "containers-terminated")
 	}
@@ -262,7 +263,7 @@ func (b *BackupRuntime) Abort(ctx context.Context, expected WorkspaceBarrier) (W
 	for {
 		barrier, err = b.observe(ctx, barrier)
 		if err != nil {
-			return barrier, err
+			return barrier, fmt.Errorf("%w: maintenance abort observation", err)
 		}
 		if barrier.Phase == "stopped" {
 			return barrier, nil
@@ -324,26 +325,54 @@ func (b *BackupRuntime) finish(ctx context.Context, expected WorkspaceBarrier, v
 		return barrier, ErrWorkspaceConflict
 	}
 	if barrier.StopReason == "containers-terminated" {
-		pod, err := b.ownedPod(ctx, barrier)
-		if err != nil {
-			_, getErr := w.manager.client.CoreV1().Pods(StorageNamespace).Get(ctx, barrier.PodName, metav1.GetOptions{})
-			if !apierrors.IsNotFound(getErr) {
-				return barrier, err
-			}
-		} else {
-			finalizers := slices.DeleteFunc(slices.Clone(pod.Finalizers), func(f string) bool { return f == BackupJobFinalizer })
-			patch, _ := json.Marshal([]map[string]any{{"op": "test", "path": "/metadata/uid", "value": string(pod.UID)}, {"op": "test", "path": "/metadata/resourceVersion", "value": pod.ResourceVersion}, {"op": "replace", "path": "/metadata/finalizers", "value": finalizers}})
-			if _, err = w.manager.client.CoreV1().Pods(StorageNamespace).Patch(ctx, pod.Name, types.JSONPatchType, patch, metav1.PatchOptions{}); err != nil && !apierrors.IsNotFound(err) {
-				return barrier, ErrWorkspaceUnavailable
-			}
-			uid := pod.UID
-			if err = w.manager.client.CoreV1().Pods(StorageNamespace).Delete(ctx, pod.Name, metav1.DeleteOptions{Preconditions: &metav1.Preconditions{UID: &uid}}); err != nil && !apierrors.IsNotFound(err) {
-				return barrier, ErrWorkspaceUnavailable
-			}
+		if err := b.cleanupStoppedPod(ctx, barrier); err != nil {
+			return barrier, err
 		}
 	}
 	if verifiedRestore {
 		return w.registry.completeRestore(barrier)
 	}
 	return w.registry.releaseBarrier(barrier)
+}
+
+// 停止证明已落盘后，Kubelet仍可能更新Pod状态/RV；只对固定UID的清理CAS
+// 有界重试，每次重新核对归属与完整Spec，不能跳过未知停止或删除替换Pod。
+func (b *BackupRuntime) cleanupStoppedPod(ctx context.Context, barrier WorkspaceBarrier) error {
+	if barrier.Phase != "stopped" || barrier.StopReason != "containers-terminated" {
+		return ErrWorkspaceConflict
+	}
+	w := b.workspace
+	for attempt := 0; attempt < 3; attempt++ {
+		pod, err := b.ownedPod(ctx, barrier)
+		if err != nil {
+			_, getErr := w.manager.client.CoreV1().Pods(StorageNamespace).Get(ctx, barrier.PodName, metav1.GetOptions{})
+			if !apierrors.IsNotFound(getErr) {
+				return err
+			}
+			return nil // 只有已有持久停止证明时才允许缺Pod重试。
+		}
+		if slices.Contains(pod.Finalizers, BackupJobFinalizer) {
+			finalizers := slices.DeleteFunc(slices.Clone(pod.Finalizers), func(f string) bool { return f == BackupJobFinalizer })
+			patch, _ := json.Marshal([]map[string]any{{"op": "test", "path": "/metadata/uid", "value": string(pod.UID)}, {"op": "test", "path": "/metadata/resourceVersion", "value": pod.ResourceVersion}, {"op": "replace", "path": "/metadata/finalizers", "value": finalizers}})
+			if _, err = w.manager.client.CoreV1().Pods(StorageNamespace).Patch(ctx, pod.Name, types.JSONPatchType, patch, metav1.PatchOptions{}); err != nil {
+				if apierrors.IsNotFound(err) {
+					return nil
+				}
+				if isClaimConflict(err) && attempt < 2 {
+					log.Printf("workspace maintenance cleanup CAS retry uid=%s attempt=%d reason=%s", pod.UID, attempt+1, apierrors.ReasonForError(err))
+					if err := pollWorkspace(ctx); err != nil {
+						return err
+					}
+					continue
+				}
+				return fmt.Errorf("%w: maintenance finalizer CAS (%s)", ErrWorkspaceUnavailable, apierrors.ReasonForError(err))
+			}
+		}
+		uid := pod.UID
+		if err = w.manager.client.CoreV1().Pods(StorageNamespace).Delete(ctx, pod.Name, metav1.DeleteOptions{Preconditions: &metav1.Preconditions{UID: &uid}}); err != nil && !apierrors.IsNotFound(err) {
+			return fmt.Errorf("%w: maintenance UID delete (%s)", ErrWorkspaceUnavailable, apierrors.ReasonForError(err))
+		}
+		return nil
+	}
+	return ErrWorkspaceUnavailable
 }

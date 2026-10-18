@@ -60,12 +60,16 @@ def state_for(path: Path, task_id: str) -> dict | None:
 
 
 def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, number: int, replay_path: Path | None = None, *, port: int = 18090,
-                checkpoint_mode: str = "off", checkpoint_cutpoint: str | None = None):
+                checkpoint_mode: str = "off", checkpoint_cutpoint: str | None = None,
+                restore_cutpoint: str | None = None):
     if port not in {18090, 18091}:
         raise ValueError("process fixture only uses ports 18090/18091")
     if checkpoint_mode not in {"off", "restic"} or (checkpoint_cutpoint is not None and (
             checkpoint_mode != "restic" or port != 18090 or checkpoint_cutpoint not in {"reserved","preparing","before-data-ready","data-ready","before-commit","committed"})):
         raise ValueError("invalid fixed checkpoint process fixture mode")
+    if restore_cutpoint is not None and (checkpoint_mode != "restic" or checkpoint_cutpoint is not None
+            or port != 18090 or restore_cutpoint not in {"started", "files-ready", "before-attached", "attached", "after-tool", "cancel-ready"}):
+        raise ValueError("invalid fixed restore process fixture mode")
     # 清除继承的模型/路由/Operator配置。子进程只拿本次合成Agent身份，不拿Operator Token。
     env = {k: v for k, v in os.environ.items() if not k.startswith(("AGENTD_", "SANDBOXD_"))
            and k not in {"TYPESAFE_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY"}}
@@ -82,6 +86,8 @@ def start_agent(root: Path, go_token: str, api_token: str, alert_token: str, num
              "--host", "127.0.0.1", "--port", str(port), "--log-level", "warning", "--no-access-log"]
     if checkpoint_cutpoint is not None:
         command=[sys.executable,"-m","agentd.workspace_checkpoint_fault_demo","--child-phase",checkpoint_cutpoint,"--child-root",str(root)]
+    elif restore_cutpoint is not None:
+        command=[sys.executable,"-m","agentd.workspace_restore_fault_demo","--child-phase",restore_cutpoint,"--child-root",str(root)]
     process = subprocess.Popen(command,
                                cwd=REPO, env=env, stdout=log, stderr=subprocess.STDOUT)
     print(json.dumps({"stage": "agentd-process-started", "number": number, "pid": process.pid}), flush=True)

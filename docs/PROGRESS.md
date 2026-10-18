@@ -18,6 +18,17 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：恢复窗口TCP故障与取消四场景通过
+
+- 起点b321274，当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。新增workspace_restore_fault_demo，仅自身子进程包装真实方法，固定started/files-ready/before-attached/attached/after-tool/cancel-ready；普通第二进程自动接续原Task，Go/storage不重启，默认旧进程入口不变。after-tool采用CAS写入与来源快照不同的新内容，验证最新文件和非零调用预算；取消用真实Start后的有界异步门，不伪造慢存储。
+- 资源检查：可用内存20,628MiB，swap使用0，根盘931GiB，项目业务/维护Pod与10880/18090监听均空。真实files-ready已通过phase9-v2-restore-cut-files-ready.json：OS确认SIGSTOP再SIGKILL(-9)，普通Agent原目录进入attempt2，原Task/request/目标、claim时钟/限额保留，2模型槽/1只读工具、restore submitted一次、hash/完整配对正确。kill→ready60,576.28ms、→核查76,505.82ms；外部模型0。
+- after-tool首轮原生Task实际succeeded、2attempt、原loop deadline/timing与已用调用逐项不变，但夹具把pre-loop claim deadline和loop deadline比较而AssertionError。原phase9-v2-restore-cut-after-tool.json及日志保留，Go/Pod正常清理；修正独立verify_phase_clocks并加单测，未改变Runtime/时钟/预算，新目录-v2重跑通过：旧loop起点/deadline/timing和旧调用逐项不变，2模型/1次CAS写，attempt2新业务UID不同、恢复submitted一次，NFS新hash81dafd...未退回来源；kill→ready57,122.93ms、→核查68,486.01ms。
+- 本地夹具首轮21/21、3.807秒与下一轮22/22、3.531秒通过；时钟修复后完整267/267、298.700秒通过phase9-v2-restore-fault-latest-full-python-tests.txt；此前完整266/266、291.314秒保留，不冒称含后改动。文档47 §14记录命令/故障范围/失败原因。目录、快照、卷、Secret和原控制日志保留；Goal active。
+- 真实cancel-ready首轮失败：API一度interrupted、Go清理503，停止未确认时未继续认领/模型；finally可信对账后Task cancelled、calls空、Pod清空，不把清理当验收通过。首轮唯一API原因未捕获；复核补强Go已停止维护Pod的finalizer CAS，重新核对固定UID/Spec/RV，最多3次；持续失败/UID替换保持冻结，阶段日志不含秘密。4个合成子场景及sandbox/API race通过；初版测试UID/string比较编译失败保留，修正后通过。新独立Go二进制.cache/workspace-sandboxd-restore-cleanup已构建，旧版本保留；cancel-ready-v2真实通过：HTTP取消后2,503.38ms，1attempt/calls空/无业务Pod，目标GoClaim409、默认原分支节点正确；本轮无CAS重试日志，不能归因首轮唯一原因。Go全项目通过。
+- before-attached真实通过：Session已选旧节点但ATTACHED前强杀，普通Agent原目录attempt2完成绑定；restore只提交一次、状态/父链/hash一致，kill→ready54,866.48ms、→核查71,379.09ms。四场景严格原始日志审计采用phase9-v2-restore-fault-four-case-audit-v2.json；初稿无效节点比较被严格COMMITTED源节点相等验证替代，原件保留，不计第五次服务成绩。最终业务/维护Pod与端口均空，仅原三容器运行，数据全保留。
+- **第一项下一步**：started/attached独立切点未执行；下一步推进存储异常/仓库锁、引用清理、性能和统一入口/完整矩阵。不得把已实现的六阶段都填成通过。
+
+
 ### 2026-10-18：Task/API历史分支接线与真实两分支通过
 
 - 本批有效实现f0930f5（起点82a6b2d），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未动。RestoreCoordinator/TaskStore/main新增明确checkpoint+UUIDv4请求接口及状态查询；旧node branch在restic模式找唯一COMMITTED版本，off/V1仍拒绝历史文件恢复。先固定来源引用和queued Task以接受取消，Worker再恢复/验证/FILES_READY/ATTACHED，之后才允许Runner认领业务Pod/调用模型。Session有未完成Task时拒绝切换路线。
