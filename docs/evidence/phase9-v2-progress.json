@@ -852,6 +852,10 @@
     {
       "path": "docs/evidence/phase9-v2-cleanup-runtime-audit.json",
       "sha256": "bc99eb8f37a6be647dfb2bc647418f9a4c89150d1b3e4e8e6ff2c346822930b9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-cleanup-runtime-final-checks.json",
+      "sha256": "544f9e014f413e234f0bb3bb581b96d9e05b37112103685fa4fe6cb262aecfa1"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

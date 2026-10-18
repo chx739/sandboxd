@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-18T03:18:00.987193+00:00",
+  "implementationCommit": "2a0934954faf9904dcd19e71e0a9986ea00f41b3",
+  "binary": {
+    "path": ".cache/workspace-sandboxd-owned-cleanup",
+    "sha256": "0929dc28769812262f1d3d28bf4a0523b4096e5147257b82a859483a0a021953",
+    "notStarted": true,
+    "note": "Built with existing user document edits present; no bit-for-bit clean VCS reproducibility claim."
+  },
+  "sourceAndDocsDiffCheck": "passed",
+  "rawEvidenceDiffCheck": {
+    "status": "known-whitespace-warnings-preserved",
+    "warningCount": 2,
+    "files": [
+      "phase9-v2-cleanup-runtime-final-v2-race-tests.txt",
+      "phase9-v2-cleanup-runtime-final-v3-race-tests.txt"
+    ],
+    "reason": "Original failed Go test output blank lines retain spaces; logs and hashes not rewritten."
+  },
+  "externalModelCalls": 0,
+  "actualStorageOperations": 0,
+  "formalV2AcceptanceComplete": false
+}
