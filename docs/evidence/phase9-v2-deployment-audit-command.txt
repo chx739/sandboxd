@@ -1,0 +1,1 @@
+{"passed": true, "journalRecords": {"go": 32, "checkpoints": 10, "tasks": 35}}

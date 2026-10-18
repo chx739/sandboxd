@@ -52,9 +52,43 @@ async def wait_ready(process, url, path, timeout):
                 await asyncio.sleep(.1)
 
 
-async def run(output: Path):
-    root = Path.home() / ".local/share/sandboxd/workspace-agent-smoke" / uuid4().hex
-    root.mkdir(mode=0o700, parents=True)
+def verify_owned_checkpoints(root, deployment, after, task_id, state_hash):
+    from .app.runtime.checkpoints import CheckpointLedger
+    from .app.runtime.session_refs import SessionReferences
+    refs = SessionReferences(root / "agent-control/checkpoints")
+    ledger = CheckpointLedger(root / "agent-control/checkpoints/checkpoints.jsonl", refs, read_only=True)
+    try:
+        assert ledger.maintenance.binding()["owner"] == deployment["owner"]
+        head = ledger.head(after["sessionId"], after["branchId"])
+        checkpoints = []
+        while head is not None:
+            assert head["status"] == "COMMITTED" and head["identity"]["taskId"] == task_id
+            assert head["data"]["repositoryCryptoId"] == deployment["owner"]["repositoryCryptoId"]
+            refs.read(head["identity"]["sessionRef"])
+            checkpoints.append(head)
+            head = ledger.get(head["parentCheckpointId"]) if head["parentCheckpointId"] else None
+        assert len(checkpoints) >= 3 and not ledger.pending()
+        assert len({r["data"]["snapshotId"] for r in checkpoints}) == len(checkpoints)
+        assert [r["revision"] for r in reversed(checkpoints)] == list(range(1, len(checkpoints)+1))
+        assert hashlib.sha256((root / "deployment.json").read_bytes()).hexdigest() == state_hash
+        return list(reversed(checkpoints))
+    finally:
+        ledger.close()
+
+
+async def run(output: Path, deployment_dir: Path | None = None):
+    if output.exists():
+        raise ValueError("preserve previous entry evidence")
+    deployment = None
+    if deployment_dir is not None:
+        from .workspace_deployment import ready
+        deployment = ready(deployment_dir)
+        root = deployment_dir
+        if (root / "agent-control/tasks.jsonl").exists() or (root / "replay.json").exists():
+            raise ValueError("entry fixture needs a fresh initialized deployment without prior Tasks")
+    else:
+        root = Path.home() / ".local/share/sandboxd/workspace-agent-smoke" / uuid4().hex
+        root.mkdir(mode=0o700, parents=True)
     replay = root / "replay.json"
     replay.write_text(json.dumps({"kind": "deterministic-policy-case", "responses": [
         {"toolCalls": [{"id": "write-entry", "name": "write_file", "args": {"path": "entry.md", "content": CONTENT}}]},
@@ -70,6 +104,10 @@ async def run(output: Path):
                AGENTD_ALERT_TOKEN=alert_token, AGENTD_RECOVERY_DIR=str(root / "agent-control"),
                AGENTD_TRACE_DIR=str(root / "legacy-traces"), AGENTD_REPLAY_FILE=str(replay),
                AGENTD_LLM_MODE="replay", AGENTD_SANDBOXD_URL="http://127.0.0.1:8080")
+    if deployment is not None:
+        env["SANDBOXD_WORKSPACE_DEPLOYMENT_DIR"] = str(root)
+        # 放入合成canary验证agent入口移除存储凭据；从不使用真实凭据。
+        env.update(RESTIC_PASSWORD="synthetic-entry-canary", AWS_SECRET_ACCESS_KEY="synthetic-entry-canary")
     sdk = SandboxdClient("http://127.0.0.1:8080", go_token)
     api = httpx.AsyncClient(base_url="http://127.0.0.1:8090", headers={"Authorization": "Bearer " + api_token}, timeout=5)
     children, go, task_id = [], None, None
@@ -77,6 +115,9 @@ async def run(output: Path):
               "controlRoot": str(root), "entryScriptSha256": hashlib.sha256((REPO / "hack/workspace.sh").read_bytes()).hexdigest(),
               "binarySha256": hashlib.sha256((REPO / ".cache/workspace-sandboxd").read_bytes()).hexdigest(),
               "replaySha256": hashlib.sha256(replay.read_bytes()).hexdigest()}
+    if deployment is not None:
+        report.update(mode="real-owned-v2-unified-entry-sigkill-replay", owner=deployment["owner"],
+                      deploymentStateSha256=hashlib.sha256((root / "deployment.json").read_bytes()).hexdigest())
     journal = root / "agent-control/tasks.jsonl"
     try:
         started = time.perf_counter()
@@ -92,6 +133,9 @@ async def run(output: Path):
         # 只检验本夹具生成的合成环境字段，不输出任何环境值。
         names = {v.split(b"=", 1)[0] for v in Path(f"/proc/{first.pid}/environ").read_bytes().split(b"\x00") if v}
         assert b"SANDBOXD_OPERATOR_TOKEN" not in names
+        if deployment is not None:
+            assert not names & {b"RESTIC_PASSWORD", b"AWS_SECRET_ACCESS_KEY", b"AWS_ACCESS_KEY_ID", b"MINIO_ROOT_PASSWORD"}
+            report["storageCredentialsEnvironmentRemoved"] = True
         report["operatorEnvironmentRemoved"] = True
         response = await api.post("/api/v1/tasks", json={"summary": "synthetic entry verification", "labels": {"cluster": "local-kind"}})
         assert response.status_code == 202
@@ -177,6 +221,11 @@ async def run(output: Path):
             stop_agent(*children[0])
         await api.aclose()
         await sdk.close()
+        if deployment is not None and report["passed"]:
+            try:
+                report["jointCheckpoints"] = verify_owned_checkpoints(root, deployment, after, task_id, report["deploymentStateSha256"])
+            except Exception as exc:
+                report.update(passed=False, checkpointAuditError=public_error(exc))
         report["timestamp"] = datetime.now(timezone.utc).isoformat()
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
@@ -187,8 +236,9 @@ async def run(output: Path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--deployment-dir", type=Path, help="已init-v2、无历史Task的新专属部署；验证owned同步联合保存")
     args = parser.parse_args()
-    result = asyncio.run(run(args.output))
+    result = asyncio.run(run(args.output, args.deployment_dir))
     print(json.dumps({"passed": result["passed"], "output": str(args.output)}))
 
 

@@ -285,7 +285,43 @@ bash hack/workspace.sh build-storage
 
 复用已有tag不证明镜像来自当前源码；修改helper需明确新版本和兼容检查，不能用这个入口静默升级历史任务。首次无缓存构建可能下载固定基础镜像/restic/Go模块；当前实际验证的是缓存资产校验、已有镜像复用、Go编译及kind加载，原始结果见[安装入口证据](../../docs/evidence/phase9-v2-unified-storage-build.json)。4项命令契约测试使用Fake工具，不能代替首次真实镜像构建。
 
-**此命令只准备镜像和二进制，不初始化仓库或绑定Owner。** 新专属仓库持久初始化与统一V2启动仍待接线；当前`go`子命令的旧restic分支使用v2镜像，不得因此宣称已启用v3的归属与管理清理。已有历史共享仓库保留，不自动收编。
+**此命令只准备镜像和二进制。** 新部署继续执行下面的`init-v2`。未指定部署目录的旧shell restic路径仍使用v2镜像；已有历史共享仓库保留，不自动收编。
+
+### 新专属V2部署：初始化、启动与重启
+
+前置条件：项目kind/Calico/gVisor/RBAC、NFS与专属MinIO已经按本目录及文档47安装；MinIO使用独立`backup-compose.yml`，仓库外私有配置为`~/.local/share/sandboxd/workspace-backup/minio-credentials.json`（`access/secret`），须与该服务实际凭据相同。`init-v2`不启动或重置已有存储，不改RAG MinIO。Go/Python服务所需的四个不同Token仍由仓库外环境提供。
+
+```bash
+export SANDBOXD_WORKSPACE_DEPLOYMENT_DIR="$HOME/.local/share/sandboxd/deployments/my-v2"
+bash hack/workspace.sh init-v2 --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR"
+bash hack/workspace.sh status-v2 --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR"
+```
+
+目录必须是上述原生Linux `deployments`下的一个新私有目录。初始化创建唯一`owned-deploy/<UUID>`仓库前缀、不可变Secret及Owner；状态/密码私有持久化，业务Pod不会得到仓库凭据。重复`init-v2`核对并复用原身份，不生成第二个初始化Pod。提交结果不明时仅查询原Pod；原Pod缺失、失败、UID/spec变化或无法证明停止时拒绝继续，不能删目录后当作恢复。
+
+两个终端均设置相同`SANDBOXD_WORKSPACE_DEPLOYMENT_DIR`，仓库外配置原有Token，然后先Go、后Agent：
+
+```bash
+bash hack/workspace.sh go
+```
+
+```bash
+export AGENTD_SANDBOXD_URL=http://127.0.0.1:8080
+bash hack/workspace.sh agent
+```
+
+部署目录生成的Go/Agent控制路径、restic模式与逻辑仓库ID必须一致；旧环境若显式配置了不同目录/`off`模式/仓库ID，入口会拒绝，请核对后移除冲突项。不得改Owner或重置原目录来绕过检查。正常重启使用同一环境与同一目录；原Task/attempt/预算语义不变。Agent入口移除Operator Token及存储凭据环境，固定Replay/路由关闭。
+
+`go-args/agent-env`是调用时只读配置视图；仅固定字段，不执行配置内容，不使用`eval/source`。Go启动还核对当前NFS/MinIO地址；地址改变须显式迁移，不自动重指向其他存储。本机目录claim只针对单WSL部署，不能宣传为多主机锁或HA。
+
+实际通过统一入口启动与Agent SIGKILL恢复的演示（只用**已初始化且尚无Task的新目录**）：
+
+```bash
+bash hack/workspace.sh entry --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR" \
+  --output .cache/owned-entry.json
+```
+
+这条命令运行固定合成Replay，会强杀自己启动的Agent一次；要求8080/8090及工作区实验窗口空闲。已有业务目录只用于日常启动，不重跑此夹具；旧输出/数据不覆盖。实际结果、独立审计与局限见[文档47 §19](../../docs/47-联合检查点与restic-MinIO学习手册.md#19-owned-v2统一部署与启动恢复)。
 
 NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工具组与最终诊断的同步联合保存；默认off。可信Go另需固定维护镜像、专用仓库Secret名称与MinIO私网地址，凭据不能交给业务Pod/模型。安装、两终端启动、独立真实演示及未验收范围见[文档47 §7](../../docs/47-联合检查点与restic-MinIO学习手册.md#7-agent完整边界自动保存与最终诊断接续)。不因有备份就认为历史分支恢复、NFS高可用或自动GC已经实现。
 

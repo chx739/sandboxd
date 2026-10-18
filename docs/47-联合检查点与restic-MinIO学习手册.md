@@ -645,3 +645,49 @@ agentd/.venv/bin/python -m agentd.workspace_storage_fault_demo \
 - [0.18.1脚本接口](https://restic.readthedocs.io/en/v0.18.1/075_scripting.html)：JSON结果与退出码。
 
 二进制本身的`restore --help`也确认snapshotID:subfolder语义；版本化文档无法通过浏览器加载的恢复页面不当作已读取证据。
+
+## 19. owned V2统一部署与启动恢复
+
+### 19.1 为什么增加部署状态
+
+临时探测可以每次新建仓库；日常启动必须复用同一仓库、控制目录和Owner。`workspace_deployment.py`是独立可信部署入口，不注册Agent工具；初始化之后，正常读取配置只需标准库，不加载模型或Agent依赖。安装与两终端命令见[部署说明](../deploy/workspace/README.md#新专属v2部署初始化启动与重启)。
+
+```text
+PLANNED：固定目录/仓库前缀/controller/Secret/job
+  → SECRET_READY：持久固定Pod模板（无业务NFS卷）
+  → INIT_SUBMITTED：先落盘意图，再提交一次初始化Pod
+  → OWNER_READY：真实成功结果、UID/imageID/节点停止证明已落盘
+  → READY：检查点目录已绑定同Owner及本机唯一claim
+```
+
+INIT_SUBMITTED后的重试只核对同一Pod。缺失不代表从未执行，不能再init；失败/身份变化/节点停止证明不足也保留原意图并停止。OWNER_READY后的重试只完成目录绑定，不重新初始化。成功证明和READY先持久化，再按原UID删除已确认终止的维护Pod；删除后再次启动沿保存结果复用。该流程没有控制盘丢失恢复、跨主机协调或自动迁移。
+
+持久配置限制在原生`~/.local/share/sandboxd/deployments/<name>`私有目录，核对路径、权限、设备与inode、配置checksum和仓库claim。Secret设为immutable；密码/MinIO凭据仅在仓库外私有文件和Secret，不写入deployment.json/Session/模型。checksum检测意外损坏，不是对恶意管理员的签名。
+
+### 19.2 启动时如何使用
+
+- 设置`SANDBOXD_WORKSPACE_DEPLOYMENT_DIR`后，Go入口读取固定Owner/Secret/地址及Go控制目录，选择v3维护镜像；旧未指定目录的V1与手动v2路径继续保留，不自动收编旧仓库。
+- Agent入口读取同目录的`agent-control`、restic模式、固定逻辑仓库ID；已有不同环境值直接拒绝，不悄悄覆盖用户配置。
+- 配置是调用时视图。Shell先检查读取退出码，再按行处理固定参数/环境字段，不用`eval/source`，也不使用会吞掉子进程失败的进程替换读取。
+- Agent移除Operator与RESTIC/AWS/MinIO凭据环境；真实API Token仍按既有权限使用。目录名、Owner、Secret名称不是认证Token。
+- Go启动检查存储地址仍匹配原部署；地址变化停止并要求显式迁移。MinIO/NFS服务、固定镜像、原生控制盘仍是前置依赖，不宣称单命令提供生产HA。
+
+### 19.3 本轮真实结果与证据
+
+`phase9-v2-deployment-init-command.txt`实际创建全新`owned-deploy`前缀并到READY；同目录重复初始化与只读状态分别记录在`-reinit-command.txt`和`-status.json`。原始初始化Pod成功证明保存在部署文件中，未复用旧共享或故意污染仓库。
+
+`phase9-v2-deployment-entry.json`为真实统一Shell→Go TCP→Agent TCP→gVisor/NFS/restic/MinIO，固定Replay、外部模型0：
+
+- 实际SIGKILL本夹具Agent后，同目录自动接续同一Task，两个attempt/不同Pod UID，原预算、时钟、deadline/provider不变。
+- 模型预留4槽（含原在途槽），文件写入仅1次，恢复后实际读回hash；原Session前缀保留。
+- 三个联合检查点全部PREPARING→DATA_READY→COMMITTED，revision1～3、完整父链/Session引用/仓库身份一致；最终无pending。
+- Agent进程环境没有Operator Token与存储凭据。测试存储环境使用合成canary，没有给Agent放入真实存储密码。
+- 单样本强杀→API就绪59,617.37ms，→最终核查89,464.54ms；源码挂载盘启动、轮询、刻意Replay延时和同步备份均计入，不当生产RTO。
+
+独立标准库`workspace_deployment_audit.py`已通过`phase9-v2-deployment-audit.json`：重算Go32/CP10/Task35条日志checksum/序号，核对Owner与目录claim、原调用/预算、父链/文件hash；实际仓库恰有marker+三个业务snapshot，正常`check --read-data`通过，业务/维护Pod清空。审计不重跑任务、不删除snapshot；不冒充初始化进程切点实验或完整V2矩阵。
+
+本地部署状态机与安装入口相关23/23通过`phase9-v2-deployment-final-targeted-tests.txt`，覆盖提交确认丢失、原Pod缺失、绑定中断、换UID/Secret/地址、失败、过期Lease/不健康Node、目录移动、claim不符、坏配置/权限/锁与只读视图。这些异常是Fake协议验证，与上述真实正常初始化/Agent强杀分开报告。完整回归及最终交付结果以PROGRESS和原始输出为准。
+
+入口报告保留当时Shell hash；最终版本仅`status-v2`帮助说明一行不同，已按该单行差异重构核对，Go/Agent执行分支未变。没有为统一hash或筛选更快数字重跑服务实验，具体源文件及检查值见本轮final-checks。
+
+最终完整Python332/332、320.665秒通过`phase9-v2-deployment-full-python-tests.txt`，包含本批19项部署测试和既有会话/预算/恢复/记忆/清理回归。项目业务/维护Pod和四个实验端口清空；所有数据/快照/Secret/控制目录保留，旧共享或污染仓库未触碰。新目录已有Task，日常继续沿原目录启动，不能再次作为fresh entry夹具使用。

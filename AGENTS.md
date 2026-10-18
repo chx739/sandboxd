@@ -38,6 +38,8 @@ owned helper组件（文档48 §8）已在新专用合成仓库实际验证精�
 
 统一安装续作：workspace.sh build-storage已有真实缓存校验/镜像复用/当前Go编译/kind加载证据和4项Fake契约测试；已有tag不覆盖，首次无缓存Docker构建未重跑。默认.cache/workspace-sandboxd已更新为本批源码构建，旧owned-cleanup缓存保留。fresh Owner持久初始化、目录绑定和统一restic服务启动仍待完成；不要从镜像准备成功推导部署完成或自动收编旧共享仓库。
 
+统一部署后续以文档47 §19为准：init-v2固定新仓库/controller/Secret/job，PLANNED→SECRET_READY→INIT_SUBMITTED→OWNER_READY→READY；意图先落盘，未知后只查原Pod，缺失/失败/UID变化不得盲目init。已真实验证新owned-deploy初始化/复用、目录claim与统一Go/Agent SIGKILL接续和3份CP，独立32/10/35条日志及仓库read-data通过；本地初始化异常23项与真实服务分开。当前新目录已有Task，不能重跑entry夹具；正常启动沿原目录，旧共享/污染夹具保留。下一步完整十项逐项审计，不能从本轮单项通过宣布整体完成。
+
 只有修改某个历史模块时，才需要额外阅读对应计划：Phase 1 读 `00`，Phase 2 读 `12`，Phase 2.1 读 `16`，Phase 3 读 `17`，Phase 4 读 `20`。不要每次把全部历史计划重新当作当前需求。
 
 仓库文件、Git 状态和实际命令输出比聊天记忆更可信。上下文不完整时，不要重新设计项目，也不要根据猜测扩大范围；从 `docs/PROGRESS.md` 的下一步恢复。

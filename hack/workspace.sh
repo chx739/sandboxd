@@ -33,6 +33,8 @@ case "$action" in
   check         只读资源/集群/NFS/版本检查
   build         编译可信Go服务（要求Go1.26.5）
   build-storage 准备V1业务/v3维护镜像，编译当前Go/固定Pod渲染器并加载kind；已有tag只复用
+  init-v2 ARGS  初始化全新专属仓库并绑定私有部署目录；要求--deployment-dir，重试沿原意图
+  status-v2 ARGS 只读查看V2初始化阶段；要求--deployment-dir
   nfs           启动已配置的专属NFS；要求已核实SANDBOXD_NFS_IMAGE
   go            前台启动Go服务；要求Agent/Operator Token及原生持久控制目录
   agent         前台启动NFS+Replay agentd；路由关闭，不调用外部模型
@@ -72,12 +74,26 @@ EOF
   build-storage)
     exec bash hack/build-workspace-storage.sh
     ;;
+  init-v2)
+    check_cluster
+    exec "$python_bin" -m agentd.workspace_deployment init "$@"
+    ;;
+  status-v2)
+    exec /usr/bin/python3 -m agentd.workspace_deployment status "$@"
+    ;;
   go)
     check_cluster
     : "${SANDBOXD_TOKEN:?需要Agent Token}" "${SANDBOXD_OPERATOR_TOKEN:?需要独立Operator Token}"
-    : "${SANDBOXD_WORKSPACE_CONTROL_DIR:?设置原生Linux持久控制目录}"
     backup_args=()
-    case "${AGENTD_CHECKPOINT_MODE:-off}" in
+    if [[ -n "${SANDBOXD_WORKSPACE_DEPLOYMENT_DIR:-}" ]]; then
+      [[ -z "${AGENTD_CHECKPOINT_MODE:-}" || "$AGENTD_CHECKPOINT_MODE" == restic ]] || { echo 'V2部署目录不能降级为off。' >&2; exit 1; }
+      [[ -z "${SANDBOXD_WORKSPACE_CONTROL_DIR:-}" || "$SANDBOXD_WORKSPACE_CONTROL_DIR" == "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR/go-control" ]] || { echo 'Go控制目录与V2部署不符。' >&2; exit 1; }
+      # 先检查读取退出码，再mapfile；进程替换会吞掉校验失败，不能用于此处。
+      deployment_args="$(/usr/bin/python3 -m agentd.workspace_deployment go-args --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR")"
+      mapfile -t backup_args <<< "$deployment_args"
+    else
+      : "${SANDBOXD_WORKSPACE_CONTROL_DIR:?设置原生Linux持久控制目录}"
+      case "${AGENTD_CHECKPOINT_MODE:-off}" in
       off) ;;
       restic)
         : "${SANDBOXD_BACKUP_SECRET_NAME:?设置已初始化专属仓库的Secret名称}"
@@ -87,15 +103,33 @@ EOF
                      -workspace-backup-minio-ip "$SANDBOXD_BACKUP_MINIO_IP")
         ;;
       *) echo 'AGENTD_CHECKPOINT_MODE只能为off或restic。' >&2; exit 1 ;;
-    esac
+      esac
+      backup_args+=(-workspace-control-dir "$SANDBOXD_WORKSPACE_CONTROL_DIR")
+    fi
     exec "$binary" -listen 127.0.0.1:8080 -pool-size 0 -workspace-nfs-server "$(nfs_address)" \
-      -workspace-image sandboxd-workspace:runtime-v1.5 -workspace-control-dir "$SANDBOXD_WORKSPACE_CONTROL_DIR" "${backup_args[@]}"
+      -workspace-image sandboxd-workspace:runtime-v1.5 "${backup_args[@]}"
     ;;
   agent)
     : "${AGENTD_TOKEN:?需要Agent API Token}" "${AGENTD_ALERT_TOKEN:?需要独立Alert Token}" "${SANDBOXD_TOKEN:?需要sandboxd Agent Token}"
+    if [[ -n "${SANDBOXD_WORKSPACE_DEPLOYMENT_DIR:-}" ]]; then
+      deployment_env="$(/usr/bin/python3 -m agentd.workspace_deployment agent-env --deployment-dir "$SANDBOXD_WORKSPACE_DEPLOYMENT_DIR")"
+      mapfile -t deployment_values <<< "$deployment_env"
+      for entry in "${deployment_values[@]}"; do
+        key="${entry%%=*}"; value="${entry#*=}"
+        case "$key" in
+          AGENTD_RECOVERY_DIR|AGENTD_CHECKPOINT_MODE|AGENTD_CHECKPOINT_REPOSITORY_ID)
+            [[ -z "${!key:-}" || "${!key}" == "$value" ]] || { echo 'Agent环境与V2部署不符。' >&2; exit 1; }
+            export "$entry"
+            ;;
+          *) echo '未知部署环境字段。' >&2; exit 1 ;;
+        esac
+      done
+    fi
     : "${AGENTD_RECOVERY_DIR:?设置原生Linux持久控制目录}"
     [[ "${AGENTD_LLM_MODE:-replay}" == replay ]] || { echo '本入口只允许Replay。' >&2; exit 1; }
     unset SANDBOXD_OPERATOR_TOKEN
+    unset RESTIC_PASSWORD RESTIC_REPOSITORY AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+    unset MINIO_ROOT_USER MINIO_ROOT_PASSWORD SANDBOXD_BACKUP_MINIO_ENV_FILE
     export AGENTD_WORKSPACE_BACKEND=nfs AGENTD_LLM_MODE=replay AGENTD_ROUTER_MODE=off
     exec "$python_bin" -m uvicorn agentd.app.main:create_app --factory --host 127.0.0.1 --port 8090
     ;;

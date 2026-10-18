@@ -59,9 +59,9 @@
     }
   ],
   "remaining": [
-    "Fresh owned repository durable bootstrap and unique control-directory binding, preserving all old shared/foreign fixtures and reconciling unknown initialization without blind re-init",
-    "Actual unified shell startup of owned restic-mode Go/Agent and restart reuse; cached build/image preparation alone is insufficient",
-    "Final ten-item V2 requirement-by-requirement authoritative evidence audit and related regressions; restore started/attached standalone fixture modes not executed, actual live-source-task refusal and missing/corrupt/image-mismatch coverage must be checked against requirements"
+    "Final ten-item V2 authoritative requirement-by-requirement audit: verify each condition against original reports/journals, not just passing booleans",
+    "Gather any missing actual-service evidence, especially V2-07 missing/corrupt/image refusal, V2-08 active-source refusal and V2-06 identical save request idempotence; existing restore started/attached standalone modes remain disclosed as unexecuted optional fixtures rather than new requirements",
+    "Final reviewable PR delivery, fixed commands and evidence linkage; preserve all old fixtures and user edits, no merge"
   ],
   "evidence": [
     {
@@ -955,6 +955,54 @@
     {
       "path": "docs/evidence/phase9-v2-unified-storage-build.json",
       "sha256": "013409886a1a09f638c22fb424a737bf7cd3f54a3b6c2ba65f397bc3fc272214"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-audit-command.txt",
+      "sha256": "5e7015e367951ed59e1a2d0092b0ac0bc3f2c0e2f30a52fe8eee785fa110b180"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-audit.json",
+      "sha256": "7aa87b7c84473eb3ea760f6e725cb181e8119410bb228b3608f20e17595902a9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-entry-command.txt",
+      "sha256": "ff767c19650fbda332fc6b5a14e1264398ec7453f40f94f71014553d9be601d8"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-entry.json",
+      "sha256": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-final-checks.json",
+      "sha256": "92ae121989c5c031eeab9bf8035cc28678c8a7d152b6e257ac14df8077970c88"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-final-targeted-tests.txt",
+      "sha256": "a76b34375f68c41b3dd4f45f5f3ab458e896bbc81fafbab7b2751fe0cdeb5a39"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-final-v2-checks.json",
+      "sha256": "662a735bd2bd185ca4adf12686cbd8876a20e373e2348e200f40f6f174e02540"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-full-python-tests.txt",
+      "sha256": "0376abcf51430b16f1c0bdac3af5c985cfc0994962d408c4dfc40e11de4b3cc1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-init-command.txt",
+      "sha256": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-initial-tests.txt",
+      "sha256": "926c521c60e4e5a1f4493d33ef5e71db400626c35ae6895b9fc707c239f4bb25"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-reinit-command.txt",
+      "sha256": "202f41b62e2817797a45802ee5ffec2ad0e9e4673d5b62207098d39472551e4f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-deployment-status.json",
+      "sha256": "6540e99f5a0218f0db9898fe3cf0a3cabc9fdf2d1f8ba74e6bb028614554f25f"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -970,5 +1018,8 @@
   "actualJointCleanupScope": "Actual Replay Agent five CPs, local protected references, Go Operator fixed GC, Python metadata, admin/Go SIGKILL after durable proof, real lock conflict/explicit retry, prune and retained pinned file restore verified; not new historical Task resume or performance benchmark.",
   "fixedWorkloadPerformanceScope": "Actual V1/V2 each9 serial fixed-dataset trials, nine fresh owned repositories, 18 backups/9 verified restores, dataset/manifest/324 Go journal/counter/quantile audit, network/packed/raw-data/apparent storage/CPU/memory endpoints recorded. Backend batch microbenchmark only; no production Agent-total or public billing extrapolation; unified startup/full V2 audit pending.",
   "unifiedStorageBuildReport": "phase9-v2-unified-storage-build.json",
-  "unifiedStorageBuildScope": "Actual cached restic verification, original Docker IDs preserved, current Go/server renderer build and kind loading; four Fake shell contracts. No fresh repository initialization or Agent startup acceptance."
+  "unifiedStorageBuildScope": "Actual cached restic verification, original Docker IDs preserved, current Go/server renderer build and kind loading; four Fake shell contracts. No fresh repository initialization or Agent startup acceptance.",
+  "unifiedDeploymentReport": "phase9-v2-deployment-entry.json",
+  "unifiedDeploymentAudit": "phase9-v2-deployment-audit.json",
+  "unifiedDeploymentScope": "Fresh owned repository persistent init/reuse, directory claim and actual unified Shell Go+Agent TCP/SIGKILL same-Task recovery with 3 committed checkpoints, unchanged budgets and native read-data; init fault windows are Fake protocol tests, not real initializer SIGKILL."
 }

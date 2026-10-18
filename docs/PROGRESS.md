@@ -14,9 +14,20 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M5：V1已交付；V2保存/协议切点/历史分支/存储故障/联合GC及固定后端性能已验证；统一V2入口和十项完整验收审计待完成；Goal active
+    Phase 9 M5：V1已交付；V2保存/协议切点/历史分支/存储故障/联合GC/固定后端性能及统一owned部署接续已验证；十项完整验收审计待完成；Goal active
 
 ## Phase 9 当前恢复点
+
+### 2026-10-18：owned V2初始化与统一入口接续已真实通过
+
+- 起点4e7930a，仍为codex/workspace-restic-v2/草稿PR#3（前置PR#2→PR#1，不合并）；用户docs32/docs34保持。上轮固定构建入口/实证/推送为进展，本轮新增独立workspace_deployment及初始化状态机、只读配置视图、Shell init-v2/status-v2和owned Go/Agent分支；不新增Agent工具或付费调用。
+- 固定新私有部署根/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47，对应全新owned-deploy前缀/immutable Secret/controller/owner marker；原Go/Agent目录身份、密码、初始化job先持久化。PLANNED→SECRET_READY→INIT_SUBMITTED→OWNER_READY→READY，未知结果只查原Pod，缺失/失败/UID/spec变化不盲目init；证明先落盘再目录绑定/同UID清理。默认NFS运行、旧共享/污染仓库均保留。
+- 实际init-v2、重复同目录init及status成功，原始-init-command/-reinit-command/-status保留；重复不产生第二个init Pod。真实统一Shell Go+Agent TCP/SIGKILL自动接续通过-deployment-entry.json：同Task原预算/时钟/deadline/provider不变、2attempt/不同Pod UID，4模型槽含在途预留、写文件仅1次、恢复读hash/原Session前缀正确，3个COMMITTED/revision1～3/同Owner/无pending。Agent环境Operator及合成存储canary均移除，未放入真实存储凭据。kill→API59,617.37ms、→核查89,464.54ms是单样本，含挂载盘导入/刻意等待/同步备份，不当生产RTO。
+- 独立标准库部署审计-audit及-command已通过：Go32/CP10/Task35条checksum/seq、claim/原预算/父链/服务端文件hash一致；实际专属仓库marker+3份业务snapshot及正常check --read-data通过，业务/维护Pod0。没有重新运行任务或删snapshot，不是初始化进程故障实验、历史分支或完整十项验收。
+- 本地初批19/19、1.697秒，最终相关23/23、2.642秒通过-initial-tests/-final-targeted-tests；初始化确认丢失、缺Pod、绑定中断、错误身份/失败/过期Lease/目录/锁等是Fake协议验证。完整Python332/332、320.665秒通过-full-python-tests，原生session95959实际退出0；未因记忆CLI导入等待而重启，旧306项不冒充本轮成绩，各批有重叠不相加。
+- 入口原始报告保留执行当时Shell SHA；最终仅status-v2帮助文字一行有差异，按单行重构已核对Go/Agent执行分支未变，不为统一hash重跑服务。Go生产源码未改，当前新缓存二进制仍为4e7930a批次构建；新的目录/凭据/快照/全部日志保留。
+- 收尾-final-checks实际通过：332项原文/部署原始日志hash一致，三项目容器running且非paused，业务/维护Pod0、8080/8090/10880/18090空闲，3个实际存储凭据字面/Base64在23份本轮公开文件零命中，用户两份文档hash保持。该检查点捕获当时文档hash；后续仅补本文最终回归记录和证据索引，不把动态文档hash当不可变源码证明。源码/原始报告最终固定值另在-final-v2-checks，避免文档自引用。
+- **第一项下一步**：对文档43十项逐一审计现有真实报告和原始账本，重点核查V2-07缺失/校验/镜像拒绝、V2-08活动来源拒绝及V2-06同保存请求幂等的实际证据，缺项补独立真实服务验收。统一部署已有真实证据，不能再写成全部待实现；完整Goal保持active，不将任何可选夹具未运行自动扩大为新目标。新部署目录已有Task，日常启动可复用，entry合成夹具不复跑此目录。
 
 ### 2026-10-18：统一存储构建入口已真实验证
 

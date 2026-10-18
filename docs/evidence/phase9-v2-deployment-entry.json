@@ -1,0 +1,795 @@
+{
+  "mode": "real-owned-v2-unified-entry-sigkill-replay",
+  "passed": true,
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47",
+  "entryScriptSha256": "1435a54d32b611e5be36752ee4ff49aab24c70512ad9615aa614be1678fe5649",
+  "binarySha256": "a693c4e77275cc1576b25fe1900dcd43187141d19ae3afc715226ec8444d9b6f",
+  "replaySha256": "40e9b3efc48898decb27edfaa454097ec57c65c9075299054161b1d734fe85f3",
+  "owner": {
+    "controllerId": "controller-d3afca43b7264ff9b8935ffa9ebf7cec",
+    "ownerSnapshotId": "8a9fa70448cf17977ed41c6567b9f44d2482f7b052efcddbca8369987ede9262",
+    "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2"
+  },
+  "deploymentStateSha256": "72a18f9749190d8dba5239f65b7f9aae8d246b2931892375dbba6c8978086de3",
+  "goReadyMs": 853.1871710001724,
+  "initialAgentReadyMs": 61999.615212997014,
+  "storageCredentialsEnvironmentRemoved": true,
+  "operatorEnvironmentRemoved": true,
+  "killToApiReadyMs": 59617.36525499873,
+  "killToReplacementObservedMs": 62057.57838499994,
+  "stateBeforeKill": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic entry verification"
+      },
+      "fingerprint": "d4832e782ba11b96d5aef3e976f5a071",
+      "labels": {
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "claimRequested": true,
+        "ownerStopped": false,
+        "podUid": "aa24496d-ed17-4d6b-aa4a-cc7cbf5dd8fe",
+        "sandboxId": "6dfb28c2f3bad01d",
+        "startedAt": "2026-10-18T04:56:03.887386+00:00"
+      }
+    ],
+    "branchId": "branch-16815a0b601249a79578e550791906e7",
+    "calls": {
+      "call-1cb67bd33f144f049eecac15fa7f39a3": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "reserved"
+      },
+      "call-41fe12eb7dc7403a982296dbce4386c2": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "expectedNewSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "entry.md",
+        "state": "finished"
+      },
+      "call-abed5185377344b69eedf2462584005d": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-02e7cc2b0a624318",
+    "deadline": "2026-10-18T04:58:09.816513+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "40e9b3efc48898decb27edfaa454097ec57c65c9075299054161b1d734fe85f3",
+      "model": "replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-0495be4f9898ee59",
+    "status": "running",
+    "taskId": "task-f83c45ef847d996b",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-18T04:56:03.887386+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-18T04:56:09.816513+00:00"
+    },
+    "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+  },
+  "stateAfterRestart": {
+    "alert": {
+      "annotations": {
+        "summary": "synthetic entry verification"
+      },
+      "fingerprint": "d4832e782ba11b96d5aef3e976f5a071",
+      "labels": {
+        "cluster": "local-kind",
+        "source": "manual"
+      },
+      "status": "firing"
+    },
+    "attempts": [
+      {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "aa24496d-ed17-4d6b-aa4a-cc7cbf5dd8fe",
+        "sandboxId": "6dfb28c2f3bad01d",
+        "startedAt": "2026-10-18T04:56:03.887386+00:00",
+        "stopReason": "containers-terminated"
+      },
+      {
+        "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+        "claimRequested": true,
+        "ownerStopped": true,
+        "podUid": "f5c30b82-e4b7-4add-87c4-b4c495aabf8d",
+        "sandboxId": "ff77edbc35ee6c13",
+        "startedAt": "2026-10-18T04:57:16.066653+00:00",
+        "stopReason": "containers-terminated"
+      }
+    ],
+    "branchId": "branch-16815a0b601249a79578e550791906e7",
+    "calls": {
+      "call-1cb67bd33f144f049eecac15fa7f39a3": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "uncertain"
+      },
+      "call-37014dc6a87d489483dc92c34f22e31b": {
+        "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-41fe12eb7dc7403a982296dbce4386c2": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "expectedNewSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+        "kind": "tool",
+        "operation": "write_file",
+        "path": "entry.md",
+        "state": "finished"
+      },
+      "call-7ad4628ecfc2466db55ffa0efd8303e3": {
+        "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+        "expectedNewSha256": null,
+        "kind": "tool",
+        "operation": "read_file",
+        "path": "entry.md",
+        "state": "finished"
+      },
+      "call-abed5185377344b69eedf2462584005d": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      },
+      "call-dd1981d883d84cdb93f24d0a17cf8fe9": {
+        "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+        "expectedNewSha256": null,
+        "kind": "model",
+        "operation": "",
+        "path": "",
+        "state": "finished"
+      }
+    },
+    "cancelRequested": false,
+    "commands": [],
+    "completeNodeId": "node-42805aa85ae41687",
+    "deadline": "2026-10-18T04:58:09.816513+00:00",
+    "limits": {
+      "model": 6,
+      "router": 1,
+      "tool": 8
+    },
+    "maxRecoveries": 2,
+    "provider": {
+      "fingerprint": "40e9b3efc48898decb27edfaa454097ec57c65c9075299054161b1d734fe85f3",
+      "model": "replay",
+      "provider": "replay"
+    },
+    "schemaVersion": 2,
+    "sessionId": "session-0495be4f9898ee59",
+    "status": "succeeded",
+    "taskId": "task-f83c45ef847d996b",
+    "timing": {
+      "claimSeconds": 190,
+      "claimStartedAt": "2026-10-18T04:56:03.887386+00:00",
+      "loopSeconds": 120,
+      "loopStartedAt": "2026-10-18T04:56:09.816513+00:00"
+    },
+    "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+  },
+  "oldPod": {
+    "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128",
+    "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+    "podUid": "aa24496d-ed17-4d6b-aa4a-cc7cbf5dd8fe",
+    "sandboxId": "6dfb28c2f3bad01d",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-fdc170e810d8429d80d91ee0ee4c8128",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "newPod": {
+    "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128",
+    "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+    "podUid": "f5c30b82-e4b7-4add-87c4-b4c495aabf8d",
+    "sandboxId": "ff77edbc35ee6c13",
+    "runtimeClass": "gvisor",
+    "runAsUser": 65532,
+    "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+    "imageRef": "sandboxd-workspace:runtime-v1.5",
+    "nfsMount": {
+      "source": "172.23.0.3:/workspaces/workspace-fdc170e810d8429d80d91ee0ee4c8128",
+      "fstype": "nfs4",
+      "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+    },
+    "gvisorStartup": "[   0.000000] Starting gVisor..."
+  },
+  "traces": [
+    {
+      "alertFingerprint": "",
+      "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+      "capabilities": {},
+      "elapsedMs": 0,
+      "events": [
+        {
+          "details": {
+            "auditIds": [
+              "audit-664bed91d0794384b93a37531b2613e8",
+              "audit-85c6ce3dc8d74964a9553fa852f2618b"
+            ],
+            "completeNodeId": "node-02e7cc2b0a624318",
+            "modelReservations": 2,
+            "modelResponsesRecorded": 1,
+            "provenance": "durable-call-audit; missing metadata remains unknown; legacy logs may have no audit",
+            "reason": "prior attempt had no persisted completion trace",
+            "uncertainReservations": [
+              "call-1cb67bd33f144f049eecac15fa7f39a3"
+            ],
+            "usageKnown": false
+          },
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "attempt.recovered"
+        }
+      ],
+      "final": null,
+      "injectedVia": [],
+      "mode": "recovery",
+      "model": "replay",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [],
+      "provider": "replay",
+      "routing": {},
+      "sandboxId": "6dfb28c2f3bad01d",
+      "status": "interrupted",
+      "steps": [
+        {
+          "arguments": {
+            "content": {
+              "bytes": 33,
+              "redacted": true,
+              "sha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57"
+            },
+            "path": "entry.md"
+          },
+          "auditDetails": {
+            "body": {
+              "bytes": 33,
+              "created": true,
+              "diff": "--- entry.md:old\n+++ entry.md:new\n@@ -1,0 +1,2 @@\n+synthetic unified-entry recovery\n+\n",
+              "newSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+              "oldSha256": null,
+              "path": "entry.md",
+              "redacted": false
+            },
+            "evidenceId": "ev-adb9eb12af87623f0547",
+            "observedAt": "2026-10-18T04:56:09.993201+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 136,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"bytes\":33,\"created\":true,\"diff\":\"--- entry.md:old\\n+++ entry.md:new\\n@@ -1,0 +1,2 @@\\n+synthetic unified-entry recovery\\n+\\n\",\"newSha256\":\"10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57\",\"oldSha256\":null,\"path\":\"entry.md\",\"redacted\":false},\"evidenceId\":\"ev-adb9eb12af87623f0547\",\"observedAt\":\"2026-10-18T04:56:09.993201+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "write_file"
+        }
+      ],
+      "taskId": "task-f83c45ef847d996b",
+      "verdict": "process-interrupted",
+      "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+    },
+    {
+      "alertFingerprint": "d4832e782ba11b96d5aef3e976f5a071",
+      "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+      "capabilities": {
+        "deterministic": true,
+        "toolCalling": true
+      },
+      "elapsedMs": 29266,
+      "events": [
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 1,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.started"
+        },
+        {
+          "details": {
+            "effectiveTier": null,
+            "restored": true
+          },
+          "elapsedMs": 0,
+          "index": 2,
+          "iteration": null,
+          "tool": "",
+          "type": "model.route.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 3,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 1778,
+          "index": 4,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.claim.completed"
+        },
+        {
+          "details": {
+            "afterChars": 2882,
+            "afterMessages": 5,
+            "beforeChars": 1982,
+            "beforeMessages": 4,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 12328,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 5,
+          "iteration": 3,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 6,
+          "iteration": 3,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "tool_calls",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 0,
+          "index": 7,
+          "iteration": 3,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {
+            "pluginId": "files",
+            "pluginVersion": "1.0.0"
+          },
+          "elapsedMs": 0,
+          "index": 8,
+          "iteration": 3,
+          "tool": "read_file",
+          "type": "tool.started"
+        },
+        {
+          "details": {
+            "denied": false,
+            "denyLayer": "",
+            "pluginId": "files",
+            "pluginVersion": "1.0.0",
+            "statusCode": 200
+          },
+          "elapsedMs": 147,
+          "index": 9,
+          "iteration": 3,
+          "tool": "read_file",
+          "type": "tool.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 10,
+          "iteration": 3,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {
+            "checkpointId": "cp-35c8fd185b4a4a54b47a74d6fc803e0d",
+            "nodeId": "node-f80ef0e835a6b12c",
+            "revision": 2
+          },
+          "elapsedMs": 0,
+          "index": 11,
+          "iteration": null,
+          "tool": "",
+          "type": "checkpoint.committed"
+        },
+        {
+          "details": {
+            "afterChars": 3917,
+            "afterMessages": 7,
+            "beforeChars": 2417,
+            "beforeMessages": 6,
+            "compactedGroups": 0,
+            "estimatedTokensWithOutputReserve": 13395,
+            "toolSchemaEstimatedTokens": 4152,
+            "trimmed": false
+          },
+          "elapsedMs": 0,
+          "index": 12,
+          "iteration": 4,
+          "tool": "",
+          "type": "context.transformed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 13,
+          "iteration": 4,
+          "tool": "",
+          "type": "turn.started"
+        },
+        {
+          "details": {
+            "finishReason": "stop",
+            "usage": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "totalTokens": 0
+            },
+            "usageKnown": true
+          },
+          "elapsedMs": 8002,
+          "index": 14,
+          "iteration": 4,
+          "tool": "",
+          "type": "model.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 15,
+          "iteration": 4,
+          "tool": "",
+          "type": "turn.completed"
+        },
+        {
+          "details": {
+            "nodeId": "node-42805aa85ae41687",
+            "source": "runtime-final-diagnosis"
+          },
+          "elapsedMs": 0,
+          "index": 16,
+          "iteration": null,
+          "tool": "",
+          "type": "diagnosis.persisted"
+        },
+        {
+          "details": {
+            "checkpointId": "cp-99ba621de7824326a2a0bb36942aeb76",
+            "nodeId": "node-42805aa85ae41687",
+            "revision": 3
+          },
+          "elapsedMs": 0,
+          "index": 17,
+          "iteration": null,
+          "tool": "",
+          "type": "checkpoint.committed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 18,
+          "iteration": null,
+          "tool": "",
+          "type": "agent.completed"
+        },
+        {
+          "details": {},
+          "elapsedMs": 0,
+          "index": 19,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.started"
+        },
+        {
+          "details": {},
+          "elapsedMs": 1401,
+          "index": 20,
+          "iteration": null,
+          "tool": "",
+          "type": "sandbox.release.completed"
+        }
+      ],
+      "final": {
+        "deniedActions": [],
+        "evidence": [
+          {
+            "source": "session-history:write_file",
+            "summary": "{\"historical\": true, \"toolCallId\": \"write-entry\", \"evidenceId\": \"ev-adb9eb12af87623f0547\", \"observedAt\": \"2026-10-18T04:56:09.993201+00:00\"}"
+          },
+          {
+            "source": "read_file",
+            "summary": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic unified-entry recovery\\n\",\"offset\":0,\"path\":\"entry.md\",\"redacted\":false,\"sha256\":\"10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3724c7b4baa882e59bc7\",\"observedAt\":\"2026-10-18T04:57:18.042004+00:00\"}"
+          }
+        ],
+        "injectionDetected": false,
+        "planId": null,
+        "recommendation": "observe",
+        "rootCause": "",
+        "severity": "warning",
+        "summary": "Recovered via unified entry"
+      },
+      "injectedVia": [],
+      "mode": "replay",
+      "model": "replay",
+      "modelUsage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0
+      },
+      "plugins": [
+        {
+          "capabilities": [
+            "network:prometheus",
+            "metrics:read"
+          ],
+          "description": "对部署者固定的 Prometheus 执行只读即时 PromQL 查询",
+          "id": "prometheus",
+          "tools": [
+            "query_prometheus"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "sandbox:claim",
+            "kubernetes:read",
+            "deployment-scale:propose"
+          ],
+          "description": "通过 sandboxd/gVisor 读取 Kubernetes，并创建待审批扩缩容 Plan",
+          "id": "kubernetes",
+          "tools": [
+            "kubernetes_read",
+            "propose_plan"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "network:ssh",
+            "linux:read"
+          ],
+          "description": "通过固定 SSH Target Registry 执行四个只读 Linux 诊断操作",
+          "id": "linux-host",
+          "tools": [
+            "linux_read"
+          ],
+          "version": "1.0.0"
+        },
+        {
+          "capabilities": [
+            "task-workspace:read",
+            "task-workspace:write"
+          ],
+          "description": "只访问当前 task 私有工作区的文本 list/read/search/write/edit 工具",
+          "id": "files",
+          "tools": [
+            "list_files",
+            "read_file",
+            "search_files",
+            "write_file",
+            "edit_file"
+          ],
+          "version": "1.0.0"
+        }
+      ],
+      "provider": "replay",
+      "routing": {
+        "effectiveTier": null,
+        "restored": true
+      },
+      "sandboxId": "ff77edbc35ee6c13",
+      "status": "succeeded",
+      "steps": [
+        {
+          "arguments": {
+            "path": "entry.md"
+          },
+          "auditDetails": {
+            "body": {
+              "content": "synthetic unified-entry recovery\n",
+              "offset": 0,
+              "path": "entry.md",
+              "redacted": false,
+              "sha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+              "totalChars": 33,
+              "truncated": false
+            },
+            "evidenceId": "ev-3724c7b4baa882e59bc7",
+            "observedAt": "2026-10-18T04:57:18.042004+00:00",
+            "ok": true,
+            "statusCode": 200
+          },
+          "denied": false,
+          "denyLayer": "",
+          "elapsedMs": 147,
+          "index": 1,
+          "node": "execute_tool",
+          "observation": "{\"ok\":true,\"statusCode\":200,\"body\":{\"content\":\"synthetic unified-entry recovery\\n\",\"offset\":0,\"path\":\"entry.md\",\"redacted\":false,\"sha256\":\"10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57\",\"totalChars\":33,\"truncated\":false},\"evidenceId\":\"ev-3724c7b4baa882e59bc7\",\"observedAt\":\"2026-10-18T04:57:18.042004+00:00\"}",
+          "pluginId": "files",
+          "pluginVersion": "1.0.0",
+          "tool": "read_file"
+        }
+      ],
+      "taskId": "task-f83c45ef847d996b",
+      "verdict": "completed",
+      "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+    }
+  ],
+  "killToReadObservedMs": 62455.67710800242,
+  "killToSucceededMs": 89464.54282200284,
+  "serverSha256": "10550e80bf804e404d9e6648a1007243c23ed724b8cfeea50b353ffd7cd9aa57",
+  "sessionPrefixPreserved": true,
+  "timingScope": "single sample; source mount import and deliberate Replay delay included; not production RTO",
+  "jointCheckpoints": [
+    {
+      "checkpointId": "cp-5a30d48a12444321b72665eae38d3791",
+      "committedAt": "2026-10-18T04:56:18.356533+00:00",
+      "createdAt": "2026-10-18T04:56:10.042889+00:00",
+      "data": {
+        "manifestSha256": "cde8a658a5f7562b5a5268f6371067c01b57cdaaeb6523c573de215ab006dd6c",
+        "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2",
+        "repositoryId": "repo-d3afca43b7264ff9b8935ffa9ebf7cec",
+        "snapshotId": "fbc1e3bfa64e717b11b8af3e96f67cda98e9afa1f5da376f859022b764e9eae6"
+      },
+      "failure": null,
+      "identity": {
+        "attemptId": "attempt-991d85a087c44fdfabfbbd9753d00d63",
+        "branchId": "branch-16815a0b601249a79578e550791906e7",
+        "generation": 1,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "podUid": "aa24496d-ed17-4d6b-aa4a-cc7cbf5dd8fe",
+        "sandboxId": "6dfb28c2f3bad01d",
+        "sessionId": "session-0495be4f9898ee59",
+        "sessionNodeId": "node-02e7cc2b0a624318",
+        "sessionRef": {
+          "bytes": 4484,
+          "nodeId": "node-02e7cc2b0a624318",
+          "path": "session-refs/407017b77bf61ca0621fc14f9cf3c7b23977ed926a2ef90d2ad0754ab484a2f5.json",
+          "schemaVersion": 1,
+          "sessionId": "session-0495be4f9898ee59",
+          "sha256": "407017b77bf61ca0621fc14f9cf3c7b23977ed926a2ef90d2ad0754ab484a2f5"
+        },
+        "taskId": "task-f83c45ef847d996b",
+        "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+      },
+      "parentCheckpointId": null,
+      "revision": 1,
+      "schemaVersion": 1,
+      "status": "COMMITTED"
+    },
+    {
+      "checkpointId": "cp-35c8fd185b4a4a54b47a74d6fc803e0d",
+      "committedAt": "2026-10-18T04:57:24.562770+00:00",
+      "createdAt": "2026-10-18T04:57:18.102720+00:00",
+      "data": {
+        "manifestSha256": "cde8a658a5f7562b5a5268f6371067c01b57cdaaeb6523c573de215ab006dd6c",
+        "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2",
+        "repositoryId": "repo-d3afca43b7264ff9b8935ffa9ebf7cec",
+        "snapshotId": "fe6b979b0d1ae1f480bd25b42a07b63e100a146ae48d22124d336a00bd464f5f"
+      },
+      "failure": null,
+      "identity": {
+        "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+        "branchId": "branch-16815a0b601249a79578e550791906e7",
+        "generation": 2,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "podUid": "f5c30b82-e4b7-4add-87c4-b4c495aabf8d",
+        "sandboxId": "ff77edbc35ee6c13",
+        "sessionId": "session-0495be4f9898ee59",
+        "sessionNodeId": "node-f80ef0e835a6b12c",
+        "sessionRef": {
+          "bytes": 5492,
+          "nodeId": "node-f80ef0e835a6b12c",
+          "path": "session-refs/a683335111561fc064f91717dc891e88c9045d21e5372b161149744686efef22.json",
+          "schemaVersion": 1,
+          "sessionId": "session-0495be4f9898ee59",
+          "sha256": "a683335111561fc064f91717dc891e88c9045d21e5372b161149744686efef22"
+        },
+        "taskId": "task-f83c45ef847d996b",
+        "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+      },
+      "parentCheckpointId": "cp-5a30d48a12444321b72665eae38d3791",
+      "revision": 2,
+      "schemaVersion": 1,
+      "status": "COMMITTED"
+    },
+    {
+      "checkpointId": "cp-99ba621de7824326a2a0bb36942aeb76",
+      "committedAt": "2026-10-18T04:57:41.673809+00:00",
+      "createdAt": "2026-10-18T04:57:33.236179+00:00",
+      "data": {
+        "manifestSha256": "cde8a658a5f7562b5a5268f6371067c01b57cdaaeb6523c573de215ab006dd6c",
+        "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2",
+        "repositoryId": "repo-d3afca43b7264ff9b8935ffa9ebf7cec",
+        "snapshotId": "24997e49743644de15e490804d0929908b79396809feb3f1dcf8f0811a715209"
+      },
+      "failure": null,
+      "identity": {
+        "attemptId": "attempt-33efe7b46ae148d8bd0b471ad8a4f2ca",
+        "branchId": "branch-16815a0b601249a79578e550791906e7",
+        "generation": 2,
+        "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "imageRef": "sandboxd-workspace:runtime-v1.5",
+        "podUid": "f5c30b82-e4b7-4add-87c4-b4c495aabf8d",
+        "sandboxId": "ff77edbc35ee6c13",
+        "sessionId": "session-0495be4f9898ee59",
+        "sessionNodeId": "node-42805aa85ae41687",
+        "sessionRef": {
+          "bytes": 7194,
+          "nodeId": "node-42805aa85ae41687",
+          "path": "session-refs/b350acda28155c18520e947ad85fc27cf83c0829bdf0fc49ab30f73019ee89f7.json",
+          "schemaVersion": 1,
+          "sessionId": "session-0495be4f9898ee59",
+          "sha256": "b350acda28155c18520e947ad85fc27cf83c0829bdf0fc49ab30f73019ee89f7"
+        },
+        "taskId": "task-f83c45ef847d996b",
+        "workspaceId": "workspace-fdc170e810d8429d80d91ee0ee4c8128"
+      },
+      "parentCheckpointId": "cp-35c8fd185b4a4a54b47a74d6fc803e0d",
+      "revision": 3,
+      "schemaVersion": 1,
+      "status": "COMMITTED"
+    }
+  ],
+  "timestamp": "2026-10-18T04:57:43.979792+00:00"
+}

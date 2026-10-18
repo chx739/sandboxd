@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "sourceSha256": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9",
+  "mode": "independent-owned-v2-unified-entry-audit",
+  "scope": "Actual init/reuse/Go+Agent startup and same-Task SIGKILL recovery, original budgets and files, owned joint commits and native repository read-data; not bootstrap crash injection or full V2 matrix",
+  "journalRecords": {
+    "go": 32,
+    "checkpoints": 10,
+    "tasks": 35
+  },
+  "owner": {
+    "controllerId": "controller-d3afca43b7264ff9b8935ffa9ebf7cec",
+    "ownerSnapshotId": "8a9fa70448cf17977ed41c6567b9f44d2482f7b052efcddbca8369987ede9262",
+    "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2"
+  },
+  "snapshots": [
+    "24997e49743644de15e490804d0929908b79396809feb3f1dcf8f0811a715209",
+    "8a9fa70448cf17977ed41c6567b9f44d2482f7b052efcddbca8369987ede9262",
+    "fbc1e3bfa64e717b11b8af3e96f67cda98e9afa1f5da376f859022b764e9eae6",
+    "fe6b979b0d1ae1f480bd25b42a07b63e100a146ae48d22124d336a00bd464f5f"
+  ],
+  "resticReadDataCheckPassed": true,
+  "externalModelCalls": 0,
+  "files": {
+    "docs/evidence/phase9-v2-deployment-entry.json": "f3637a6103a3e8f27e6f36cc890db4d5af8895a8bbd06c7aa37b0204d958f8c9",
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/deployment.json": "72a18f9749190d8dba5239f65b7f9aae8d246b2931892375dbba6c8978086de3",
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/go-control/workspaces.jsonl": "ef8c0243e9a990f7b9f5ba1ada76fde3dc7609c250acd21e972c29fe64a52679",
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/agent-control/tasks.jsonl": "b6993f1dc608c06cbc01ac9e2cffc1cf1e279b495ce26a67b71deab8e8eb2fa6",
+    "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47/agent-control/checkpoints/checkpoints.jsonl": "f73a5810d7454337da89a69794d16f931e994b5c73071d1deb12acc217a32f14",
+    "/home/hx/.local/share/sandboxd/repository-controllers/81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2.json": "e2cf367aa9fdef80beb48b5c6a2b9b9e334affe09bbec8562a556fb6955696ef"
+  },
+  "formalV2AcceptanceComplete": false
+}

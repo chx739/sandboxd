@@ -1,0 +1,16 @@
+{
+  "phase": "READY",
+  "owner": {
+    "controllerId": "controller-d3afca43b7264ff9b8935ffa9ebf7cec",
+    "ownerSnapshotId": "8a9fa70448cf17977ed41c6567b9f44d2482f7b052efcddbca8369987ede9262",
+    "repositoryCryptoId": "81cee486907506ec8b1c54be973440a66c75c27c6375c4eba1e08e5f04d2f4d2"
+  },
+  "secretName": "restic-8bbec1bf3da64f5985bc1e57e701d8ea",
+  "root": {
+    "device": 2096,
+    "directory": "/home/hx/.local/share/sandboxd/deployments/entry-3c927792095347c18680af01f0e34d47",
+    "inode": 2505
+  },
+  "nfsIp": "172.23.0.3",
+  "minioIp": "172.23.0.4"
+}
