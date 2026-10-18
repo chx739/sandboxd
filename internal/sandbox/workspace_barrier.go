@@ -28,9 +28,10 @@ type WorkspaceBarrier struct {
 // Trusted deployment inputs are pinned with the job, so restart cannot silently
 // select another image, repository Secret or endpoint for an uncertain request.
 type BackupJobConfig struct {
-	ImageRef   string `json:"imageRef,omitempty"`
-	SecretName string `json:"secretName,omitempty"`
-	EndpointIP string `json:"endpointIp,omitempty"`
+	ImageRef   string                       `json:"imageRef,omitempty"`
+	SecretName string                       `json:"secretName,omitempty"`
+	EndpointIP string                       `json:"endpointIp,omitempty"`
+	Owner      backuphelper.RepositoryOwner `json:"owner,omitzero"`
 }
 
 func (r *WorkspaceRegistry) barrierActive(workspaceID string) bool {
@@ -46,6 +47,9 @@ func (r *WorkspaceRegistry) Barrier(workspaceID string) (WorkspaceBarrier, bool)
 }
 
 func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
+	if !r.repositoryMatches(b.Job) {
+		return ErrWorkspaceConflict
+	}
 	if b.Version != 1 || !workspaceIDPattern.MatchString(b.WorkspaceID) || !runtimeIDPattern.MatchString(b.JobID) || len(b.JobID) > 46 || b.PodName != "workspace-backup-"+b.JobID {
 		return errors.New("invalid workspace barrier identity")
 	}
@@ -53,7 +57,7 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		return err
 	}
 	if b.Job != (BackupJobConfig{}) {
-		request := backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}
+		request := backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID, Owner: b.Job.Owner}
 		if b.Operation == "restore" && b.RestoreSource.valid() {
 			request = backuphelper.Request{Operation: "restore", SnapshotID: b.RestoreSource.SnapshotID, ManifestSHA256: b.RestoreSource.ManifestSHA256, RepositoryCryptoID: b.RestoreSource.RepositoryCryptoID}
 		} else if b.Operation != "backup" {
@@ -76,6 +80,9 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 			return ErrWorkspaceConflict
 		}
 	case "restore":
+		if b.Job.Owner != (backuphelper.RepositoryOwner{}) && b.RestoreSource.RepositoryCryptoID != b.Job.Owner.RepositoryCryptoID {
+			return ErrWorkspaceConflict
+		}
 		// 目标只能是从未认领的新目录；已释放的旧目录也不能作为恢复目标。
 		if record.Phase != "ready" || record.Generation != 0 || b.Access != (WorkspaceAccess{}) {
 			return ErrWorkspaceConflict

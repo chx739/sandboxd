@@ -110,7 +110,7 @@ func main() {
 		}
 		apiServer.EnableWorkspaces(workspaces)
 		if cfg.BackupImage != "" {
-			backups, err := sandbox.NewBackupRuntime(workspaces, sandbox.BackupJobConfig{ImageRef: cfg.BackupImage, SecretName: cfg.BackupSecret, EndpointIP: cfg.BackupMinIOIP})
+			backups, err := sandbox.NewBackupRuntime(workspaces, sandbox.BackupJobConfig{ImageRef: cfg.BackupImage, SecretName: cfg.BackupSecret, EndpointIP: cfg.BackupMinIOIP, Owner: cfg.BackupOwner})
 			if err != nil {
 				log.Fatalf("配置可信备份执行器: %v", err)
 			}

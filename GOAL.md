@@ -12,6 +12,8 @@
 
 Phase 9 只解除与本轮直接相关的历史限制：文件工具经 Go 受限接口访问本项目 Pod 专属工作区；新增 NFS、任务/attempt 持久化与 restic/MinIO；自动故障接续保留原 Task，手动 resume 继续创建新 Task。仍禁止任意 Shell、外部主机任意写入、自动审批、新数据库、消息队列、多租户及生产级 HA。原安全边界与用户数据保留；Phase 8 未完成的 Live/人工审核待办保留，其旧预算不自动授权本轮调用。
 
+最新增量：Go控制日志已接入新专属仓库的不可变归属绑定、显式部署参数及owned备份/结果核验，本地Go回归通过；完整清理持久屏障、Operator入口、Python控制目录归属和联合验收仍未完成，不能把绑定模块作为V2-09完成证明。续作见文档48 §9。
+
 在公开 GitHub 仓库中，面向 WSL2/Linux 实现一个**最小化、模块化、真实可运行、适合秋招面试讲解**的 Kubernetes AI Agent 沙箱 Demo：以 **gVisor（runsc，WSL2 默认使用 systrap）**提供运行时隔离，用简洁易读、带中文“为什么”注释的 Go 代码串起 Pod 安全基线、ServiceAccount/RBAC、Calico NetworkPolicy、client-go Exec、Informer/Workqueue、预热池与 JSON Patch CAS、Prometheus 指标以及 Deployment 扩缩容 DryRun/审批门，并为每个模块编写配套学习文档、八股知识点、面试问答和可复现验证命令。项目的成功标准是“能在当前 WSL 环境安全地跑通、用户能快速读懂、能展示证据并在面试中讲清设计取舍”，而不是生产级完备性、极致性能、完整测试覆盖率或复杂架构。
 
 ## 已完成目标：Phase 2 外部告警诊断 Agent

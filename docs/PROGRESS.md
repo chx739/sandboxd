@@ -18,6 +18,14 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：Go持久仓库绑定与owned备份接线
+
+- 起点da46dcf，codex/workspace-restic-v2/草稿PR#3仍OPEN，base为codex/workspace-nfs-v1；保留用户docs32/docs34。上轮为流量答疑/源码检查，没有新增性能成绩；本轮新增实际代码和回归证据。Goal保持完整active。
+- 新repository.binding只允许全新Go控制日志，fsync固定controller/repo crypto/owner marker、Secret名称和MinIO IP；重启相同配置幂等，拒绝换绑定、漏Owner降级及旧工作区自动收编。三项可信部署参数完整校验，BackupRuntime实际构造backup-owned并核对成功结果crypto，恢复来源错仓库在预留前拒绝。旧未绑定模式默认保留；没有给Agent新增执行参数或删除接口。
+- 初轮3项顶层定向通过phase9-v2-repository-binding-tests.txt；后增配置及恢复来源重建测试，最终config/helper/sandbox/API race全部通过-final-race-tests，Go全项目通过-full-go-tests。均为本地逻辑/fake Kubernetes，无实际Pod或MinIO操作，不重跑Python、不把旧292当本批成绩。资源available20,557MiB/swap0/根盘930GiB。
+- -audit记录8份代码hash及4份测试原文，当前进度188份证据hash逐项核验通过；初次证据收集器因Go ok后的空格格式误拒，修正解析而未改原测试或重跑。外部模型0、新服务0、删除0；原仓库/卷/快照保留。仓库绑定只约束该Go日志，不宣称已完成Python控制目录唯一归属或跨部署排他。
+- **第一项下一步**：复用维护Pod生命周期补持久全局GC屏障与可信Operator专属入口，再完成Python控制目录归属/PREPARED→真实后端→FORGOTTEN协调器、新专属干净仓库的引用保护/中断/锁冲突验收。性能流量、统一V2入口、完整十项审计仍待完成。文档48 §9为本批代码阅读入口。
+
 ### 2026-10-18：owned helper与新专用仓库实际forget/prune组件通过
 
 - 本批有效实现9d50421（起点d02c3fe），codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮本地引用/预览、292回归及PR为进展；本轮增加可信Go helper的仓库归属与固定init-owned/backup-owned/forget/prune契约，管理Pod不挂业务NFS，未开放Agent API/模型工具，默认运行仍为v2镜像。

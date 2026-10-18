@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/chx739/sandboxd/internal/backuphelper"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -30,6 +31,7 @@ type Config struct {
 	BackupImage         string
 	BackupSecret        string
 	BackupMinIOIP       string
+	BackupOwner         backuphelper.RepositoryOwner
 }
 
 func Parse(args []string) (Config, error) {
@@ -51,6 +53,9 @@ func Parse(args []string) (Config, error) {
 	flags.StringVar(&cfg.BackupImage, "workspace-backup-image", "", "可信restic维护镜像；三项备份配置齐全才启用")
 	flags.StringVar(&cfg.BackupSecret, "workspace-backup-secret", "", "已配置的专属仓库Secret名称；不是凭据值")
 	flags.StringVar(&cfg.BackupMinIOIP, "workspace-backup-minio-ip", "", "专属MinIO固定IPv4；不接受调用方存储URL")
+	flags.StringVar(&cfg.BackupOwner.ControllerID, "workspace-backup-controller", "", "新专属仓库controller UUIDv4；不是认证Token")
+	flags.StringVar(&cfg.BackupOwner.RepositoryCryptoID, "workspace-backup-repository-id", "", "专属restic仓库完整crypto ID")
+	flags.StringVar(&cfg.BackupOwner.OwnerSnapshotID, "workspace-backup-owner-snapshot", "", "专属仓库归属标记的完整snapshot ID")
 
 	if err := flags.Parse(args); err != nil {
 		return Config{}, err
@@ -93,6 +98,9 @@ func Parse(args []string) (Config, error) {
 		if cfg.WorkspaceNFSServer == "" || cfg.BackupImage == "" || !strings.HasPrefix(cfg.BackupSecret, "restic-") || ip == nil || ip.To4() == nil || cfg.RuntimeClass != "gvisor" {
 			return Config{}, errors.New("备份模式要求完整NFS配置、固定维护镜像、专用Secret、MinIO IPv4和gvisor")
 		}
+	}
+	if cfg.BackupOwner != (backuphelper.RepositoryOwner{}) && (!cfg.BackupOwner.Valid() || cfg.BackupImage == "") {
+		return Config{}, errors.New("仓库归属要求完整controller、crypto ID、标记snapshot和备份配置")
 	}
 	return cfg, nil
 }

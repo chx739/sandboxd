@@ -42,6 +42,9 @@ func NewBackupRuntime(w *WorkspaceRuntime, job BackupJobConfig) (*BackupRuntime,
 	if _, err := BuildBackupPod(Config{Image: job.ImageRef, RuntimeClass: "gvisor"}, "validate", "workspace-11111111111111111111111111111111", job.SecretName, backuphelper.Request{Operation: "config"}); err != nil {
 		return nil, err
 	}
+	if err := w.registry.bindRepository(job); err != nil {
+		return nil, err
+	}
 	b := &BackupRuntime{workspace: w, job: job}
 	b.readLogs = func(ctx context.Context, pod *corev1.Pod) ([]byte, error) {
 		limit := int64(backuphelper.MaxOutput + 1)
@@ -59,7 +62,7 @@ func (b *BackupRuntime) expected(barrier WorkspaceBarrier) (*corev1.Pod, error) 
 	if barrier.Job != b.job || (barrier.Operation != "backup" && barrier.Operation != "restore") {
 		return nil, ErrWorkspaceConflict
 	}
-	request := backuphelper.Request{Operation: "backup", CheckpointID: barrier.CheckpointID}
+	request := backuphelper.Request{Operation: "backup", CheckpointID: barrier.CheckpointID, Owner: b.job.Owner}
 	if barrier.Operation == "restore" {
 		if !barrier.RestoreSource.valid() || barrier.RestoreSource.ImageRef != b.workspace.image {
 			return nil, ErrWorkspaceConflict
@@ -241,6 +244,9 @@ func (b *BackupRuntime) Wait(ctx context.Context, expected WorkspaceBarrier) (Wo
 			}
 			if json.Unmarshal(raw, &result) != nil || !result.OK || result.Operation != barrier.Operation || (barrier.Operation == "backup" && result.CheckpointID != barrier.CheckpointID) || !backupHash.MatchString(result.SnapshotID) || !backupHash.MatchString(result.Repository.ID) || !backupHash.MatchString(result.Manifest.SHA256) || (barrier.Operation == "restore" && (result.SnapshotID != barrier.RestoreSource.SnapshotID || result.Repository.ID != barrier.RestoreSource.RepositoryCryptoID || result.Manifest.SHA256 != barrier.RestoreSource.ManifestSHA256)) {
 				return barrier, BackupResult{}, fmt.Errorf("%w: maintenance result contract", ErrWorkspaceUnavailable)
+			}
+			if b.job.Owner != (backuphelper.RepositoryOwner{}) && result.Repository.ID != b.job.Owner.RepositoryCryptoID {
+				return barrier, BackupResult{}, fmt.Errorf("%w: maintenance repository identity", ErrWorkspaceUnavailable)
 			}
 			return barrier, BackupResult{result.SnapshotID, result.Repository.ID, result.Manifest.SHA256, pod.Status.ContainerStatuses[0].ImageID, string(pod.UID)}, nil
 		}

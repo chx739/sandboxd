@@ -60,10 +60,11 @@ func (a WorkspaceAccess) Validate() error {
 }
 
 type WorkspaceRegistry struct {
-	mu       sync.Mutex
-	journal  *control.Journal
-	records  map[string]WorkspaceRecord
-	barriers map[string]WorkspaceBarrier
+	mu         sync.Mutex
+	journal    *control.Journal
+	records    map[string]WorkspaceRecord
+	barriers   map[string]WorkspaceBarrier
+	repository RepositoryBinding
 }
 
 func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
@@ -73,6 +74,17 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 	}
 	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}, barriers: map[string]WorkspaceBarrier{}}
 	for _, entry := range journal.Entries() {
+		if entry.Type == "repository.binding" {
+			var binding RepositoryBinding
+			decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))
+			decoder.DisallowUnknownFields()
+			if decoder.Decode(&binding) != nil || r.validateRepositoryBinding(binding) != nil {
+				journal.Close()
+				return nil, errors.New("invalid persistent repository binding")
+			}
+			r.repository = binding
+			continue
+		}
 		if entry.Type == "workspace.barrier" {
 			var barrier WorkspaceBarrier
 			decoder := json.NewDecoder(strings.NewReader(string(entry.Data)))

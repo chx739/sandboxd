@@ -796,6 +796,26 @@
     {
       "path": "docs/evidence/phase9-v2-owned-image-build.json",
       "sha256": "7245422b837f333ba30fd6947d0bc9ab2ff54804b9a6fa7b1c7c95e074f6cc88"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-final-race-tests.txt",
+      "sha256": "baf20f512bb895fd944bbcb18cafb2f65b329e41a48414644453fa5ec6418d65"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-full-go-tests.txt",
+      "sha256": "30d15cf400701ba7ca57f7936e1940f922704d814d3705e0825436e66afe1472"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-race-tests.txt",
+      "sha256": "7e047705ab515e016e9c42a7e4f79c355a79f78aa1dfe3025ab89865c027d430"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-tests.txt",
+      "sha256": "1dc3ee304aff9773fc86338aae88feb0326e5af653f14f2684ab9b728f8c1ab0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-binding-audit.json",
+      "sha256": "91268752404378f550edced4d5d42120a5cc991e972711e742bf4ffad3274596"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -804,5 +824,6 @@
   "agentNormalPathReport": "phase9-v2-agent-joint-checkpoint-v3.json",
   "agentFaultScope": "Six actual Agent SIGKILL cut points verified (reserved, preparing, before-data-ready, data-ready, before-commit, committed); Go/storage stayed available; restore API/full matrix not yet complete",
   "restoreControlScope": "prior synthetic control-module evidence retained; current actual executor evidence recorded in restoreExecutorScope; HTTP/Session integration pending",
-  "restoreExecutorScope": "actual trusted Go/gVisor/NFS/restic/MinIO component restored new empty target and rejected wrong expected repository before writes; no HTTP/Session historical branch/Task resume acceptance yet"
+  "restoreExecutorScope": "actual trusted Go/gVisor/NFS/restic/MinIO component restored new empty target and rejected wrong expected repository before writes; no HTTP/Session historical branch/Task resume acceptance yet",
+  "repositoryBindingScope": "Go journal pins owned repository/controller/marker/Secret name/endpoint on fresh control log only; rejects downgrade and foreign restore source; local Go and fake Kube tests passed. Python unique control-root ownership, persistent GC barrier, admin HTTP and joint cleanup not implemented."
 }

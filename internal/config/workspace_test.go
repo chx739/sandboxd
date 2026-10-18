@@ -1,6 +1,24 @@
 package config
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
+
+func TestBackupOwnerConfigurationIsExplicitAndComplete(t *testing.T) {
+	t.Setenv("SANDBOXD_TOKEN", "test-agent")
+	t.Setenv("SANDBOXD_OPERATOR_TOKEN", "test-operator")
+	base := []string{"--workspace-nfs-server", "172.23.0.3", "--workspace-image", "fixed", "--workspace-control-dir", "/home/demo/control", "--workspace-backup-image", "sandboxd-restic:0.18.1-v3", "--workspace-backup-secret", "restic-test", "--workspace-backup-minio-ip", "172.23.0.4"}
+	owner := []string{"--workspace-backup-controller", "controller-12345678123442348abc123456789abc", "--workspace-backup-repository-id", strings.Repeat("2", 64), "--workspace-backup-owner-snapshot", strings.Repeat("9", 64)}
+	if cfg, err := Parse(append(append([]string{}, base...), owner...)); err != nil || !cfg.BackupOwner.Valid() {
+		t.Fatal("valid owner rejected", err)
+	}
+	for _, args := range [][]string{owner, append(append([]string{}, base...), owner[:2]...), append(append([]string{}, base...), owner[2:]...)} {
+		if _, err := Parse(args); err == nil {
+			t.Fatal("incomplete owner configuration accepted")
+		}
+	}
+}
 
 func TestWorkspaceConfigurationIsCompleteAndPersistent(t *testing.T) {
 	t.Setenv("SANDBOXD_TOKEN", "test-agent")

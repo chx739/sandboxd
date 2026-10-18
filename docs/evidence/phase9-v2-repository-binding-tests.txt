@@ -1,0 +1,34 @@
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/controller
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/repository
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/marker
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/secret
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/endpoint
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/missing-owner
+=== RUN   TestRepositoryBindingPersistentImmutableAndNoDowngrade/empty
+--- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade (0.02s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/controller (0.00s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/repository (0.00s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/marker (0.00s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/secret (0.00s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/endpoint (0.00s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/missing-owner (0.00s)
+    --- PASS: TestRepositoryBindingPersistentImmutableAndNoDowngrade/empty (0.00s)
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/old-control
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/bad-owner
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/bad-secret
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/bad-endpoint
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/duplicate
+=== RUN   TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/late
+--- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay (0.12s)
+    --- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/old-control (0.02s)
+    --- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/bad-owner (0.02s)
+    --- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/bad-secret (0.02s)
+    --- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/bad-endpoint (0.02s)
+    --- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/duplicate (0.02s)
+    --- PASS: TestRepositoryBindingRejectsAdoptionInvalidAndCorruptReplay/late (0.02s)
+=== RUN   TestOwnedBackupRuntimeUsesFixedOwnerAndChecksRepository
+--- PASS: TestOwnedBackupRuntimeUsesFixedOwnerAndChecksRepository (0.10s)
+PASS
+ok  	github.com/chx739/sandboxd/internal/sandbox	0.262s
