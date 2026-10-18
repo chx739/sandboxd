@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：真实restic排他仓库锁冲突通过
 
-- 起点640868a，当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一目标轮有真实MinIO超时、提交与PR证据，属于进展；本轮推进剩余真实锁场景。存储夹具增加固定repository-lock模式，默认minio保留；生产Runtime/Go/镜像未改，不增加Agent工具或自由restic入口。
+- 本批有效实现214d1e5（起点640868a），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一目标轮有真实MinIO超时、提交与PR证据，属于进展；本轮推进剩余真实锁场景。存储夹具增加固定repository-lock模式，默认minio保留；生产Runtime/Go/镜像未改，不增加Agent工具或自由restic入口。
 - 新workspace_repository_lock管理夹具校验restic0.18.1二进制SHA、项目Secret/MinIO/loopback端口映射和来源crypto ID，真实check --read-data取得排他锁后只SIGSTOP自身进程；waitpid确认、独立150秒PID+starttime看门狗与finally正常CONT/INT退出，锁列表为空才算释放。桥接IP的管理侧无凭据健康探测不可达，改用同容器已发布localhost9002；不是修改业务NFS/MinIO架构。不会强制unlock或删除对象。
 - 资源检查available20,629MiB、swap0、根盘930GiB，业务/维护Pod空，原三容器运行。phase9-v2-storage-repository-lock.json真实通过：原cp-45fa... COMMITTED/revision1保持，第二点cp-d264... PREPARING→FAILED；Wait503、真实restic退出11/helper退出1，实际runsc/v2镜像一致；锁仍活跃时核查原恢复头/Session引用/报告hash、1attempt/2模型槽/2工具槽。持锁后备份启动至failed4,473.75ms，不含管理取锁时间；随后正常释放自己的锁，目录/快照/Secret/控制日志保留，外部模型0。
 - -audit报告校验三个原始日志19/24/5条checksum/seq，单次submitted及真实stopped证明→released顺序、原loop deadline/timing和calls保持；不是第二次服务实验。夹具8/8、0.005秒通过，最终相关协调器回归27/27、3.876秒通过-repository-lock-related-tests；未重跑旧267全量。-final-checks确认持锁进程退出、Pod/端口清空、MinIO正常、语法/diff与3个生成存储凭据在10份本轮文件无匹配。文档47 §16记录来源、命令、锁与Go屏障分工；失败实际发生在备份前快照查询阶段，不冒充上传中途失败。
