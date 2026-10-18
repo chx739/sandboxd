@@ -30,7 +30,7 @@
     {
       "id": "V2-05",
       "status": "pending",
-      "note": "Actual MinIO pause after first committed checkpoint: default 90s Wait returns 504, abort/finish succeed; previous revision1 remains and next point FAILED; bounded Task failure, unchanged loop clock/calls, real runsc, health restored. Partial-file failure and repository lock remain unverified; full V2 audit pending."
+      "note": "Actual MinIO pause/default 90s Wait timeout and actual exclusive restic check lock verified separately. Lock test returns real restic exit11/helper exit1 via gVisor; previous revision1 remains, next point FAILED; stop/release proof, original loop clock/calls retained, normal check shutdown releases lock without unlock. Partial-file failure and full V2 audit remain unverified."
     },
     {
       "id": "V2-06",
@@ -59,7 +59,7 @@
     }
   ],
   "remaining": [
-    "Real restic partial-file failure and repository lock cases; actual MinIO unavailability/default Wait timeout now verified without head advance",
+    "Real restic partial-file failure; actual MinIO unavailability/default Wait timeout and actual exclusive repository lock are verified without head advance",
     "Reference-aware controlled cleanup preview, protected branch/pinned/active-restore sources, forget/prune; default no automatic deletion",
     "Fixed-workload V1/V2 performance/traffic and resource comparison including synchronous checkpoint overhead",
     "Actual unified shell startup restic-mode execution",
@@ -685,6 +685,30 @@
     {
       "path": "docs/evidence/phase9-v2-storage-minio-outage.json",
       "sha256": "21280469b3bc6ffe7712603bccb19bc9e58740a5ea19d58dbd7d9f112fa5707c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-lock-final-checks.json",
+      "sha256": "e85e69463ec432f82f3a5bb8b9140224e05a93d35ad27e5e14531e7ffb1d292f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-lock-fixture-tests.txt",
+      "sha256": "b677f2516accbbda471d7429521bd68a6aa0c520c23b7d65c2c27ad4831de0e4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-repository-lock-related-tests.txt",
+      "sha256": "d51c42f55ed93459aeaa62367426763fd11273a3f25a8ccb18682858e7a5acb5"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-repository-lock-audit.json",
+      "sha256": "ee5a65aef7b110818ee0e5afae126a9ed6884ab41bd6b7f07645cd8857ebca84"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-repository-lock-command.txt",
+      "sha256": "15002444e8ba66c107875b7038dbb43430b88377a50b5fe35f28bd666d756fcf"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-repository-lock.json",
+      "sha256": "21f0183924c21b5fdaf33e43530fa0c4a75459c31e3bb1de851ed55801274ed4"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

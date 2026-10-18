@@ -22,6 +22,7 @@ from .app.store import TaskStore
 from .workspace_checkpoint_demo import CheckpointObservedClient
 from .workspace_checkpoint_fault_demo import require_idle_ports
 from .workspace_demo import REPO, checked, ready, start_go, stop_go
+from .workspace_repository_lock import RepositoryLock
 
 MINIO = "sandboxd-workspace-backup-minio-1"
 
@@ -83,14 +84,33 @@ class OutageClient(CheckpointObservedClient):
                 assert head["status"] == "COMMITTED" and head["checkpointId"] != cp
                 self.previous_head = head
                 self.failed_checkpoint = cp
+                if isinstance(self.outage, RepositoryLock):
+                    self.outage.expected_repository_id = head["data"]["repositoryCryptoId"]
                 self.outage.begin()
                 self.outage_started = time.perf_counter()
-                print(json.dumps({"stage": "MinIO-paused-after-first-commit", "checkpointId": cp}), flush=True)
+                print(json.dumps({"stage": "storage-fault-after-first-commit", "checkpointId": cp,
+                                  "faultType": type(self.outage).__name__}), flush=True)
         started = time.perf_counter()
         try:
             response = await super().workspace_backup(action, binding, cp, job, timeout=timeout)
             self.events.append({"action": action, "checkpointId": cp, "httpStatus": response.status_code,
                                 "timeoutSeconds": timeout, "elapsedMs": (time.perf_counter() - started) * 1000})
+            if action == "wait" and response.status_code >= 400 and isinstance(self.outage, RepositoryLock):
+                # 只读取本请求固定Pod的结构化helper输出，不保存原始CRI或后端stderr。
+                barrier = (await self.get_workspace_backup(binding["workspaceId"])).body
+                assert barrier["checkpointId"] == cp and barrier["access"] == binding
+                pod = json.loads(checked(["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-storage",
+                                          "get", "pod", barrier["podName"], "-o", "json"]))
+                assert pod["metadata"]["uid"] == barrier["podUid"]
+                status = pod["status"]["containerStatuses"][0]
+                cri = json.loads(checked(["docker", "exec", "sandboxd-control-plane", "crictl", "inspect", "-o", "json",
+                                          status["containerID"].split("://", 1)[1]]))
+                raw = json.loads(checked(["kubectl", "--context", "kind-sandboxd", "-n", "sandboxd-storage", "logs", barrier["podName"]]))
+                assert "exit=11," in raw.get("error", ""), "must be actual restic lock conflict"
+                assert cri["info"]["runtimeType"] == "io.containerd.runsc.v1"
+                self.failed_maintenance = {"podUid": barrier["podUid"], "podName": barrier["podName"],
+                    "checkpointId": cp, "runtimeType": cri["info"]["runtimeType"], "imageId": status["imageID"],
+                    "helperExitCode": status["state"]["terminated"]["exitCode"], "resticExitCode": 11}
             return response
         except BaseException as exc:
             self.events.append({"action": action, "checkpointId": cp, "exceptionType": type(exc).__name__,
@@ -98,7 +118,9 @@ class OutageClient(CheckpointObservedClient):
             raise
 
 
-async def run(output: Path, secret: str, endpoint: str):
+async def run(output: Path, secret: str, endpoint: str, fault: str = "minio"):
+    if fault not in {"minio", "repository-lock"}:
+        raise ValueError("unknown fixed storage fault")
     require_idle_ports((10880,))
     assert checked(["kubectl", "config", "current-context"]).strip() == "kind-sandboxd"
     nfs = json.loads(checked(["docker", "inspect", "sandboxd-workspace-nfs-1"]))[0]
@@ -118,12 +140,12 @@ async def run(output: Path, secret: str, endpoint: str):
     store = TaskStore(root / "legacy-traces", recovery_dir=root / "agent-control")
     refs = SessionReferences(root / "agent-control/checkpoints")
     ledger = CheckpointLedger(root / "agent-control/checkpoints/checkpoints.jsonl", refs)
-    outage = MinioOutage()
+    outage = MinioOutage() if fault == "minio" else RepositoryLock(root, secret, endpoint)
     client = OutageClient(token, ledger, outage)
     coordinator = CheckpointCoordinator(client, ledger, refs, "repo-component")
     worker = None
-    report = {"mode": "real-agent-replay-go-gvisor-nfs-minio-paused", "passed": False,
-              "scope": "MinIO unavailability and real wait timeout; not partial-file failure or repository lock",
+    report = {"mode": "real-agent-replay-go-gvisor-nfs-storage-fault", "fault": fault, "passed": False,
+              "scope": "actual MinIO unavailability/Wait timeout or actual exclusive repository lock, separately reported; not partial-file failure",
               "externalModelCalls": 0, "controlRoot": str(root)}
     try:
         await ready(process)
@@ -138,7 +160,7 @@ async def run(output: Path, secret: str, endpoint: str):
                 if task.status in {"succeeded", "failed", "interrupted", "cancelled", "limit_exceeded"}:
                     break
                 await asyncio.sleep(.2)
-        assert outage.container_id and client.previous_head and client.failed_checkpoint
+        assert client.previous_head and client.failed_checkpoint
         state = store._ledger.get(task.task_id)
         old = client.previous_head
         report.update(taskStatus=task.status, taskError=task.error, workspaceId=task.workspace_id,
@@ -153,7 +175,13 @@ async def run(output: Path, secret: str, endpoint: str):
         elapsed = (time.perf_counter() - client.outage_started) * 1000
         assert elapsed < 145000, "default wait and cleanup must be bounded before watchdog recovery"
         # 故障仍存在时先核对失败结果，防止看门狗恢复服务造成假阳性。
-        assert json.loads(checked(["docker", "inspect", outage.container_id]))[0]["State"]["Paused"]
+        if fault == "minio":
+            assert json.loads(checked(["docker", "inspect", outage.container_id]))[0]["State"]["Paused"]
+        else:
+            outage.assert_active()
+            report["lockProof"] = {"exclusiveCheckPid": outage.process.pid, "lockIds": outage.lock_ids,
+                                   "processStoppedAndLiveAtAssertions": True, "resticBinarySha256": hashlib.sha256((REPO / ".cache/restic-image-v2/restic").read_bytes()).hexdigest()}
+            report["failedMaintenance"] = client.failed_maintenance
         record, prefix = ledger.restore_point(old["checkpointId"])
         assert record == old and prefix["nodes"]
         actual = checked(["docker", "exec", "--user", "65532:65532", "sandboxd-workspace-nfs-1", "sha256sum",
@@ -163,7 +191,7 @@ async def run(output: Path, secret: str, endpoint: str):
                       preservedCheckpoint=old, failedCheckpoint=ledger.get(client.failed_checkpoint),
                       outageToTerminalMs=elapsed, calls=state["calls"], attempts=state["attempts"],
                       deadline=state["deadline"], timing=state["timing"], fileSha256=actual,
-                      minioStillPausedAtAssertions=True, businessPods=client.observations,
+                      minioStillPausedAtAssertions=fault == "minio", businessPods=client.observations,
                       successfulMaintenance=client.maintenance)
     except BaseException as exc:
         report["error"] = public_error(exc)
@@ -171,10 +199,10 @@ async def run(output: Path, secret: str, endpoint: str):
     finally:
         try:
             outage.end()
-            report["minioRestored"] = True
+            report["minioRestored" if fault == "minio" else "exclusiveLockReleasedNormally"] = True
         except Exception as exc:
             report["passed"] = False
-            report["minioRestoreError"] = public_error(exc)
+            report["faultCleanupError"] = public_error(exc)
         if worker:
             worker.cancel()
             await asyncio.gather(worker, return_exceptions=True)
@@ -192,7 +220,8 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--secret-name", required=True)
     parser.add_argument("--minio-ip", required=True)
+    parser.add_argument("--fault", choices=("minio", "repository-lock"), default="minio")
     args = parser.parse_args()
     if args.output.exists():
         raise ValueError("preserve existing evidence; choose a new report path")
-    asyncio.run(run(args.output, args.secret_name, args.minio_ip))
+    asyncio.run(run(args.output, args.secret_name, args.minio_ip, args.fault))

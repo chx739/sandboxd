@@ -580,7 +580,33 @@ agentd/.venv/bin/python -m agentd.workspace_storage_fault_demo \
 
 面试讲法：备份失败只损失本次新增的历史恢复点；最新NFS文件与上一份COMMITTED分别保留。同步备份等待有成本，因此需要显式超时、可取消和停止证明；本次不能推出NFS不可用时也能接管。读代码从`OutageClient.workspace_backup`的第二次Start前暂停，沿`CheckpointCoordinator.save/cleanup`与Go Wait/Abort/Finish，再看持久检查点日志。
 
-## 16. 官方参考与版本
+## 16. 真实restic排他锁实验
+
+同一存储故障入口增加固定`--fault repository-lock`选择；默认仍为`minio`，原报告与命令保留。没有新增生产工具、HTTP参数、维护镜像或自由restic命令入口。
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_storage_fault_demo \
+  --fault repository-lock \
+  --secret-name '<同环境已初始化专用仓库的Secret名称>' \
+  --minio-ip '<当前专属MinIO在kind网络内的IPv4>' \
+  --output docs/evidence/phase9-v2-storage-repository-lock.json
+```
+
+管理夹具`workspace_repository_lock.py`验证固定restic0.18.1二进制SHA256、项目专属Secret/MinIO身份、原生私有UUID目录和来源crypto ID。在第一份COMMITTED后，启动真实`restic check --read-data`，有界限速以观察其排他锁；只观察没有旧锁的仓库。发现唯一锁后SIGSTOP并经waitpid确认自己的check子进程确实停止，保持排他锁，下一次真实Go维护Pod因锁冲突失败。故障核查时check仍活着、锁ID仍一致，不能把伪造锁JSON或Fake错误当真实仓库锁。
+
+WSL管理进程对Docker桥接IP的无凭据健康探测不可达，本机映射`127.0.0.1:9002`健康200。因此只为管理侧check生成同容器固定loopback地址的私有repository文件；核对容器端口映射和crypto ID，业务/维护Pod继续使用既有kind网络地址。AWS凭据仅在子进程环境，密码在0600私有文件，不输出原始后端stderr或CRI环境。
+
+finally与独立150秒看门狗只对自己的PID+内核starttime匹配进程发送CONT/INT；等待正常check退出，再确认锁列表为空。不执行`unlock`、`forget`、`prune`、强杀或手工删除仓库对象。若正常退出/锁释放无法证实，报告失败并保留状态供检查；不能把“不知道锁属于谁”解释成可清理。该check处于可信Go全局维护控制之外，用来模拟另一个管理员维护操作，不能把它当成生产并行维护功能。
+
+机制参考固定版本源码：[check取得排他锁](https://github.com/restic/restic/blob/v0.18.1/cmd/restic/cmd_check.go)、[list locks不另取读锁](https://github.com/restic/restic/blob/v0.18.1/cmd/restic/cmd_list.go)。本地夹具4项范围/退出/拒绝强制解锁/脱敏测试，与原存储夹具共8项通过（0.005秒）；原始结果`phase9-v2-repository-lock-fixture-tests.txt`，真实实验结果另列，不能互相替代。
+
+实际`phase9-v2-storage-repository-lock.json`通过：第一点`cp-45fa0332a45a4557aa04f49795edd1af`COMMITTED/revision1；下一点`cp-d26468d97cea4b02a7c4b9766d34242f`仅PREPARING→FAILED。Go Wait503，真实helper退出1、其restic命令退出11；维护CRI runsc、固定v2镜像身份一致。锁活跃时核查head/Session引用/报告hash、原预算和单attempt；自锁建立后启动备份至Task failed4,473.75ms（不包含管理侧取锁前的配置与观察时间，不是生产性能数据）。业务写/读各一次、两次Replay模型槽，没有再发诊断模型或写入。
+
+正常CONT/INT退出check后锁列表为空，未执行unlock；`-audit.json`独立核对Go/Python19/24/5条原始checksum/seq、第二点仅一次submitted、reserved→submitted→identified→stopped(containers-terminated)→released、原loop deadline/timing/calls一致。此审计属于同一实际实验，不能计成另一个场景。前一节真实MinIO默认Wait超时与本节真实锁冲突分别有证据；部分文件失败、清理引用保护和完整V2仍未验收。
+
+最终相关回归27/27、3.876秒通过`phase9-v2-repository-lock-related-tests.txt`（包含锁/存储夹具与协调器/协议切点），本轮未重跑旧267项全量，不把历史数字冒称新夹具覆盖。`phase9-v2-repository-lock-final-checks.json`确认持锁进程已退出、两命名空间Pod/端口均空、MinIO正常；语法/diff与3个生成存储凭据在10份本轮文件的扫描通过。实际维护子命令在备份前的快照查询阶段因排他锁退出11；不冒充上传中途失败。
+
+## 17. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。
