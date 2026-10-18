@@ -23,7 +23,8 @@ from .plugins.knowledge import KnowledgePlugin
 from .plugins.logs import LogsPlugin
 from .router import JevChoiceSource, ModelPrice, ModelRouter
 from .runtime.checkpoint_coordinator import CheckpointCoordinator
-from .runtime.checkpoints import CheckpointLedger
+from .runtime.checkpoints import CheckpointLedger, CheckpointConflict
+from .runtime.durable import JournalCorrupt
 from .runtime.session_refs import SessionReferences
 from .store import (
     ControlKind,
@@ -117,6 +118,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             refs = SessionReferences(cfg.recovery_dir / "checkpoints")
             checkpoint_ledger = CheckpointLedger(cfg.recovery_dir / "checkpoints/checkpoints.jsonl",refs)
             checkpoints = CheckpointCoordinator(sandboxd,checkpoint_ledger,refs,cfg.checkpoint_repository_id)
+            store.configure_checkpoints(checkpoints)
     except BaseException:
         if checkpoint_ledger is not None:
             checkpoint_ledger.close()
@@ -393,10 +395,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             task = await store.resume(session_id, node_id)
         except TaskNotFoundError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
-        except (ValueError, TaskConflictError) as exc:
+        except (ValueError, TaskConflictError, CheckpointConflict) as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         except QueueFullError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except (OSError, JournalCorrupt) as exc:
+            raise HTTPException(status_code=409, detail="恢复来源缺失或校验失败") from exc
+        restore = store.restore_for_task(task.task_id)
         return JSONResponse(
             status_code=202,
             content={
@@ -404,6 +409,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "sessionId": task.session_id,
                 "status": task.status,
                 "branchedFrom": node_id,
+                **({"restoreId": restore["restoreId"], "checkpointId": restore["sourceCheckpointId"],
+                    "branchId": task.branch_id, "workspaceId": task.workspace_id} if restore is not None else {}),
             },
         )
 
@@ -414,5 +421,31 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/api/v1/sessions/{session_id}/branch/{node_id}", status_code=202)
     async def branch_session(session_id: str, node_id: str, request: Request) -> JSONResponse:
         return await start_session_branch(session_id, node_id, request)
+
+    @app.post("/api/v1/sessions/{session_id}/checkpoints/{checkpoint_id}/restore/{restore_id}", status_code=202)
+    async def restore_checkpoint(session_id: str, checkpoint_id: str, restore_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            task = await store.restore_checkpoint(session_id, checkpoint_id, restore_id)
+            progress = store.restore_progress(session_id, restore_id)
+        except QueueFullError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except (ValueError, TaskConflictError, CheckpointConflict) as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except (OSError, JournalCorrupt) as exc:
+            raise HTTPException(status_code=409, detail="恢复来源缺失或校验失败") from exc
+        return JSONResponse(status_code=202, content={"taskId": task.task_id, "sessionId": task.session_id,
+                    "branchId": task.branch_id, "workspaceId": task.workspace_id, "restoreId": restore_id,
+                    "status": task.status, "restoreStatus": progress["status"], "checkpointId": checkpoint_id})
+
+    @app.get("/api/v1/sessions/{session_id}/restores/{restore_id}")
+    async def get_restore(session_id: str, restore_id: str, request: Request) -> JSONResponse:
+        _authorized(request, cfg.api_token)
+        try:
+            return JSONResponse(store.restore_progress(session_id, restore_id))
+        except (TaskNotFoundError, CheckpointConflict) as exc:
+            raise HTTPException(status_code=404, detail="restore not found") from exc
+        except TaskConflictError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
 
     return app

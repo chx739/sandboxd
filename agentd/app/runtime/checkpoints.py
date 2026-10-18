@@ -156,6 +156,12 @@ class CheckpointLedger:
             origin = self._origins.get((session_id, branch_id))
             return self._restores[origin]["sourceCheckpointId"] if origin else None
 
+    def committed_at_node(self, session_id: str, node_id: str) -> list[str]:
+        with self._lock:
+            return [cp for cp, record in self._records.items() if record["status"] == "COMMITTED"
+                    and record["identity"]["sessionId"] == session_id
+                    and record["identity"]["sessionNodeId"] == node_id]
+
     def _project(self, state: dict[str, Any]) -> None:
         r = copy.deepcopy(state)
         self._records[r["checkpointId"]] = r

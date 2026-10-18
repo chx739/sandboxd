@@ -18,6 +18,17 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：Task/API历史分支接线与真实两分支通过
+
+- 起点82a6b2d，当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34未动。RestoreCoordinator/TaskStore/main新增明确checkpoint+UUIDv4请求接口及状态查询；旧node branch在restic模式找唯一COMMITTED版本，off/V1仍拒绝历史文件恢复。先固定来源引用和queued Task以接受取消，Worker再恢复/验证/FILES_READY/ATTACHED，之后才允许Runner认领业务Pod/调用模型。Session有未完成Task时拒绝切换路线。
+- 同Task原claim/loop时钟和预算保留，恢复整段90秒且不超过原deadline；重启复用原job/目标、先核查旧执行者，未知停止阻止新attempt；ATTACHED后沿最新NFS继续，不重新restore覆盖新文件。来源已RESERVED但Task缺失启动补建原ID；后续状态缺原Task拒绝。取消和ATTACHED短锁排序，启动queued投影有旧活跃attempt时先显示cancelling，不提前终态。
+- phase9-v2-restore-branches-component.json真实2场景通过（69,547.90ms）：实际Agent ASGI处理器/TaskStore/Runner→真实Go TCP/gVisor/NFS/restic/MinIO，从同一旧点创建两条独立路线；第一条新增branch-only文件，第二条目录及精确Session父链没有兄弟内容。原Task账本/来源分支head/原控制文件hash不变，首份parent=来源、revision1，最终head分别3/2；新模型槽3/2、工具槽2/1，全部固定Replay、外部模型0。维护实际runsc、业务镜像/gVisor启动与NFS hash核对；不是Agent TCP/SIGKILL/GC实验。
+- 独立Go/Python原始控制日志checksum/seq及proof→release→claim顺序审计通过phase9-v2-restore-branches-audit.json，不计为第三个服务成绩。实验后两命名空间无Pod，10880/18090无监听，仅kind/NFS/专属MinIO运行；目录/快照/卷/Secret/日志保留。运行前内存可用20,696MiB、swap使用0、根盘931GiB。
+- 初轮定向52/52、10.589秒及下一批55/55、11.551秒通过；后来增加节点歧义/最新文件恢复和启动取消缓存修复，完整Python258/258、290.382秒通过phase9-v2-restore-store-full-python-tests.txt（含当时9项恢复Task用例）；后加启动取消缓存修复与第10项用例由最新定向58/58、12.618秒覆盖phase9-v2-restore-store-latest-tests.txt，不冒称258包含后改动。统一入口restic维护镜像固定改为v2，shell语法与完整启动验收分开；细节见文档47 §13。
+- 收尾补失败路由：未ATTACHED/失败恢复Task不成为默认resume工作区；默认上下文和Session查询按最后可用Task的持久完整节点选择，避免Session已选旧节点但ATTACHED前失败时把旧上下文与原分支最新文件混用。新增窗口测试最终59/59、12.697秒通过phase9-v2-restore-store-routing-tests.txt；最终完整Python260/260、288.855秒通过phase9-v2-restore-store-routing-full-python-tests.txt，覆盖最终代码。真实两分支报告不冒充此故障窗口的真实服务实验。
+- **第一项下一步**：接真实恢复窗口取消/进程切点、存储异常/仓库锁，然后管理清理预览/引用保护/受控forget-prune、性能和统一入口/完整矩阵。历史正常分支已验证，完整Goal active。
+
+
 ### 2026-10-18：历史恢复来源与分支检查点关系控制模块
 
 - 本批有效实现c20cb06（起点2836588），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。本批新增同检查点JSONL的checkpoint.restore事件：RESERVED→FILES_READY→ATTACHED/FAILED，首次固定source和新branch/workspace/task，幂等与重建；不接远程动作或模型工具。

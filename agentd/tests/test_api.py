@@ -173,6 +173,15 @@ class AgentAPIAuthTest(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(response.status_code, 409)
                 self.assertIn("历史文件版本", response.json()["detail"])
 
+                restore_path = f"/api/v1/sessions/{demo_id}/checkpoints/cp-test/restore/restore-test"
+                progress_path = f"/api/v1/sessions/{demo_id}/restores/restore-test"
+                for method, path in (("POST", restore_path), ("GET", progress_path)):
+                    for token in ("", "alert-token"):
+                        response = await client.request(method, path, headers={"Authorization": "Bearer " + token})
+                        self.assertEqual(response.status_code, 401)
+                    response = await client.request(method, path, headers={"Authorization": "Bearer api-token"})
+                    self.assertEqual(response.status_code, 409)  # V1/off不能默默恢复历史文件。
+
 
 if __name__ == "__main__":
     unittest.main()

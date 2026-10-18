@@ -1,0 +1,405 @@
+{
+  "passed": true,
+  "mode": "actual-agent-asgi-go-http-gvisor-nfs-restic-minio-history-branches",
+  "externalModelCalls": 0,
+  "controlRoot": "/home/hx/.local/share/sandboxd/workspace-restore-branch/9b3963bd246f42d8ac2f6da8e21d8167",
+  "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+  "sourceReport": "docs/evidence/phase9-v2-agent-cut-committed.json",
+  "cases": [
+    {
+      "index": 1,
+      "passed": true,
+      "taskId": "task-79953a5317da8a65",
+      "branchId": "branch-c1d6a65c8846493ea86c0bc9a470329d",
+      "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+      "restore": {
+        "restoreId": "restore-bef8e165ae0f42b795f4d9a86792b143",
+        "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+        "sessionId": "session-eba92e76c2add765",
+        "branchId": "branch-c1d6a65c8846493ea86c0bc9a470329d",
+        "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+        "taskId": "task-79953a5317da8a65",
+        "status": "ATTACHED",
+        "failure": null,
+        "createdAt": "2026-10-18T00:18:45.326103+00:00"
+      },
+      "sourceTaskUnchanged": true,
+      "sourceBranchHeadUnchanged": true,
+      "sourcePrefixPreserved": true,
+      "siblingMarkerAbsent": false,
+      "fileSha256": "c267c431c06f7f079e7547e0e6b7360a25a023596939e1fe6c72cd69d65c29cd",
+      "branchFilePresent": true,
+      "checkpoints": [
+        {
+          "schemaVersion": 1,
+          "checkpointId": "cp-40caa2aa4bf941e19d9e93c298942e68",
+          "parentCheckpointId": "cp-9f11afe0469144478f56f781016e79ed",
+          "identity": {
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-c1d6a65c8846493ea86c0bc9a470329d",
+            "sessionNodeId": "node-999d09463e1114bf",
+            "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+            "taskId": "task-79953a5317da8a65",
+            "attemptId": "attempt-2cc01da98b0d4ac485dcec60a00130c9",
+            "sandboxId": "7c00cc5567a7a37b",
+            "podUid": "beb9f92a-3bf1-4b5c-809f-2cf44db763ea",
+            "generation": 1,
+            "imageRef": "sandboxd-workspace:runtime-v1.5",
+            "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+            "sessionRef": {
+              "schemaVersion": 1,
+              "path": "session-refs/28ccc2172cf85855cf9b101e5476a9016af643b4b9b51803efdd8d45033a2142.json",
+              "sha256": "28ccc2172cf85855cf9b101e5476a9016af643b4b9b51803efdd8d45033a2142",
+              "bytes": 9401,
+              "sessionId": "session-eba92e76c2add765",
+              "nodeId": "node-999d09463e1114bf"
+            }
+          },
+          "status": "COMMITTED",
+          "data": {
+            "repositoryId": "repo-component",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "snapshotId": "b27688ce7081db83ed1c24d2abc5c3b28976a62399c4782d776b2f632fb3be79",
+            "manifestSha256": "0730d1305d3a9b2538d20b6014c640afd1088e51639debbb90fe40e8ba8d2257"
+          },
+          "revision": 3,
+          "createdAt": "2026-10-18T00:19:18.554227+00:00",
+          "committedAt": "2026-10-18T00:19:25.181210+00:00",
+          "failure": null
+        },
+        {
+          "schemaVersion": 1,
+          "checkpointId": "cp-9f11afe0469144478f56f781016e79ed",
+          "parentCheckpointId": "cp-81fce18386ea43db9846a722aa57751f",
+          "identity": {
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-c1d6a65c8846493ea86c0bc9a470329d",
+            "sessionNodeId": "node-ef2f371f15189885",
+            "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+            "taskId": "task-79953a5317da8a65",
+            "attemptId": "attempt-2cc01da98b0d4ac485dcec60a00130c9",
+            "sandboxId": "7c00cc5567a7a37b",
+            "podUid": "beb9f92a-3bf1-4b5c-809f-2cf44db763ea",
+            "generation": 1,
+            "imageRef": "sandboxd-workspace:runtime-v1.5",
+            "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+            "sessionRef": {
+              "schemaVersion": 1,
+              "path": "session-refs/1bf50e5de692034e904b5ce045c3a4f76b91e7c30d165bc2559144a0af010ce5.json",
+              "sha256": "1bf50e5de692034e904b5ce045c3a4f76b91e7c30d165bc2559144a0af010ce5",
+              "bytes": 7102,
+              "sessionId": "session-eba92e76c2add765",
+              "nodeId": "node-ef2f371f15189885"
+            }
+          },
+          "status": "COMMITTED",
+          "data": {
+            "repositoryId": "repo-component",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "snapshotId": "b3a837ee198f223b0afee53d3b4be8c8be4e21129b7a15cd35ccd2396e7f5aa9",
+            "manifestSha256": "0730d1305d3a9b2538d20b6014c640afd1088e51639debbb90fe40e8ba8d2257"
+          },
+          "revision": 2,
+          "createdAt": "2026-10-18T00:19:12.599966+00:00",
+          "committedAt": "2026-10-18T00:19:18.163340+00:00",
+          "failure": null
+        },
+        {
+          "schemaVersion": 1,
+          "checkpointId": "cp-81fce18386ea43db9846a722aa57751f",
+          "parentCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+          "identity": {
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-c1d6a65c8846493ea86c0bc9a470329d",
+            "sessionNodeId": "node-bb135262c8fda324",
+            "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+            "taskId": "task-79953a5317da8a65",
+            "attemptId": "attempt-2cc01da98b0d4ac485dcec60a00130c9",
+            "sandboxId": "7c00cc5567a7a37b",
+            "podUid": "beb9f92a-3bf1-4b5c-809f-2cf44db763ea",
+            "generation": 1,
+            "imageRef": "sandboxd-workspace:runtime-v1.5",
+            "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+            "sessionRef": {
+              "schemaVersion": 1,
+              "path": "session-refs/18485c09b77436756120b59d8eb23f6c260b36c690ace3c2db82b1224510b2a8.json",
+              "sha256": "18485c09b77436756120b59d8eb23f6c260b36c690ace3c2db82b1224510b2a8",
+              "bytes": 5917,
+              "sessionId": "session-eba92e76c2add765",
+              "nodeId": "node-bb135262c8fda324"
+            }
+          },
+          "status": "COMMITTED",
+          "data": {
+            "repositoryId": "repo-component",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "snapshotId": "7b171d47a00083c159a2ed47d70c5116fecc95d601ebdb90ead0e0d0011dec44",
+            "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6"
+          },
+          "revision": 1,
+          "createdAt": "2026-10-18T00:19:05.845710+00:00",
+          "committedAt": "2026-10-18T00:19:11.959482+00:00",
+          "failure": null
+        }
+      ],
+      "maintenance": [
+        {
+          "checkpointId": "cp-81fce18386ea43db9846a722aa57751f",
+          "podUid": "14b8b71e-af28-437e-97b9-e04c3ee9f969",
+          "podName": "workspace-backup-backup-81fce18386ea43db9846a722aa57751f",
+          "runtimeType": "io.containerd.runsc.v1",
+          "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+          "snapshotId": "7b171d47a00083c159a2ed47d70c5116fecc95d601ebdb90ead0e0d0011dec44"
+        },
+        {
+          "checkpointId": "cp-9f11afe0469144478f56f781016e79ed",
+          "podUid": "316699b6-c5cb-42f7-8307-2fec7641eb57",
+          "podName": "workspace-backup-backup-9f11afe0469144478f56f781016e79ed",
+          "runtimeType": "io.containerd.runsc.v1",
+          "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+          "snapshotId": "b3a837ee198f223b0afee53d3b4be8c8be4e21129b7a15cd35ccd2396e7f5aa9"
+        },
+        {
+          "checkpointId": "cp-40caa2aa4bf941e19d9e93c298942e68",
+          "podUid": "b7e2eddb-0dc9-42b0-85fc-28174bb9d41d",
+          "podName": "workspace-backup-backup-40caa2aa4bf941e19d9e93c298942e68",
+          "runtimeType": "io.containerd.runsc.v1",
+          "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+          "snapshotId": "b27688ce7081db83ed1c24d2abc5c3b28976a62399c4782d776b2f632fb3be79"
+        }
+      ],
+      "restoreMaintenance": [
+        {
+          "restoreId": "restore-bef8e165ae0f42b795f4d9a86792b143",
+          "checkpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+          "target": {
+            "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-c1d6a65c8846493ea86c0bc9a470329d"
+          },
+          "result": {
+            "snapshotId": "bc7d29c7a043a243ede7d33ccade6758d341dcce9c357f3905663da843e2145f",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+            "maintenanceImageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+            "podUid": "ed8f1bdb-0e16-4a4d-a875-c31d29ab6016"
+          },
+          "actualRuntime": {
+            "podUid": "ed8f1bdb-0e16-4a4d-a875-c31d29ab6016",
+            "podName": "workspace-backup-restore-bef8e165ae0f42b795f4d9a86792b143",
+            "actualRuntimeType": "io.containerd.runsc.v1",
+            "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58"
+          }
+        }
+      ],
+      "businessPods": [
+        {
+          "workspaceId": "workspace-edc4c53c690e4216aea024cd7245a7eb",
+          "attemptId": "attempt-2cc01da98b0d4ac485dcec60a00130c9",
+          "podUid": "beb9f92a-3bf1-4b5c-809f-2cf44db763ea",
+          "sandboxId": "7c00cc5567a7a37b",
+          "runtimeClass": "gvisor",
+          "runAsUser": 65532,
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "nfsMount": {
+            "source": "172.23.0.3:/workspaces/workspace-edc4c53c690e4216aea024cd7245a7eb",
+            "fstype": "nfs4",
+            "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+          },
+          "gvisorStartup": "[   0.000000] Starting gVisor..."
+        }
+      ],
+      "modelReservations": 3,
+      "toolReservations": 2,
+      "attempts": [
+        {
+          "attemptId": "attempt-2cc01da98b0d4ac485dcec60a00130c9",
+          "claimRequested": true,
+          "ownerStopped": true,
+          "podUid": "beb9f92a-3bf1-4b5c-809f-2cf44db763ea",
+          "sandboxId": "7c00cc5567a7a37b",
+          "startedAt": "2026-10-18T00:18:45.340509+00:00",
+          "stopReason": "containers-terminated"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "passed": true,
+      "taskId": "task-6ff8faac9d28f42e",
+      "branchId": "branch-bbb20b226d2746d69297844c27c0d2c9",
+      "workspaceId": "workspace-0440a3159ce64746a4289f7cb651f811",
+      "restore": {
+        "restoreId": "restore-fdd5af916ebe4ba1b752916e505db08d",
+        "sourceCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+        "sessionId": "session-eba92e76c2add765",
+        "branchId": "branch-bbb20b226d2746d69297844c27c0d2c9",
+        "workspaceId": "workspace-0440a3159ce64746a4289f7cb651f811",
+        "taskId": "task-6ff8faac9d28f42e",
+        "status": "ATTACHED",
+        "failure": null,
+        "createdAt": "2026-10-18T00:19:27.190448+00:00"
+      },
+      "sourceTaskUnchanged": true,
+      "sourceBranchHeadUnchanged": true,
+      "sourcePrefixPreserved": true,
+      "siblingMarkerAbsent": true,
+      "fileSha256": "c267c431c06f7f079e7547e0e6b7360a25a023596939e1fe6c72cd69d65c29cd",
+      "branchFilePresent": false,
+      "checkpoints": [
+        {
+          "schemaVersion": 1,
+          "checkpointId": "cp-e96d4770e16f47609eb44c2d67bb0e20",
+          "parentCheckpointId": "cp-356ce2e96ece4a0588014cfac6edfa87",
+          "identity": {
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-bbb20b226d2746d69297844c27c0d2c9",
+            "sessionNodeId": "node-decb83677cf27d2b",
+            "workspaceId": "workspace-0440a3159ce64746a4289f7cb651f811",
+            "taskId": "task-6ff8faac9d28f42e",
+            "attemptId": "attempt-0eb44f6b923f4870a35f2a57ccf188b1",
+            "sandboxId": "2fdb85a6801241ea",
+            "podUid": "d9c762e0-9c1c-49f7-8048-b37c940472f2",
+            "generation": 1,
+            "imageRef": "sandboxd-workspace:runtime-v1.5",
+            "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+            "sessionRef": {
+              "schemaVersion": 1,
+              "path": "session-refs/de6455245020c3e385d03363a1b43c9ebfc7364d5e8d80b52a0cd0bcb24d97d1.json",
+              "sha256": "de6455245020c3e385d03363a1b43c9ebfc7364d5e8d80b52a0cd0bcb24d97d1",
+              "bytes": 7658,
+              "sessionId": "session-eba92e76c2add765",
+              "nodeId": "node-decb83677cf27d2b"
+            }
+          },
+          "status": "COMMITTED",
+          "data": {
+            "repositoryId": "repo-component",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "snapshotId": "bbb23d17b8776c6df33ba09ba558a1bf1d7780098044fc7bc30043e662223adc",
+            "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6"
+          },
+          "revision": 2,
+          "createdAt": "2026-10-18T00:19:46.555947+00:00",
+          "committedAt": "2026-10-18T00:19:52.165682+00:00",
+          "failure": null
+        },
+        {
+          "schemaVersion": 1,
+          "checkpointId": "cp-356ce2e96ece4a0588014cfac6edfa87",
+          "parentCheckpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+          "identity": {
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-bbb20b226d2746d69297844c27c0d2c9",
+            "sessionNodeId": "node-990ac4003b1aa5fc",
+            "workspaceId": "workspace-0440a3159ce64746a4289f7cb651f811",
+            "taskId": "task-6ff8faac9d28f42e",
+            "attemptId": "attempt-0eb44f6b923f4870a35f2a57ccf188b1",
+            "sandboxId": "2fdb85a6801241ea",
+            "podUid": "d9c762e0-9c1c-49f7-8048-b37c940472f2",
+            "generation": 1,
+            "imageRef": "sandboxd-workspace:runtime-v1.5",
+            "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+            "sessionRef": {
+              "schemaVersion": 1,
+              "path": "session-refs/704b8eafc99754b2864179e39347971d5a0d3c915eaedd44442ac79e61a36f1d.json",
+              "sha256": "704b8eafc99754b2864179e39347971d5a0d3c915eaedd44442ac79e61a36f1d",
+              "bytes": 5917,
+              "sessionId": "session-eba92e76c2add765",
+              "nodeId": "node-990ac4003b1aa5fc"
+            }
+          },
+          "status": "COMMITTED",
+          "data": {
+            "repositoryId": "repo-component",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "snapshotId": "e8fa837dcc338f831a885b137d23eecee5a204f9ff50f6df10055bf15c744485",
+            "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6"
+          },
+          "revision": 1,
+          "createdAt": "2026-10-18T00:19:40.742474+00:00",
+          "committedAt": "2026-10-18T00:19:46.139819+00:00",
+          "failure": null
+        }
+      ],
+      "maintenance": [
+        {
+          "checkpointId": "cp-356ce2e96ece4a0588014cfac6edfa87",
+          "podUid": "3b4dac02-0c82-44db-9ab7-6d89554f56e4",
+          "podName": "workspace-backup-backup-356ce2e96ece4a0588014cfac6edfa87",
+          "runtimeType": "io.containerd.runsc.v1",
+          "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+          "snapshotId": "e8fa837dcc338f831a885b137d23eecee5a204f9ff50f6df10055bf15c744485"
+        },
+        {
+          "checkpointId": "cp-e96d4770e16f47609eb44c2d67bb0e20",
+          "podUid": "72743dd7-49e3-437b-bee8-5a7a2b176f1b",
+          "podName": "workspace-backup-backup-e96d4770e16f47609eb44c2d67bb0e20",
+          "runtimeType": "io.containerd.runsc.v1",
+          "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+          "snapshotId": "bbb23d17b8776c6df33ba09ba558a1bf1d7780098044fc7bc30043e662223adc"
+        }
+      ],
+      "restoreMaintenance": [
+        {
+          "restoreId": "restore-fdd5af916ebe4ba1b752916e505db08d",
+          "checkpointId": "cp-93540b038af442d6a01fed6bf7ae9c15",
+          "target": {
+            "workspaceId": "workspace-0440a3159ce64746a4289f7cb651f811",
+            "sessionId": "session-eba92e76c2add765",
+            "branchId": "branch-bbb20b226d2746d69297844c27c0d2c9"
+          },
+          "result": {
+            "snapshotId": "bc7d29c7a043a243ede7d33ccade6758d341dcce9c357f3905663da843e2145f",
+            "repositoryCryptoId": "7c156a33249e853bac91d89723f21c1cb93f06718b0fea54746eaffe92464320",
+            "manifestSha256": "063f07ec1f551f6950c4ce43d738dd411ac0051b7b528a224bd9a7329cc682d6",
+            "maintenanceImageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+            "podUid": "0ef07458-0005-4cd0-8315-c9f2c903d463"
+          },
+          "actualRuntime": {
+            "podUid": "0ef07458-0005-4cd0-8315-c9f2c903d463",
+            "podName": "workspace-backup-restore-fdd5af916ebe4ba1b752916e505db08d",
+            "actualRuntimeType": "io.containerd.runsc.v1",
+            "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58"
+          }
+        }
+      ],
+      "businessPods": [
+        {
+          "workspaceId": "workspace-0440a3159ce64746a4289f7cb651f811",
+          "attemptId": "attempt-0eb44f6b923f4870a35f2a57ccf188b1",
+          "podUid": "d9c762e0-9c1c-49f7-8048-b37c940472f2",
+          "sandboxId": "2fdb85a6801241ea",
+          "runtimeClass": "gvisor",
+          "runAsUser": 65532,
+          "imageId": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+          "imageRef": "sandboxd-workspace:runtime-v1.5",
+          "nfsMount": {
+            "source": "172.23.0.3:/workspaces/workspace-0440a3159ce64746a4289f7cb651f811",
+            "fstype": "nfs4",
+            "options": "rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=50,retrans=2,sec=sys,clientaddr=172.23.0.2,local_lock=none,addr=172.23.0.3"
+          },
+          "gvisorStartup": "[   0.000000] Starting gVisor..."
+        }
+      ],
+      "modelReservations": 2,
+      "toolReservations": 1,
+      "attempts": [
+        {
+          "attemptId": "attempt-0eb44f6b923f4870a35f2a57ccf188b1",
+          "claimRequested": true,
+          "ownerStopped": true,
+          "podUid": "d9c762e0-9c1c-49f7-8048-b37c940472f2",
+          "sandboxId": "2fdb85a6801241ea",
+          "startedAt": "2026-10-18T00:19:27.203802+00:00",
+          "stopReason": "containers-terminated"
+        }
+      ]
+    }
+  ],
+  "binarySha256": "4b2ca6b93e84ee6dbc8a1bed15a4a28a0e6ca37d7bea20e821782ff74fb67fcb",
+  "scope": "two historical branch restores via actual ASGI handlers and local services; no Agent TCP, SIGKILL, GC or Live LLM",
+  "originalControlUnchanged": true,
+  "elapsedMs": 69547.89855700074
+}

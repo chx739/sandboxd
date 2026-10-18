@@ -20,6 +20,7 @@ from .runtime.session import SessionJournal
 from .runtime.recovery import RecoveryLedger, RecoveryConflict, RecoveryLimit, new_id, TERMINAL
 from .runtime.execution import RecoveryAttempt
 from .runtime.workspace_imports import WorkspaceImports
+from .runtime.restore_coordinator import RestoreCoordinator
 from .tools.remote_files import WorkspaceExecutionError
 import httpx
 from .working_memory import project_working_memory
@@ -74,6 +75,7 @@ class TaskStore:
         self._cancel_requested: set[str] = set()
         self._queue: asyncio.Queue[str] = asyncio.Queue(maxsize=16)
         self._lock = asyncio.Lock()
+        self._restorer: RestoreCoordinator | None = None
         if self._ledger is not None:
             for state in self._ledger.records():
                 task = AgentTask(
@@ -89,6 +91,105 @@ class TaskStore:
                 self._sync_durable_task(task.task_id)
                 if state["status"] not in TERMINAL:
                     self._startup_queue.append(task.task_id)
+
+    def configure_checkpoints(self, checkpoints) -> None:
+        """仅启动期调用，Worker启动前修复来源已预留、Task尚未落盘的窗口。"""
+        if self._ledger is None or self._restorer is not None:
+            raise ValueError("checkpoint restoration requires an unconfigured durable store")
+        self._restorer = RestoreCoordinator(checkpoints)
+        for request in checkpoints.ledger.restore_requests():
+            if request["status"] == "FAILED":
+                continue
+            task = self._adopt_restore_task(request)
+            if task.status in TERMINAL and request["status"] in {"RESERVED", "FILES_READY"}:
+                state = self._ledger.get(task.task_id)
+                if state["attempts"] and request["status"] == "RESERVED":
+                    raise TaskConflictError("终态Task仍有未对账恢复请求")
+                checkpoints.ledger.advance_restore(request["restoreId"], "FAILED",
+                                "cancelled" if state["cancelRequested"] else "deadline")
+            if task.status not in TERMINAL and task.task_id not in self._startup_queue:
+                self._startup_queue.append(task.task_id)
+
+    def _adopt_restore_task(self, request: dict) -> AgentTask:
+        cp, prefix = self._restorer.ledger.restore_point(request["sourceCheckpointId"])
+        task_id = request["taskId"]
+        try:
+            state = self._ledger.get(task_id)
+        except LookupError:
+            if request["status"] != "RESERVED":
+                raise TaskConflictError("已恢复文件或已绑定的请求缺少原Task账本")
+            state = self._ledger.create(task_id=task_id, session_id=request["sessionId"],
+                                       branch_id=request["branchId"], workspace_id=request["workspaceId"],
+                                       alert=prefix["alert"])
+        if (any(state[k] != request[k] for k in ("sessionId", "branchId", "workspaceId"))
+                or cp["identity"]["sessionId"] != request["sessionId"]):
+            raise TaskConflictError("恢复请求与原Task绑定不一致")
+        task = self._tasks.get(task_id)
+        if task is None:
+            task = AgentTask(taskId=task_id, sessionId=state["sessionId"], alert=AlertEvent.model_validate(state["alert"]),
+                             status=state["status"] if state["status"] in TERMINAL else "queued",
+                             createdAt=datetime.fromisoformat(self._ledger.created_at(task_id)))
+            self._tasks[task_id] = task
+            self._controls[task_id] = AgentControl()
+            self._journals[task_id] = self._journal(task.session_id)
+            self._sync_durable_task(task_id)
+        return task
+
+    async def restore_checkpoint(self, session_id: str, checkpoint_id: str, restore_id: str | None = None) -> AgentTask:
+        async with self._lock:
+            if self._restorer is None:
+                raise TaskConflictError("历史文件恢复需要显式启用restic检查点模式")
+            restore_id = restore_id or new_id("restore")
+            existing = next((r for r in self._restorer.ledger.restore_requests() if r["restoreId"] == restore_id), None)
+            if existing is not None:
+                if existing["sessionId"] != session_id or existing["sourceCheckpointId"] != checkpoint_id:
+                    raise TaskConflictError("恢复请求重试不能更换来源")
+                return self._adopt_restore_task(existing).model_copy(deep=True)
+            cp, prefix = self._restorer.ledger.restore_point(checkpoint_id)
+            if cp["identity"]["sessionId"] != session_id:
+                raise TaskConflictError("检查点属于其他Session")
+            if any(s["sessionId"] == session_id and s["status"] not in TERMINAL for s in self._ledger.records()):
+                raise TaskConflictError("Session已有未完成任务，不能切换工作区分支")
+            if self._queue.full() or sum(s["status"] not in TERMINAL for s in self._ledger.records()) >= 17:
+                raise QueueFullError("Agent 任务队列已满")
+            if await self._journal(session_id).checkpoint_prefix(prefix["nodeId"]) != prefix:
+                raise TaskConflictError("Session父链与检查点不可变引用不一致")
+            request = self._restorer.ledger.prepare_restore(restore_id, checkpoint_id, session_id=session_id,
+                        branch_id=new_id("branch"), workspace_id=new_id("workspace"), task_id="task-" + secrets.token_hex(8))
+            task = self._adopt_restore_task(request)
+            self._queue.put_nowait(task.task_id)
+            return task.model_copy(deep=True)
+
+    def restore_progress(self, session_id: str, restore_id: str) -> dict:
+        if self._restorer is None:
+            raise TaskConflictError("历史文件恢复未启用")
+        request = self._restorer.ledger.restore_request(restore_id)
+        if request["sessionId"] != session_id:
+            raise TaskNotFoundError("restore not found")
+        return request
+
+    def restore_for_task(self, task_id: str) -> dict | None:
+        return self._restorer.for_task(task_id) if self._restorer is not None else None
+
+    def _workspace_history(self, session_id: str) -> list[dict]:
+        history = [s for s in self._ledger.records() if s["sessionId"] == session_id]
+        # 未ATTACHED的恢复Task只是意图，失败目录不能成为默认resume工作区。
+        return [s for s in history if (self.restore_for_task(s["taskId"]) or {"status": "ATTACHED"})["status"] == "ATTACHED"]
+
+    async def _route_node(self, session_id: str) -> str | None:
+        if self._ledger is None:
+            return None
+        history = self._workspace_history(session_id)
+        if not history:
+            return None
+        latest = history[-1]
+        for state in reversed(history):
+            if state["branchId"] == latest["branchId"] and state["completeNodeId"] is not None:
+                return state["completeNodeId"]
+        restored = self.restore_for_task(latest["taskId"])
+        if restored is not None:
+            return self._restorer.ledger.get(restored["sourceCheckpointId"])["identity"]["sessionNodeId"]
+        return None
 
     async def enqueue(
         self,
@@ -121,6 +222,9 @@ class TaskStore:
             branch_id, workspace_id = new_id("branch"), new_id("workspace")
             if self._ledger is not None and session_id is not None:
                 history = [s for s in self._ledger.records() if s["sessionId"] == session_id]
+                if any(s["status"] not in TERMINAL for s in history):
+                    raise TaskConflictError("Session已有未完成任务，不能切换活动路线")
+                history = self._workspace_history(session_id)
                 if not history:
                     imported = self._imports.get(session_id)
                     if imported is None or imported["status"] != "COMMITTED":
@@ -134,7 +238,8 @@ class TaskStore:
                 branch_id, workspace_id = previous["branchId"], previous["workspaceId"]
                 if any(s["workspaceId"] == workspace_id and s["status"] not in TERMINAL for s in history):
                     raise TaskConflictError("工作区已有未完成任务")
-                if parent_node_id != (await journal.summary())["activeLeafId"]:
+                expected_node = await self._route_node(session_id) or (await journal.summary())["activeLeafId"]
+                if parent_node_id != expected_node:
                     raise TaskConflictError("NFS V1 无对应历史文件版本，不能从旧节点恢复工作区")
             # Header 必须先落盘再入队，避免 Worker 抢先写 Transcript。
             await journal.initialize(task_id, alert, parent_node_id)
@@ -163,6 +268,13 @@ class TaskStore:
             return task.model_copy(deep=True)
 
     async def resume(self, session_id: str, node_id: str | None = None) -> AgentTask:
+        if self._restorer is not None and node_id is not None:
+            candidates = self._restorer.ledger.committed_at_node(session_id, node_id)
+            if len(candidates) != 1:
+                raise TaskConflictError("该节点没有唯一COMMITTED文件版本，请使用明确checkpoint恢复接口")
+            return await self.restore_checkpoint(session_id, candidates[0])
+        if node_id is None:
+            node_id = await self._route_node(session_id)
         journal = self._journal(session_id)
         try:
             alert, messages, selected_node_id = await journal.load_branch(node_id)
@@ -229,7 +341,10 @@ class TaskStore:
                 self._ledger.cancel(task_id)
             journal = self._journals[task_id]
             await journal.append_command(task_id, "cancel")
-            if task.status == "queued":
+            durable = self._ledger.get(task_id) if self._ledger is not None else None
+            active_attempt = durable is not None and durable["attempts"] and not durable["attempts"][-1]["ownerStopped"]
+            # 启动投影为queued不代表旧attempt已停止，取消响应不能提前显示终态。
+            if task.status == "queued" and not active_attempt:
                 task.status = "cancelled"
             else:
                 task.status = "cancelling"
@@ -258,9 +373,10 @@ class TaskStore:
         try:
             summary = await journal.summary()
             if self._ledger is not None:
-                history = [s for s in self._ledger.records() if s["sessionId"] == session_id]
+                history = self._workspace_history(session_id)
                 if history:
                     summary.update({key: history[-1][key] for key in ("taskId", "branchId", "workspaceId", "status")})
+                    summary["activeLeafId"] = await self._route_node(session_id) or summary["activeLeafId"]
             return summary
         except FileNotFoundError as exc:
             raise TaskNotFoundError("session not found") from exc
@@ -269,9 +385,10 @@ class TaskStore:
         try:
             tree = await self._journal(session_id).tree()
             if self._ledger is not None:
-                history = [s for s in self._ledger.records() if s["sessionId"] == session_id]
+                history = self._workspace_history(session_id)
                 if history:
                     tree.update({key: history[-1][key] for key in ("branchId", "workspaceId")})
+                    tree["activeLeafId"] = await self._route_node(session_id) or tree["activeLeafId"]
             return tree
         except FileNotFoundError as exc:
             raise TaskNotFoundError("session not found") from exc
@@ -286,6 +403,8 @@ class TaskStore:
         self, session_id: str, node_id: str | None = None,
     ) -> dict:
         try:
+            if node_id is None:
+                node_id = await self._route_node(session_id)
             alert, messages, selected = await self._journal(session_id).load_branch(node_id)
         except FileNotFoundError as exc:
             raise TaskNotFoundError("session not found") from exc
@@ -453,7 +572,13 @@ class TaskStore:
     async def _run_durable_task(self, task_id: str, runner: AgentRunner) -> None:
         while True:
             state = self._ledger.get(task_id)
+            restore = self._restorer.for_task(task_id) if self._restorer is not None else None
             if state["status"] in TERMINAL:
+                if restore is not None and restore["status"] in {"RESERVED", "FILES_READY"}:
+                    if state["attempts"] and restore["status"] == "RESERVED":
+                        raise TaskConflictError("终态Task仍有未对账恢复执行器")
+                    self._restorer.ledger.advance_restore(restore["restoreId"], "FAILED",
+                                    "cancelled" if state["cancelRequested"] else "deadline")
                 async with self._lock:
                     self._tasks[task_id].status = state["status"]
                     self._sync_durable_task(task_id)
@@ -461,6 +586,13 @@ class TaskStore:
             if state["attempts"] and not state["attempts"][-1]["ownerStopped"]:
                 old = state["attempts"][-1]
                 try:
+                    if restore is not None and restore["status"] in {"RESERVED", "FILES_READY"}:
+                        recovery = RecoveryAttempt(self._ledger, task_id, old["attemptId"])
+                        try:
+                            # SIGKILL后仍使用原job/目录和截止时间核查，不重新分配恢复请求。
+                            await self._restorer.ensure_files(restore, recovery)
+                        except Exception:
+                            await self._restorer.cleanup(self._restorer.for_task(task_id), recovery)
                     await runner.stop_attempt(RecoveryAttempt(self._ledger, task_id, old["attemptId"]))
                 except Exception as exc:
                     await self._set_error(task_id, "interrupted", "旧执行者未确认停止：" + public_error(exc))
@@ -474,6 +606,11 @@ class TaskStore:
             if state["cancelRequested"]:
                 await self._finish_durable(task_id, "cancelled")
                 return
+            if self._restorer is not None:
+                restore = self._restorer.for_task(task_id)
+                if restore is not None and restore["status"] == "FAILED":
+                    await self._finish_durable(task_id, "failed", "历史文件恢复失败；原分支与来源保留")
+                    return
             traces = self._ledger.traces(task_id)
             if (traces and traces[-1].get("status") in TERMINAL
                     and state["attempts"][-1]["ownerStopped"]):
@@ -497,10 +634,7 @@ class TaskStore:
                         else:
                             control.follow_up(command["content"], command["commandId"])
                 self._controls[task_id] = control
-                run_task = asyncio.create_task(runner.run(
-                    task_id, task.alert, control=control, journal=self._journals[task_id], recovery=recovery,
-                    resume_messages=self._resume_messages.pop(task_id, None),
-                ))
+                run_task = asyncio.create_task(self._run_attempt(runner, task_id, control, recovery))
                 self._running[task_id] = run_task
                 if self._ledger.get(task_id)["cancelRequested"]:
                     run_task.cancel()
@@ -535,6 +669,47 @@ class TaskStore:
                 return
             if await self._finish_durable(task_id, status):
                 return
+
+    async def _run_attempt(self, runner: AgentRunner, task_id: str, control: AgentControl,
+                           recovery: RecoveryAttempt):
+        request = self._restorer.for_task(task_id) if self._restorer is not None else None
+        try:
+            if request is not None:
+                if request["status"] in {"RESERVED", "FILES_READY"}:
+                    request = await self._restorer.ensure_files(request, recovery)
+                    cp, prefix = self._restorer.ledger.restore_point(request["sourceCheckpointId"])
+                    async with self._lock:
+                        # cancel与ATTACHED共用短锁排序；任何网络恢复都在锁外。
+                        recovery.remaining()
+                        journal = self._journals[task_id]
+                        if await journal.checkpoint_prefix(prefix["nodeId"]) != prefix:
+                            raise TaskConflictError("恢复Session父链与不可变来源不一致")
+                        await journal.initialize(task_id, self._tasks[task_id].alert, prefix["nodeId"])
+                        request = self._restorer.ledger.advance_restore(request["restoreId"], "ATTACHED")
+                if request["status"] != "ATTACHED":
+                    raise WorkspaceExecutionError("historical restore did not attach", recoverable=False)
+                cp, _ = self._restorer.ledger.restore_point(request["sourceCheckpointId"])
+                source_node = cp["identity"]["sessionNodeId"]
+                if recovery.snapshot()["completeNodeId"] in {None, source_node}:
+                    _, messages, _ = await self._journals[task_id].load_branch(source_node)
+                    messages.append(HumanMessage(content="请基于所选检查点的事故会话与已恢复文件继续诊断，并输出更新后的结构化结论。"))
+                    self._resume_messages[task_id] = messages
+            return await runner.run(task_id, self._tasks[task_id].alert, control=control,
+                        journal=self._journals[task_id], recovery=recovery,
+                        resume_messages=self._resume_messages.pop(task_id, None))
+        except BaseException:
+            if request is not None and not recovery.snapshot()["attempts"][-1]["ownerStopped"]:
+                async def cleanup():
+                    await self._restorer.cleanup(self._restorer.for_task(task_id), recovery)
+                    await runner.stop_attempt(recovery)
+                cleanup_task = asyncio.create_task(cleanup())
+                try:
+                    await asyncio.wait_for(asyncio.shield(cleanup_task), timeout=45)
+                except BaseException:
+                    cleanup_task.cancel()
+                    await asyncio.gather(cleanup_task, return_exceptions=True)
+                    raise
+            raise
 
     async def get_task_traces(self, task_id: str) -> list[dict]:
         async with self._lock:

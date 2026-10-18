@@ -281,4 +281,4 @@ NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工�
 
 ### V2可信文件恢复组件
 
-已新增固定维护镜像`sandboxd-restic:0.18.1-v2`及`hack/workspace-restore-runtime-smoke`，实际NFS/MinIO新空目标恢复与错误仓库身份写入前拒绝已通过；安装、运行及保留控制目录对账命令见[文档47 §10](../../docs/47-联合检查点与restic-MinIO学习手册.md#10-可信恢复执行器与真实nfsminio验收)。这是可信文件恢复组件，restore HTTP与Python会话历史分支尚未接线；默认V1/旧备份入口不因此自动改为历史恢复。
+已新增固定维护镜像`sandboxd-restic:0.18.1-v2`及`hack/workspace-restore-runtime-smoke`，实际NFS/MinIO新空目标恢复与错误仓库身份写入前拒绝已通过；安装、运行及保留控制目录对账命令见[文档47 §10](../../docs/47-联合检查点与restic-MinIO学习手册.md#10-可信恢复执行器与真实nfsminio验收)。受限restore HTTP与Python历史分支随后已接线，两分支真实服务验收见[文档47 §13](../../docs/47-联合检查点与restic-MinIO学习手册.md#13-taskstoreagent-api与真实历史分支)；off/V1仍不恢复历史文件，完整故障与清理验收待完成。

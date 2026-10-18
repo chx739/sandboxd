@@ -404,7 +404,7 @@ RESERVED → FILES_READY → ATTACHED
 ```
 
 - 首次`prepare_restore`先持久化UUIDv4 restore/branch/workspace、预分配taskId及COMMITTED sourceCheckpointId，再允许协调器调用远程恢复。Session必须相同，目标branch/workspace/task必须独立且没有被旧检查点或另一恢复请求使用。
-- 同请求重试复用绑定，不追加重复记录；换来源或换目标明确拒绝。FILES_READY要求上层已完成可信文件验证；ATTACHED要求上层已持久化Task绑定。当前还未接这些上层动作，不将纯逻辑状态转移称作真实联合恢复。
+- 同请求重试复用绑定，不追加重复记录；换来源或换目标明确拒绝。FILES_READY要求上层已完成可信文件验证；ATTACHED要求上层已持久化Task绑定。本节记录接线前控制模块；后续真实Task/API接线见§13，不能将本节合成状态转移单独当成真实联合恢复。
 - `protected_checkpoints`返回分支恢复头和所有保留恢复请求的来源引用。FAILED也保留引用及隔离目标，防止结果不明时遗忘来源；当前没有自动解除引用、forget/prune或管理清理入口。后续清理必须消费此投影，并按仓库/完整snapshot聚合引用，不能只按checkpointId删除共享快照。
 - 仅ATTACHED建立新分支来源。新分支首份检查点的parentCheckpointId指向所选来源，revision从1开始；来源分支继续前进不改变这个关系。首份提交核对目标workspace/task和不可变Session父链确实包含来源的完整前缀。后续提交沿新分支head递增，不把来源revision拷贝到新分支。
 - 首份检查点准备/提交及重建都使用相同的来源关系；COMMITTED仍是一条日志同时投影head/revision。旧日志没有restore事件时按原逻辑读取。出现新事件的控制目录不能交给旧二进制写入，旧解析器会拒绝未知事件。
@@ -428,9 +428,87 @@ agentd/.venv/bin/python -m unittest agentd.tests.test_checkpoints agentd.tests.t
 
 初轮34项本地测试通过（5.804秒），`phase9-v2-restore-reference-tests.txt`；随后增加来源head前移后的引用、非法完整restore日志、revision2来源的新分支序号，以及恢复请求列表读取，最终35/35、6.079秒通过`phase9-v2-restore-reference-final-tests.txt`。完整Python249/249、289.899秒通过`phase9-v2-restore-reference-full-python-tests.txt`，包含六项新恢复控制用例；有重叠的测试批次不相加。所有身份/快照/状态证明为合成，无真实restore/Task分支/API或清理成绩；旧真实服务报告不会自动覆盖本批新控制代码。 另以新解析器读取已保留的真实Agent控制目录，所选COMMITTED检查点与最终revision3头一致，JSONL和Session引用字节不变；结果`phase9-v2-restore-reference-retained-compat.json`只证明旧格式重建兼容，不是新增故障或恢复服务验收。
 
-**第一项下一步**：持久历史恢复协调器与TaskStore接线：读取精确Session引用，先RESERVED，再调用既有Go恢复HTTP验证新空目标，成功后FILES_READY，持久化新Task/Session分支并ATTACHED再入队。重启须按原restoreId/job/目标对账；不可重新分配ID或把FILES_READY直接当Task可运行。原分支有活动任务时拒绝切换，先保持单Worker会话head语义；随后补真实历史分支及取消/预算/引用清理验收。
+**当时的下一步**（已在§13接线；实际Task会先持久化queued意图，Worker完成恢复后才允许Runner执行）：持久历史恢复协调器与TaskStore接线：读取精确Session引用，先RESERVED，再调用既有Go恢复HTTP验证新空目标，成功后FILES_READY，持久化新Task/Session分支并ATTACHED再入队。重启须按原restoreId/job/目标对账；不可重新分配ID或把FILES_READY直接当Task可运行。原分支有活动任务时拒绝切换，先保持单Worker会话head语义；随后补真实历史分支及取消/预算/引用清理验收。
 
-## 13. 官方参考与版本
+## 13. TaskStore、Agent API与真实历史分支
+
+### 为什么先登记queued Task
+
+用户需要在恢复过程中取消，因此按下列顺序保存。提前创建的是有预算的执行意图，**没有提前运行模型、文件工具或认领业务Pod**：
+
+```text
+Agent Token + checkpointId + restoreId
+  → RESERVED：固定来源、新branch/workspace/task并保护来源
+  → 持久化queued Task，再返回202（相同restoreId重试返回同Task）
+  → Worker启动attempt和原claim时钟
+  → 可信Go恢复到新空目录，核验snapshot/manifest/repo/image
+  → Go核验结果持久化并释放维护屏障
+  → FILES_READY
+  → 校验精确Session父链，选择该节点，ATTACHED
+  → Runner认领业务Pod、继续诊断并保存新分支检查点
+```
+
+网络恢复不持有Task取消锁；ATTACHED与接受取消在短锁内排序。Session切换前再次核对当前Task未取消、未过期。已经ATTACHED的Task故障接续沿最新NFS状态继续，不重新下载旧快照覆盖后来文件。默认resume和Session读取依据最后可用Task的分支/工作区及持久完整节点；未ATTACHED或失败的恢复意图不成为默认路线。即使Session选择已追加、ATTACHED前失败留下旧节点head，也不将旧上下文与原分支最新文件混用；保留原JSONL审计，由新的合法继续选择正确父链。
+
+`RestoreCoordinator.ensure_files`限制整段恢复最多90秒，且每一步受同Task持久截止时间限制；已有claim/loop分段时钟保持。重启复用原restoreId/job/目标，先核查旧维护Pod与已验证结果；已完成的FILES_READY只核查，不重复restore。停止无法确认时不发放新attempt。独立清理窗口只用于终止/释放，不追加执行预算。
+
+启动时RESERVED存在而Task缺失，按原ID补建意图；FILES_READY/ATTACHED却缺少原Task账本则拒绝，不伪造其历史。queued缓存若对应旧活跃attempt，取消响应保持cancelling，等停止证明后才进入cancelled。失败和取消保留来源引用、目录和审计；没有自动forget/prune。
+
+### 代码阅读与面试自测
+
+按`main.py`恢复路由→`store.py`排队/取消/启动对账→`runtime/restore_coordinator.py`→Go `restore_runtime.go`→检查点日志读这一条路径，不需要新增Agent框架。
+
+- **queued是否等于可以执行？** 只表示已接受意图；FILES_READY核对文件、ATTACHED核对会话，随后才允许Runner。
+- **两个服务的日志是否是一个事务？** 不是。各自fsync和单写入，用固定请求ID、显式状态、可信证明及启动对账跨窗口恢复；不宣称分布式原子提交。
+- **为什么不能恢复后总是再pull一次？** ATTACHED后的工作区可能已有后续写入，重下旧快照会丢失新内容；自动接续必须查询当前NFS并沿用原预算。
+- **为什么失败Task不能作为默认resume来源？** 它可能只登记了目标，或会话刚选节点就失败。默认路线由可用Task分支及持久完整节点投影，避免拼接错误上下文与文件。
+
+### API和模式边界
+
+沿用Agent API Token：
+
+| 接口 | 行为 |
+|---|---|
+| `POST /api/v1/sessions/{session}/checkpoints/{checkpoint}/restore/{restore_uuid4}` | 明确选择COMMITTED检查点，返回202、taskId、restoreId及新branch/workspace；首次请求前由客户端生成并保留UUIDv4，重试复用 |
+| `GET /api/v1/sessions/{session}/restores/{restore_uuid4}` | 只读恢复状态、来源及目标身份 |
+| `POST /api/v1/tasks/{task}/cancel` | 既有持久取消，适用于恢复中的新Task |
+| `POST /api/v1/sessions/{session}/branch/{node}` | restic模式下要求该节点有唯一COMMITTED版本；没有或有多个版本则409，改用明确checkpoint接口；响应附restoreId |
+| `POST /api/v1/sessions/{session}/resume` | 最新工作区继续，不隐式回滚历史快照 |
+
+同Session有未完成Task时拒绝另开工作区分支，保持单Worker/活动Session head语义。off/V1仍拒绝旧节点文件恢复；不会因为代码中有restorer就静默打开后端。无快照、来源缺失/校验失败返回明确错误，不使用相邻版本。控制盘整体丢失恢复不在本轮承诺内；这里要求原Session父链与不可变引用一致，损坏时拒绝猜测。
+
+统一入口的restic模式固定维护镜像已更新到`sandboxd-restic:0.18.1-v2`，需先按§10构建/载入；off行为保留。已登记v1 Job配置的旧组件控制目录不能直接改镜像绕过固定配置，保留旧目录/镜像，演示使用独立新控制目录。完整shell restic启动仍需另行验收，本节真实夹具直接使用同样Go flags。
+
+### 可重复的两分支实验
+
+前提：§10的v2维护镜像、Go二进制、可用NFS/专属MinIO/Secret，10880空闲。先按§10生成本环境`.cache/restore-source.json`；不能把仓库旧报告的snapshot ID当成新MinIO已有数据。
+
+```bash
+export GOMODCACHE=/tmp/sandboxd-workspace-go-mod GOCACHE=/tmp/sandboxd-workspace-go-build
+export PATH="$HOME/.local/bin:$PATH"
+go build -o .cache/workspace-sandboxd-restore-http ./cmd/sandboxd
+agentd/.venv/bin/python -m agentd.workspace_restore_branch_demo \
+  --source-report .cache/restore-source.json \
+  --secret-name "$SANDBOXD_BACKUP_SECRET_NAME" --minio-ip "$SANDBOXD_BACKUP_MINIO_IP" \
+  --output .cache/restore-branches-new.json
+```
+
+夹具把自身已保留的合成来源控制目录复制到新原生UUID目录，原目录不写；两次使用不同Replay脚本和两次正常App生命周期。仅在夹具构造器包装实际SDK以观察RPC/CRI，不替换处理器、TaskStore/Runner或真实服务。Agent入口是实际ASGI处理器，Go是实际TCP HTTP；**没有宣称本轮验证Agent TCP/进程SIGKILL**。
+
+`phase9-v2-restore-branches-component.json`真实两场景通过，总69,547.90ms（含观测、恢复和同步保存，不是生产RTO）：
+
+- 第一分支：从旧COMMITTED点恢复新空工作区，读原报告、显式新建branch-only.md、输出最终诊断；3模型槽/2工具槽，3个新COMMITTED点，首份parent指向所选来源且revision1，head revision3。
+- 第二分支：同一旧点再恢复另一空目录，仅读原报告与诊断；2模型槽/1工具槽、head revision2，目录没有第一分支新增文件，精确Session父链/最终引用不含兄弟标记。报告第一场景siblingMarkerAbsent=false表示该场景没有要求标记缺席；第二场景true才是隔离断言。
+- 两次新task/branch/workspace互异，原Task完整账本状态、原分支恢复头、原来源控制文件hash不变。新工作区报告hash与原NFS一致，实际维护CRI均runsc，业务镜像身份/启动gVisor/NFS挂载核对。相同请求重试同Task、401及状态查询由实际处理器验证。
+- 原始文件/目录/快照/Secret保留，业务和维护Pod均正常清理。独立只读Go/Python日志checksum/seq审计`phase9-v2-restore-branches-audit.json`通过：每请求仅一次RESERVED，FILES_READY→ATTACHED早于新分支PREPARING，Go核验证明→释放→业务认领顺序正确。审计不是第三次服务实验。外部模型0。
+
+### 回归、限制与下一步
+
+首轮52/52、10.589秒通过，随后API鉴权/未知停止等55/55、11.551秒通过，原始`phase9-v2-restore-store-initial-tests.txt`与-final-tests.txt。此后增加节点歧义、ATTACHED后未知写确认恢复不重新下载快照，以及启动取消缓存修复，完整Python258/258、290.382秒通过`phase9-v2-restore-store-full-python-tests.txt`，含当时9项恢复Task用例；后加启动取消缓存修复/第10项用例由最新定向58/58、12.618秒覆盖`phase9-v2-restore-store-latest-tests.txt`，不把258项冒称包含后改动，批次不相加。随后失败默认路由/Session选择窗口修正由最终59/59、12.697秒定向和最终完整Python260/260、288.855秒覆盖（`phase9-v2-restore-store-routing-tests.txt`、`phase9-v2-restore-store-routing-full-python-tests.txt`）；真实正常两分支报告不冒充此故障窗口的真实服务实验。真实取消/恢复SIGKILL、存储失败、引用清理/性能与完整十项验收仍待完成。
+
+**第一项下一步**：增加真实恢复窗口取消/进程切点和存储异常/锁；再接引用保护驱动的管理预览与受控forget/prune、同条件性能、统一restic入口及完整矩阵。历史正常分支已通不等于所有故障已验证。
+
+## 14. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

@@ -20,7 +20,7 @@
     {
       "id": "V2-03",
       "status": "pending",
-      "note": "full acceptance not executed"
+      "note": "two historical branches from exact committed Session/files verified via actual Agent ASGI handlers and real Go/gVisor/NFS/restic/MinIO; sibling isolation and original state preserved; complete V2 matrix review pending"
     },
     {
       "id": "V2-04",
@@ -45,7 +45,7 @@
     {
       "id": "V2-08",
       "status": "pending",
-      "note": "full acceptance not executed"
+      "note": "normal explicit checkpoint restore to independent empty workspaces verified; live source-task refusal and complete fault matrix still need actual-service evidence"
     },
     {
       "id": "V2-09",
@@ -55,14 +55,14 @@
     {
       "id": "V2-10",
       "status": "pending",
-      "note": "full acceptance not executed"
+      "note": "manual new Task continuation and original source audit unchanged verified with real services; interrupted current-Task budget/latest-state behavior covered locally, real restore-window fault proof pending"
     }
   ],
   "remaining": [
     "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "Historical restore coordinator/TaskStore/API integration over validated HTTP and durable source/branch-origin control; budgets/cancel and reference-aware cleanup remain",
-    "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
+    "Actual Agent TCP/restic unified startup and restore-window cancellation/process-cut recovery; normal ASGI TaskStore historical branch integration verified",
+    "Historical branch faults: preserve current Task budget/cancel during interrupted restore and prove no snapshot overwrite or old side-effect replay with actual services",
     "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
     "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
     "actual unified shell startup restic-mode execution"
@@ -527,6 +527,42 @@
     {
       "path": "docs/evidence/phase9-v2-restore-reference-full-python-tests.txt",
       "sha256": "3acdbd74a37be556a53b7128e93f47afb3364d242dad07eaac42c19526628ca9"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-final-tests.txt",
+      "sha256": "00173213a0bd8b7e1b7b5170b5fdb83b707f56df6f6aef9337555bb2e1654090"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-full-python-tests.txt",
+      "sha256": "7df2ae158d1b47b041df61e5f6160f3f07b47e08547f2743e12b047d31c08ce3"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-initial-tests.txt",
+      "sha256": "433dfff5a6acf99b13a0983ead959685507ff18ac8b84b5a2528f119f275d201"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-latest-tests.txt",
+      "sha256": "acea853c571ee5e7f222e3a33f4881aa5928dac7aea6b625ff91cd27d4e7322a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-branches-audit.json",
+      "sha256": "8607c5021394f3c010568d17de5d07c7b952c189c45ad9384a426e3465aa5e65"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-branches-component-tests.txt",
+      "sha256": "a5440de78d82e67beb07314e2b6d883f912a54ea227ce3a1d21115684834f86e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-branches-component.json",
+      "sha256": "eeb4473810d9addf2b7480dbd3eec73f6c0d9fafd464a668cdd8773967322002"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-routing-full-python-tests.txt",
+      "sha256": "4da249b9daff73a614ef62ab22d4fb968366fa79731ca8a54d7174803cec6db1"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-store-routing-tests.txt",
+      "sha256": "8c1078fb3b7cc235c14ca9102ba9bea32afa7854428738ae51900c85d842495f"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

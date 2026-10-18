@@ -78,7 +78,7 @@ EOF
       restic)
         : "${SANDBOXD_BACKUP_SECRET_NAME:?设置已初始化专属仓库的Secret名称}"
         : "${SANDBOXD_BACKUP_MINIO_IP:?设置已核对的专属MinIO IPv4}"
-        backup_args=(-workspace-backup-image sandboxd-restic:0.18.1-v1 \
+        backup_args=(-workspace-backup-image sandboxd-restic:0.18.1-v2 \
                      -workspace-backup-secret "$SANDBOXD_BACKUP_SECRET_NAME" \
                      -workspace-backup-minio-ip "$SANDBOXD_BACKUP_MINIO_IP")
         ;;
