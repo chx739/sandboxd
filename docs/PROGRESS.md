@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：引用保护、只读预览与遗忘控制协议
 
-- 起点0a1d640，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实部分失败、282项完整回归和PR为进展；本轮推进受控清理所需本地控制层。CheckpointLedger新增同JSONL的pin与forget事件，按crypto ID+完整snapshot聚合所有逻辑别名/检查点引用，保护分支头、保留恢复源和显式pin；保存/恢复/清理进行中、FAILED带data及坏Session引用阻止清理。
+- 本批有效实现12c8042（起点0a1d640），codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实部分失败、282项完整回归和PR为进展；本轮推进受控清理所需本地控制层。CheckpointLedger新增同JSONL的pin与forget事件，按crypto ID+完整snapshot聚合所有逻辑别名/检查点引用，保护分支头、保留恢复源和显式pin；保存/恢复/清理进行中、FAILED带data及坏Session引用阻止清理。
 - 管理预览返回稳定内容SHA，prepare_forget重新核查同计划并fsync整组PREPARED；先停止文件恢复资格再允许未来后端执行，同ID幂等、改绑定/过期拒绝。未知结果保持PREPARED，重建后仍拒绝恢复/新保存；FORGOTTEN保留原COMMITTED历史及节点树，按旧node选恢复点过滤不可用项。complete_forget当前仅合成测试使用，没有HTTP/CLI apply、实际后端删除或prune。
 - 新checkpoint_admin固定preview/pin/unpin；同目录agentd文件锁占用拒绝，不自动建目录、不调用外部服务。DurableJournal新增只读模式，不chmod/追加/修断尾，保持排他锁；写入默认语义保留。初批相关42/42、6.612秒通过，后补3项共享组/坏事件/未提交别名测试，最终完整Python292/292、335.307秒通过phase9-v2-retention-full-python-tests.txt；FORGOTTEN为合成控制验证，不是实际删除成绩。
 - 实际retained-preview已通过：此前真实两分支控制目录的9份日志/引用文件hash、ctime、mode完全不变；8个快照组4组保护、4组仅本地引用候选，含恢复来源保护。是实际离线CLI与旧控制数据兼容证据，不是新的存储服务删除验收。收尾-final-checks再次核对9份文件不变、语法/diff、3个生成存储凭据在13份本轮文件无匹配。未启动新Pod，原目录/快照/卷/Secret和所有数据保留，外部模型0。文档48为当前清理续作入口。
