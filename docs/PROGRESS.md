@@ -14,9 +14,18 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M4/M5：V1已交付；V2正常保存、协议切点、历史分支、存储故障及新仓库真实联合GC已验证；固定性能/流量、统一V2入口和十项完整验收审计待完成；Goal active
+    Phase 9 M5：V1已交付；V2保存/协议切点/历史分支/存储故障/联合GC及固定后端性能已验证；统一V2入口和十项完整验收审计待完成；Goal active
 
 ## Phase 9 当前恢复点
+
+### 2026-10-18：固定V1/V2后端性能与流量通过
+
+- 起点fec103c，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实GC/故障/恢复/审计及PR为进展；本轮新增workspace_checkpoint_benchmark、独立标准库审计和3项纯逻辑测试。复用seed20261018及few4×1KiB/many32×256B/partial8×4KiB、2次list预热、暖读、单并发，不清内核缓存，不并发项目测试/安装。
+- phase9-v2-fixed-workload-v1.json与主JSON各9/9真实通过；同一Go二进制、NFS部署、固定数据/hash。V2每试验全新独立仓库/Owner/Secret/控制目录，18次实际备份、9次初版恢复全量hash验证；无模型调用或删除。V1复用Go进程，V2逐仓库启动Go，prepare/claim不作纯归因；批量后端备份不是默认Agent每工具组联合CP，receipt显式sessionBound=false。
+- 首次备份RPC P50三场景6.664/8.040/7.822秒，后续7.092/7.879/7.680秒；含prepare/claim/hash核验/release的恢复P50约14.6/14.6/15.4秒。后续packed新增0/0/5446字节，少量数据不变也有MinIO约62KB RX和70KB TX、NFS元数据开销，不将容器流量当公网或纯PUT。原始资源/网络端点、压缩统计、owner基线与du表观仓库字节全部保留，未测峰值/对象请求数/生产QPS。
+- 独立-fixed-workload-audit通过：两组固定数据、全部manifest/hash、324条Go日志、9个独立crypto、18个不同snapshot、阶段/恢复来源、计数差和分位数重算。性能结束后相关7/7、0.018秒纯逻辑回归通过-unit-tests；不把旧完整306项冒称本轮新运行。数据、快照、Secret及控制根保留。文档46 §7～8有方法、表格和限制，明确本轮读RPC变化不可直接归因备份提速。
+- 收尾-fixed-workload-final-checks通过：项目三容器运行无暂停，业务/维护Pod0，10880/18090空闲；9个新仓库各保留owner+2业务snapshot。11个实际存储凭据字面/Base64在13份本轮公开文件零命中，220份证据hash逐项通过，AST/diff通过，用户docs32/docs34 hash与前批一致。整个V2完成标记仍false。
+- **第一项下一步**：统一restic安装/启动入口接fresh Owner/bootstrap和可复现配置，保留旧共享数据不收编，再按文档43十项逐一核对原始证据/命令/回归并更新PR。性能目标已取得本机小规模实证，不重复试验筛数字、不扩大为生产HA；Goal保持完整active。
 
 ### 2026-10-18：新专属仓库真实联合GC通过
 

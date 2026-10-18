@@ -916,6 +916,34 @@
     {
       "path": "docs/evidence/phase9-v2-owned-gc-joint.json",
       "sha256": "081265cebee261bff177ceb1a67ba6040f4eb580f5664b0cf8bd8c7be461b17f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-audit-command.txt",
+      "sha256": "63e0b5e85a67479d11d0bdaffdec7026b00b1d5d80937837f99abcdc8f4d03ba"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-audit.json",
+      "sha256": "27cdf646c8a4e8b03c562fbc75c225b12e2eebc2af4fcb3e316fa483c3562d6c"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-command.txt",
+      "sha256": "e05c48e509d05a4af496c0b83700c5e989903a752d3b8ba8e31d349f0098797d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-final-checks.json",
+      "sha256": "0e20cf28c004e01f90d1f97dfaf230b429c663d28ad7e0e1138959e6532a3698"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-unit-tests.txt",
+      "sha256": "25eb4a05aa0c27b0af6830cb75cdcd72d4af6446bc141d1edd3f374029852e58"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload-v1.json",
+      "sha256": "ee45f6c2d5740eb63175b82e325e0942b2acd3a289b1e0be25631c54d398419d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-fixed-workload.json",
+      "sha256": "2fb72810c892ff9744338c35059ca42ec6baa5f48cc2b17593e2924c9ea66cae"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -928,5 +956,6 @@
   "repositoryBindingScope": "Go journal pins owned repository/controller/marker/Secret name/endpoint on fresh control log only; rejects downgrade and foreign restore source; local Go and fake Kube tests passed. Python unique control-root ownership, persistent GC barrier, admin HTTP and joint cleanup not implemented.",
   "cleanupRuntimeScope": "Go persistent global cleanup barrier, owned fixed operations, stored result proof, bounded stop/UID cleanup, explicit same-target retry and Operator-only routes verified locally with fake Kubernetes; actual joint cleanup and Python coordinator not yet verified.",
   "cleanupCoordinatorScope": "Independent operator-only Python process, same-journal repository binding/execution cursors, fixed local crypto-to-directory claim, reference recheck/PREPARED/Go proof/FORGOTTEN/Finish protocol, explicit bounded attempt retry and startup gate verified with local Fake/MockTransport; actual joint storage acceptance pending.",
-  "actualJointCleanupScope": "Actual Replay Agent five CPs, local protected references, Go Operator fixed GC, Python metadata, admin/Go SIGKILL after durable proof, real lock conflict/explicit retry, prune and retained pinned file restore verified; not new historical Task resume or performance benchmark."
+  "actualJointCleanupScope": "Actual Replay Agent five CPs, local protected references, Go Operator fixed GC, Python metadata, admin/Go SIGKILL after durable proof, real lock conflict/explicit retry, prune and retained pinned file restore verified; not new historical Task resume or performance benchmark.",
+  "fixedWorkloadPerformanceScope": "Actual V1/V2 each9 serial fixed-dataset trials, nine fresh owned repositories, 18 backups/9 verified restores, dataset/manifest/324 Go journal/counter/quantile audit, network/packed/raw-data/apparent storage/CPU/memory endpoints recorded. Backend batch microbenchmark only; no production Agent-total or public billing extrapolation; unified startup/full V2 audit pending."
 }

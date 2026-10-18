@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "createdAt": "2026-10-18T04:31:19.790299+00:00",
+  "baseCommit": "fec103cc4e894a2a8d2708d43c1b99c01ec2200d",
+  "previousGoalTurnClassification": "progress: actual joint GC accepted, audited and pushed; this turn executes fixed-workload measurement",
+  "sources": [
+    {
+      "path": "agentd/workspace_checkpoint_benchmark.py",
+      "sha256": "c73a2816ead5e21e6655ff0054cd9f7031f766e3a157afa74107d2a7588621e1"
+    },
+    {
+      "path": "agentd/workspace_checkpoint_benchmark_audit.py",
+      "sha256": "c47df9b70ab1aa352efca66652965ddbd597bbe18457a34b09a93c8bc4ce9681"
+    },
+    {
+      "path": "agentd/tests/test_workspace_checkpoint_benchmark.py",
+      "sha256": "770eea91269a56fc8d6c585e20e66564b185eadcc6616ad198b5bc57ddfdf6c3"
+    }
+  ],
+  "v1Trials": 9,
+  "v2Trials": 9,
+  "snapshots": 18,
+  "restores": 9,
+  "retainedRepositories": 9,
+  "snapshotsIncludingMarkersPerRepository": 3,
+  "containers": [
+    {
+      "name": "sandboxd-control-plane",
+      "id": "3da8c61a734e9ef4db34c4502567954f2e8bbd299a142e2dcc18d54daf9d8b77",
+      "imageId": "sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f"
+    },
+    {
+      "name": "sandboxd-workspace-nfs-1",
+      "id": "497b2542b2227785b5c559ffe45c400df283a900d0bb2f4a17ac3e73498fd16b",
+      "imageId": "sha256:504f663c8f65a3fb88640b8c5523c82fb6275a0bf0a6ff3f7fed427384c8db61"
+    },
+    {
+      "name": "sandboxd-workspace-backup-minio-1",
+      "id": "83f1562f81d00bb331ebfc49c6e16976a6990bbe818aa57a025a2abdfe3a08b0",
+      "imageId": "sha256:6d770d7f255cda1f18d841ffc4365cb7e0d237f6af6a15fcdb587480cd7c3b93"
+    }
+  ],
+  "businessAndMaintenancePods": 0,
+  "ports10880And18090": "idle",
+  "credentialScan": {
+    "uniqueStorageValues": 11,
+    "encodings": [
+      "literal",
+      "base64"
+    ],
+    "files": 13,
+    "matches": 0
+  },
+  "unitTests": {
+    "tests": 7,
+    "seconds": 0.018,
+    "passed": true
+  },
+  "externalModelCalls": 0,
+  "formalV2AcceptanceComplete": false,
+  "scope": "Backend microbenchmark only; fixed inputs/warmups, distinct Go process lifecycle; no Agent Session/Task/model cost or production SLA/public billing claim."
+}
