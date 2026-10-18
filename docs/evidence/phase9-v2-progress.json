@@ -50,7 +50,7 @@
     {
       "id": "V2-09",
       "status": "pending",
-      "note": "Local reference aggregation, explicit pins, stale-preview check and PREPARED/FORGOTTEN lifecycle implemented; protected heads/restore sources/aliases/uncommitted records covered by synthetic tests. Actual readonly CLI preserves 9 retained real control files (hash/ctime/mode), 8 snapshot groups projected. Full Python292 passed. Trusted Go forget/prune, repository-owner binding and actual deletion acceptance remain pending; local eligible is not deletion authority."
+      "note": "Local refs/pins/preview/lifecycle and readonly retained-control CLI verified. New owned helper component actually verifies precise forget/retry/prune/check/restore plus marker/wrong-repo/wrong-controller/foreign-snapshot rejection in a new synthetic prefix, all16 runsc Pods. This is direct trusted admin component/manual quiescence, not Go durable GC barrier, Operator API or Session refs coordinator integration; full acceptance pending."
     },
     {
       "id": "V2-10",
@@ -59,7 +59,7 @@
     }
   ],
   "remaining": [
-    "Trusted Go fixed forget/prune, global maintenance serialization, unique repository/control owner binding, offline coordinator and new dedicated synthetic repository actual cleanup/restore validation; local refs/pins/preview/lifecycle now implemented",
+    "Connect verified owned helper to trusted Go persistent global cleanup barrier/administrator-only entry, unique control directory binding and PREPARED/FORGOTTEN coordinator; then actual joint refs/crash/lock/recovery acceptance in new dedicated repo",
     "Fixed-workload V1/V2 performance/traffic and resource comparison including synchronous checkpoint overhead",
     "Actual unified shell startup restic-mode execution",
     "Final ten-item V2 requirement-by-requirement evidence audit and related regressions; restore started/attached standalone fixture modes not executed"
@@ -764,6 +764,38 @@
     {
       "path": "docs/evidence/phase9-v2-retention-retained-preview.json",
       "sha256": "facb3ce8dc7def7c0d94854c250eeb4b246451a9a21cd522c23b25bd09c77695"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-cleanup-component-audit.json",
+      "sha256": "01c83db79d4c8bc13a5b9a7401b97631cf17e1205685d45f442e28ace2bf2216"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-cleanup-component-command.txt",
+      "sha256": "9d95f557be528b444335b508d91aa7862c86eb433e01180728543ad3a9c58911"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-cleanup-component.json",
+      "sha256": "ba537681876ca5fe5cd3483725a8a23fe1356d913ae6464954fc48efd4e94c18"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-final-checks.json",
+      "sha256": "b7f838968e71ec23efd5f842d8c4f84f8e7cf264a1eca0aa9cb7fe87d9b11fe6"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-helper-final-race-tests.txt",
+      "sha256": "dca4908c93bded9fbb4775050b72242e5dd17778a62be411b5d4958b4b80c18e"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-helper-full-go-tests.txt",
+      "sha256": "72caa941e60b7ad27c4aa047070853d07d6a69af15ecf237770cb5c9cb4b609a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-helper-go-tests.txt",
+      "sha256": "aec27d0c71abd9c7b2964fa44c688cd8a93a8e3d00dc36816dccda9b511d42fe"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-owned-image-build.json",
+      "sha256": "7245422b837f333ba30fd6947d0bc9ab2ff54804b9a6fa7b1c7c95e074f6cc88"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

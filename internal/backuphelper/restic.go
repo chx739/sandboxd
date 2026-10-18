@@ -22,11 +22,12 @@ var checkpointID = regexp.MustCompile(`^cp-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9
 var fullHash = regexp.MustCompile(`^[a-f0-9]{64}$`)
 
 type Request struct {
-	Operation          string `json:"operation"`
-	CheckpointID       string `json:"checkpointId,omitempty"`
-	SnapshotID         string `json:"snapshotId,omitempty"`
-	ManifestSHA256     string `json:"manifestSha256,omitempty"`
-	RepositoryCryptoID string `json:"repositoryCryptoId,omitempty"`
+	Operation          string          `json:"operation"`
+	CheckpointID       string          `json:"checkpointId,omitempty"`
+	SnapshotID         string          `json:"snapshotId,omitempty"`
+	ManifestSHA256     string          `json:"manifestSha256,omitempty"`
+	RepositoryCryptoID string          `json:"repositoryCryptoId,omitempty"`
+	Owner              RepositoryOwner `json:"owner,omitzero"`
 }
 
 func Parse(args []string) (Request, error) {
@@ -36,6 +37,37 @@ func Parse(args []string) (Request, error) {
 	}
 	r.Operation = args[0]
 	switch r.Operation {
+	case "init-owned":
+		if len(args) != 2 || !controllerID.MatchString(args[1]) {
+			return r, errors.New("owned init requires controller UUIDv4")
+		}
+		r.Owner.ControllerID = args[1]
+	case "backup-owned", "forget", "prune":
+		n := 5
+		if r.Operation == "prune" {
+			n = 4
+		}
+		if len(args) != n {
+			return r, errors.New("owned maintenance requires exact identities")
+		}
+		if r.Operation == "backup-owned" {
+			r.Operation, r.CheckpointID = "backup", args[1]
+			if !checkpointID.MatchString(r.CheckpointID) {
+				return r, errors.New("invalid checkpoint identity")
+			}
+			r.Owner = RepositoryOwner{RepositoryCryptoID: args[2], ControllerID: args[3], OwnerSnapshotID: args[4]}
+		} else {
+			r.Owner = RepositoryOwner{RepositoryCryptoID: args[1], ControllerID: args[2], OwnerSnapshotID: args[3]}
+			if r.Operation == "forget" {
+				r.SnapshotID = args[4]
+				if !fullHash.MatchString(r.SnapshotID) {
+					return r, errors.New("forget requires full snapshot ID")
+				}
+			}
+		}
+		if !r.Owner.Valid() {
+			return r, errors.New("invalid repository ownership binding")
+		}
 	case "manifest", "init", "snapshots", "stats", "check", "config":
 		if len(args) != 1 {
 			return r, errors.New("operation takes no arguments")
@@ -150,6 +182,10 @@ func config(ctx context.Context) (map[string]any, error) {
 func Run(ctx context.Context, r Request) (map[string]any, error) {
 	result := map[string]any{"operation": r.Operation, "resticVersion": "0.18.1"}
 	switch r.Operation {
+	case "init-owned":
+		return initializeOwned(ctx, r.Owner)
+	case "forget", "prune":
+		return cleanupOwned(ctx, r, command)
 	case "manifest":
 		value, err := workspace.SnapshotManifest("/workspace")
 		result["manifest"] = value
@@ -182,6 +218,11 @@ func Run(ctx context.Context, r Request) (map[string]any, error) {
 		result["result"] = value
 		return result, nil
 	case "backup":
+		if r.Owner != (RepositoryOwner{}) {
+			if _, err := verifyOwner(ctx, r.Owner, command); err != nil {
+				return nil, err
+			}
+		}
 		before, err := workspace.SnapshotManifest("/workspace")
 		if err != nil {
 			return nil, err
@@ -206,8 +247,12 @@ func Run(ctx context.Context, r Request) (map[string]any, error) {
 			id, _ = prior[0]["id"].(string)
 			result["reusedSnapshot"] = true
 		} else {
-			raw, err = command(ctx, "backup", "/workspace", "--host", "sandboxd-workspace", "--tag", tag, "--tag", "manifest:"+before.SHA256,
-				"--exclude", "/workspace/.sandboxd-lock", "--exclude", ".sandboxd-tmp-*")
+			args := []string{"backup", "/workspace", "--host", "sandboxd-workspace", "--tag", tag, "--tag", "manifest:" + before.SHA256,
+				"--exclude", "/workspace/.sandboxd-lock", "--exclude", ".sandboxd-tmp-*"}
+			if r.Owner != (RepositoryOwner{}) {
+				args = append(args, "--tag", ownerTag(r.Owner))
+			}
+			raw, err = command(ctx, args...)
 			if err != nil {
 				return nil, err
 			} // Nonzero, including partial backup, never means success.
@@ -284,8 +329,21 @@ func Run(ctx context.Context, r Request) (map[string]any, error) {
 // FixedArgs is shared by the trusted Pod builder; identifiers are data, not shell.
 func FixedArgs(r Request) ([]string, error) {
 	args := []string{r.Operation}
+	if r.Operation == "init-owned" {
+		args = append(args, r.Owner.ControllerID)
+	}
+	if r.Operation == "forget" || r.Operation == "prune" {
+		args = append(args, r.Owner.RepositoryCryptoID, r.Owner.ControllerID, r.Owner.OwnerSnapshotID)
+		if r.Operation == "forget" {
+			args = append(args, r.SnapshotID)
+		}
+	}
 	if r.Operation == "backup" {
 		args = append(args, r.CheckpointID)
+		if r.Owner != (RepositoryOwner{}) {
+			args[0] = "backup-owned"
+			args = append(args, r.Owner.RepositoryCryptoID, r.Owner.ControllerID, r.Owner.OwnerSnapshotID)
+		}
 	}
 	if r.Operation == "restore" {
 		args = append(args, r.SnapshotID, r.ManifestSHA256)

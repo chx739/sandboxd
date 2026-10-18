@@ -55,6 +55,11 @@ func BuildBackupPod(cfg Config, id, workspaceID, secretName string, request back
 			Items: []corev1.KeyToPath{{Key: "repository", Path: "repository"}, {Key: "password", Path: "password"}}}}},
 		{Name: "tmp", VolumeSource: corev1.VolumeSource{EmptyDir: &corev1.EmptyDirVolumeSource{SizeLimit: quantity("64Mi")}}},
 	}
+	if request.Operation == "init-owned" || request.Operation == "forget" || request.Operation == "prune" {
+		// 仓库管理不需要任何业务NFS文件；只有私有凭据与临时空间。
+		container.VolumeMounts = container.VolumeMounts[1:]
+		pod.Spec.Volumes = pod.Spec.Volumes[1:]
+	}
 	return pod, nil
 }
 

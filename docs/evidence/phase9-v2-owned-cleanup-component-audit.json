@@ -1,0 +1,13 @@
+{
+  "mode": "independent-owned-helper-component-report-audit",
+  "passed": true,
+  "sourceReportSha256": "ba537681876ca5fe5cd3483725a8a23fe1356d913ae6464954fc48efd4e94c18",
+  "sourceScriptSha256": "ec35d46558b98d2ecb4241ebe0401fa1394686ae211f27276e26d1c76d74f073",
+  "operations": 16,
+  "expectedRejections": 4,
+  "actualMaintenanceImageId": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+  "exactInventoryTransitions": true,
+  "newSyntheticPrefixVerified": true,
+  "oldRepositoriesSelected": false,
+  "scope": "Same actual component run, not another experiment; no Go durable cleanup barrier/Operator API/Session coordinator proof"
+}

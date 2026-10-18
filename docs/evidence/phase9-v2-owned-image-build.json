@@ -1,0 +1,37 @@
+{
+  "imageRef": "sandboxd-restic:0.18.1-v3",
+  "dockerInspectId": "sha256:086857d7cf9eb5df85db094a2bba38011e4a2a68d8adccdf3b0554ca82e25623",
+  "identityType": "Docker image inspect Id, distinct from per-container CRI imageID",
+  "resticVersion": "restic 0.18.1 compiled with go1.25.1 on linux/amd64",
+  "inputs": [
+    {
+      "path": ".cache/restic-image-v3/restic",
+      "sha256": "01143daba61a1dc8afb0cb3d03ba83e6b118f55b6b146b27473a09efc3df13d6"
+    },
+    {
+      "path": ".cache/restic-image-v3/sandbox-restic",
+      "sha256": "a0951a0ef55ddece786822a51baf4d7f3faee7f59b5241a6942fd26fbbc12d07"
+    },
+    {
+      "path": ".cache/workspace-backup-pod-owned",
+      "sha256": "2c08385461507bec253f282d0fa43ae9237a5d562dfdccf2e75667cd218d2f4b"
+    },
+    {
+      "path": "internal/backuphelper/restic.go",
+      "sha256": "bbd5481406c4581a49f1367c3161fef0d6a60048967af7a1abf3ec9624cb3907"
+    },
+    {
+      "path": "internal/backuphelper/ownership.go",
+      "sha256": "01a46ac22c398b98485e30151f9cfa811098ab94158e6a90b4d76b774b010a88"
+    },
+    {
+      "path": "deploy/workspace/restic.Dockerfile",
+      "sha256": "6b2b33809b67e5c651e859984f6b8ec2b552a1629d3882e26a890cf7e5c80386"
+    }
+  ],
+  "oldImagesRetained": [
+    "sandboxd-restic:0.18.1-v1",
+    "sandboxd-restic:0.18.1-v2"
+  ],
+  "scope": "Build from verified cached assets; new tag loaded into kind; default runtime image unchanged"
+}

@@ -21,8 +21,14 @@ func main() {
 	cp := flag.String("checkpoint", "", "UUIDv4 checkpoint identity")
 	snapshot := flag.String("snapshot", "", "full snapshot hash")
 	manifest := flag.String("manifest", "", "expected restore manifest hash")
+	controller := flag.String("controller", "", "trusted controller UUIDv4")
+	ownerSnapshot := flag.String("owner-snapshot", "", "immutable repository owner snapshot")
+	repositoryCrypto := flag.String("repository-crypto", "", "full repository crypto identity")
 	flag.Parse()
 	request := backuphelper.Request{Operation: *op, CheckpointID: *cp, SnapshotID: *snapshot, ManifestSHA256: *manifest}
+	if *controller != "" || *ownerSnapshot != "" || *repositoryCrypto != "" {
+		request.Owner = backuphelper.RepositoryOwner{ControllerID: *controller, OwnerSnapshotID: *ownerSnapshot, RepositoryCryptoID: *repositoryCrypto}
+	}
 	pod, err := sandbox.BuildBackupPod(sandbox.Config{Image: *image, RuntimeClass: "gvisor"}, *id, *workspace, *secret, request)
 	if err != nil {
 		log.Fatal(err)

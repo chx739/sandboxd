@@ -50,6 +50,31 @@ func hashForBackupTest() string {
 	return "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
+func TestRepositoryManagementPodsHaveNoWorkspaceMount(t *testing.T) {
+	o := backuphelper.RepositoryOwner{RepositoryCryptoID: hashForBackupTest(), ControllerID: "controller-123456789abc4def8123456789abcdef", OwnerSnapshotID: hashForBackupTest()}
+	for _, request := range []backuphelper.Request{
+		{Operation: "init-owned", Owner: backuphelper.RepositoryOwner{ControllerID: o.ControllerID}},
+		{Operation: "forget", Owner: o, SnapshotID: hashForBackupTest()},
+		{Operation: "prune", Owner: o},
+	} {
+		pod, err := BuildBackupPod(Config{Image: "sandboxd-restic:0.18.1-v3", RuntimeClass: "gvisor"}, "gc-test", "workspace-123456789abcdef0123456789abcdef0", "restic-test", request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(pod.Spec.Volumes) != 2 || len(pod.Spec.Containers[0].VolumeMounts) != 2 {
+			t.Fatal("management mounted business data")
+		}
+		for _, volume := range pod.Spec.Volumes {
+			if volume.PersistentVolumeClaim != nil || volume.HostPath != nil {
+				t.Fatal("management got workspace access")
+			}
+		}
+		if *pod.Spec.RuntimeClassName != "gvisor" || *pod.Spec.SecurityContext.RunAsUser != 65532 || *pod.Spec.AutomountServiceAccountToken {
+			t.Fatal("security baseline changed")
+		}
+	}
+}
+
 func TestBackupNetworkOnlyAllowsConfiguredMinIO(t *testing.T) {
 	p, err := BuildBackupNetworkPolicy("172.23.0.4")
 	if err == nil && (p.APIVersion != "networking.k8s.io/v1" || p.Kind != "NetworkPolicy") {

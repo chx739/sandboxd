@@ -19,7 +19,7 @@ func main() {
 	defer cancel()
 	result, err := backuphelper.Run(ctx, r)
 	if err != nil {
-		json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": false, "error": err.Error(), "outcomeUncertain": r.Operation == "backup" || r.Operation == "restore"})
+		json.NewEncoder(os.Stdout).Encode(map[string]any{"ok": false, "error": err.Error(), "outcomeUncertain": r.Operation == "backup" || r.Operation == "restore" || r.Operation == "forget" || r.Operation == "prune" || r.Operation == "init-owned"})
 		os.Exit(1)
 	}
 	result["ok"] = true

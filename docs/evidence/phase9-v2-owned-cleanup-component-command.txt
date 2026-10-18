@@ -1,0 +1,16 @@
+{"operation": "init-owned", "expectedFailure": false, "passed": true}
+{"operation": "backup", "expectedFailure": false, "passed": true}
+{"operation": "backup", "expectedFailure": false, "passed": true}
+{"operation": "forget", "expectedFailure": true, "passed": true}
+{"operation": "forget", "expectedFailure": true, "passed": true}
+{"operation": "forget", "expectedFailure": true, "passed": true}
+{"operation": "snapshots", "expectedFailure": false, "passed": true}
+{"operation": "forget", "expectedFailure": false, "passed": true}
+{"operation": "forget", "expectedFailure": false, "passed": true}
+{"operation": "prune", "expectedFailure": false, "passed": true}
+{"operation": "check", "expectedFailure": false, "passed": true}
+{"operation": "snapshots", "expectedFailure": false, "passed": true}
+{"operation": "restore", "expectedFailure": false, "passed": true}
+{"operation": "backup", "expectedFailure": false, "passed": true}
+{"operation": "prune", "expectedFailure": true, "passed": true}
+{"operation": "snapshots", "expectedFailure": false, "passed": true}
