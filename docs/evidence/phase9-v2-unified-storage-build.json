@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "mode": "actual-unified-storage-build-cached-images",
+  "scope": "cached official restic verified, current server/renderer built, original images reused and kind loaded; NOT first uncached Docker build, fresh repository initialization, Agent startup, or complete V2 acceptance",
+  "externalModelCalls": 0,
+  "images": {
+    "sandboxd-workspace:runtime-v1.5": "sha256:8e1abdb6e17c11c98fb04f7ad707d748a35c199c9fc80fabbec300a60c7fb465",
+    "sandboxd-restic:0.18.1-v3": "sha256:086857d7cf9eb5df85db094a2bba38011e4a2a68d8adccdf3b0554ca82e25623"
+  },
+  "criImages": {
+    "sandboxd-workspace:runtime-v1.5": [
+      {
+        "id": "sha256:ee4b19828a03a59cb10941cd1aa03e8829e47c82466e3f1977bfd001b5fdd1d1",
+        "repoDigests": []
+      }
+    ],
+    "sandboxd-restic:0.18.1-v3": [
+      {
+        "id": "sha256:0253fdb655d226c3255dd7857090cc7e18d813252b6a28615eab0c42177f4575",
+        "repoDigests": []
+      }
+    ]
+  },
+  "podCountsAfter": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "files": {
+    "hack/build-workspace-storage.sh": "4b120ca3a1bf9c354a7d9a72da6ead138c48d6e7fc8fee3fd82dcbf820d432b8",
+    "hack/workspace.sh": "89735cff68ffc6535aad6e8158d08e6f9bec5bb4f7b4305321a72289bffc002f",
+    "agentd/tests/test_workspace_storage_build.py": "931c73acdff5049e3a41589751ea1e922a6f3bba0a0e9b8780a2ad3302c5be7e",
+    ".cache/workspace-storage-build-3oNWBXPQ/workspace-sandboxd": "a693c4e77275cc1576b25fe1900dcd43187141d19ae3afc715226ec8444d9b6f",
+    ".cache/workspace-storage-build-3oNWBXPQ/workspace-backup-pod-owned": "f91619498c4d99878035aa7500b6f3fc590b02d332700c439af7b594816e3324"
+  },
+  "resticSha256": "01143daba61a1dc8afb0cb3d03ba83e6b118f55b6b146b27473a09efc3df13d6",
+  "userDocumentSha256": {
+    "32-Agent记忆检索与路由学习手册.md": "80bf3d7a08124a40480c7532ae9d374f669d1b29571f50aac6d97266f92895a7",
+    "34-Codex风格分层记忆学习手册.md": "6d69af87f3966a2ee4c6599b4d954efb37f6fd7eb8fd57515d8c0d5dc203c75f"
+  },
+  "buildCommandSha256": "cfa14263b43474a57b634a1057fb05f43b6e3ebda520ab582786949116723042",
+  "formalV2AcceptanceComplete": false
+}

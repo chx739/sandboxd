@@ -1,0 +1,9 @@
+test_cluster_gate_fails_before_install_or_build (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+test_existing_tags_preserved_but_current_server_and_renderer_rebuilt (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+test_failed_build_does_not_replace_previous_server (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+test_first_install_builds_only_fixed_images_and_helpers (agentd.tests.test_workspace_storage_build.WorkspaceStorageBuildTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.421s
+
+OK

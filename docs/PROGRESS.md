@@ -18,6 +18,14 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：统一存储构建入口已真实验证
+
+- 起点8727abc，codex/workspace-restic-v2/草稿PR#3实际OPEN、base=codex/workspace-nfs-v1，前置PR#2→PR#1；用户docs32/docs34 hash保持。上轮流量解释与只读检查未改变验收状态，本轮新增hack/build-workspace-storage.sh和workspace.sh build-storage，推进统一V2安装入口，不重跑已完成性能实验。
+- 串行真实执行build-storage通过：resource available20,503MiB/swap0、项目单节点检查；固定restic0.18.1缓存校验、已有runtime-v1.5和restic-v3镜像复用（Docker ID未变）、当前Go服务及固定Pod渲染器重编译、kind加载通过。构建输入.cache/workspace-storage-build-3oNWBXPQ保留；默认.cache/workspace-sandboxd现为此批源码构建的新二进制，不再使用旧缓存。历史owned-cleanup可信缓存与其他镜像/证据均保留。
+- 原始phase9-v2-unified-storage-build-command.txt、-build.json记录实际Docker/CRI身份、二进制hash与业务/维护Pod0；4/4标准库Fake命令契约测试通过-build-tests.txt，覆盖已有tag不覆盖/首次命令/编译失败保留旧服务/集群门禁。Fake首次路径不是无缓存真实Docker构建，本轮不启动Agent或初始化仓库、不新增存储故障、不调用外部模型；不能当统一V2启动验收。
+- 两份用户文档hash已复核不变，原数据/卷/Secret/快照保留。部署README加入命令、前置条件和未接线边界；当前旧shell restic路径仍为v2，不因准备v3镜像就声称owned默认运行已切换。整体formalV2AcceptanceComplete保持false。
+- **第一项下一步**：新私有部署目录中的fresh Owner/bootstrap持久状态机，固定Secret/prefix/init job，重启不盲目init或收编旧历史；绑定Python检查点目录和Go参数后真实执行统一Go/Agent restic入口。再按文档43全部十项逐项审计/相关回归及PR交付，Goal保持完整active。
+
 ### 2026-10-18：固定V1/V2后端性能与流量通过
 
 - 起点fec103c，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮真实GC/故障/恢复/审计及PR为进展；本轮新增workspace_checkpoint_benchmark、独立标准库审计和3项纯逻辑测试。复用seed20261018及few4×1KiB/many32×256B/partial8×4KiB、2次list预热、暖读、单并发，不清内核缓存，不并发项目测试/安装。

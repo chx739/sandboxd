@@ -32,6 +32,7 @@ case "$action" in
   install       固定工具与uv frozen全部已声明extras（首次需要网络）
   check         只读资源/集群/NFS/版本检查
   build         编译可信Go服务（要求Go1.26.5）
+  build-storage 准备V1业务/v3维护镜像，编译当前Go/固定Pod渲染器并加载kind；已有tag只复用
   nfs           启动已配置的专属NFS；要求已核实SANDBOXD_NFS_IMAGE
   go            前台启动Go服务；要求Agent/Operator Token及原生持久控制目录
   agent         前台启动NFS+Replay agentd；路由关闭，不调用外部模型
@@ -67,6 +68,9 @@ EOF
     : "${SANDBOXD_NFS_IMAGE:?设置已核实的固定NFS镜像ID或digest}"
     # 保留既有容器/IP和named volumes；升级存储服务另走显式迁移。
     docker compose -f deploy/workspace/compose.yml up -d --no-recreate nfs
+    ;;
+  build-storage)
+    exec bash hack/build-workspace-storage.sh
     ;;
   go)
     check_cluster

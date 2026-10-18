@@ -273,6 +273,20 @@ bash hack/workspace.sh benchmark --repeats 3 --background-condition serial --out
 
 ## V2 可选联合检查点
 
+### 固定镜像与可信二进制准备
+
+已有kind/Calico/gVisor基础环境时，从仓库根目录执行：
+
+```bash
+bash hack/workspace.sh build-storage
+```
+
+该入口先检查资源及项目集群、校验固定restic0.18.1下载/二进制，再准备`runtime-v1.5`与`restic:0.18.1-v3`两个镜像。已有tag只inspect复用；缺失时按固定Dockerfile构建。它不覆盖旧镜像、不删除数据卷，保留本次构建输入。当前Go服务与固定Pod渲染器始终从源码构建，分别安装到`.cache/workspace-sandboxd`与`.cache/workspace-backup-pod-owned`，最后加载镜像到项目kind。
+
+复用已有tag不证明镜像来自当前源码；修改helper需明确新版本和兼容检查，不能用这个入口静默升级历史任务。首次无缓存构建可能下载固定基础镜像/restic/Go模块；当前实际验证的是缓存资产校验、已有镜像复用、Go编译及kind加载，原始结果见[安装入口证据](../../docs/evidence/phase9-v2-unified-storage-build.json)。4项命令契约测试使用Fake工具，不能代替首次真实镜像构建。
+
+**此命令只准备镜像和二进制，不初始化仓库或绑定Owner。** 新专属仓库持久初始化与统一V2启动仍待接线；当前`go`子命令的旧restic分支使用v2镜像，不得因此宣称已启用v3的归属与管理清理。已有历史共享仓库保留，不自动收编。
+
 NFS继续作为运行工作区，`AGENTD_CHECKPOINT_MODE=restic`启用完整工具组与最终诊断的同步联合保存；默认off。可信Go另需固定维护镜像、专用仓库Secret名称与MinIO私网地址，凭据不能交给业务Pod/模型。安装、两终端启动、独立真实演示及未验收范围见[文档47 §7](../../docs/47-联合检查点与restic-MinIO学习手册.md#7-agent完整边界自动保存与最终诊断接续)。不因有备份就认为历史分支恢复、NFS高可用或自动GC已经实现。
 
 ### V2联合提交进程切点

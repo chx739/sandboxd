@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "milestone": "M4-in-progress",
+  "milestone": "M5-in-progress",
   "formalV2AcceptanceComplete": false,
   "externalModelCalls": 0,
   "componentReport": "phase9-v2-backup-component-v3.json",
@@ -59,10 +59,9 @@
     }
   ],
   "remaining": [
-    "Connect verified owned helper to trusted Go persistent global cleanup barrier/administrator-only entry, unique control directory binding and PREPARED/FORGOTTEN coordinator; then actual joint refs/crash/lock/recovery acceptance in new dedicated repo",
-    "Fixed-workload V1/V2 performance/traffic and resource comparison including synchronous checkpoint overhead",
-    "Actual unified shell startup restic-mode execution",
-    "Final ten-item V2 requirement-by-requirement evidence audit and related regressions; restore started/attached standalone fixture modes not executed"
+    "Fresh owned repository durable bootstrap and unique control-directory binding, preserving all old shared/foreign fixtures and reconciling unknown initialization without blind re-init",
+    "Actual unified shell startup of owned restic-mode Go/Agent and restart reuse; cached build/image preparation alone is insufficient",
+    "Final ten-item V2 requirement-by-requirement authoritative evidence audit and related regressions; restore started/attached standalone fixture modes not executed, actual live-source-task refusal and missing/corrupt/image-mismatch coverage must be checked against requirements"
   ],
   "evidence": [
     {
@@ -944,6 +943,18 @@
     {
       "path": "docs/evidence/phase9-v2-fixed-workload.json",
       "sha256": "2fb72810c892ff9744338c35059ca42ec6baa5f48cc2b17593e2924c9ea66cae"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-unified-storage-build-command.txt",
+      "sha256": "cfa14263b43474a57b634a1057fb05f43b6e3ebda520ab582786949116723042"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-unified-storage-build-tests.txt",
+      "sha256": "88afb0a3c04dbe0a04548384f2544edc26f9011de6a8f64fe6c253bd9c7730a0"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-unified-storage-build.json",
+      "sha256": "013409886a1a09f638c22fb424a737bf7cd3f54a3b6c2ba65f397bc3fc272214"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",
@@ -957,5 +968,7 @@
   "cleanupRuntimeScope": "Go persistent global cleanup barrier, owned fixed operations, stored result proof, bounded stop/UID cleanup, explicit same-target retry and Operator-only routes verified locally with fake Kubernetes; actual joint cleanup and Python coordinator not yet verified.",
   "cleanupCoordinatorScope": "Independent operator-only Python process, same-journal repository binding/execution cursors, fixed local crypto-to-directory claim, reference recheck/PREPARED/Go proof/FORGOTTEN/Finish protocol, explicit bounded attempt retry and startup gate verified with local Fake/MockTransport; actual joint storage acceptance pending.",
   "actualJointCleanupScope": "Actual Replay Agent five CPs, local protected references, Go Operator fixed GC, Python metadata, admin/Go SIGKILL after durable proof, real lock conflict/explicit retry, prune and retained pinned file restore verified; not new historical Task resume or performance benchmark.",
-  "fixedWorkloadPerformanceScope": "Actual V1/V2 each9 serial fixed-dataset trials, nine fresh owned repositories, 18 backups/9 verified restores, dataset/manifest/324 Go journal/counter/quantile audit, network/packed/raw-data/apparent storage/CPU/memory endpoints recorded. Backend batch microbenchmark only; no production Agent-total or public billing extrapolation; unified startup/full V2 audit pending."
+  "fixedWorkloadPerformanceScope": "Actual V1/V2 each9 serial fixed-dataset trials, nine fresh owned repositories, 18 backups/9 verified restores, dataset/manifest/324 Go journal/counter/quantile audit, network/packed/raw-data/apparent storage/CPU/memory endpoints recorded. Backend batch microbenchmark only; no production Agent-total or public billing extrapolation; unified startup/full V2 audit pending.",
+  "unifiedStorageBuildReport": "phase9-v2-unified-storage-build.json",
+  "unifiedStorageBuildScope": "Actual cached restic verification, original Docker IDs preserved, current Go/server renderer build and kind loading; four Fake shell contracts. No fresh repository initialization or Agent startup acceptance."
 }
