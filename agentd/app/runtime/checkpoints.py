@@ -22,6 +22,8 @@ _DATA = {"repositoryId", "repositoryCryptoId", "snapshotId", "manifestSha256"}
 _STATE = {"schemaVersion", "checkpointId", "parentCheckpointId", "identity", "status", "data",
           "revision", "createdAt", "committedAt", "failure"}
 _FAILURES = {"backup_failed", "cancelled", "deadline", "conflict", "session_invalid"}
+_RESTORE = {"restoreId", "sourceCheckpointId", "sessionId", "branchId", "workspaceId",
+            "taskId", "status", "createdAt", "failure"}
 
 
 class CheckpointConflict(RuntimeError):
@@ -48,8 +50,14 @@ class CheckpointLedger:
         self._records: dict[str, dict[str, Any]] = {}
         self._heads: dict[tuple[str, str], str] = {}
         self._boundaries: dict[tuple[str, str, str], str] = {}
+        self._restores: dict[str, dict[str, Any]] = {}
+        self._origins: dict[tuple[str, str], str] = {}
         try:
             for entry in self._journal.entries():
+                if entry["type"] == "checkpoint.restore":
+                    self._validate_restore(entry["data"])
+                    self._project_restore(entry["data"])
+                    continue
                 if entry["type"] != "checkpoint.state":
                     raise JournalCorrupt("unknown checkpoint event")
                 self._validate(entry["data"])
@@ -111,8 +119,17 @@ class CheckpointLedger:
             raise JournalCorrupt("invalid checkpoint failure reason")
         previous = self._records.get(r["checkpointId"])
         if previous is None:
-            if r["status"] != "PREPARING" or self._heads.get(self._branch(r)) != r["parentCheckpointId"]:
+            if r["status"] != "PREPARING" or self._parent(self._branch(r)) != r["parentCheckpointId"]:
                 raise JournalCorrupt("checkpoint must start at current committed head")
+            if self._branch(r) not in self._heads and self._branch(r) in self._origins:
+                origin = self._restores[self._origins[self._branch(r)]]
+                source = self._records[origin["sourceCheckpointId"]]
+                if i["workspaceId"] != origin["workspaceId"] or i["taskId"] != origin["taskId"]:
+                    raise JournalCorrupt("first restored checkpoint changed target binding")
+                prefix = self._refs.read(i["sessionRef"])["nodes"]
+                parent_prefix = self._refs.read(source["identity"]["sessionRef"])["nodes"]
+                if prefix[:len(parent_prefix)] != parent_prefix:
+                    raise JournalCorrupt("restored checkpoint does not extend exact source Session")
             boundary = (i["taskId"], i["attemptId"], i["sessionNodeId"])
             if boundary in self._boundaries:
                 raise JournalCorrupt("checkpoint boundary already has an idempotency identity")
@@ -126,8 +143,18 @@ class CheckpointLedger:
                 raise JournalCorrupt("checkpoint data identity changed")
         if r["status"] == "COMMITTED":
             head = self._heads.get(self._branch(r))
-            if head != r["parentCheckpointId"] or r["revision"] != (self._records[head]["revision"] if head else 0) + 1:
+            if self._parent(self._branch(r)) != r["parentCheckpointId"] or r["revision"] != (self._records[head]["revision"] if head else 0) + 1:
                 raise JournalCorrupt("checkpoint head/revision compare-and-swap failed")
+
+    def _parent(self, branch: tuple[str, str]) -> str | None:
+        head = self._heads.get(branch)
+        origin = self._origins.get(branch)
+        return head or (self._restores[origin]["sourceCheckpointId"] if origin else None)
+
+    def branch_origin(self, session_id: str, branch_id: str) -> str | None:
+        with self._lock:
+            origin = self._origins.get((session_id, branch_id))
+            return self._restores[origin]["sourceCheckpointId"] if origin else None
 
     def _project(self, state: dict[str, Any]) -> None:
         r = copy.deepcopy(state)
@@ -171,7 +198,7 @@ class CheckpointLedger:
                 if old["identity"] != identity or old["parentCheckpointId"] != expected_head:
                     raise CheckpointConflict("checkpoint retry changed binding")
                 return old
-            if self._heads.get((identity["sessionId"], identity["branchId"])) != expected_head:
+            if self._parent((identity["sessionId"], identity["branchId"])) != expected_head:
                 raise CheckpointConflict("branch head changed")
             self._refs.read(identity["sessionRef"])
             return self._save({"schemaVersion": 1, "checkpointId": checkpoint_id, "parentCheckpointId": expected_head,
@@ -196,7 +223,7 @@ class CheckpointLedger:
             self._refs.read(r["identity"]["sessionRef"])
             if r["status"] == "COMMITTED":
                 return r
-            if r["status"] != "DATA_READY" or self._heads.get(self._branch(r)) != r["parentCheckpointId"]:
+            if r["status"] != "DATA_READY" or self._parent(self._branch(r)) != r["parentCheckpointId"]:
                 raise CheckpointConflict("checkpoint is not data-ready or head changed")
             head = self.head(*self._branch(r))
             r.update(status="COMMITTED", revision=(head["revision"] if head else 0) + 1,
@@ -221,6 +248,105 @@ class CheckpointLedger:
             if r["status"] != "COMMITTED":
                 raise CheckpointConflict("checkpoint is not a committed restore point")
             return r, self._refs.read(r["identity"]["sessionRef"])
+
+    def _validate_restore(self, record: dict[str, Any]) -> None:
+        if not isinstance(record, dict) or set(record) != _RESTORE:
+            raise JournalCorrupt("invalid restore record fields")
+        for key, prefix in (("restoreId", "restore"), ("branchId", "branch"), ("workspaceId", "workspace")):
+            if not isinstance(record[key], str) or not re.fullmatch(prefix + r"-[a-f0-9]{12}4[a-f0-9]{3}[89ab][a-f0-9]{15}", record[key]):
+                raise JournalCorrupt("restore target needs fixed UUIDv4 identities")
+        for key in ("sessionId", "taskId", "sourceCheckpointId"):
+            if not isinstance(record[key], str) or not _ID.fullmatch(record[key]):
+                raise JournalCorrupt("invalid restore scope")
+        _time(record["createdAt"])
+        source = self._records.get(record["sourceCheckpointId"])
+        if (source is None or source["status"] != "COMMITTED"
+                or source["identity"]["sessionId"] != record["sessionId"]
+                or source["identity"]["branchId"] == record["branchId"]
+                or source["identity"]["workspaceId"] == record["workspaceId"]):
+            raise JournalCorrupt("restore requires same Session and independent target")
+        if record["status"] not in {"RESERVED", "FILES_READY", "ATTACHED", "FAILED"}:
+            raise JournalCorrupt("invalid restore state")
+        if ((record["status"] == "FAILED" and record["failure"] not in _FAILURES)
+                or (record["status"] != "FAILED" and record["failure"] is not None)):
+            raise JournalCorrupt("invalid restore failure code")
+        old = self._restores.get(record["restoreId"])
+        if old is None:
+            if record["status"] != "RESERVED":
+                raise JournalCorrupt("restore must reserve source before execution")
+            for other in self._restores.values():
+                if any(record[key] == other[key] for key in ("branchId", "workspaceId", "taskId")):
+                    raise JournalCorrupt("restore target identity is already reserved")
+            for checkpoint in self._records.values():
+                if any(record[key] == checkpoint["identity"][key] for key in ("branchId", "workspaceId", "taskId")):
+                    raise JournalCorrupt("restore cannot reuse an existing target")
+        else:
+            if any(record[key] != old[key] for key in _RESTORE - {"status", "failure"}):
+                raise JournalCorrupt("restore retry changed immutable binding")
+            transitions = {"RESERVED": {"FILES_READY", "FAILED"}, "FILES_READY": {"ATTACHED", "FAILED"}}
+            if record["status"] not in transitions.get(old["status"], set()):
+                raise JournalCorrupt("invalid restore transition")
+
+    def _project_restore(self, record: dict[str, Any]) -> None:
+        self._restores[record["restoreId"]] = copy.deepcopy(record)
+        if record["status"] == "ATTACHED":
+            self._origins[(record["sessionId"], record["branchId"])] = record["restoreId"]
+
+    def _save_restore(self, record: dict[str, Any]) -> dict[str, Any]:
+        self._validate_restore(record)
+        self._journal.append("checkpoint.restore", record)
+        self._project_restore(record)
+        return copy.deepcopy(record)
+
+    def prepare_restore(self, restore_id: str, checkpoint_id: str, *, session_id: str,
+                        branch_id: str, workspace_id: str, task_id: str) -> dict[str, Any]:
+        """先fsync固定来源和目标，调用方随后才能发起任何远程恢复动作。"""
+        with self._lock:
+            source, _ = self.restore_point(checkpoint_id)
+            binding = {"restoreId": restore_id, "sourceCheckpointId": source["checkpointId"],
+                       "sessionId": session_id, "branchId": branch_id,
+                       "workspaceId": workspace_id, "taskId": task_id}
+            old = self._restores.get(restore_id)
+            if old is not None:
+                if any(old[key] != value for key, value in binding.items()):
+                    raise CheckpointConflict("restore retry changed binding")
+                return copy.deepcopy(old)
+            return self._save_restore({**binding, "status": "RESERVED", "failure": None,
+                                       "createdAt": datetime.now(timezone.utc).isoformat()})
+
+    def restore_request(self, restore_id: str) -> dict[str, Any]:
+        with self._lock:
+            if restore_id not in self._restores:
+                raise CheckpointConflict("unknown restore request")
+            return copy.deepcopy(self._restores[restore_id])
+
+    def restore_requests(self) -> list[dict[str, Any]]:
+        with self._lock:
+            return copy.deepcopy(list(self._restores.values()))
+
+    def advance_restore(self, restore_id: str, status: str, failure: str | None = None) -> dict[str, Any]:
+        """仅协调器使用：FILES_READY需可信恢复证明，ATTACHED需持久Task绑定。
+
+        本日志不能替代Go核验或Task提交；失败也保留来源引用，不能立即forget。
+        """
+        with self._lock:
+            record = self.restore_request(restore_id)
+            if record["status"] == status and record["failure"] == failure:
+                return record
+            if status in {"FILES_READY", "ATTACHED"}:
+                self.restore_point(record["sourceCheckpointId"])
+            record.update(status=status, failure=failure)
+            return self._save_restore(record)
+
+    def protected_checkpoints(self) -> dict[str, list[str]]:
+        """管理清理的引用输入；未提供主动解除引用或删除快照能力。"""
+        with self._lock:
+            protected: dict[str, list[str]] = {}
+            for (session, branch), cp in self._heads.items():
+                protected.setdefault(cp, []).append("branch-head:" + session + "/" + branch)
+            for request in self._restores.values():
+                protected.setdefault(request["sourceCheckpointId"], []).append("restore-source:" + request["restoreId"])
+            return protected
 
     def close(self) -> None:
         self._journal.close()

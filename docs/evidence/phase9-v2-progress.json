@@ -61,7 +61,7 @@
   "remaining": [
     "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
     "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "Session branch integration over validated restricted restore HTTP/client; original budgets/cancel and active source reference protection required",
+    "Historical restore coordinator/TaskStore/API integration over validated HTTP and durable source/branch-origin control; budgets/cancel and reference-aware cleanup remain",
     "historical branch from exact committed Session prefix and separate workspace; continued execution without side-effect replay or budget rollback",
     "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
     "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
@@ -511,6 +511,22 @@
     {
       "path": "docs/evidence/phase9-v2-restore-http-full-python-tests.txt",
       "sha256": "6505103688323ef08b669ac5b8a680cecdd444270ce294516e09c3a728bdb46f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-final-tests.txt",
+      "sha256": "573cd905d590c0daa209daa9b79c07b90ccdc022dd58638af71b97d13e0aae99"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-retained-compat.json",
+      "sha256": "2ca8c0c4800d10aa22561ec2ac1833a725ac46cfacbfa5485119c7eb000d95de"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-tests.txt",
+      "sha256": "1d4ab4749f434a8ce363cbba389f7ced7a916c3dcbe50625e9ada253857dad75"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-restore-reference-full-python-tests.txt",
+      "sha256": "3acdbd74a37be556a53b7128e93f47afb3364d242dad07eaac42c19526628ca9"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

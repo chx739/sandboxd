@@ -394,7 +394,43 @@ agentd/.venv/bin/python -m agentd.workspace_restore_http_demo \
 
 **下一步**：精确Session父链、新branch/workspace和持久恢复请求联合接线，先保护活动恢复源；恢复后的预算/取消/不重放、引用清理、真实存储异常与同条件性能仍需验收。当前真实成绩仅证明文件恢复HTTP组件，不能宣布V2完整完成。
 
-## 12. 官方参考与版本
+## 12. 历史恢复来源引用与分支父检查点（控制模块）
+
+历史恢复使用同一份单写入检查点JSONL新增`checkpoint.restore`事件，保持Task账本与Go归属日志各自唯一写入者。这里只登记控制状态；可信文件恢复HTTP、Task接续和取消必须由后续协调器核对，状态名不能代替这些真实证明。
+
+```text
+RESERVED → FILES_READY → ATTACHED
+    └────────┴────────→ FAILED
+```
+
+- 首次`prepare_restore`先持久化UUIDv4 restore/branch/workspace、预分配taskId及COMMITTED sourceCheckpointId，再允许协调器调用远程恢复。Session必须相同，目标branch/workspace/task必须独立且没有被旧检查点或另一恢复请求使用。
+- 同请求重试复用绑定，不追加重复记录；换来源或换目标明确拒绝。FILES_READY要求上层已完成可信文件验证；ATTACHED要求上层已持久化Task绑定。当前还未接这些上层动作，不将纯逻辑状态转移称作真实联合恢复。
+- `protected_checkpoints`返回分支恢复头和所有保留恢复请求的来源引用。FAILED也保留引用及隔离目标，防止结果不明时遗忘来源；当前没有自动解除引用、forget/prune或管理清理入口。后续清理必须消费此投影，并按仓库/完整snapshot聚合引用，不能只按checkpointId删除共享快照。
+- 仅ATTACHED建立新分支来源。新分支首份检查点的parentCheckpointId指向所选来源，revision从1开始；来源分支继续前进不改变这个关系。首份提交核对目标workspace/task和不可变Session父链确实包含来源的完整前缀。后续提交沿新分支head递增，不把来源revision拷贝到新分支。
+- 首份检查点准备/提交及重建都使用相同的来源关系；COMMITTED仍是一条日志同时投影head/revision。旧日志没有restore事件时按原逻辑读取。出现新事件的控制目录不能交给旧二进制写入，旧解析器会拒绝未知事件。
+
+例如来源分支已到revision2，新分支第一次保存是：
+
+```text
+Session
+├── branch-A → cp-A2 (revision=2)
+└── restore-R (source=cp-A2, workspace-B, task-B)
+    └── branch-B → cp-B1 (revision=1, parent=cp-A2)
+```
+
+原branch-A、原工作区和原Task审计不回退；本模块也不修改Task预算。手动历史分支仍须创建新Task，自动故障接续仍须保留原Task/额度/截止时间，两者不能混用。
+
+验证入口：
+
+```bash
+agentd/.venv/bin/python -m unittest agentd.tests.test_checkpoints agentd.tests.test_checkpoint_coordinator -v
+```
+
+初轮34项本地测试通过（5.804秒），`phase9-v2-restore-reference-tests.txt`；随后增加来源head前移后的引用、非法完整restore日志、revision2来源的新分支序号，以及恢复请求列表读取，最终35/35、6.079秒通过`phase9-v2-restore-reference-final-tests.txt`。完整Python249/249、289.899秒通过`phase9-v2-restore-reference-full-python-tests.txt`，包含六项新恢复控制用例；有重叠的测试批次不相加。所有身份/快照/状态证明为合成，无真实restore/Task分支/API或清理成绩；旧真实服务报告不会自动覆盖本批新控制代码。 另以新解析器读取已保留的真实Agent控制目录，所选COMMITTED检查点与最终revision3头一致，JSONL和Session引用字节不变；结果`phase9-v2-restore-reference-retained-compat.json`只证明旧格式重建兼容，不是新增故障或恢复服务验收。
+
+**第一项下一步**：持久历史恢复协调器与TaskStore接线：读取精确Session引用，先RESERVED，再调用既有Go恢复HTTP验证新空目标，成功后FILES_READY，持久化新Task/Session分支并ATTACHED再入队。重启须按原restoreId/job/目标对账；不可重新分配ID或把FILES_READY直接当Task可运行。原分支有活动任务时拒绝切换，先保持单Worker会话head语义；随后补真实历史分支及取消/预算/引用清理验收。
+
+## 13. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。

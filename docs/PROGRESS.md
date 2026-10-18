@@ -18,6 +18,14 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：历史恢复来源与分支检查点关系控制模块
+
+- 起点2836588，当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。本批新增同检查点JSONL的checkpoint.restore事件：RESERVED→FILES_READY→ATTACHED/FAILED，首次固定source和新branch/workspace/task，幂等与重建；不接远程动作或模型工具。
+- 分支头和保留恢复请求来源形成protected_checkpoints投影，失败也保留来源；尚无解除引用/forget-prune/管理清理，不冒称已完成清理验收。只有ATTACHED建立分支来源，首份检查点parent指向来源、revision从1起，核对来源Session父链/目标workspace/task。协调器保存无新head时读取持久来源，不改Task预算。
+- 首轮定向34/34、5.804秒通过phase9-v2-restore-reference-tests.txt；此后追加来源前移/非法完整日志等检查，最终35/35、6.079秒通过phase9-v2-restore-reference-final-tests.txt；完整Python249/249、289.899秒通过phase9-v2-restore-reference-full-python-tests.txt，已核对包含本批六项恢复控制测试；各批有重叠，不相加。全部为本地合成逻辑，不当真实Session分支或存储服务验收。 新解析器只读重建既有真实Agent切点控制日志通过phase9-v2-restore-reference-retained-compat.json：原COMMITTED点/分支head revision3一致，JSONL与Session引用字节不变；不是新增文件恢复。
+- **第一项下一步**：历史恢复协调器/TaskStore/API接线，严格先来源引用→新空目标可信恢复→FILES_READY→Task绑定→ATTACHED→入队，重启按原请求对账。真实取消/存储故障、清理、性能和完整V2十项仍待完成；Goal active。
+
+
 ### 2026-10-18：恢复HTTP与Python客户端真实链路通过
 
 - 本批有效实现44b18c1（起点531b358），当前codex/workspace-restic-v2，草稿PR#3仍OPEN且base=codex/workspace-nfs-v1；依赖PR#2→PR#1、不合并。用户docs32/docs34不修改、不暂存。

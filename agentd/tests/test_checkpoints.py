@@ -72,6 +72,120 @@ class CheckpointTests(unittest.IsolatedAsyncioTestCase):
         self.ledger.prepare(self.cp, self.identity, None)
         return self.ledger.data_ready(self.cp, self.data)
 
+    def reserve_restore(self, **changes):
+        values = dict(restore_id=new_id("restore"), checkpoint_id=self.cp, session_id=self.sid,
+                      branch_id=new_id("branch"), workspace_id=new_id("workspace"), task_id="task-restored")
+        values.update(changes)
+        return self.ledger.prepare_restore(**values)
+
+    async def test_restore_source_reserved_before_execution_and_retry_is_immutable(self):
+        self.ready(); self.commit()
+        request = self.reserve_restore()
+        original = self.path.read_bytes()
+        repeated = self.ledger.prepare_restore(request["restoreId"], self.cp, session_id=self.sid,
+                    branch_id=request["branchId"], workspace_id=request["workspaceId"], task_id=request["taskId"])
+        self.assertEqual(request, repeated)
+        self.assertEqual(original, self.path.read_bytes())
+        self.assertIn("restore-source:" + request["restoreId"], self.ledger.protected_checkpoints()[self.cp])
+        self.reopen()
+        self.assertEqual(request, self.ledger.restore_request(request["restoreId"]))
+        self.assertIsNone(self.ledger.branch_origin(self.sid, request["branchId"]))
+        with self.assertRaises(CheckpointConflict):
+            self.ledger.prepare_restore(request["restoreId"], self.cp, session_id=self.sid,
+                    branch_id=request["branchId"], workspace_id=new_id("workspace"), task_id=request["taskId"])
+
+    async def test_failed_restore_keeps_pin_and_cannot_reuse_target(self):
+        self.ready(); self.commit()
+        request = self.reserve_restore()
+        node = await self.session.append_transcript(self.task, self.messages + [AIMessage(content="source advances")])
+        identity = dict(self.identity, sessionNodeId=node, sessionRef=await self.refs.capture(self.session, node))
+        later = new_id("cp")
+        self.ledger.prepare(later, identity, self.cp)
+        self.ledger.data_ready(later, self.data)
+        self.ledger.commit(later)
+        with self.assertRaises(JournalCorrupt):
+            self.ledger.advance_restore(request["restoreId"], "ATTACHED")
+        self.ledger.advance_restore(request["restoreId"], "FAILED", "backup_failed")
+        self.reopen()
+        self.assertIn(self.cp, self.ledger.protected_checkpoints())
+        self.assertEqual(self.ledger.protected_checkpoints()[self.cp], ["restore-source:" + request["restoreId"]])
+        self.assertIsNone(self.ledger.branch_origin(self.sid, request["branchId"]))
+        with self.assertRaises(JournalCorrupt):
+            self.ledger.advance_restore(request["restoreId"], "FILES_READY")
+        with self.assertRaises(JournalCorrupt):
+            self.reserve_restore(workspace_id=request["workspaceId"], task_id="task-other")
+
+    async def test_restore_invalid_complete_history_refused_even_with_valid_checksum(self):
+        self.ready(); self.commit()
+        request = self.reserve_restore()
+        # 模拟完整但非法的日志状态，不把checksum当作业务提交证明。
+        self.ledger._journal.append("checkpoint.restore", dict(request, status="ATTACHED"))
+        self.ledger.close()
+        with self.assertRaises(JournalCorrupt):
+            CheckpointLedger(self.path, self.refs)
+
+    async def test_restore_rejects_uncommitted_scope_and_original_target(self):
+        self.ready()
+        with self.assertRaises(CheckpointConflict):
+            self.reserve_restore()
+        self.commit()
+        for changes in ({"session_id": "session-ffffffffffffffff"}, {"branch_id": self.branch},
+                        {"workspace_id": self.workspace}, {"task_id": self.task}):
+            with self.assertRaises(JournalCorrupt):
+                self.reserve_restore(**changes)
+        self.assertEqual(self.ledger.restore_requests(), [])
+
+    async def test_restored_branch_first_checkpoint_links_source_and_revision_restarts(self):
+        self.ready(); self.commit()
+        # 来源已是revision2；新分支第一份仍须从1开始，不能继承来源序号。
+        self.messages += [AIMessage(content="source later complete")]
+        self.node = await self.session.append_transcript(self.task, self.messages)
+        self.identity.update(sessionNodeId=self.node, sessionRef=await self.refs.capture(self.session, self.node))
+        second = new_id("cp")
+        self.ledger.prepare(second, self.identity, self.cp)
+        self.ledger.data_ready(second, self.data)
+        self.assertEqual(self.ledger.commit(second)["revision"], 2)
+        self.cp = second
+        request = self.reserve_restore()
+        self.ledger.advance_restore(request["restoreId"], "FILES_READY")
+        self.assertIsNone(self.ledger.branch_origin(self.sid, request["branchId"]))
+        self.ledger.advance_restore(request["restoreId"], "ATTACHED")
+        _, messages, _ = await self.session.load_branch(self.node)
+        branch = SessionJournal(self.root / "sessions", self.sid)
+        await branch.initialize(request["taskId"], self.alert, self.node)
+        node = await branch.append_transcript(request["taskId"], messages + [HumanMessage(content="new branch"), AIMessage(content="done")])
+        identity = dict(self.identity, branchId=request["branchId"], workspaceId=request["workspaceId"],
+                        taskId=request["taskId"], attemptId=new_id("attempt"), sessionNodeId=node,
+                        sessionRef=await self.refs.capture(branch, node))
+        cp = new_id("cp")
+        with self.assertRaises(CheckpointConflict):
+            self.ledger.prepare(cp, identity, None)
+        self.ledger.prepare(cp, identity, self.cp)
+        self.ledger.data_ready(cp, self.data)
+        committed = self.ledger.commit(cp)
+        self.assertEqual(committed["parentCheckpointId"], self.cp)
+        self.assertEqual(committed["revision"], 1)
+        self.reopen()
+        self.assertEqual(self.ledger.head(self.sid, self.branch)["checkpointId"], self.cp)
+        self.assertEqual(self.ledger.head(self.sid, request["branchId"])["checkpointId"], cp)
+        self.assertEqual(self.ledger.branch_origin(self.sid, request["branchId"]), self.cp)
+
+    async def test_first_restored_checkpoint_cannot_substitute_another_prefix_or_task(self):
+        self.ready(); self.commit()
+        request = self.reserve_restore()
+        self.ledger.advance_restore(request["restoreId"], "FILES_READY")
+        self.ledger.advance_restore(request["restoreId"], "ATTACHED")
+        identity = dict(self.identity, branchId=request["branchId"], workspaceId=request["workspaceId"])
+        with self.assertRaises(JournalCorrupt):
+            self.ledger.prepare(new_id("cp"), identity, self.cp)
+        # 同Session另一条父链即使完整，也不属于所选检查点。
+        branch = SessionJournal(self.root / "sessions", self.sid)
+        await branch.initialize("task-other-prefix", self.alert)
+        node = await branch.append_transcript("task-other-prefix", [HumanMessage(content="unrelated"), AIMessage(content="done")])
+        identity.update(taskId=request["taskId"], sessionNodeId=node, sessionRef=await self.refs.capture(branch, node))
+        with self.assertRaises(JournalCorrupt):
+            self.ledger.prepare(new_id("cp"), identity, self.cp)
+
     def commit(self):
         return self.recovery.commit_checkpoint(self.ledger, self.cp, self.owner, self.now)
 

@@ -89,7 +89,8 @@ class CheckpointCoordinator:
                     "generation": binding.generation, "imageRef": owner["imageRef"],
                     "imageId": owner["imageId"], "sessionRef": reference}
         head = self.ledger.head(state["sessionId"], state["branchId"])
-        parent = old["parentCheckpointId"] if old else head["checkpointId"] if head else None
+        parent = (old["parentCheckpointId"] if old else head["checkpointId"] if head
+                  else self.ledger.branch_origin(state["sessionId"], state["branchId"]))
         prepared = self.ledger.prepare(cp, identity, parent)
         if prepared["status"] == "PREPARING":
             await self._call("start", access, cp, job, recovery)
