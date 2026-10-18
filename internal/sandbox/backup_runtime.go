@@ -59,11 +59,13 @@ func NewBackupRuntime(w *WorkspaceRuntime, job BackupJobConfig) (*BackupRuntime,
 }
 
 func (b *BackupRuntime) expected(barrier WorkspaceBarrier) (*corev1.Pod, error) {
-	if barrier.Job != b.job || (barrier.Operation != "backup" && barrier.Operation != "restore") {
+	if barrier.Job != b.job || (barrier.Operation != "backup" && barrier.Operation != "restore" && !barrier.isCleanup()) {
 		return nil, ErrWorkspaceConflict
 	}
 	request := backuphelper.Request{Operation: "backup", CheckpointID: barrier.CheckpointID, Owner: b.job.Owner}
-	if barrier.Operation == "restore" {
+	if barrier.isCleanup() {
+		request = backuphelper.Request{Operation: barrier.Operation, Owner: b.job.Owner, SnapshotID: barrier.Cleanup.SnapshotID}
+	} else if barrier.Operation == "restore" {
 		if !barrier.RestoreSource.valid() || barrier.RestoreSource.ImageRef != b.workspace.image {
 			return nil, ErrWorkspaceConflict
 		}
@@ -80,7 +82,7 @@ func (b *BackupRuntime) expected(barrier WorkspaceBarrier) (*corev1.Pod, error) 
 
 func (b *BackupRuntime) current(expected WorkspaceBarrier) (WorkspaceBarrier, error) {
 	got, ok := b.workspace.registry.Barrier(expected.WorkspaceID)
-	if !ok || got.JobID != expected.JobID || got.CheckpointID != expected.CheckpointID || got.Access != expected.Access || got.Job != b.job || got.Operation != expected.Operation || got.RestoreSource != expected.RestoreSource || (got.Operation != "backup" && got.Operation != "restore") || got.Phase == "released" {
+	if !ok || got.JobID != expected.JobID || got.CheckpointID != expected.CheckpointID || got.Access != expected.Access || got.Job != b.job || got.Operation != expected.Operation || got.RestoreSource != expected.RestoreSource || got.Cleanup != expected.Cleanup || (got.Operation != "backup" && got.Operation != "restore" && !got.isCleanup()) || got.Phase == "released" {
 		return WorkspaceBarrier{}, ErrWorkspaceConflict
 	}
 	return got, nil
@@ -202,6 +204,9 @@ type BackupResult struct {
 }
 
 func (b *BackupRuntime) Wait(ctx context.Context, expected WorkspaceBarrier) (WorkspaceBarrier, BackupResult, error) {
+	if expected.isCleanup() {
+		return WorkspaceBarrier{}, BackupResult{}, ErrWorkspaceConflict
+	}
 	for {
 		barrier, err := b.observe(ctx, expected)
 		if err != nil {

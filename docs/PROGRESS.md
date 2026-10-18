@@ -14,9 +14,17 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 当前里程碑：
 
-    Phase 9 M4：V1已交付；V2正常保存、协议切点、历史分支与存储故障已验证，引用控制及owned后端组件已接；持久GC/管理员/联合协调、性能/统一入口及十项完整验收待完成；Goal active
+    Phase 9 M4：V1已交付；V2正常保存、协议切点、历史分支与存储故障已验证；引用控制/owned组件/Go仓库绑定及GC屏障/Operator接口已有分层证据；Python联合协调及真实GC、性能/统一入口和十项完整验收待完成；Goal active
 
 ## Phase 9 当前恢复点
+
+### 2026-10-18：持久GC执行与Operator入口本地闭环
+
+- 起点a96a9bc，codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。上一轮持久仓库绑定、回归和PR推送属于进展；本轮复用维护Pod/WorkspaceBarrier新增forget/prune固定执行、全局互斥、结果证明落盘、显式同目标新job重试及Operator专属HTTP。关联ID不创建NFS目录，管理Pod仍无业务PVC，Agent无此API权限/模型工具。
+- reserve只冻结；Wait核验真实Pod结果后fsync CleanupResult；Finish要求已有证明，可跨“删Pod后”窗口重启。未知/非零/超时仍冻结，retry须旧Pod确定停止并清理同UID；防止旧请求释放新job、历史gcId或旧jobId复用。尚未提交Pod且尚未写PREPARED时，管理员可cancel-reservation撤销过期计划；Go能证明never-submitted，上层未PREPARED条件须由后续可信协调器保证，不能把此接口当通用失败解冻。
+- 本地新增Runtime7项/API3项顶层测试，覆盖持久冻结、正反互斥、坏结果、证明恢复、非法完整日志、历史ID、预留撤销和管理员权限。最终phase9-v2-cleanup-runtime-final-v4-race-tests.txt的sandbox/API通过，Go全项目-full-go-tests通过。final-v2/v3保留同一错误映射失败：旧未归属后端已拒绝但返回500，应409；修复预留前Owner检查后通过，没有实际删除或越权。初轮/targeted等仅对应当时代码，不冒称包含后补场景。
+- 本批仅本地逻辑/fake Kubernetes，新服务0/实际仓库操作0/外部模型0；未改Python、不重跑旧292，原数据/镜像/仓库/快照/卷保留。available20,526MiB、swap0，未启动故障实验。文档48 §10记录固定接口、代码顺序、边界和后续验收；完整V2仍不宣称完成。
+- **第一项下一步**：独立Python管理协调器绑定唯一控制目录，持锁核验引用、Go Reserve后复核并fsync PREPARED、固定Start/Wait、FORGOTTEN后Finish；崩溃从同GC/job对账，PREPARED后不撤销，锁冲突不强解。随后新专属干净仓库真实联合验收，不复用旧共享或故意污染夹具。性能流量、统一restic入口、十项最终审计仍保持完整待办。
 
 ### 2026-10-18：Go持久仓库绑定与owned备份接线
 

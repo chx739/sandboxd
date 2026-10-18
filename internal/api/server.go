@@ -92,6 +92,8 @@ func (s *Server) routes() {
 	s.mux.Handle("GET /api/v1/plans", s.requireEither(http.HandlerFunc(s.listPlans)))
 	s.mux.Handle("POST /api/v1/plans/{id}/approve", s.requireOperator(http.HandlerFunc(s.approvePlan)))
 	s.mux.Handle("POST /api/v1/plans/{id}/reject", s.requireOperator(http.HandlerFunc(s.rejectPlan)))
+	s.mux.Handle("GET /api/v1/repository/cleanup", s.requireOperator(http.HandlerFunc(s.getRepositoryCleanup)))
+	s.mux.Handle("POST /api/v1/repository/cleanup/{action}", s.requireOperator(http.HandlerFunc(s.repositoryCleanup)))
 }
 
 func (s *Server) requireAgent(next http.Handler) http.Handler {

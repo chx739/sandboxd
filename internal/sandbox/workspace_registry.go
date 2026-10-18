@@ -60,11 +60,13 @@ func (a WorkspaceAccess) Validate() error {
 }
 
 type WorkspaceRegistry struct {
-	mu         sync.Mutex
-	journal    *control.Journal
-	records    map[string]WorkspaceRecord
-	barriers   map[string]WorkspaceBarrier
-	repository RepositoryBinding
+	mu           sync.Mutex
+	journal      *control.Journal
+	records      map[string]WorkspaceRecord
+	barriers     map[string]WorkspaceBarrier
+	repository   RepositoryBinding
+	cleanupPlans map[string]cleanupPlan
+	cleanupJobs  map[string]bool
 }
 
 func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
@@ -72,7 +74,7 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 	if err != nil {
 		return nil, err
 	}
-	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}, barriers: map[string]WorkspaceBarrier{}}
+	r := &WorkspaceRegistry{journal: journal, records: map[string]WorkspaceRecord{}, barriers: map[string]WorkspaceBarrier{}, cleanupPlans: map[string]cleanupPlan{}, cleanupJobs: map[string]bool{}}
 	for _, entry := range journal.Entries() {
 		if entry.Type == "repository.binding" {
 			var binding RepositoryBinding
@@ -94,6 +96,7 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 				return nil, errors.New("invalid persistent workspace barrier")
 			}
 			r.barriers[barrier.WorkspaceID] = barrier
+			r.indexCleanup(barrier)
 			continue
 		}
 		var record WorkspaceRecord
@@ -113,6 +116,9 @@ func OpenWorkspaceRegistry(path string) (*WorkspaceRegistry, error) {
 }
 
 func (r *WorkspaceRegistry) validate(record WorkspaceRecord) error {
+	if r.repository != (RepositoryBinding{}) && record.WorkspaceID == r.cleanupWorkspaceID() {
+		return ErrWorkspaceConflict // 维护关联ID不是可挂载的业务工作区。
+	}
 	if record.RestoredFrom != (RestoreSource{}) && !record.RestoredFrom.valid() {
 		return ErrWorkspaceConflict
 	}

@@ -1,0 +1,22 @@
+ok  	github.com/chx739/sandboxd/internal/sandbox	3.756s
+2026/10/18 11:14:13 workspace operation failed: workspace operation interrupted: context deadline exceeded
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace operation interrupted: context deadline exceeded
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: invalid workspace barrier identity
+--- FAIL: TestCleanupHTTPUnownedBackendRefuses (0.01s)
+    cleanup_handler_test.go:139: unowned repository cleanup allowed 500 {"error":"workspace operation did not complete","errorType":"workspace-execution","sandboxRecovery":false}
+        
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace operation interrupted: context deadline exceeded
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+2026/10/18 11:14:13 workspace operation failed: workspace ownership conflict
+FAIL
+FAIL	github.com/chx739/sandboxd/internal/api	0.194s
+FAIL

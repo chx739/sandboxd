@@ -10,19 +10,22 @@ import (
 // A process crash, HTTP timeout, or vanished Pod must not silently unfreeze it.
 // Only trusted maintenance reconciliation advances the Pod stop evidence.
 type WorkspaceBarrier struct {
-	Version         int             `json:"schemaVersion"`
-	WorkspaceID     string          `json:"workspaceId"`
-	CheckpointID    string          `json:"checkpointId"`
-	Operation       string          `json:"operation"`
-	Access          WorkspaceAccess `json:"access"`
-	JobID           string          `json:"jobId"`
-	PodName         string          `json:"podName"`
-	PodUID          string          `json:"podUid,omitempty"`
-	Phase           string          `json:"phase"`
-	StopReason      string          `json:"stopReason,omitempty"`
-	Job             BackupJobConfig `json:"job,omitempty"`
-	RestoreSource   RestoreSource   `json:"restoreSource,omitzero"`
-	RestoreVerified bool            `json:"restoreVerified,omitempty"`
+	Version          int             `json:"schemaVersion"`
+	WorkspaceID      string          `json:"workspaceId"`
+	CheckpointID     string          `json:"checkpointId"`
+	Operation        string          `json:"operation"`
+	Access           WorkspaceAccess `json:"access"`
+	JobID            string          `json:"jobId"`
+	PodName          string          `json:"podName"`
+	PodUID           string          `json:"podUid,omitempty"`
+	Phase            string          `json:"phase"`
+	StopReason       string          `json:"stopReason,omitempty"`
+	Job              BackupJobConfig `json:"job,omitempty"`
+	RestoreSource    RestoreSource   `json:"restoreSource,omitzero"`
+	RestoreVerified  bool            `json:"restoreVerified,omitempty"`
+	Cleanup          CleanupTarget   `json:"cleanup,omitzero"`
+	CleanupResult    CleanupResult   `json:"cleanupResult,omitzero"`
+	CleanupCancelled bool            `json:"cleanupCancelled,omitempty"`
 }
 
 // Trusted deployment inputs are pinned with the job, so restart cannot silently
@@ -56,9 +59,14 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 	if _, err := backuphelper.FixedArgs(backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID}); err != nil {
 		return err
 	}
+	if err := r.validateCleanupFields(b); err != nil {
+		return err
+	}
 	if b.Job != (BackupJobConfig{}) {
 		request := backuphelper.Request{Operation: "backup", CheckpointID: b.CheckpointID, Owner: b.Job.Owner}
-		if b.Operation == "restore" && b.RestoreSource.valid() {
+		if b.isCleanup() {
+			request = backuphelper.Request{Operation: b.Operation, Owner: b.Job.Owner, SnapshotID: b.Cleanup.SnapshotID}
+		} else if b.Operation == "restore" && b.RestoreSource.valid() {
 			request = backuphelper.Request{Operation: "restore", SnapshotID: b.RestoreSource.SnapshotID, ManifestSHA256: b.RestoreSource.ManifestSHA256, RepositoryCryptoID: b.RestoreSource.RepositoryCryptoID}
 		} else if b.Operation != "backup" {
 			return ErrWorkspaceConflict
@@ -71,10 +79,12 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		}
 	}
 	record, ok := r.records[b.WorkspaceID]
-	if !ok {
+	if !ok && !b.isCleanup() {
 		return ErrWorkspaceConflict
 	}
 	switch b.Operation {
+	case "forget", "prune":
+		// validateCleanupFields已校验仓库归属、固定目标和持久结果。
 	case "backup":
 		if b.Access.Validate() != nil || !matches(record, b.Access) || b.RestoreSource != (RestoreSource{}) || b.RestoreVerified {
 			return ErrWorkspaceConflict
@@ -121,6 +131,9 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 	}
 	previous, exists := r.barriers[b.WorkspaceID]
 	if !exists || previous.JobID != b.JobID {
+		if b.isCleanup() && r.validCleanupRetry(previous, b, exists) {
+			return nil
+		}
 		if exists && previous.RestoreSource != (RestoreSource{}) && b.Operation == "restore" {
 			return ErrWorkspaceConflict
 		}
@@ -132,7 +145,9 @@ func (r *WorkspaceRegistry) validateBarrier(b WorkspaceBarrier) error {
 		}
 		return nil
 	}
-	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.Job != b.Job || previous.RestoreSource != b.RestoreSource || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) ||
+	if previous.CheckpointID != b.CheckpointID || previous.Access != b.Access || previous.Operation != b.Operation || previous.Job != b.Job || previous.RestoreSource != b.RestoreSource || previous.Cleanup != b.Cleanup || previous.PodName != b.PodName || (previous.PodUID != "" && b.PodUID != previous.PodUID) || (previous.StopReason != "" && b.StopReason != previous.StopReason) ||
+		(previous.CleanupResult != b.CleanupResult && !(b.isCleanup() && previous.Phase == "stopped" && b.Phase == "stopped" && previous.CleanupResult == (CleanupResult{}) && b.CleanupResult != (CleanupResult{}))) ||
+		(previous.CleanupCancelled != b.CleanupCancelled && !(b.isCleanup() && previous.Phase == "stopped" && b.Phase == "released" && !previous.CleanupCancelled && b.CleanupCancelled)) ||
 		(previous.RestoreVerified != b.RestoreVerified && !(previous.Phase == "stopped" && b.Phase == "stopped" && !previous.RestoreVerified && b.RestoreVerified)) {
 		return ErrWorkspaceConflict
 	}
@@ -162,6 +177,7 @@ func (r *WorkspaceRegistry) saveBarrier(b WorkspaceBarrier) (WorkspaceBarrier, e
 		return WorkspaceBarrier{}, err
 	}
 	r.barriers[b.WorkspaceID] = b
+	r.indexCleanup(b)
 	return b, nil
 }
 

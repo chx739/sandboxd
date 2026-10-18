@@ -25,7 +25,7 @@ func (s *Server) getWorkspaceBackup(response http.ResponseWriter, request *http.
 		return
 	}
 	barrier, ok := s.workspaces.Registry().Barrier(request.PathValue("workspace"))
-	if !ok {
+	if !ok || (barrier.Operation != "backup" && barrier.Operation != "restore") {
 		writeJSON(response, http.StatusNotFound, map[string]string{"error": "backup not found"})
 		return
 	}
