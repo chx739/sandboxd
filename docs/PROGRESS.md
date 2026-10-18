@@ -20,7 +20,7 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ### 2026-10-18：恢复窗口TCP故障与取消四场景通过
 
-- 起点b321274，当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。新增workspace_restore_fault_demo，仅自身子进程包装真实方法，固定started/files-ready/before-attached/attached/after-tool/cancel-ready；普通第二进程自动接续原Task，Go/storage不重启，默认旧进程入口不变。after-tool采用CAS写入与来源快照不同的新内容，验证最新文件和非零调用预算；取消用真实Start后的有界异步门，不伪造慢存储。
+- 本批有效实现5f17541（起点b321274），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。新增workspace_restore_fault_demo，仅自身子进程包装真实方法，固定started/files-ready/before-attached/attached/after-tool/cancel-ready；普通第二进程自动接续原Task，Go/storage不重启，默认旧进程入口不变。after-tool采用CAS写入与来源快照不同的新内容，验证最新文件和非零调用预算；取消用真实Start后的有界异步门，不伪造慢存储。
 - 资源检查：可用内存20,628MiB，swap使用0，根盘931GiB，项目业务/维护Pod与10880/18090监听均空。真实files-ready已通过phase9-v2-restore-cut-files-ready.json：OS确认SIGSTOP再SIGKILL(-9)，普通Agent原目录进入attempt2，原Task/request/目标、claim时钟/限额保留，2模型槽/1只读工具、restore submitted一次、hash/完整配对正确。kill→ready60,576.28ms、→核查76,505.82ms；外部模型0。
 - after-tool首轮原生Task实际succeeded、2attempt、原loop deadline/timing与已用调用逐项不变，但夹具把pre-loop claim deadline和loop deadline比较而AssertionError。原phase9-v2-restore-cut-after-tool.json及日志保留，Go/Pod正常清理；修正独立verify_phase_clocks并加单测，未改变Runtime/时钟/预算，新目录-v2重跑通过：旧loop起点/deadline/timing和旧调用逐项不变，2模型/1次CAS写，attempt2新业务UID不同、恢复submitted一次，NFS新hash81dafd...未退回来源；kill→ready57,122.93ms、→核查68,486.01ms。
 - 本地夹具首轮21/21、3.807秒与下一轮22/22、3.531秒通过；时钟修复后完整267/267、298.700秒通过phase9-v2-restore-fault-latest-full-python-tests.txt；此前完整266/266、291.314秒保留，不冒称含后改动。文档47 §14记录命令/故障范围/失败原因。目录、快照、卷、Secret和原控制日志保留；Goal active。
