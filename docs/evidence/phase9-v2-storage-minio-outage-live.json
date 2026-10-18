@@ -1,0 +1,16 @@
+{
+  "mode": "real-live-outage-observation",
+  "minioContainerId": "83f1562f81d00bb331ebfc49c6e16976a6990bbe818aa57a025a2abdfe3a08b0",
+  "minioPaused": true,
+  "maintenancePodUid": "08608044-bee2-4a42-ab61-c8c3b239f718",
+  "maintenancePodName": "workspace-backup-backup-f903ef7972694f01863d8a44d929db19",
+  "checkpointId": "cp-f903ef7972694f01863d8a44d929db19",
+  "phase": "Running",
+  "runtimeType": "io.containerd.runsc.v1",
+  "imageRef": "sandboxd-restic:0.18.1-v2",
+  "imageId": "sha256:146dcc0f65c9a1c7839494f74b7724f005a493974d27a9d41eff19759856ce58",
+  "runAsUser": 65532,
+  "containerState": [
+    "running"
+  ]
+}

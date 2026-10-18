@@ -25,12 +25,12 @@
     {
       "id": "V2-04",
       "status": "pending",
-      "note": "six Agent protocol cut points passed and journal projections verified; final historical restore-point API integration pending; full V2 matrix not complete"
+      "note": "Six actual Agent protocol cuts and historical restore API/branch paths verified; final full V2 matrix review pending."
     },
     {
       "id": "V2-05",
       "status": "pending",
-      "note": "full acceptance not executed"
+      "note": "Actual MinIO pause after first committed checkpoint: default 90s Wait returns 504, abort/finish succeed; previous revision1 remains and next point FAILED; bounded Task failure, unchanged loop clock/calls, real runsc, health restored. Partial-file failure and repository lock remain unverified; full V2 audit pending."
     },
     {
       "id": "V2-06",
@@ -59,13 +59,11 @@
     }
   ],
   "remaining": [
-    "real cancellation and storage failure reconciliation; six Agent protocol cut points verified, historical restore API exposure still pending",
-    "real MinIO unavailability, restic partial failure, timeout and repository lock cases without head advance",
-    "Unified restic shell startup, remaining restore started/attached cuts and real storage failure/lock cases; actual Agent TCP files-ready/after-tool/before-attached SIGKILL and cancellation verified",
-    "Final requirement-by-requirement V2 matrix, storage faults and reference-aware cleanup; actual current Task nonzero call budget, exact loop deadline, latest-file preservation and one write verified after SIGKILL",
-    "protected branch/pinned/active-restore references, controlled cleanup preview and forget/prune",
-    "ten complete V2 acceptance cases and fixed-workload V1/V2 performance/traffic comparison",
-    "actual unified shell startup restic-mode execution"
+    "Real restic partial-file failure and repository lock cases; actual MinIO unavailability/default Wait timeout now verified without head advance",
+    "Reference-aware controlled cleanup preview, protected branch/pinned/active-restore sources, forget/prune; default no automatic deletion",
+    "Fixed-workload V1/V2 performance/traffic and resource comparison including synchronous checkpoint overhead",
+    "Actual unified shell startup restic-mode execution",
+    "Final ten-item V2 requirement-by-requirement evidence audit and related regressions; restore started/attached standalone fixture modes not executed"
   ],
   "evidence": [
     {
@@ -655,6 +653,38 @@
     {
       "path": "docs/evidence/phase9-v2-restore-cleanup-full-go-tests.txt",
       "sha256": "1c035c03c23434768a10dce03d057f28c87c8a93edea3e7dc9804c87a812576d"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-final-checks.json",
+      "sha256": "0251134236500fa1c13563e2ea2ba23a236d9b884f20d11d9789e2617f6e2c0f"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-final-related-tests.txt",
+      "sha256": "127fffa576f94c0af37a6ecd3377c6e097427483f0148967a82c454efa05ef03"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-fixture-tests.txt",
+      "sha256": "49c4c120a2dd08a3aa7054936e60c04c96ac8e4f1f99446be69a479590944a81"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-fault-related-tests.txt",
+      "sha256": "10c46d70c812464b5bdead8e29564ac27fed71b2bf00fb4f4d1a2ec5ce06e359"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage-audit.json",
+      "sha256": "ee48d72020f5192fd185a5be7b416c04d754200c87cf5f24ece0b2c000dbd2b4"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage-command.txt",
+      "sha256": "13a4c5f5123e102e17520c19601992d08666029210d3629e9101970ad49e723a"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage-live.json",
+      "sha256": "a9d5663e3e2b674e23f1648f4de13fe091ddc341e1fd31634e9626a632157572"
+    },
+    {
+      "path": "docs/evidence/phase9-v2-storage-minio-outage.json",
+      "sha256": "21280469b3bc6ffe7712603bccb19bc9e58740a5ea19d58dbd7d9f112fa5707c"
     }
   ],
   "localCheckpointProtocolScope": "Session prefix references, local commit/head journal, RecoveryLedger cancellation/budget guard; HTTP/Agent joint execution not wired",

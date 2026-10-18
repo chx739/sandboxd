@@ -1,0 +1,16 @@
+{
+  "mode": "local-post-experiment-checks",
+  "passed": true,
+  "syntaxValid": true,
+  "gitDiffCheck": true,
+  "generatedCredentialValuesChecked": 3,
+  "filesScanned": 11,
+  "credentialMatches": 0,
+  "podCounts": {
+    "sandboxd-demo": 0,
+    "sandboxd-storage": 0
+  },
+  "minioRunningAndUnpaused": true,
+  "agentAndGoPortsIdle": true,
+  "scope": "only generated project storage credentials; not a general secret detection guarantee"
+}

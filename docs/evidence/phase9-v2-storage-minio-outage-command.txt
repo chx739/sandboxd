@@ -1,0 +1,1 @@
+{"stage": "MinIO-paused-after-first-commit", "checkpointId": "cp-f903ef7972694f01863d8a44d929db19"}

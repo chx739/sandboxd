@@ -18,6 +18,14 @@ Phase 1–6 已完成并保留；Phase 7 的会话、记忆、ES/Milvus 检索�
 
 ## Phase 9 当前恢复点
 
+### 2026-10-18：真实MinIO不可用与默认备份等待超时通过
+
+- 起点2244d86，当前codex/workspace-restic-v2/草稿PR#3 OPEN、base=codex/workspace-nfs-v1，远端与本地已核对；用户docs32/docs34保留。上一轮仅回答流量问题、未推进代码，本轮按未完成存储故障继续。新增管理夹具workspace_storage_fault_demo，先保存真实COMMITTED，再在第二点PREPARING后暂停专属MinIO；固定容器名/Compose标签/不可变ID校验，独立150秒看门狗和finally恢复，不改生产Runtime/Go、时钟、调用预算或权限。
+- 运行前available20,647MiB、swap用量0、根盘930GiB、业务/维护Pod空；只有kind/NFS/专属MinIO运行。phase9-v2-storage-minio-outage.json真实通过：第二点wait默认90秒在90,001.83ms返回504，abort/finish200，暂停至failed93,483.74ms；原COMMITTED head/revision1保持、第二点FAILED、无pending、owner停止，2模型槽/2工具槽、1attempt、NFS报告hash一致；断言时MinIO仍paused，随后恢复健康HTTP200，Pod/端口清理，数据全部保留，外部模型0。
+- 故障中-live报告核实维护实际runsc/v2镜像/UID65532；独立-audit报告核对Go/Python三个控制日志19/24/5条checksum/seq、PREPARING→DATA_READY→COMMITTED及下一点PREPARING→FAILED顺序、最终Task/calls、原loop deadline/timing与owner停止。只读审计不是第二次服务成绩；本批没有再次恢复旧快照内容。文档47 §15记录命令、范围及学习讲法。
+- 本地夹具3/3、0.002秒与相关22/22、4.034秒通过；随后增强unpause后必须真实nonpaused才停止看门狗并增加第4项单测，最终23/23、3.988秒通过-final-related-tests。生产代码未变，不宣称旧267项覆盖新夹具。收尾-final-checks语法/diff、Pod/监听清理、MinIO状态通过；3个生成存储凭据在11份本轮文件无匹配。本批真实故障与仓库锁/部分文件失败/GC分开，V2-05只覆盖MinIO不可用及Wait超时，完整Goal active。
+- **第一项下一步**：真实仓库锁与部分文件失败，受控清理预览/引用保护/forget-prune、固定条件V1/V2性能流量、统一restic入口及完整V2矩阵。新夹具保留原始失败资料、所有卷/快照/控制目录；不强制unlock、不删除旧对象。
+
 ### 2026-10-18：恢复窗口TCP故障与取消四场景通过
 
 - 本批有效实现5f17541（起点b321274），当前codex/workspace-restic-v2/草稿PR#3，用户docs32/docs34保留。新增workspace_restore_fault_demo，仅自身子进程包装真实方法，固定started/files-ready/before-attached/attached/after-tool/cancel-ready；普通第二进程自动接续原Task，Go/storage不重启，默认旧进程入口不变。after-tool采用CAS写入与来源快照不同的新内容，验证最新文件和非零调用预算；取消用真实Start后的有界异步门，不伪造慢存储。

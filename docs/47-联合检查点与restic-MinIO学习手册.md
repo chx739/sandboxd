@@ -555,7 +555,32 @@ agentd/.venv/bin/python -m agentd.workspace_restore_fault_demo \
 
 这里没有启动外部模型，所有模型为固定Replay；正常/取消/失败均保留目录、快照、Secret和控制日志。未知停止证明仍阻止接管，不删除Pod对象或改generation来冒充fencing。后续还需实际存储失败/仓库锁、受控清理和引用保护、同条件性能、统一入口及完整V2矩阵。
 
-## 15. 官方参考与版本
+## 15. MinIO不可用的联合保存故障实验
+
+入口`agentd/workspace_storage_fault_demo.py`复用真实TaskStore/Runner/CheckpointCoordinator、Go HTTP、gVisor、NFS与restic，模型为固定Replay。先完成写报告和第一份COMMITTED检查点；第二次完整工具组保存已PREPARING、尚未Start时，仅暂停`sandboxd-workspace-backup-minio-1`。沿用生产路径的90秒备份等待上限及独立清理窗口，不改Task时钟、调用额度或账本。
+
+暂停前核对Compose项目标签、固定容器名及running/nonpaused状态，再按不可变容器ID操作；先启动独立150秒恢复看门狗，finally也恢复原容器。不得并行运行其他依赖该专用MinIO的实验。NFS、kind、原工作区/快照/Secret保留；故障影响整个项目备份服务，不影响旧RAG的MinIO。看门狗是夹具保险，不是应用恢复机制。
+
+已有同环境§10的固定维护镜像/Go二进制、专用仓库初始化及Secret后执行：
+
+```bash
+agentd/.venv/bin/python -m agentd.workspace_storage_fault_demo \
+  --secret-name '<本环境已初始化专用仓库的Secret名称>' \
+  --minio-ip '<当前专属MinIO在kind网络内的IPv4>' \
+  --output docs/evidence/phase9-v2-storage-minio-outage.json
+```
+
+必须在MinIO仍暂停时核查：Task不能succeeded；原COMMITTED head/revision不变且Session引用可读；新点FAILED、不暴露为恢复点；无待提交点；原owner停止；调用只包含两次Replay模型槽与写/读工具槽；文件hash不变。报告保留每个真实HTTP动作状态、超时参数和耗时。finally恢复MinIO后才停止看门狗；失败保留原始报告，不用新结果覆盖。该实验不替代仓库锁、部分文件不可读、实际快照损坏或引用清理验收，也不代表生产故障恢复时间。
+
+实际`evidence/phase9-v2-storage-minio-outage.json`通过：第一份COMMITTED为`cp-d6daa284c4e44647ada15c92b3e6486c`，第二份`cp-f903ef7972694f01863d8a44d929db19`只经过PREPARING→FAILED，原head/revision1不变。真实wait在90,001.83ms返回HTTP504，abort/finish均200，暂停至Task failed共93,483.74ms；这包含固定90秒等待，不代表故障必须等待这么久才可发现。故障断言时MinIO仍paused，finally恢复后健康HTTP200；业务/维护Pod均清空，目录/快照/Secret/日志全部保留。两次Replay模型槽和写/读两个工具槽，只有一次attempt、无后续模型重试；外部调用0。
+
+独立观测`phase9-v2-storage-minio-outage-live.json`在故障等待中核实维护Pod UID、实际CRI runsc、固定v2镜像与UID65532，只提取白名单字段，未存储原始CRI环境。原始Go/Python三个日志19/24/5条checksum/seq、精确检查点状态顺序、最终Task/calls、原loop timing/deadline及owner停止证明由`phase9-v2-storage-minio-outage-audit.json`核对；不是第二次服务实验。该审计证明控制记录保留，未在本批重新恢复旧快照内容；此前实际恢复证据另见§10–14。
+
+本地夹具首轮3项单测通过（0.002秒），范围拒绝、看门狗早于pause且绑定容器ID、unpause失败保留看门狗；结果`evidence/phase9-v2-storage-fault-fixture-tests.txt`，不当作真实服务成绩。随后相关协调器/切点夹具22/22通过（4.034秒），`phase9-v2-storage-fault-related-tests.txt`；最后增加“unpause返回后仍paused不可停止看门狗”的确认与第4项单测，最终23/23、3.988秒通过`phase9-v2-storage-fault-final-related-tests.txt`，不用22项冒充覆盖最后改动。生产Runtime/Go未改，不把旧267项当作新增夹具的执行结果。收尾-final-checks报告核实语法/diff、Pod与监听清理、MinIO非暂停状态，3个生成存储凭据在11份本轮文件中无匹配；这不是通用密钥扫描保证。
+
+面试讲法：备份失败只损失本次新增的历史恢复点；最新NFS文件与上一份COMMITTED分别保留。同步备份等待有成本，因此需要显式超时、可取消和停止证明；本次不能推出NFS不可用时也能接管。读代码从`OutageClient.workspace_backup`的第二次Start前暂停，沿`CheckpointCoordinator.save/cleanup`与Go Wait/Abort/Finish，再看持久检查点日志。
+
+## 16. 官方参考与版本
 
 - [restic 0.18.1 release](https://github.com/restic/restic/releases/tag/v0.18.1)：固定二进制与校验表。
 - [0.18.1 MinIO/S3配置](https://restic.readthedocs.io/en/v0.18.1/030_preparing_a_new_repo.html#minio-server)：S3兼容仓库、凭据、路径式访问；初始化可创建专用bucket。
